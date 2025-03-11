@@ -8,7 +8,7 @@ import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 
 // TODO валидация перед сохранением, стили, сохранение 
 
-export const ThoughtDiary: React.FC = () => {
+ const ThoughtDiary: React.FC = () => {
   const [records, setRecords] = useState<ThoughtRecord[]>([]);
   const [currentRecord, setCurrentRecord] = useState<ThoughtRecord>({
     situation: '',
@@ -233,3 +233,5 @@ export const ThoughtDiary: React.FC = () => {
     </div>
   );
 }; 
+
+export default ThoughtDiary

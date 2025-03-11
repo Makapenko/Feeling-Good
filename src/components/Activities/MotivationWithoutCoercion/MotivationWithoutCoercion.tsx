@@ -8,7 +8,7 @@ interface ComparisonRecord {
 }
 // DisarmingTechnique
 
-export const MotivationWithoutCoercion: React.FC = () => {
+ const MotivationWithoutCoercion: React.FC = () => {
   const [currentThought, setCurrentThought] = useState('');
   const [currentAdvantage, setCurrentAdvantage] = useState('');
   const [currentDisadvantage, setCurrentDisadvantage] = useState('');
@@ -152,3 +152,5 @@ export const MotivationWithoutCoercion: React.FC = () => {
     </div>
   );
 }; 
+
+export default MotivationWithoutCoercion

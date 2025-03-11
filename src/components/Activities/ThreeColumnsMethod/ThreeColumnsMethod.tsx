@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
 
-export const ThreeColumnsMethod: React.FC = () => {
+const ThreeColumnsMethod: React.FC = () => {
   return (
     <ThreeColumnsBase
       title="Метод трёх колонок"
@@ -14,3 +14,5 @@ export const ThreeColumnsMethod: React.FC = () => {
     />
   );
 }; 
+
+export default ThreeColumnsMethod

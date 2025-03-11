@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
 
-export const HinderingHelpingThoughts: React.FC = () => {
+ const HinderingHelpingThoughts: React.FC = () => {
   return (
     <ThreeColumnsBase
       title="Техника мешающих и помогающих мыслей"
@@ -14,3 +14,5 @@ export const HinderingHelpingThoughts: React.FC = () => {
     />
   );
 }; 
+
+export default HinderingHelpingThoughts

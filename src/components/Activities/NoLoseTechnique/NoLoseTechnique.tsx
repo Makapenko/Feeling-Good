@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
 
-export const NoLoseTechnique: React.FC = () => {
+ const NoLoseTechnique: React.FC = () => {
   return (
     <ThreeColumnsBase
       title="Беспроигрышная техника"
@@ -14,3 +14,5 @@ export const NoLoseTechnique: React.FC = () => {
     />
   );
 }; 
+
+export default NoLoseTechnique

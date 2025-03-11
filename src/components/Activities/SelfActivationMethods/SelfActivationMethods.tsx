@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './SelfActivationMethods.module.css';
-import { selfActivationMethods } from '../../data/selfActivationMethods';
-import { useProgress, SpecialContent } from '../../store/ProgressContext';
-import { ProgressAction } from '../../store/progressReducer';
+import { selfActivationMethods } from '../../../data/selfActivationMethods';
+import { useProgress, SpecialContent } from '../../../store/ProgressContext';
+import { ProgressAction } from '../../../store/progressReducer';
 
 const SelfActivationMethods: React.FC = () => {
   const { dispatch } = useProgress();

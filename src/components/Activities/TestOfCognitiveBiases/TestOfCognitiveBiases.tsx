@@ -8,7 +8,7 @@ interface AnswerState {
   isSubmitted: boolean;
 }
 
-export const TestOfCognitiveBiases: React.FC = () => {
+ const TestOfCognitiveBiases: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>(
     listOfQuestions.map(() => ({ selectedAnswers: [], isSubmitted: false }))
@@ -198,3 +198,5 @@ export const TestOfCognitiveBiases: React.FC = () => {
     </div>
   );
 };
+
+export default TestOfCognitiveBiases

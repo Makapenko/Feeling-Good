@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './DisarmingTechnique.module.css';
 
-export const DisarmingTechnique: React.FC = () => {
+ const DisarmingTechnique: React.FC = () => {
   return (
     <div className={styles.container}>
       <h2>Техника обезоруживания</h2>
