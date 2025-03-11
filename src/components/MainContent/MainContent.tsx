@@ -1,27 +1,28 @@
 import { useEffect } from 'react';
 import styles from './MainContent.module.css';
 import { useProgress } from '../../store/ProgressContext';
-import Survey, { burnsConfig, novacoConfig } from '../Activities/Survey';
-import ListOfCognitiveBiases from '../Activities//ListOfCognitiveBiases/ListOfCognitiveBiases';
-import TestOfCognitiveBiases from '../Activities//TestOfCognitiveBiases/TestOfCognitiveBiases';
-import ThreeColumnsMethod  from '../Activities//ThreeColumnsMethod/ThreeColumnsMethod';
-import ThoughtDiary from '../Activities//ThoughtDiary/ThoughtDiary';
-import DailySchedule from '../Activities//DailySchedule/DailySchedule';
-import AntiProcrastinationSheet from '../Activities//AntiProcrastinationSheet/AntiProcrastinationSheet';
-import PleasureSheet from '../Activities//PleasureSheet/PleasureSheet';
-import NoButsSheet from '../Activities//NoButsSheet/NoButsSheet';
-import SelfSupport from '../Activities//SelfSupport/SelfSupport';
-import SelfActivationMethods from '../Activities//SelfActivationMethods/SelfActivationMethods';
-import HinderingHelpingThoughts from '../Activities//HinderingHelpingThoughts/HinderingHelpingThoughts';
-import MotivationWithoutCoercion from '../Activities//MotivationWithoutCoercion/MotivationWithoutCoercion';
-import NoLoseTechnique from '../Activities//NoLoseTechnique/NoLoseTechnique';
-import SmallSteps from '../Activities//SmallSteps/SmallSteps';
-import ImagineSuccess from '../Activities//ImagineSuccess/ImagineSuccess';
-import CountAchievements from '../Activities//CountAchievements/CountAchievements';
-import CheckCantDo from '../Activities//CheckCantDo/CheckCantDo';
-import DisarmingTechnique from '../Activities//DisarmingTechnique/DisarmingTechnique';
 import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
+
+import Survey, { burnsConfig, novacoConfig } from '../Activities/Survey';
+import ListOfCognitiveBiases from '../Activities/ListOfCognitiveBiases/ListOfCognitiveBiases';
+import TestOfCognitiveBiases from '../Activities/TestOfCognitiveBiases/TestOfCognitiveBiases';
+import ThreeColumnsMethod  from '../Activities/ThreeColumnsMethod/ThreeColumnsMethod';
+import ThoughtDiary from '../Activities/ThoughtDiary/ThoughtDiary';
+import DailySchedule from '../Activities/DailySchedule/DailySchedule';
+import AntiProcrastinationSheet from '../Activities/AntiProcrastinationSheet/AntiProcrastinationSheet';
+import PleasureSheet from '../Activities/PleasureSheet/PleasureSheet';
+import NoButsSheet from '../Activities/NoButsSheet/NoButsSheet';
+import SelfSupport from '../Activities/SelfSupport/SelfSupport';
+import SelfActivationMethods from '../Activities/SelfActivationMethods/SelfActivationMethods';
+import HinderingHelpingThoughts from '../Activities/HinderingHelpingThoughts/HinderingHelpingThoughts';
+import MotivationWithoutCoercion from '../Activities/MotivationWithoutCoercion/MotivationWithoutCoercion';
+import NoLoseTechnique from '../Activities/NoLoseTechnique/NoLoseTechnique';
+import SmallSteps from '../Activities/SmallSteps/SmallSteps';
+import ImagineSuccess from '../Activities/ImagineSuccess/ImagineSuccess';
+import CountAchievements from '../Activities/CountAchievements/CountAchievements';
+import CheckCantDo from '../Activities/CheckCantDo/CheckCantDo';
+import DisarmingTechnique from '../Activities/DisarmingTechnique/DisarmingTechnique';
 
 const MainContent: React.FC = () => {
   const { progress, dispatch } = useProgress();

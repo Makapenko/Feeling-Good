@@ -12,28 +12,28 @@ const SelfActivationMethods: React.FC = () => {
     
     switch (technique) {
       case 'Метод маленьких шагов':
-        content = 'small-steps' as const;
+        content = 'small-steps';
         break;
       case 'Ежедневное расписание дня':
-        content = 'daily-schedule' as const;
+        content = 'daily-schedule';
         break;
       case 'Листок антипрокрастинации':
-        content = 'anti-procrastination' as const;
+        content = 'anti-procrastination';
         break;
       case 'Ежедневная запись автоматических мыслей':
-        content = 'thought-diary' as const;
+        content = 'thought-diary';
         break;
       case 'Листок предполагаемого удовольствия':
-        content = 'pleasure-sheet' as const;
+        content = 'pleasure-sheet';
         break;
       case 'Никаких но':
-        content = 'no-buts' as const;
+        content = 'no-buts';
         break;
       case 'Техника мешающих и помогающих мыслей':
-        content = 'hindering-helping-thoughts' as const;
+        content = 'hindering-helping-thoughts';
         break;
       case 'Мотивация без принуждения':
-        content = 'motivation-without-coercion' as const;
+        content = 'motivation-without-coercion';
         break;
       case 'Представьте успех':
         content = 'imagine-success'
@@ -45,10 +45,10 @@ const SelfActivationMethods: React.FC = () => {
         content = 'check-cant-do'
         break;
       case 'Беспроигрышная техника':
-        content = 'no-lose-technique' as const;
+        content = 'no-lose-technique';
         break;
       case 'Техника обезоруживания':
-        content = 'disarming-technique' as const;
+        content = 'disarming-technique';
         break;
     }
 
