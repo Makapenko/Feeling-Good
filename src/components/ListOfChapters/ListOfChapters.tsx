@@ -2,7 +2,10 @@ import { useProgress } from '../../store/ProgressContext';
 import styles from './ListOfChapters.module.css';
 import chaptersData from './chapters.json';
 import { useState } from 'react';
-import type { Chapter } from '../../types/chapters.types';
+import type { Chapter, ChaptersData, Section } from '../../types/chapters.types';
+
+// Указываем тип для импортированных данных
+const typedChaptersData = chaptersData as ChaptersData;
 
 function ListOfChapters() {
   const { progress, dispatch } = useProgress();
@@ -62,7 +65,7 @@ function ListOfChapters() {
     const prevChapterId = `ch${chapterNumber - 1}`;
     
     // Находим предыдущую главу
-    const prevChapter = chaptersData.chapters.find(ch => ch.id === prevChapterId);
+    const prevChapter = typedChaptersData.chapters.find(ch => ch.id === prevChapterId);
     if (!prevChapter) return false;
 
     // Проверяем завершенность последней подглавы предыдущей главы
@@ -77,7 +80,7 @@ function ListOfChapters() {
     return chapter.sections.every(section => isSubchapterCompleted(section.id));
   };
 
-  const handleChapterClick = async (path: string, chapterId: string, title: string) => {
+  const handleChapterClick = async (path: string | undefined, chapterId: string, title: string) => {
     console.log('Clicking chapter:', chapterId);
     
     if (path) {
@@ -106,12 +109,12 @@ function ListOfChapters() {
   return (
     <aside className={styles.sidebar}>
       <h3>Список глав:</h3>
-      {chaptersData.sections.map((section) => (
+      {typedChaptersData.sections.map((section) => (
         <div key={section.id}>
           <h4>{section.name}</h4>
           <ul>
             {section.chapters.map((chapterId) => {
-              const chapter = chaptersData.chapters.find(ch => ch.id === chapterId);
+              const chapter = typedChaptersData.chapters.find(ch => ch.id === chapterId);
               const isAvailable = isChapterAvailable(chapterId);
               
               if (!chapter) return null;
@@ -133,7 +136,7 @@ function ListOfChapters() {
                       </div>
                       {isExpanded && (
                         <ul className={styles.subSections}>
-                          {chapter.sections.map((section, index) => (
+                          {chapter.sections.map((section: Section, index) => (
                             <li
                               key={section.id}
                               onClick={() => 

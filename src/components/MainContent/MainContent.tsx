@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import styles from './MainContent.module.css';
-import ChapterReader from '../ChapterReader/ChapterReader';
 import Survey, { burnsConfig, novacoConfig } from '../Survey';
 import ListOfCognitiveBiases from '../ListOfCognitiveBiases/ListOfCognitiveBiases';
 import { TestOfCognitiveBiases } from '../TestOfCognitiveBiases/TestOfCognitiveBiases';
@@ -21,6 +20,8 @@ import ImagineSuccess from '../ImagineSuccess/ImagineSuccess';
 import CountAchievements from '../CountAchievements/CountAchievements';
 import CheckCantDo from '../CheckCantDo/CheckCantDo';
 import { DisarmingTechnique } from '../DisarmingTechnique/DisarmingTechnique';
+import ChapterContainer from '../ChapterReader/ChapterContainer';
+import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
 
 const MainContent: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -75,22 +76,16 @@ const MainContent: React.FC = () => {
       return <CountAchievements />;
     } else if (progress.specialContent === 'check-cant-do') {
       return <CheckCantDo />;
+    } else if (progress.specialContent === 'progress-calendar') {
+      return <ProgressCalendar />;
     }
 
     if (progress.currentChapter) {
       const { id, content } = progress.currentChapter;
       return (
-        <ChapterReader 
+        <ChapterContainer
           content={content}
           chapterId={id}
-          onNext={() => {
-            if (progress.currentChapter) {
-              dispatch({ 
-                type: 'COMPLETE_CHAPTER', 
-                chapterId: progress.currentChapter.id 
-              });
-            }
-          }}
         />
       );
     }

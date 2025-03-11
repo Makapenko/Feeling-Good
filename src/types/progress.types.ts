@@ -25,12 +25,15 @@ export interface ChapterProgress {
   completedAt?: string;
 }
 
-export interface DailyProgress {
-  date: string; // ISO date string
+export interface DayProgress {
   chapters: {
     [chapterId: string]: ChapterProgress;
   };
   exercises: Exercise[];
+}
+
+export interface DailyProgress {
+  [date: string]: DayProgress;
 }
 
 export interface Chapter {
@@ -61,14 +64,16 @@ export type SpecialContent =
   | 'small-steps'
   | 'imagine-success'
   | 'count-achievements'
-  | 'check-cant-do';
+  | 'check-cant-do'
+  | 'progress-calendar'
+  | null;
 
 export interface UserProgress {
   currentChapter: Chapter | null;
-  specialContent: SpecialContent | null;
-  dailyProgress: {
-    [date: string]: DailyProgress;
-  };
+  specialContent: SpecialContent;
+  dailyProgress: DailyProgress;
+  chapters: Chapter[];
+  testResults: TestResult[];
 }
 
 // Удалить пример использования и оставить только типы 

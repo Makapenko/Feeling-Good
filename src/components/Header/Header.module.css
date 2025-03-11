@@ -1,6 +1,30 @@
 .header {
-  background-color: #282c34;
-  padding: 20px;
+  background-color: #4CAF50;
   color: white;
-  text-align: center;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.calendarButton {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.calendarButton:hover {
+  background-color: white;
+  color: #4CAF50;
 }

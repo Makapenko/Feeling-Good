@@ -1,8 +1,12 @@
 import { useProgress } from '../../store/ProgressContext';
 import styles from './ChapterReader.module.css';
-import Timer from './Timer';
 import DOMPurify from 'dompurify';
 import chaptersData from '../ListOfChapters/chapters.json';
+import type { ChaptersData, Section } from '../../types/chapters.types';
+import { useMemo } from 'react';
+
+// Указываем тип для импортированных данных
+const typedChaptersData = chaptersData as ChaptersData;
 
 interface ChapterReaderProps {
   content: string;
@@ -13,17 +17,9 @@ interface ChapterReaderProps {
 const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNext }) => {
   const { dispatch } = useProgress();
 
-  const handleTimeUpdate = (timeSpent: number) => {
-    dispatch({ 
-      type: 'UPDATE_CHAPTER_PROGRESS', 
-      chapterId, 
-      timeSpent 
-    });
-  };
-
   const findNextChapter = () => {
     // Находим текущую главу
-    const currentChapter = chaptersData.chapters.find(ch => {
+    const currentChapter = typedChaptersData.chapters.find(ch => {
       // Проверяем, является ли текущий ID главой или подглавой
       if (chapterId === ch.id) return true;
       return ch.sections.some(section => section.id === chapterId);
@@ -36,7 +32,7 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
       const currentSectionIndex = currentChapter.sections.findIndex(s => s.id === chapterId);
       if (currentSectionIndex < currentChapter.sections.length - 1) {
         // Есть следующая подглава
-        const nextSection = currentChapter.sections[currentSectionIndex + 1];
+        const nextSection = currentChapter.sections[currentSectionIndex + 1] as Section;
         return {
           id: nextSection.id,
           title: nextSection.title,
@@ -46,12 +42,12 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
     }
 
     // Если это последняя подглава или глава без подглав, переходим к следующей главе
-    const currentChapterIndex = chaptersData.chapters.findIndex(ch => ch.id === currentChapter.id);
-    if (currentChapterIndex < chaptersData.chapters.length - 1) {
-      const nextChapter = chaptersData.chapters[currentChapterIndex + 1];
+    const currentChapterIndex = typedChaptersData.chapters.findIndex(ch => ch.id === currentChapter.id);
+    if (currentChapterIndex < typedChaptersData.chapters.length - 1) {
+      const nextChapter = typedChaptersData.chapters[currentChapterIndex + 1];
       // Если у следующей главы есть подглавы, берем первую подглаву
       if (nextChapter.sections && nextChapter.sections.length > 0) {
-        const firstSection = nextChapter.sections[0];
+        const firstSection = nextChapter.sections[0] as Section;
         return {
           id: firstSection.id,
           title: firstSection.title,
@@ -75,7 +71,7 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
 
     // Находим следующую главу или подглаву
     const nextChapter = findNextChapter();
-    if (nextChapter) {
+    if (nextChapter && nextChapter.path) {
       try {
         const response = await fetch(nextChapter.path);
         const content = await response.text();
@@ -99,14 +95,15 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
   };
 
   // Очищаем HTML и разрешаем только безопасные теги и атрибуты
-  const sanitizedContent = DOMPurify.sanitize(content, {
-    ALLOWED_TAGS: ['p', 'br', 'img', 'i', 'b', 'sup', 'sub', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'center'],
-    ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'border', 'id', 'name', 'href'],
-  });
+  const sanitizedContent = useMemo(() => {
+    return DOMPurify.sanitize(content, {
+      ALLOWED_TAGS: ['p', 'br', 'img', 'i', 'b', 'sup', 'sub', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'center'],
+      ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'border', 'id', 'name', 'href'],
+    });
+  }, [content]);
 
   return (
-    <div className={styles.chapterContainer}>
-      <Timer onTimeUpdate={handleTimeUpdate} />
+    <div className={styles.chapterContent}>
       <div 
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: sanitizedContent }} 

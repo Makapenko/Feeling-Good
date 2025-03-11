@@ -12,9 +12,33 @@ export function getInitialState(): UserProgress {
     }
   }
   
+  const today = new Date().toISOString().split('T')[0];
+  
   return {
     currentChapter: null,
     specialContent: null,
-    dailyProgress: {}
+    dailyProgress: {
+      [today]: {
+        chapters: {},
+        exercises: []
+      }
+    },
+    chapters: [],
+    testResults: []
+  };
+}
+
+export function getInitialProgress(): UserProgress {
+  const savedProgress = localStorage.getItem('userProgress');
+  if (savedProgress) {
+    return JSON.parse(savedProgress);
+  }
+
+  return {
+    currentChapter: null,
+    specialContent: null,
+    dailyProgress: {},
+    chapters: [],
+    testResults: []
   };
 } 

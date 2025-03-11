@@ -1,25 +1,43 @@
 .chapterContainer {
+  padding: 20px;
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  position: relative;
+}
+
+.chapterContent {
+  margin-top: 40px;
 }
 
 .content {
-  font-size: 16px;
   line-height: 1.6;
-  margin-bottom: 30px;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.timer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nextButton {
-  margin-top: 20px;
+  display: block;
+  margin: 20px auto;
   padding: 10px 20px;
-  background-color: #0066cc;
+  background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 .nextButton:hover {
-  background-color: #0052a3;
+  background-color: #45a049;
 } 
