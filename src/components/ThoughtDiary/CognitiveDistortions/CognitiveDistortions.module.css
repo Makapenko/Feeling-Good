@@ -1,0 +1,231 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.column h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.distortionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: 400px;
+  padding-right: 8px;
+}
+
+.distortionsList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.distortionsList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.distortionsList::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.distortionsList::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.distortionItem {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.distortionItem:hover {
+  border-color: #4CAF50;
+  background: white;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #4CAF50;
+}
+
+.distortionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.distortionTitle {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.distortionDescription {
+  font-size: 0.9rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+/* Стили для выбранного искажения */
+.distortionItem.selected {
+  border-color: #4CAF50;
+  background: #f1f8f1;
+}
+
+/* Анимация при выборе */
+.checkbox:checked + .distortionContent .distortionTitle {
+  color: #4CAF50;
+}
+
+.multiSelect {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.selectedDisplay {
+  min-height: 36px;
+  height: auto;
+  padding: 6px 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 1;
+}
+
+.selectedDisplay:hover {
+  border-color: #4CAF50;
+}
+
+.placeholder {
+  color: #adb5bd;
+}
+
+.selectedItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-height: 24px;
+}
+
+.selectedItem {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 2px 0;
+}
+
+.removeItem {
+  border: none;
+  background: none;
+  color: #2e7d32;
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 1.2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.removeItem:hover {
+  color: #1b5e20;
+}
+
+.arrow {
+  color: #6c757d;
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+  margin-top: 8px;
+}
+
+.arrow.up {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option:hover {
+  background: #f8f9fa;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #4CAF50;
+  cursor: pointer;
+}
+
+.optionTitle {
+  color: #2c3e50;
+}
+
+/* Стилизация скролла */
+.dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

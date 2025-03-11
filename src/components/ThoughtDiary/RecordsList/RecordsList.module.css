@@ -1,0 +1,81 @@
+.recordsList {
+  margin-top: 30px;
+}
+
+.recordContainer {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #dee2e6;
+}
+
+.situationHeader {
+  margin-bottom: 15px;
+}
+
+.situationHeader h4 {
+  margin: 0 0 8px 0;
+  color: #495057;
+  font-size: 16px;
+}
+
+.situationHeader p {
+  margin: 0;
+  font-size: 15px;
+  color: #212529;
+}
+
+.emotionsContainer {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.emotionsHeader h4 {
+  margin: 0 0 8px 0;
+  color: #495057;
+  font-size: 14px;
+}
+
+.emotions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.emotion {
+  background-color: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.thoughtsTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  margin: 15px 0;
+}
+
+.thoughtsTable th {
+  background-color: #f1f3f5;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+  border: 1px solid #dee2e6;
+}
+
+.thoughtsTable td {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+  vertical-align: top;
+}
+
+.thoughtsTable tr:hover {
+  background-color: #f8f9fa;
+}

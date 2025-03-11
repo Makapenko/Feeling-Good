@@ -1,0 +1,32 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.column h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.field {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 14px;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.field:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.field::placeholder {
+  color: #adb5bd;
+}

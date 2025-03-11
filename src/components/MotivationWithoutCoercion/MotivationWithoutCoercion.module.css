@@ -1,0 +1,155 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.description {
+  color: #4a5568;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.thoughtInput {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 10px;
+}
+
+.input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #2d3748;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.addButton {
+  padding: 8px 16px;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.addButton:hover:not(:disabled) {
+  background-color: #3182ce;
+}
+
+.addButton:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.columnsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.column {
+  background-color: #f7fafc;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.column h3 {
+  margin-bottom: 20px;
+  color: #2d3748;
+  font-size: 1.2rem;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.inputGroup .addButton {
+  padding: 8px 12px;
+  min-width: 40px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  color: #2d3748;
+}
+
+.recordsList {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.thoughts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.thoughtButton {
+  background: none;
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #4a5568;
+  transition: all 0.2s;
+}
+
+.thoughtButton:hover {
+  background-color: #f7fafc;
+  border-color: #4299e1;
+  color: #2d3748;
+}
+
+.thoughtButton.active {
+  background-color: #4299e1;
+  border-color: #4299e1;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .thoughtInput {
+    flex-direction: column;
+  }
+
+  .columnsContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .thoughts {
+    flex-direction: column;
+  }
+
+  .thoughtButton {
+    width: 100%;
+    text-align: left;
+  }
+} 

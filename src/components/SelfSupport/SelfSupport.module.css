@@ -1,0 +1,126 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.table {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background-color: #f7fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header .column {
+  padding: 16px;
+  font-weight: 500;
+  color: #2d3748;
+  text-align: left;
+}
+
+.statements {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.column {
+  padding: 12px;
+  position: relative;
+}
+
+.textArea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.textArea:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.devaluingArea {
+  background-color: #fff5f5;
+  border-color: #feb2b2;
+}
+
+.supportingArea {
+  background-color: #f0fff4;
+  border-color: #9ae6b4;
+}
+
+.deleteButton {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background: none;
+  border: none;
+  color: #e53e3e;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.deleteButton:hover {
+  color: #c53030;
+}
+
+.addRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background-color: #f7fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.addButton {
+  margin: 16px;
+  padding: 8px 16px;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.addButton:hover {
+  background-color: #3182ce;
+}
+
+@media (max-width: 768px) {
+  .header,
+  .row,
+  .addRow {
+    grid-template-columns: 1fr;
+  }
+
+  .header .column:not(:last-child),
+  .row .column:not(:last-child) {
+    border-bottom: 1px solid #e2e8f0;
+  }
+} 

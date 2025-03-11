@@ -1,0 +1,113 @@
+import { useEffect } from 'react';
+import styles from './MainContent.module.css';
+import ChapterReader from '../ChapterReader/ChapterReader';
+import Survey, { burnsConfig, novacoConfig } from '../Survey';
+import ListOfCognitiveBiases from '../ListOfCognitiveBiases/ListOfCognitiveBiases';
+import { TestOfCognitiveBiases } from '../TestOfCognitiveBiases/TestOfCognitiveBiases';
+import { ThreeColumnsMethod } from '../ThreeColumnsMethod/ThreeColumnsMethod';
+import { useProgress } from '../../store/ProgressContext';
+import { ThoughtDiary } from '../ThoughtDiary/ThoughtDiary';
+import DailySchedule from '../DailySchedule/DailySchedule';
+import AntiProcrastinationSheet from '../AntiProcrastinationSheet/AntiProcrastinationSheet';
+import PleasureSheet from '../PleasureSheet/PleasureSheet';
+import NoButsSheet from '../NoButsSheet/NoButsSheet';
+import SelfSupport from '../SelfSupport/SelfSupport';
+import SelfActivationMethods from '../SelfActivationMethods/SelfActivationMethods';
+import { HinderingHelpingThoughts } from '../HinderingHelpingThoughts/HinderingHelpingThoughts';
+import { MotivationWithoutCoercion } from '../MotivationWithoutCoercion/MotivationWithoutCoercion';
+import { NoLoseTechnique } from '../NoLoseTechnique/NoLoseTechnique';
+import SmallSteps from '../SmallSteps/SmallSteps';
+import ImagineSuccess from '../ImagineSuccess/ImagineSuccess';
+import CountAchievements from '../CountAchievements/CountAchievements';
+import CheckCantDo from '../CheckCantDo/CheckCantDo';
+import { DisarmingTechnique } from '../DisarmingTechnique/DisarmingTechnique';
+
+const MainContent: React.FC = () => {
+  const { progress, dispatch } = useProgress();
+
+  useEffect(() => {
+    if (progress.currentChapter?.id) {
+      dispatch({ 
+        type: 'START_CHAPTER_READING', 
+        chapterId: progress.currentChapter.id 
+      });
+    }
+  }, [progress.currentChapter?.id, dispatch]);
+
+  const renderContent = () => {
+    if (progress.specialContent === 'burns-checklist') {
+      return <Survey config={burnsConfig} />;
+    } else if (progress.specialContent === 'novaco-scale') {
+      return <Survey config={novacoConfig} />;
+    } else if (progress.specialContent === 'cognitive-biases') {
+      return <ListOfCognitiveBiases />;
+    } else if (progress.specialContent === 'cognitive-biases-test') {
+      return <TestOfCognitiveBiases />;
+    } else if (progress.specialContent === 'three-columns-method') {
+      return <ThreeColumnsMethod />;
+    } else if (progress.specialContent === 'thought-diary') {
+      return <ThoughtDiary />;
+    } else if (progress.specialContent === 'daily-schedule') {
+      return <DailySchedule />;
+    } else if (progress.specialContent === 'anti-procrastination') {
+      return <AntiProcrastinationSheet />;
+    } else if (progress.specialContent === 'pleasure-sheet') {
+      return <PleasureSheet />;
+    } else if (progress.specialContent === 'no-buts') {
+      return <NoButsSheet />;
+    } else if (progress.specialContent === 'self-support') {
+      return <SelfSupport />;
+    } else if (progress.specialContent === 'self-activation') {
+      return <SelfActivationMethods />;
+    } else if (progress.specialContent === 'hindering-helping-thoughts') {
+      return <HinderingHelpingThoughts />;
+    } else if (progress.specialContent === 'disarming-technique') {
+      return <DisarmingTechnique />;
+    } else if (progress.specialContent === 'motivation-without-coercion') {
+      return <MotivationWithoutCoercion />;
+    } else if (progress.specialContent === 'no-lose-technique') {
+      return <NoLoseTechnique />;
+    } else if (progress.specialContent === 'small-steps') {
+      return <SmallSteps />;
+    } else if (progress.specialContent === 'imagine-success') {
+      return <ImagineSuccess />;
+    } else if (progress.specialContent === 'count-achievements') {
+      return <CountAchievements />;
+    } else if (progress.specialContent === 'check-cant-do') {
+      return <CheckCantDo />;
+    }
+
+    if (progress.currentChapter) {
+      const { id, content } = progress.currentChapter;
+      return (
+        <ChapterReader 
+          content={content}
+          chapterId={id}
+          onNext={() => {
+            if (progress.currentChapter) {
+              dispatch({ 
+                type: 'COMPLETE_CHAPTER', 
+                chapterId: progress.currentChapter.id 
+              });
+            }
+          }}
+        />
+      );
+    }
+
+    return (
+      <div className={styles.welcome}>
+        <h2>Выберите главу для изучения</h2>
+        <p>Здесь будет текст выбранной главы или задания.</p>
+      </div>
+    );
+  };
+
+  return (
+    <>  
+      {renderContent()}
+    </>
+  );
+};
+
+export default MainContent;

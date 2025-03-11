@@ -1,0 +1,144 @@
+.thoughtsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.thoughtsContainer h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.thoughtsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thoughtRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.thoughtHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.thoughtNumber {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4CAF50;
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.thoughtContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.thoughtField {
+  flex: 1;
+}
+
+.thoughtInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 14px;
+  resize: none;
+  overflow: hidden;
+  min-height: 24px;
+  line-height: 1.5;
+  font-family: inherit;
+  background: #f8f9fa;
+  transition: all 0.2s;
+}
+
+.thoughtInput:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+  background: white;
+}
+
+.thoughtInput::placeholder {
+  color: #adb5bd;
+}
+
+.thoughtAnalysis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  min-height: 120px;
+}
+
+.containerAddThoughtButton {
+   display: flex;
+  align-items: center;
+  justify-content: center; 
+}
+
+.addThoughtButton {
+  width: auto;
+  height: 28px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 4px;
+  background: #4CAF50;
+  color: white;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+ 
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+
+.addThoughtButton:hover:not(:disabled) {
+  background: #45a049;
+}
+
+.addThoughtButton:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.deleteThoughtButton {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: #dc3545;
+  color: white;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.deleteThoughtButton:hover {
+  background: #c82333;
+}
