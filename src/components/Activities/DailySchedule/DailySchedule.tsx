@@ -32,11 +32,8 @@ const DailySchedule = () => {
   useEffect(() => {
     if (!date || !progress?.dailyProgress) return;
 
-    console.log('[LOAD] Trying to load schedule for date:', date);
-
     const dayProgress = progress.dailyProgress[date];
     if (!dayProgress?.exercises.exercises) {
-      console.log('[LOAD] No exercises found for date:', date);
       // Сброс к пустому расписанию
       setTimeSlots(prevSlots => prevSlots.map(slot => ({
         time: slot.time,
@@ -50,13 +47,10 @@ const DailySchedule = () => {
       exercise => exercise.type === 'daily-schedule' && exercise.id === SCHEDULE_ID
     ) as DailyScheduleExercise | undefined;
 
-    console.log('[LOAD] Found schedule for date:', date, schedule);
 
     if (schedule?.timeSlots) {
-      console.log('[LOAD] Setting timeslots from schedule');
       setTimeSlots(schedule.timeSlots);
     } else {
-      console.log('[LOAD] No schedule found, resetting to empty');
       setTimeSlots(prevSlots => prevSlots.map(slot => ({
         time: slot.time,
         planned: null,
@@ -68,10 +62,6 @@ const DailySchedule = () => {
   // Сохранение расписания при изменении
   const saveSchedule = useCallback(() => {
     if (!date) return;
-
-    console.log('[SAVE] Saving schedule for date:', date);
-    console.log('[SAVE] TimeSlots to save:', timeSlots);
-
     const exercise: DailyScheduleExercise = {
       type: 'daily-schedule',
       id: SCHEDULE_ID,
@@ -82,8 +72,6 @@ const DailySchedule = () => {
       timeSlots
     };
 
-    console.log('[SAVE] Dispatching exercise:', exercise);
-
     dispatch({
       type: 'SAVE_EXERCISE',
       exercise
@@ -93,12 +81,9 @@ const DailySchedule = () => {
   // Автоматическое сохранение при изменении timeSlots
   useEffect(() => {
     const hasActivities = timeSlots.some(slot => slot.planned?.text || slot.actual?.text);
-    console.log('[AUTO-SAVE] TimeSlots changed, has activities:', hasActivities);
     
     if (date && hasActivities) {
-      console.log('[AUTO-SAVE] Starting save timeout for date:', date);
       const timeoutId = setTimeout(() => {
-        console.log('[AUTO-SAVE] Executing delayed save');
         saveSchedule();
       }, 1000);
       return () => clearTimeout(timeoutId);
@@ -106,7 +91,6 @@ const DailySchedule = () => {
   }, [timeSlots, saveSchedule, date]);
 
   const handleActivityChange = useCallback((index: number, text: string, type: 'planned' | 'actual') => {
-    console.log('[CHANGE] Activity change:', { index, text, type, date });
     
     setTimeSlots(prevSlots => {
       const newTimeSlots = [...prevSlots];
