@@ -1,121 +1,178 @@
 .calendar {
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+  background-color: #f5f5f5;
+  border-radius: 8px;
 }
 
 .calendar h2 {
-  text-align: center;
-  color: #333;
+  color: #2d3748;
+  font-size: 1.25rem;
   margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .emptyMessage {
   text-align: center;
-  color: #666;
-  font-size: 1.1rem;
-  margin-top: 40px;
+  color: #718096;
+  padding: 40px 0;
+  font-size: 1rem;
 }
 
 .days {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
 }
 
 .day {
-  background: #f5f5f5;
-  border-radius: 8px;
-  padding: 15px;
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  min-height: 100px;
+  cursor: default;
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.day.hasContent {
   cursor: pointer;
-  transition: all 0.3s ease;
+  background-color: #f0fff4;
+  border-color: #9ae6b4;
 }
 
-.day:hover {
-  background: #e8e8e8;
+.day.hasContent:hover {
+  box-shadow: 0 2px 4px rgba(72, 187, 120, 0.1);
+  transform: translateY(-1px);
+  background-color: #e6ffed;
 }
 
-.day.selected {
-  background: #e0e0e0;
+.dayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.day h3 {
-  margin: 0 0 10px 0;
-  color: #4CAF50;
-  font-size: 1.1rem;
-}
-
-.day h4 {
-  margin: 0 0 10px 0;
-  color: #666;
+.dayHeader h3 {
+  margin: 0;
+  color: #2d3748;
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.day h5 {
-  margin: 15px 0 10px 0;
-  color: #4CAF50;
-  font-size: 0.9rem;
-  font-weight: 600;
+.dayHeader span {
+  color: #2f855a;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .dayContent {
-  margin-top: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.indicator {
+  font-size: 0.85rem;
+  color: #38a169;
+  padding: 2px 0;
 }
 
 .details {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #ddd;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
 }
 
-.chapter, .test {
+.details h5 {
+  color: #2d3748;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+.chapter, .subChapter, .test {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  color: #333;
-}
-
-.chapter span:first-child, .test span:first-child {
-  flex: 1;
-  margin-right: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.chapter span:last-child, .test span:last-child {
-  color: #4CAF50;
-  font-weight: 500;
-  white-space: nowrap;
+  padding: 4px 0;
+  font-size: 0.85rem;
+  color: #4a5568;
 }
 
 .chapterGroup {
-  margin: 15px 0;
-  background: #fff;
-  border-radius: 6px;
-  padding: 10px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 8px 0;
+  padding: 8px;
+  background-color: #f8fafc;
+  border-radius: 4px;
 }
 
 .parentChapter {
-  font-weight: bold;
-  color: #2c3e50;
-  padding-bottom: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #eee;
+  color: #2d3748;
+  font-weight: 500;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .subChapter {
+  padding-left: 8px;
+  color: #718096;
+}
+
+.monthHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0 6px 15px;
-  color: #555;
-  font-size: 0.95em;
+  margin-bottom: 16px;
 }
 
-.test span:last-child {
-  color: #27ae60;
-  font-weight: bold;
+.monthHeader button {
+  background: none;
+  border: none;
+  color: #4a5568;
+  font-size: 1.25rem;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.monthHeader button:hover {
+  background-color: #e2e8f0;
+  color: #2d3748;
+}
+
+.monthTitle {
+  color: #2d3748;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.weekDay {
+  text-align: center;
+  color: #718096;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 4px;
+}
+
+.emptyDay {
+  background: transparent;
+  border: none;
+  pointer-events: none;
 } 

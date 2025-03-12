@@ -2,38 +2,18 @@ import { useState } from 'react';
 import { useProgress } from '../../store/ProgressContext';
 import styles from './ProgressCalendar.module.css';
 import chaptersData from '../ListOfChapters/chapters.json';
+import DayDetails from './DayDetails';
+import { ChapterMap, CalendarDayProgress } from './types';
 
-interface CalendarDayProgress {
-  date: string;
-  chapters: {
-    id: string;
-    title: string;
-    timeSpent: number;
-    parentChapter?: {
-      id: string;
-      title: string;
-      order: number;
-    };
-  }[];
-  tests?: {
-    type: string;
-    result: number;
-    title: string;
-  }[];
-}
-
-interface ChapterMap {
-  [key: string]: {
-    id: string;
-    title: string;
-    order: number;
-    sections: { id: string; title: string }[];
-  };
-}
+const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 const ProgressCalendar: React.FC = () => {
   const { progress } = useProgress();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  });
 
   // Создаем карту глав для быстрого поиска
   const chapterMap: ChapterMap = {};
@@ -61,7 +41,7 @@ const ProgressCalendar: React.FC = () => {
   };
 
   // Группируем прогресс по датам
-  const getDailyProgress = (): CalendarDayProgress[] => {
+  const getDailyProgress = (): { [key: string]: CalendarDayProgress } => {
     const dailyProgress: { [key: string]: CalendarDayProgress } = {};
 
     // Обрабатываем прогресс чтения
@@ -74,16 +54,13 @@ const ProgressCalendar: React.FC = () => {
           };
 
           Object.entries(dayProgress.chapters).forEach(([chapterId, chapterProgress]) => {
-            // Находим информацию о главе или подглаве
             let chapterTitle = '';
             const parentChapter = findParentChapter(chapterId);
             
             if (parentChapter) {
-              // Это подглава
               const section = chapterMap[parentChapter.id].sections.find(s => s.id === chapterId);
               chapterTitle = section?.title || chapterId;
             } else {
-              // Это основная глава
               chapterTitle = chapterMap[chapterId]?.title || chapterId;
             }
 
@@ -103,7 +80,6 @@ const ProgressCalendar: React.FC = () => {
             const bOrder = b.parentChapter?.order || chapterMap[b.id]?.order || 0;
             if (aOrder !== bOrder) return aOrder - bOrder;
             
-            // Если это подглавы одной главы, сортируем по их порядку в sections
             if (a.parentChapter && b.parentChapter && a.parentChapter.id === b.parentChapter.id) {
               const sections = chapterMap[a.parentChapter.id].sections;
               const aIndex = sections.findIndex(s => s.id === a.id);
@@ -116,7 +92,7 @@ const ProgressCalendar: React.FC = () => {
       });
     }
 
-    // Обработка тестов остается без изменений
+    // Обработка тестов
     if (progress?.testResults && progress.testResults.length > 0) {
       progress.testResults.forEach(test => {
         if (test.completedAt) {
@@ -139,9 +115,7 @@ const ProgressCalendar: React.FC = () => {
       });
     }
 
-    return Object.values(dailyProgress).sort((a, b) => 
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    return dailyProgress;
   };
 
   const formatTime = (seconds: number): string => {
@@ -150,9 +124,47 @@ const ProgressCalendar: React.FC = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const dailyProgress = getDailyProgress();
+  const getMonthDays = () => {
+    const [year, month] = currentMonth.split('-').map(Number);
+    const firstDay = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0);
+    
+    // Получаем день недели для первого дня месяца (0 = воскресенье)
+    let firstDayOfWeek = firstDay.getDay();
+    // Преобразуем в формат, где понедельник = 0
+    firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
 
-  if (dailyProgress.length === 0) {
+    const days = [];
+    
+    // Добавляем пустые дни в начале месяца
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Добавляем дни месяца
+    for (let i = 1; i <= lastDay.getDate(); i++) {
+      const date = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+      days.push(date);
+    }
+
+    return days;
+  };
+
+  const dailyProgress = getDailyProgress();
+  const monthDays = getMonthDays();
+
+  const changeMonth = (delta: number) => {
+    const [year, month] = currentMonth.split('-').map(Number);
+    const newDate = new Date(year, month - 1 + delta, 1);
+    setCurrentMonth(`${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}`);
+  };
+
+  const formatMonthTitle = () => {
+    const [year, month] = currentMonth.split('-').map(Number);
+    return new Date(year, month - 1).toLocaleString('ru-RU', { month: 'long', year: 'numeric' });
+  };
+
+  if (!progress) {
     return (
       <div className={styles.calendar}>
         <h2>Календарь прогресса</h2>
@@ -161,94 +173,68 @@ const ProgressCalendar: React.FC = () => {
     );
   }
 
-  // Группируем главы по родительским главам для отображения
-  const groupChaptersByParent = (chapters: CalendarDayProgress['chapters']) => {
-    const grouped: { [key: string]: typeof chapters } = {};
-    const standalone: typeof chapters = [];
-
-    chapters.forEach(chapter => {
-      if (chapter.parentChapter) {
-        const parentId = chapter.parentChapter.id;
-        if (!grouped[parentId]) {
-          grouped[parentId] = [];
-        }
-        grouped[parentId].push(chapter);
-      } else {
-        standalone.push(chapter);
-      }
-    });
-
-    return { grouped, standalone };
-  };
-
   return (
     <div className={styles.calendar}>
-      <h2>Календарь прогресса</h2>
+      <div className={styles.monthHeader}>
+        <button onClick={() => changeMonth(-1)}>&lt;</button>
+        <h2 className={styles.monthTitle}>{formatMonthTitle()}</h2>
+        <button onClick={() => changeMonth(1)}>&gt;</button>
+      </div>
+
+      <div className={styles.weekDays}>
+        {WEEKDAYS.map(day => (
+          <div key={day} className={styles.weekDay}>{day}</div>
+        ))}
+      </div>
+
       <div className={styles.days}>
-        {dailyProgress.map(day => (
-          <div 
-            key={day.date}
-            className={`${styles.day} ${selectedDate === day.date ? styles.selected : ''}`}
-            onClick={() => setSelectedDate(day.date === selectedDate ? null : day.date)}
-          >
-            <h3>{new Date(day.date).toLocaleDateString('ru-RU')}</h3>
-            <div className={styles.dayContent}>
-              {day.chapters.length > 0 && (
-                <h4>Время чтения: {formatTime(day.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</h4>
-              )}
-              {(day.tests?.length ?? 0) > 0 && (
-                <h4>Пройдено тестов: {day.tests?.length}</h4>
-              )}
-              {selectedDate === day.date && (
-                <div className={styles.details}>
-                  {day.chapters.length > 0 && (
-                    <>
-                      <h5>Главы:</h5>
-                      {(() => {
-                        const { grouped, standalone } = groupChaptersByParent(day.chapters);
-                        return (
-                          <>
-                            {standalone.map(chapter => (
-                              <div key={chapter.id} className={styles.chapter}>
-                                <span>{chapter.title}</span>
-                                <span>{formatTime(chapter.timeSpent)}</span>
-                              </div>
-                            ))}
-                            {Object.entries(grouped).map(([parentId, subChapters]) => (
-                              <div key={parentId} className={styles.chapterGroup}>
-                                <div className={styles.parentChapter}>
-                                  {chapterMap[parentId]?.title}
-                                </div>
-                                {subChapters.map(chapter => (
-                                  <div key={chapter.id} className={styles.subChapter}>
-                                    <span>{chapter.title}</span>
-                                    <span>{formatTime(chapter.timeSpent)}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            ))}
-                          </>
-                        );
-                      })()}
-                    </>
+        {monthDays.map((date, index) => {
+          if (!date) {
+            return <div key={`empty-${index}`} className={styles.emptyDay} />;
+          }
+
+          const dayProgress = dailyProgress[date];
+
+          return (
+            <div
+              key={date}
+              className={`${styles.day} ${dayProgress ? styles.hasContent : ''}`}
+              onClick={() => dayProgress && setSelectedDate(date)}
+            >
+              <div className={styles.dayHeader}>
+                <h3>{new Date(date).getDate()}</h3>
+                {dayProgress && (
+                  <span>{formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</span>
+                )}
+              </div>
+
+              {dayProgress && (
+                <div className={styles.dayContent}>
+                  {dayProgress.chapters.length > 0 && (
+                    <div className={styles.indicator}>
+                      <span>Глав: {dayProgress.chapters.length}</span>
+                    </div>
                   )}
-                  {(day.tests?.length ?? 0) > 0 && (
-                    <>
-                      <h5>Тесты:</h5>
-                      {day.tests?.map(test => (
-                        <div key={test.type} className={styles.test}>
-                          <span>{test.title}</span>
-                          <span>Результат: {test.result}</span>
-                        </div>
-                      ))}
-                    </>
+                  {(dayProgress.tests?.length ?? 0) > 0 && (
+                    <div className={styles.indicator}>
+                      <span>Тестов: {dayProgress.tests?.length}</span>
+                    </div>
                   )}
                 </div>
               )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      {selectedDate && dailyProgress[selectedDate] && (
+        <DayDetails
+          date={selectedDate}
+          dayProgress={dailyProgress[selectedDate]}
+          chapterMap={chapterMap}
+          onClose={() => setSelectedDate(null)}
+        />
+      )}
     </div>
   );
 };
