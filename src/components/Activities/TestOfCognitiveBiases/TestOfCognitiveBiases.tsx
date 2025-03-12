@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import { listOfQuestions } from './listOfQuestions';
 import { explanationOfFirstQuestion } from './explanationOfFirstQuestion';
 import styles from './TestOfCognitiveBiases.module.css';
+import { SurveyResult } from '../Survey/types';
 
 interface AnswerState {
   selectedAnswers: number[];
   isSubmitted: boolean;
 }
 
- const TestOfCognitiveBiases: React.FC = () => {
+interface TestOfCognitiveBiasesProps {
+  onComplete?: (result: SurveyResult) => void;
+}
+
+const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>(
     listOfQuestions.map(() => ({ selectedAnswers: [], isSubmitted: false }))
@@ -55,6 +60,19 @@ interface AnswerState {
       setShowExplanation(true);
     } else if (currentQuestion === listOfQuestions.length - 1) {
       setIsTestCompleted(true);
+      
+      // Сохраняем результат теста
+      const score = calculateTotalScore();
+      const result: SurveyResult = {
+        id: 'cognitive-biases-test',
+        name: 'Тест на понимание когнитивных искажений',
+        score,
+        maxScore: 100,
+        completed: true,
+        completedAt: new Date().toISOString()
+      };
+      
+      onComplete?.(result);
     }
   };
 

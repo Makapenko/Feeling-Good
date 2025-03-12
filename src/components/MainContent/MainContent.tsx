@@ -52,7 +52,7 @@ const MainContent: React.FC = () => {
     } else if (progress.specialContent === 'cognitive-biases') {
       return <ListOfCognitiveBiases />;
     } else if (progress.specialContent === 'cognitive-biases-test') {
-      return <TestOfCognitiveBiases />;
+      return <TestOfCognitiveBiases onComplete={handleTestComplete} />;
     } else if (progress.specialContent === 'three-columns-method') {
       return <ThreeColumnsMethod />;
     } else if (progress.specialContent === 'thought-diary') {
