@@ -128,7 +128,10 @@ function ListOfChapters() {
                   {hasSubchapters ? (
                     <>
                       <div 
-                        className={`${styles.chapterTitle} ${styles.accordion} ${isExpanded ? styles.expanded : ''} ${isChapterCompleted ? styles.completed : ''}`}
+                        className={`${styles.chapterTitle} ${styles.accordion} 
+                          ${isExpanded ? styles.expanded : ''} 
+                          ${isChapterCompleted ? styles.completed : ''}
+                          ${progress.currentChapter?.id === chapterId ? styles.active : ''}`}
                         onClick={() => toggleChapter(chapterId)}
                       >
                         <span>{chapter.title}</span>
@@ -147,6 +150,7 @@ function ListOfChapters() {
                                 ${styles.sectionItem} 
                                 ${!isSubchapterAvailable(chapter, index) ? styles.disabled : ''}
                                 ${isSubchapterCompleted(section.id) ? styles.completed : ''}
+                                ${progress.currentChapter?.id === section.id ? styles.active : ''}
                               `}
                             >
                               {section.title}
@@ -162,6 +166,7 @@ function ListOfChapters() {
                         ${styles.chapterItem} 
                         ${!isAvailable ? styles.disabled : ''}
                         ${isChapterCompleted ? styles.completed : ''}
+                        ${progress.currentChapter?.id === chapter.id ? styles.active : ''}
                       `}
                     >
                       {chapter.title}

@@ -2,27 +2,56 @@
   width: 300px;
   padding: 20px;
   background-color: #f5f5f5;
+  border-radius: 8px;
   height: calc(100vh - 60px);
   overflow-y: auto;
 }
 
+.sidebar h3 {
+  color: #2d3748;
+  font-size: 1.25rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.sidebar h4 {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin: 20px 0 15px;
+  font-weight: 500;
+}
+
 .chapterItem {
   cursor: pointer;
-  padding: 8px;
+  padding: 10px 15px;
   margin: 4px 0;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color: #4a5568;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 .chapterItem:hover {
-  background-color: #e0e0e0;
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
+.chapterItem.active {
+  background-color: #e2e8f0;
+  color: #2c5282;
+  font-weight: 500;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .chapterTitle {
-  padding: 8px;
+  padding: 10px 15px;
   margin: 4px 0;
   font-weight: 500;
-  color: #333;
+  color: #4a5568;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 1rem;
 }
 
 .accordion {
@@ -30,18 +59,27 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.2s;
-  border-radius: 4px;
+  transition: all 0.2s ease;
+  border-radius: 6px;
 }
 
 .accordion:hover {
-  background-color: #e0e0e0;
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
+.accordion.active {
+  background-color: #e2e8f0;
+  color: #2c5282;
+  font-weight: 500;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .arrow {
   font-size: 12px;
   margin-left: 8px;
   transition: transform 0.2s;
+  color: #718096;
 }
 
 .expanded .arrow {
@@ -67,6 +105,7 @@
   position: absolute;
   right: 8px;
   color: #4CAF50;
+  font-weight: 600;
 }
 
 .subSections {
@@ -90,18 +129,27 @@
 
 .sectionItem {
   cursor: pointer;
-  padding: 6px;
+  padding: 6px 15px;
   margin: 2px 0;
-  font-size: 0.9em;
-  color: #666;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  font-size: 0.95rem;
+  color: #718096;
+  border-radius: 6px;
+  transition: all 0.2s ease;
   position: relative;
   padding-right: 24px;
+  font-weight: 400;
 }
 
 .sectionItem:hover {
-  background-color: #e0e0e0;
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
+.sectionItem.active {
+  background-color: #e2e8f0;
+  color: #2c5282;
+  font-weight: 500;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .sectionItem.disabled {
@@ -115,4 +163,5 @@
 
 .sectionItem.completed {
   color: #4CAF50;
+  font-weight: 500;
 }

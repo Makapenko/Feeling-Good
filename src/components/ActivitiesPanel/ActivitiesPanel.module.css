@@ -7,6 +7,8 @@
 .title {
   margin-bottom: 20px;
   color: #2d3748;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .sections {
@@ -47,6 +49,7 @@
   border-radius: 6px;
   transition: all 0.2s ease;
   cursor: pointer;
+  font-weight: 400;
 }
 
 .specialTools button:hover {
@@ -70,18 +73,23 @@
 .activeTasksList h3 {
   color: #2d3748;
   margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .taskItem {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 15px;
   background-color: #f7fafc;
   border-radius: 6px;
   margin-bottom: 10px;
+  font-size: 1rem;
+  color: #4a5568;
+  font-weight: 400;
 }
 
 .taskItem span:last-child {
   color: #718096;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 } 
