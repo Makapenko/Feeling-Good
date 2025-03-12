@@ -24,14 +24,6 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
         },
         score: prevState.score - oldAnswerValue + newAnswerValue,
       };
-
-      console.log('Обновление ответа:', {
-        questionIndex,
-        newValue: newAnswerValue,
-        oldValue: oldAnswerValue,
-        newScore: newState.score
-      });
-
       return newState;
     });
   };
@@ -41,29 +33,18 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
       (result) => state.score >= result.minScore && state.score <= result.maxScore
     )?.description;
 
-    console.log('Получение результата:', {
-      currentScore: state.score,
-      foundResult: result
-    });
-
     return result;
   };
 
   const handleComplete = () => {
-    console.log('Начало завершения опроса');
     
     // Проверяем, что на все вопросы даны ответы
     const totalQuestions = config.parts.reduce((sum, part) => sum + part.questions.length, 0);
     const answeredQuestions = Object.keys(state.answers).length;
 
-    console.log('Проверка ответов:', {
-      totalQuestions,
-      answeredQuestions,
-      answers: state.answers
-    });
+    
 
     if (answeredQuestions < totalQuestions) {
-      console.log('Не все вопросы отвечены');
       alert('Пожалуйста, ответьте на все вопросы перед завершением опроса');
       return;
     }
@@ -84,8 +65,6 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
       completedAt: new Date().toISOString(),
       completed: true
     };
-
-    console.log('Сохранение результата:', result);
 
     // Вызываем колбэк с результатом
     onComplete?.(result);

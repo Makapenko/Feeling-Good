@@ -116,9 +116,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
             <div className={styles.section}>
               <h3>Тесты</h3>
               {(() => {
-                console.log('Отображение тестов:', dayProgress.tests);
                 return dayProgress.tests?.map(test => {
-                  console.log('Тест для отображения:', test);
                   return (
                     <div key={test.id} className={styles.test}>
                       <span>{test.title}</span>

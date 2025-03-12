@@ -145,7 +145,6 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
       };
 
     case 'SAVE_TEST_RESULT': {
-      console.log('Редьюсер: получен результат теста:', action.result);
 
       // Инициализируем массив тестов, если он не существует
       const currentTests = state.testResults || [];
@@ -155,22 +154,13 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
         test.completedAt.split('T')[0] === action.result.completedAt.split('T')[0]
       );
 
-      console.log('Поиск существующего теста:', {
-        existingTestIndex,
-        currentTests
-      });
-
       const updatedTestResults = [...currentTests];
       
       if (existingTestIndex !== -1) {
-        console.log('Обновление существующего результата теста');
         updatedTestResults[existingTestIndex] = action.result;
       } else {
-        console.log('Добавление нового результата теста');
         updatedTestResults.push(action.result);
       }
-
-      console.log('Обновленные результаты тестов:', updatedTestResults);
 
       return {
         ...state,

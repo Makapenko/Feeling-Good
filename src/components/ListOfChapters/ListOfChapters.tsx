@@ -81,14 +81,11 @@ function ListOfChapters() {
   };
 
   const handleChapterClick = async (path: string | undefined, chapterId: string, title: string) => {
-    console.log('Clicking chapter:', chapterId);
     
     if (path) {
       try {
-        console.log('Fetching from path:', path);
         const response = await fetch(path);
         const content = await response.text();
-        console.log('Loaded content length:', content.length);
         
         dispatch({
           type: 'SET_CURRENT_CHAPTER',

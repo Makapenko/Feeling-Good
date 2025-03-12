@@ -38,7 +38,6 @@ const MainContent: React.FC = () => {
   }, [progress.currentChapter?.id, dispatch]);
 
   const handleTestComplete = (result: SurveyResult) => {
-    console.log('MainContent: отправка результата теста:', result);
     dispatch({
       type: 'SAVE_TEST_RESULT',
       result
