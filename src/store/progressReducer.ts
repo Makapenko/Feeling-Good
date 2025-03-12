@@ -1,7 +1,15 @@
-import { UserProgress, ChapterProgress, SpecialContent, Chapter, DayProgress, TestResult } from '../types/progress.types';
+// import { DailyProgress } from './../types/progress.types';
+import {
+  UserProgress,
+  ChapterProgress,
+  SpecialContent,
+  Chapter,
+  DayProgress,
+  TestResult,
+} from '../types/progress.types';
 import { getCurrentDate } from '../utils/dateUtils';
 
-export type ProgressAction = 
+export type ProgressAction =
   | { type: 'SET_CURRENT_CHAPTER'; chapter: Chapter }
   | { type: 'START_CHAPTER_READING'; chapterId: string }
   | { type: 'UPDATE_CHAPTER_PROGRESS'; chapterId: string; timeSpent: number }
@@ -9,30 +17,36 @@ export type ProgressAction =
   | { type: 'SET_SPECIAL_CONTENT'; content: SpecialContent | null }
   | { type: 'SAVE_TEST_RESULT'; result: TestResult };
 
-export function progressReducer(state: UserProgress, action: ProgressAction): UserProgress {
+export function progressReducer(
+  state: UserProgress,
+  action: ProgressAction
+): UserProgress {
   const currentDate = getCurrentDate();
   const todayProgress: DayProgress = state.dailyProgress[currentDate] || {
     chapters: {},
-    exercises: []
+    exercises: [],
   };
 
   switch (action.type) {
     case 'SET_CURRENT_CHAPTER': {
       const chapters = state.chapters || [];
-      const existingChapterIndex = chapters.findIndex(ch => ch.id === action.chapter.id);
+      const existingChapterIndex = chapters.findIndex(
+        (ch) => ch.id === action.chapter.id
+      );
       const updatedChapters = [...chapters];
-      
-      const todayTimeSpent = todayProgress.chapters[action.chapter.id]?.timeSpent || 0;
-      
+
+      const todayTimeSpent =
+        todayProgress.chapters[action.chapter.id]?.timeSpent || 0;
+
       const newChapter = {
         ...action.chapter,
-        timeSpent: todayTimeSpent
+        timeSpent: todayTimeSpent,
       };
-      
+
       if (existingChapterIndex !== -1) {
         updatedChapters[existingChapterIndex] = {
           ...newChapter,
-          timeSpent: chapters[existingChapterIndex].timeSpent
+          timeSpent: chapters[existingChapterIndex].timeSpent,
         };
       } else {
         updatedChapters.push(newChapter);
@@ -42,52 +56,60 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
         ...state,
         currentChapter: newChapter,
         chapters: updatedChapters,
-        specialContent: null
+        specialContent: null,
       };
     }
 
     case 'START_CHAPTER_READING':
-      if (!state.currentChapter || state.currentChapter.id !== action.chapterId) {
+      if (
+        !state.currentChapter ||
+        state.currentChapter.id !== action.chapterId
+      ) {
         return state;
       }
       return {
         ...state,
         currentChapter: {
           ...state.currentChapter,
-          timeSpent: todayProgress.chapters[action.chapterId]?.timeSpent || 0
-        }
+          timeSpent: todayProgress.chapters[action.chapterId]?.timeSpent || 0,
+        },
       };
 
     case 'UPDATE_CHAPTER_PROGRESS': {
-      if (!state.currentChapter || state.currentChapter.id !== action.chapterId) {
+      if (
+        !state.currentChapter ||
+        state.currentChapter.id !== action.chapterId
+      ) {
         return state;
       }
 
       const updatedCurrentChapter = {
         ...state.currentChapter,
-        timeSpent: action.timeSpent
+        timeSpent: action.timeSpent,
       };
 
       const chapters = state.chapters || [];
-      const chaptersWithUpdatedTime = chapters.map(ch =>
+      const chaptersWithUpdatedTime = chapters.map((ch) =>
         ch.id === action.chapterId ? { ...ch, timeSpent: action.timeSpent } : ch
       );
 
-      const currentChapterProgress = todayProgress.chapters[action.chapterId] || {
+      const currentChapterProgress = todayProgress.chapters[
+        action.chapterId
+      ] || {
         id: action.chapterId,
         timeSpent: 0,
-        completed: false
+        completed: false,
       };
 
       const updatedTodayProgress: DayProgress = {
-            ...todayProgress,
-            chapters: {
-              ...todayProgress.chapters,
+        ...todayProgress,
+        chapters: {
+          ...todayProgress.chapters,
           [action.chapterId]: {
             ...currentChapterProgress,
-            timeSpent: action.timeSpent
-          }
-        }
+            timeSpent: action.timeSpent,
+          },
+        },
       };
 
       return {
@@ -96,13 +118,16 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
         chapters: chaptersWithUpdatedTime,
         dailyProgress: {
           ...state.dailyProgress,
-          [currentDate]: updatedTodayProgress
-        }
+          [currentDate]: updatedTodayProgress,
+        },
       };
     }
 
     case 'COMPLETE_CHAPTER': {
-      if (!state.currentChapter || state.currentChapter.id !== action.chapterId) {
+      if (
+        !state.currentChapter ||
+        state.currentChapter.id !== action.chapterId
+      ) {
         return state;
       }
 
@@ -110,19 +135,19 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
         id: action.chapterId,
         timeSpent: state.currentChapter.timeSpent,
         completed: true,
-        completedAt: new Date().toISOString()
+        completedAt: new Date().toISOString(),
       };
 
       const updatedTodayProgress: DayProgress = {
         ...todayProgress,
         chapters: {
           ...todayProgress.chapters,
-          [action.chapterId]: completedChapterProgress
-        }
+          [action.chapterId]: completedChapterProgress,
+        },
       };
 
       const chapters = state.chapters || [];
-      const chaptersWithCompleted = chapters.map(ch =>
+      const chaptersWithCompleted = chapters.map((ch) =>
         ch.id === action.chapterId ? { ...ch, completed: true } : ch
       );
 
@@ -132,8 +157,8 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
         chapters: chaptersWithCompleted,
         dailyProgress: {
           ...state.dailyProgress,
-          [currentDate]: updatedTodayProgress
-        }
+          [currentDate]: updatedTodayProgress,
+        },
       };
     }
 
@@ -141,21 +166,22 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
       return {
         ...state,
         specialContent: action.content,
-        currentChapter: null
+        currentChapter: null,
       };
 
     case 'SAVE_TEST_RESULT': {
-
-      // Инициализируем массив тестов, если он не существует
-      const currentTests = state.testResults || [];
+      const currentTests =
+        state.dailyProgress[currentDate].exercises.testResults || [];
 
       const existingTestIndex = currentTests.findIndex(
-        test => test.id === action.result.id && 
-        test.completedAt.split('T')[0] === action.result.completedAt.split('T')[0]
+        (test) =>
+          test.id === action.result.id &&
+          test.completedAt.split('T')[0] ===
+            action.result.completedAt.split('T')[0]
       );
 
       const updatedTestResults = [...currentTests];
-      
+
       if (existingTestIndex !== -1) {
         updatedTestResults[existingTestIndex] = action.result;
       } else {
@@ -164,11 +190,20 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
 
       return {
         ...state,
-        testResults: updatedTestResults
+        dailyProgress: {
+          ...state.dailyProgress,
+          [currentDate]: {
+            ...state.dailyProgress[currentDate],
+            exercises: {
+              ...state.dailyProgress[currentDate].exercises,
+              testResults: updatedTestResults,
+            },
+          },
+        },
       };
     }
 
     default:
       return state;
   }
-} 
+}

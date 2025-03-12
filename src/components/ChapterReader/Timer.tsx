@@ -24,7 +24,6 @@ const Timer: React.FC<TimerProps> = ({ onTimeUpdate, chapterId }) => {
 
   // Обновление времени
   useEffect(() => {
-    console.log('Starting timer for chapter', chapterId);
     let isMounted = true;
 
     const saveCurrentTime = (time: number) => {

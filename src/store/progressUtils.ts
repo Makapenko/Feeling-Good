@@ -20,11 +20,13 @@ export function getInitialState(): UserProgress {
     dailyProgress: {
       [today]: {
         chapters: {},
-        exercises: []
+        exercises: {
+          testResults: []
+        }
       }
     },
     chapters: [],
-    testResults: []
+    
   };
 }
 
@@ -39,6 +41,5 @@ export function getInitialProgress(): UserProgress {
     specialContent: null,
     dailyProgress: {},
     chapters: [],
-    testResults: []
   };
 } 

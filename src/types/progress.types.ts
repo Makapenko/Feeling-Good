@@ -7,16 +7,6 @@ export interface TestResult {
   completedAt: string; // ISO date string
 }
 
-export interface Exercise {
-  id: string;
-  name: string;
-  status: 'not_started' | 'in_progress' | 'completed';
-  timeSpent: number; // in seconds
-  targetTime?: number; // optional target time in seconds
-  startedAt?: string;
-  completedAt?: string;
-}
-
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')
   timeSpent: number; // in seconds
@@ -29,7 +19,9 @@ export interface DayProgress {
   chapters: {
     [chapterId: string]: ChapterProgress;
   };
-  exercises: Exercise[];
+  exercises: {
+    testResults: TestResult[]
+  };
 }
 
 export interface DailyProgress {
@@ -73,7 +65,4 @@ export interface UserProgress {
   specialContent: SpecialContent;
   dailyProgress: DailyProgress;
   chapters: Chapter[];
-  testResults: TestResult[];
 }
-
-// Удалить пример использования и оставить только типы 

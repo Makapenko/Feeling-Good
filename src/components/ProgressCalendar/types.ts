@@ -9,7 +9,7 @@ export interface ChapterMap {
 
 export interface CalendarDayProgress {
   date: string;
-  chapters: {
+  chapters?: {
     id: string;
     title: string;
     timeSpent: number;
@@ -19,9 +19,14 @@ export interface CalendarDayProgress {
       order: number;
     };
   }[];
-  tests?: {
-    type: string;
-    result: number;
-    title: string;
-  }[];
-} 
+  exercises: {
+    testResults?: {
+      id: string;
+      name: string;
+      completed: boolean;
+      score?: number;
+      maxScore?: number;
+      completedAt: string;
+    }[];
+  };
+}

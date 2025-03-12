@@ -50,13 +50,16 @@ const ProgressCalendar: React.FC = () => {
         if (dayProgress.chapters && Object.keys(dayProgress.chapters).length > 0) {
           dailyProgress[date] = {
             date,
-            chapters: []
+            chapters: [],
+            exercises: {
+              testResults: []
+            }
           };
 
           Object.entries(dayProgress.chapters).forEach(([chapterId, chapterProgress]) => {
             let chapterTitle = '';
             const parentChapter = findParentChapter(chapterId);
-            
+
             if (parentChapter) {
               const section = chapterMap[parentChapter.id].sections.find(s => s.id === chapterId);
               chapterTitle = section?.title || chapterId;
@@ -79,7 +82,7 @@ const ProgressCalendar: React.FC = () => {
             const aOrder = a.parentChapter?.order || chapterMap[a.id]?.order || 0;
             const bOrder = b.parentChapter?.order || chapterMap[b.id]?.order || 0;
             if (aOrder !== bOrder) return aOrder - bOrder;
-            
+
             if (a.parentChapter && b.parentChapter && a.parentChapter.id === b.parentChapter.id) {
               const sections = chapterMap[a.parentChapter.id].sections;
               const aIndex = sections.findIndex(s => s.id === a.id);
@@ -89,32 +92,34 @@ const ProgressCalendar: React.FC = () => {
             return 0;
           });
         }
-      });
-    }
 
-    // Обработка тестов
-    if (progress?.testResults && progress.testResults.length > 0) {
-      progress.testResults.forEach(test => {
-        if (test.completedAt) {
-          const testDate = test.completedAt.split('T')[0];
-          if (!dailyProgress[testDate]) {
-            dailyProgress[testDate] = {
-              date: testDate,
-              chapters: [],
-              tests: []
-            };
-          }
-          
-          dailyProgress[testDate].tests = dailyProgress[testDate].tests || [];
-          dailyProgress[testDate].tests.push({
-            type: test.id,
-            result: test.score || 0,
-            title: test.name
+        // Обработка тестов
+        if (dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0) {
+          dayProgress.exercises.testResults.forEach(test => {
+            // if (test.completedAt) {
+              if (!dailyProgress[date]) {
+                dailyProgress[date] = {
+                  date,
+                  chapters: [],
+                  exercises: {
+                    testResults: []
+                  }
+              }
+
+              dailyProgress[date].exercises.testResults = dailyProgress[date].exercises.testResults || [];
+              dailyProgress[date].exercises.testResults.push({
+                id,
+                name,
+                completed,
+                score,
+                maxScore,
+                completedAt,
+              });
+            // }
           });
         }
       });
     }
-
     return dailyProgress;
   };
 
@@ -128,19 +133,19 @@ const ProgressCalendar: React.FC = () => {
     const [year, month] = currentMonth.split('-').map(Number);
     const firstDay = new Date(year, month - 1, 1);
     const lastDay = new Date(year, month, 0);
-    
+
     // Получаем день недели для первого дня месяца (0 = воскресенье)
     let firstDayOfWeek = firstDay.getDay();
     // Преобразуем в формат, где понедельник = 0
     firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
 
     const days = [];
-    
+
     // Добавляем пустые дни в начале месяца
     for (let i = 0; i < firstDayOfWeek; i++) {
       days.push(null);
     }
-    
+
     // Добавляем дни месяца
     for (let i = 1; i <= lastDay.getDate(); i++) {
       const date = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
@@ -217,7 +222,7 @@ const ProgressCalendar: React.FC = () => {
                   )}
                   {(dayProgress.tests?.length ?? 0) > 0 && (
                     <div className={styles.indicator}>
-                      <span>Тестов: {dayProgress.tests?.length}</span>
+                      <span>Тестов: {dayProgress.exercises.testResults.length}</span>
                     </div>
                   )}
                 </div>
