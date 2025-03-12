@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import styles from './ThoughtDiary.module.css';
 import { ThoughtInput } from './ThoughtInput/ThoughtInput';
-import { ThoughtRecord, AutomaticThought } from './types';
+import { AutomaticThought } from './types';
 import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
@@ -38,7 +38,7 @@ const ThoughtDiary: React.FC = () => {
       exercises
         .filter(exercise => exercise.type === 'thought-diary' && exercise.id === DIARY_ID)
         .forEach(exercise => {
-          if ('records' in exercise) {
+          if ('records' in exercise && exercise.type === 'thought-diary') {
             allDayRecords.push(...exercise.records.map(record => ({
               ...record,
               date
@@ -155,7 +155,7 @@ const ThoughtDiary: React.FC = () => {
       );
       
       // Объединяем существующие записи с новой
-      const updatedRecords = todayExercise && 'records' in todayExercise
+      const updatedRecords = todayExercise && 'records' in todayExercise && todayExercise.type === 'thought-diary'
         ? [...todayExercise.records, newRecord]
         : [newRecord];
 
