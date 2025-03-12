@@ -1,6 +1,7 @@
 import { SurveyConfig } from "../types";
 
 export const burnsConfig: SurveyConfig = {
+  id: "burns-checklist",
   title: "Опросник депрессии Бернса",
   answers: [
     { value: 0, label: "Ни разу" },

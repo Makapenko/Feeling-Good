@@ -16,8 +16,11 @@ interface DayDetailsProps {
       };
     }[];
     tests?: {
-      type: string;
+      id: string;
+      name: string;
       result: number;
+      score: number;
+      maxScore?: number;
       title: string;
     }[];
   };
@@ -112,12 +115,18 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           {(dayProgress.tests?.length ?? 0) > 0 && (
             <div className={styles.section}>
               <h3>Тесты</h3>
-              {dayProgress.tests?.map(test => (
-                <div key={test.type} className={styles.test}>
-                  <span>{test.title}</span>
-                  <span>Результат: {test.result}</span>
-                </div>
-              ))}
+              {(() => {
+                console.log('Отображение тестов:', dayProgress.tests);
+                return dayProgress.tests?.map(test => {
+                  console.log('Тест для отображения:', test);
+                  return (
+                    <div key={test.id} className={styles.test}>
+                      <span>{test.title}</span>
+                      <span>Результат: {test.result} {test.maxScore ? `из ${test.maxScore}` : ''}</span>
+                    </div>
+                  );
+                });
+              })()}
             </div>
           )}
         </div>

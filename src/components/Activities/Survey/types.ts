@@ -8,10 +8,23 @@ export interface Part {
 }
 
 export interface SurveyConfig {
+  id: string;
   title: string;
-  parts: Part[];
-  answers: Answer[];
-  results: Result[];
+  parts: {
+    title: string;
+    questions: {
+      text: string;
+    }[];
+  }[];
+  answers: {
+    label: string;
+    value: number;
+  }[];
+  results: {
+    minScore: number;
+    maxScore: number;
+    description: string;
+  }[];
 }
 
 export interface Answer {
@@ -27,5 +40,16 @@ export interface Result {
 
 export interface SurveyState {
   score: number;
-  answers: { [key: number]: number };
+  answers: {
+    [questionIndex: number]: number;
+  };
+}
+
+export interface SurveyResult {
+  id: string;
+  name: string;
+  score: number;
+  maxScore?: number;
+  completedAt: string;
+  completed: boolean;
 } 

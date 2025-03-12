@@ -1,12 +1,13 @@
-import { UserProgress, ChapterProgress, SpecialContent, Chapter, DayProgress } from '../types/progress.types';
+import { UserProgress, ChapterProgress, SpecialContent, Chapter, DayProgress, TestResult } from '../types/progress.types';
 import { getCurrentDate } from '../utils/dateUtils';
 
-export type ProgressAction =
+export type ProgressAction = 
   | { type: 'SET_CURRENT_CHAPTER'; chapter: Chapter }
   | { type: 'START_CHAPTER_READING'; chapterId: string }
   | { type: 'UPDATE_CHAPTER_PROGRESS'; chapterId: string; timeSpent: number }
   | { type: 'COMPLETE_CHAPTER'; chapterId: string }
-  | { type: 'SET_SPECIAL_CONTENT'; content: SpecialContent | null };
+  | { type: 'SET_SPECIAL_CONTENT'; content: SpecialContent | null }
+  | { type: 'SAVE_TEST_RESULT'; result: TestResult };
 
 export function progressReducer(state: UserProgress, action: ProgressAction): UserProgress {
   const currentDate = getCurrentDate();
@@ -79,9 +80,9 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
       };
 
       const updatedTodayProgress: DayProgress = {
-        ...todayProgress,
-        chapters: {
-          ...todayProgress.chapters,
+            ...todayProgress,
+            chapters: {
+              ...todayProgress.chapters,
           [action.chapterId]: {
             ...currentChapterProgress,
             timeSpent: action.timeSpent
@@ -104,7 +105,7 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
       if (!state.currentChapter || state.currentChapter.id !== action.chapterId) {
         return state;
       }
-      
+
       const completedChapterProgress: ChapterProgress = {
         id: action.chapterId,
         timeSpent: state.currentChapter.timeSpent,
@@ -142,6 +143,40 @@ export function progressReducer(state: UserProgress, action: ProgressAction): Us
         specialContent: action.content,
         currentChapter: null
       };
+
+    case 'SAVE_TEST_RESULT': {
+      console.log('Редьюсер: получен результат теста:', action.result);
+
+      // Инициализируем массив тестов, если он не существует
+      const currentTests = state.testResults || [];
+
+      const existingTestIndex = currentTests.findIndex(
+        test => test.id === action.result.id && 
+        test.completedAt.split('T')[0] === action.result.completedAt.split('T')[0]
+      );
+
+      console.log('Поиск существующего теста:', {
+        existingTestIndex,
+        currentTests
+      });
+
+      const updatedTestResults = [...currentTests];
+      
+      if (existingTestIndex !== -1) {
+        console.log('Обновление существующего результата теста');
+        updatedTestResults[existingTestIndex] = action.result;
+      } else {
+        console.log('Добавление нового результата теста');
+        updatedTestResults.push(action.result);
+      }
+
+      console.log('Обновленные результаты тестов:', updatedTestResults);
+
+      return {
+        ...state,
+        testResults: updatedTestResults
+      };
+    }
 
     default:
       return state;

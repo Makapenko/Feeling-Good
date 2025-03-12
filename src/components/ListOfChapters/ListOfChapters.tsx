@@ -95,7 +95,7 @@ function ListOfChapters() {
           chapter: {
             id: chapterId,
             title: title,
-            content,
+          content,
             timeSpent: 0,
             completed: false
           }
@@ -123,7 +123,7 @@ function ListOfChapters() {
               const isExpanded = expandedChapters.has(chapterId);
               const isChapterCompleted = areAllSubchaptersCompleted(chapter);
               
-              return (
+                return (
                 <li key={chapterId}>
                   {hasSubchapters ? (
                     <>
@@ -168,15 +168,15 @@ function ListOfChapters() {
                         ${isChapterCompleted ? styles.completed : ''}
                         ${progress.currentChapter?.id === chapter.id ? styles.active : ''}
                       `}
-                    >
-                      {chapter.title}
+                  >
+                    {chapter.title}
                     </div>
                   )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
       ))}
     </aside>
   );

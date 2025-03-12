@@ -5,6 +5,7 @@ import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
 
 import Survey, { burnsConfig, novacoConfig } from '../Activities/Survey';
+import { SurveyResult } from '../Activities/Survey/types';
 import ListOfCognitiveBiases from '../Activities/ListOfCognitiveBiases/ListOfCognitiveBiases';
 import TestOfCognitiveBiases from '../Activities/TestOfCognitiveBiases/TestOfCognitiveBiases';
 import ThreeColumnsMethod  from '../Activities/ThreeColumnsMethod/ThreeColumnsMethod';
@@ -36,11 +37,19 @@ const MainContent: React.FC = () => {
     }
   }, [progress.currentChapter?.id, dispatch]);
 
+  const handleTestComplete = (result: SurveyResult) => {
+    console.log('MainContent: отправка результата теста:', result);
+    dispatch({
+      type: 'SAVE_TEST_RESULT',
+      result
+    });
+  };
+
   const renderContent = () => {
     if (progress.specialContent === 'burns-checklist') {
-      return <Survey config={burnsConfig} />;
+      return <Survey config={burnsConfig} onComplete={handleTestComplete} />;
     } else if (progress.specialContent === 'novaco-scale') {
-      return <Survey config={novacoConfig} />;
+      return <Survey config={novacoConfig} onComplete={handleTestComplete} />;
     } else if (progress.specialContent === 'cognitive-biases') {
       return <ListOfCognitiveBiases />;
     } else if (progress.specialContent === 'cognitive-biases-test') {
