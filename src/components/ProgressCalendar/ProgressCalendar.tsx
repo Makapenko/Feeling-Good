@@ -47,15 +47,17 @@ const ProgressCalendar: React.FC = () => {
     // Обрабатываем прогресс чтения
     if (progress?.dailyProgress) {
       Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
-        if (dayProgress.chapters && Object.keys(dayProgress.chapters).length > 0) {
-          dailyProgress[date] = {
-            date,
-            chapters: [],
-            exercises: {
-              testResults: []
-            }
-          };
+        // Инициализируем структуру для текущей даты
+        dailyProgress[date] = {
+          date,
+          chapters: [],
+          exercises: {
+            testResults: []
+          }
+        };
 
+        // Обрабатываем прогресс по главам
+        if (dayProgress.chapters && Object.keys(dayProgress.chapters).length > 0) {
           Object.entries(dayProgress.chapters).forEach(([chapterId, chapterProgress]) => {
             let chapterTitle = '';
             const parentChapter = findParentChapter(chapterId);
@@ -67,56 +69,42 @@ const ProgressCalendar: React.FC = () => {
               chapterTitle = chapterMap[chapterId]?.title || chapterId;
             }
 
-            if (chapterProgress) {
-              dailyProgress[date].chapters.push({
-                id: chapterId,
-                title: chapterTitle,
-                timeSpent: chapterProgress.timeSpent,
-                parentChapter: parentChapter
-              });
-            }
+            dailyProgress[date].chapters?.push({
+              id: chapterId,
+              title: chapterTitle,
+              timeSpent: chapterProgress.timeSpent,
+              parentChapter: parentChapter
+            });
           });
 
           // Сортируем главы по порядку в книге
-          dailyProgress[date].chapters.sort((a, b) => {
-            const aOrder = a.parentChapter?.order || chapterMap[a.id]?.order || 0;
-            const bOrder = b.parentChapter?.order || chapterMap[b.id]?.order || 0;
-            if (aOrder !== bOrder) return aOrder - bOrder;
+          if (dailyProgress[date].chapters) {
+            dailyProgress[date].chapters.sort((a, b) => {
+              const aOrder = a.parentChapter?.order || chapterMap[a.id]?.order || 0;
+              const bOrder = b.parentChapter?.order || chapterMap[b.id]?.order || 0;
+              if (aOrder !== bOrder) return aOrder - bOrder;
 
-            if (a.parentChapter && b.parentChapter && a.parentChapter.id === b.parentChapter.id) {
-              const sections = chapterMap[a.parentChapter.id].sections;
-              const aIndex = sections.findIndex(s => s.id === a.id);
-              const bIndex = sections.findIndex(s => s.id === b.id);
-              return aIndex - bIndex;
-            }
-            return 0;
-          });
+              if (a.parentChapter && b.parentChapter && a.parentChapter.id === b.parentChapter.id) {
+                const sections = chapterMap[a.parentChapter.id].sections;
+                const aIndex = sections.findIndex(s => s.id === a.id);
+                const bIndex = sections.findIndex(s => s.id === b.id);
+                return aIndex - bIndex;
+              }
+              return 0;
+            });
+          }
         }
 
         // Обработка тестов
         if (dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0) {
-          dayProgress.exercises.testResults.forEach(test => {
-            // if (test.completedAt) {
-              if (!dailyProgress[date]) {
-                dailyProgress[date] = {
-                  date,
-                  chapters: [],
-                  exercises: {
-                    testResults: []
-                  }
-              }
-
-              dailyProgress[date].exercises.testResults = dailyProgress[date].exercises.testResults || [];
-              dailyProgress[date].exercises.testResults.push({
-                id,
-                name,
-                completed,
-                score,
-                maxScore,
-                completedAt,
-              });
-            // }
-          });
+          dailyProgress[date].exercises.testResults = dayProgress.exercises.testResults.map(test => ({
+            id: test.id,
+            name: test.name,
+            completed: test.completed,
+            score: test.score,
+            maxScore: test.maxScore,
+            completedAt: test.completedAt
+          }));
         }
       });
     }
@@ -208,19 +196,19 @@ const ProgressCalendar: React.FC = () => {
             >
               <div className={styles.dayHeader}>
                 <h3>{new Date(date).getDate()}</h3>
-                {dayProgress && (
+                {dayProgress && dayProgress.chapters && (
                   <span>{formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</span>
                 )}
               </div>
 
               {dayProgress && (
                 <div className={styles.dayContent}>
-                  {dayProgress.chapters.length > 0 && (
+                  {dayProgress.chapters && dayProgress.chapters.length > 0 && (
                     <div className={styles.indicator}>
                       <span>Глав: {dayProgress.chapters.length}</span>
                     </div>
                   )}
-                  {(dayProgress.tests?.length ?? 0) > 0 && (
+                  {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
                     <div className={styles.indicator}>
                       <span>Тестов: {dayProgress.exercises.testResults.length}</span>
                     </div>

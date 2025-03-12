@@ -1,29 +1,10 @@
 import React from 'react';
 import styles from './DayDetails.module.css';
-import { ChapterMap } from './types';
+import { ChapterMap, CalendarDayProgress } from './types';
 
 interface DayDetailsProps {
   date: string;
-  dayProgress: {
-    chapters: {
-      id: string;
-      title: string;
-      timeSpent: number;
-      parentChapter?: {
-        id: string;
-        title: string;
-        order: number;
-      };
-    }[];
-    tests?: {
-      id: string;
-      name: string;
-      result: number;
-      score: number;
-      maxScore?: number;
-      title: string;
-    }[];
-  };
+  dayProgress: CalendarDayProgress;
   chapterMap: ChapterMap;
   onClose: () => void;
 }
@@ -35,7 +16,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const groupChaptersByParent = (chapters: typeof dayProgress.chapters) => {
+  const groupChaptersByParent = (chapters: NonNullable<typeof dayProgress.chapters>) => {
     const grouped: { [key: string]: typeof chapters } = {};
     const standalone: typeof chapters = [];
 
@@ -70,17 +51,17 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           <div className={styles.summary}>
             <div className={styles.stat}>
               <span>Время чтения</span>
-              <strong>{formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</strong>
+              <strong>{dayProgress.chapters && formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</strong>
             </div>
-            {(dayProgress.tests?.length ?? 0) > 0 && (
+            {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
               <div className={styles.stat}>
                 <span>Пройдено тестов</span>
-                <strong>{dayProgress.tests?.length}</strong>
+                <strong>{dayProgress.exercises.testResults.length}</strong>
               </div>
             )}
           </div>
 
-          {dayProgress.chapters.length > 0 && (
+          {dayProgress.chapters && dayProgress.chapters.length > 0 && (
             <div className={styles.section}>
               <h3>Прочитанные главы</h3>
               {(() => {
@@ -112,19 +93,18 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
             </div>
           )}
 
-          {(dayProgress.tests?.length ?? 0) > 0 && (
+          {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
             <div className={styles.section}>
               <h3>Тесты</h3>
-              {(() => {
-                return dayProgress.tests?.map(test => {
-                  return (
-                    <div key={test.id} className={styles.test}>
-                      <span>{test.title}</span>
-                      <span>Результат: {test.result} {test.maxScore ? `из ${test.maxScore}` : ''}</span>
-                    </div>
-                  );
-                });
-              })()}
+              {dayProgress.exercises.testResults.map(test => (
+                <div key={test.id} className={styles.test}>
+                  <span>{test.name}</span>
+                  <span>
+                    {test.score !== undefined && `Результат: ${test.score}`}
+                    {test.maxScore !== undefined && ` из ${test.maxScore}`}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
         </div>
