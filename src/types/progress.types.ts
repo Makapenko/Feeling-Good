@@ -9,6 +9,29 @@ export interface TestResult {
   completedAt: string; // ISO date string
 }
 
+export interface ThoughtDiaryRecord {
+  situation: string;
+  emotions: Array<{ name: string; intensity: number }>;
+  automaticThoughts: Array<{
+    thought: string;
+    cognitiveDistortions: string[];
+    rationalResponse: string;
+  }>;
+  result: {
+    emotions: Array<{ name: string; intensity: number }>;
+  };
+  timestamp: string;
+}
+
+export interface ThoughtDiaryExercise {
+  type: 'thought-diary';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: ThoughtDiaryRecord[];
+}
+
 export interface ThreeColumnsExercise {
   type: 'three-columns-method';
   id: string;
@@ -18,7 +41,7 @@ export interface ThreeColumnsExercise {
   records: ThoughtRecord[];
 }
 
-export type Exercise = ThreeColumnsExercise;
+export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

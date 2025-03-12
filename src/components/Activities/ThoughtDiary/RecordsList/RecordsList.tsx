@@ -1,64 +1,75 @@
 import React from 'react';
-import { ThoughtRecord } from '../types';
 import styles from './RecordsList.module.css';
+import { ThoughtDiaryRecord } from '../../../../types/progress.types';
 
 interface RecordsListProps {
-  records: ThoughtRecord[];
+  records: Array<ThoughtDiaryRecord & { date: string }>;
 }
 
 export const RecordsList: React.FC<RecordsListProps> = ({ records }) => {
+  if (records.length === 0) {
+    return null;
+  }
+
   return (
     <div className={styles.recordsList}>
+      <h3>История записей</h3>
       {records.map((record, index) => (
-        <div key={index} className={styles.recordContainer}>
-          <div className={styles.situationHeader}>
-            <h4>Ситуация:</h4>
-            <p>{record.situation}</p>
+        <div key={index} className={styles.record}>
+          <div className={styles.header}>
+            <span className={styles.date}>
+              {new Date(record.date).toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long'
+              })}
+              {' '}
+              {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </span>
           </div>
-          
-          <div className={styles.emotionsContainer}>
-            <div className={styles.emotionsHeader}>
-              <h4>Начальные эмоции:</h4>
-              <div className={styles.emotions}>
+
+          <div className={styles.content}>
+            <div className={styles.section}>
+              <h4>Ситуация</h4>
+              <p>{record.situation}</p>
+            </div>
+
+            <div className={styles.section}>
+              <h4>Эмоции</h4>
+              <ul>
                 {record.emotions.map((emotion, i) => (
-                  <span key={i} className={styles.emotion}>
-                    {emotion.name}: {emotion.intensity}%
-                  </span>
+                  <li key={i}>
+                    {emotion.name} - {emotion.intensity}%
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-          </div>
 
-          <table className={styles.thoughtsTable}>
-            <thead>
-              <tr>
-                <th>Автоматические мысли</th>
-                <th>Искажения</th>
-                <th>Рациональный ответ</th>
-              </tr>
-            </thead>
-            <tbody>
+            <div className={styles.section}>
+              <h4>Мысли и ответы</h4>
               {record.automaticThoughts.map((thought, i) => (
-                <tr key={i}>
-                  <td>{thought.thought}</td>
-                  <td>{thought.cognitiveDistortions.join(', ')}</td>
-                  <td>{thought.rationalResponse}</td>
-                </tr>
+                <div key={i} className={styles.thought}>
+                  <p><strong>Автоматическая мысль:</strong> {thought.thought}</p>
+                  <p><strong>Когнитивные искажения:</strong> {thought.cognitiveDistortions.join(', ')}</p>
+                  <p><strong>Рациональный ответ:</strong> {thought.rationalResponse}</p>
+                </div>
               ))}
-            </tbody>
-          </table>
-
-          <div className={styles.emotionsContainer}>
-            <div className={styles.emotionsHeader}>
-              <h4>Конечные эмоции:</h4>
-              <div className={styles.emotions}>
-                {record.result.emotions.map((emotion, i) => (
-                  <span key={i} className={styles.emotion}>
-                    {emotion.name}: {emotion.intensity}%
-                  </span>
-                ))}
-              </div>
             </div>
+
+            {record.result.emotions.length > 0 && (
+              <div className={styles.section}>
+                <h4>Результат</h4>
+                <ul>
+                  {record.result.emotions.map((emotion, i) => (
+                    <li key={i}>
+                      {emotion.name} - {emotion.intensity}%
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       ))}

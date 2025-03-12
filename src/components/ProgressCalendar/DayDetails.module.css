@@ -128,19 +128,55 @@
   gap: 15px;
 }
 
-.recordContent .column {
+.column {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.recordContent strong {
+.column strong {
   color: #444;
   font-size: 0.9em;
 }
 
-.recordContent p {
+.column p {
   margin: 0;
   white-space: pre-wrap;
   color: #333;
+}
+
+.column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.column li {
+  color: #4a5568;
+  margin-bottom: 4px;
+}
+
+.thought {
+  background-color: #f7fafc;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.thought:last-child {
+  margin-bottom: 0;
+}
+
+.thought p {
+  margin: 0 0 8px 0;
+  color: #4a5568;
+}
+
+.thought p:last-child {
+  margin-bottom: 0;
+}
+
+.thought strong {
+  color: #2d3748;
+  font-size: 0.9em;
 } 

@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styles from './ThoughtDiary.module.css';
 import { ThoughtInput } from './ThoughtInput/ThoughtInput';
 import { ThoughtRecord, AutomaticThought } from './types';
 import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
+import { useProgress } from '../../../store/ProgressContext';
+import { ThoughtDiaryRecord } from '../../../types/progress.types';
+
+const DIARY_ID = 'thought-diary';
 
 // TODO валидация перед сохранением, стили, сохранение 
 
- const ThoughtDiary: React.FC = () => {
-  const [records, setRecords] = useState<ThoughtRecord[]>([]);
-  const [currentRecord, setCurrentRecord] = useState<ThoughtRecord>({
+const ThoughtDiary: React.FC = () => {
+  const { progress, dispatch } = useProgress();
+  const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtDiaryRecord, 'timestamp'>>({
     situation: '',
     emotions: [],
     automaticThoughts: [{
@@ -22,6 +26,30 @@ import { EmotionsSection } from './EmotionsSection/EmotionsSection';
       emotions: []
     }
   });
+
+  // Получаем все записи из прогресса
+  const allRecords = useMemo(() => {
+    if (!progress?.dailyProgress) return [];
+    
+    const allDayRecords: Array<ThoughtDiaryRecord & { date: string }> = [];
+    
+    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
+      const exercises = dayProgress.exercises.exercises || [];
+      exercises
+        .filter(exercise => exercise.type === 'thought-diary' && exercise.id === DIARY_ID)
+        .forEach(exercise => {
+          if ('records' in exercise) {
+            allDayRecords.push(...exercise.records.map(record => ({
+              ...record,
+              date
+            })));
+          }
+        });
+    });
+    
+    // Сортируем по дате и времени (новые сверху)
+    return allDayRecords.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  }, [progress]);
 
   const [newEmotion, setNewEmotion] = useState({ name: '', intensity: 0 });
   const [resultEmotion, setResultEmotion] = useState({ name: '', intensity: 0 });
@@ -113,7 +141,38 @@ import { EmotionsSection } from './EmotionsSection/EmotionsSection';
       currentRecord.automaticThoughts[0].cognitiveDistortions.length > 0 &&
       currentRecord.automaticThoughts[0].rationalResponse
     ) {
-      setRecords([...records, currentRecord]);
+      const newRecord: ThoughtDiaryRecord = {
+        ...currentRecord,
+        timestamp: new Date().toISOString()
+      };
+
+      // Получаем текущую дату
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Получаем существующие записи за сегодня
+      const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
+        exercise => exercise.type === 'thought-diary' && exercise.id === DIARY_ID
+      );
+      
+      // Объединяем существующие записи с новой
+      const updatedRecords = todayExercise && 'records' in todayExercise
+        ? [...todayExercise.records, newRecord]
+        : [newRecord];
+
+      // Сохраняем в редюсер
+      dispatch({
+        type: 'SAVE_EXERCISE',
+        exercise: {
+          type: 'thought-diary',
+          id: DIARY_ID,
+          name: 'Дневник автоматических мыслей',
+          completed: true,
+          completedAt: new Date().toISOString(),
+          records: updatedRecords
+        }
+      });
+
+      // Очищаем форму
       setCurrentRecord({
         situation: '',
         emotions: [],
@@ -126,6 +185,7 @@ import { EmotionsSection } from './EmotionsSection/EmotionsSection';
           emotions: []
         }
       });
+      setShowValidation(false);
     }
   };
 
@@ -229,7 +289,7 @@ import { EmotionsSection } from './EmotionsSection/EmotionsSection';
         </div>
       )}
 
-      <RecordsList records={records} />
+      <RecordsList records={allRecords} />
     </div>
   );
 }; 

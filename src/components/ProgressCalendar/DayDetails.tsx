@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -73,11 +73,64 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderThoughtDiaryExercise = (exercise: ThoughtDiaryExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.recordsList}>
+          {exercise.records.map((record, index) => (
+            <div key={index} className={styles.record}>
+              <div className={styles.recordTime}>
+                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </div>
+              <div className={styles.recordContent}>
+                <div className={styles.column}>
+                  <strong>Ситуация:</strong>
+                  <p>{record.situation}</p>
+                </div>
+                <div className={styles.column}>
+                  <strong>Эмоции:</strong>
+                  <ul>
+                    {record.emotions.map((emotion, i) => (
+                      <li key={i}>{emotion.name} - {emotion.intensity}%</li>
+                    ))}
+                  </ul>
+                </div>
+                {record.automaticThoughts.map((thought, i) => (
+                  <div key={i} className={styles.thought}>
+                    <p><strong>Автоматическая мысль:</strong> {thought.thought}</p>
+                    <p><strong>Когнитивные искажения:</strong> {thought.cognitiveDistortions.join(', ')}</p>
+                    <p><strong>Рациональный ответ:</strong> {thought.rationalResponse}</p>
+                  </div>
+                ))}
+                {record.result.emotions.length > 0 && (
+                  <div className={styles.column}>
+                    <strong>Результат:</strong>
+                    <ul>
+                      {record.result.emotions.map((emotion, i) => (
+                        <li key={i}>{emotion.name} - {emotion.intensity}%</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
         case 'three-columns-method':
           return renderThreeColumnsExercise(exercise);
+        case 'thought-diary':
+          return renderThoughtDiaryExercise(exercise);
         default:
           return null;
       }
@@ -162,6 +215,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
               ))}
             </div>
           )}
+
           {dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0 && (
             <div className={styles.section}>
               <h3>Упражнения</h3>
