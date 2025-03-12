@@ -6,6 +6,7 @@ import {
   Chapter,
   DayProgress,
   TestResult,
+  Exercise
 } from '../types/progress.types';
 import { getCurrentDate } from '../utils/dateUtils';
 
@@ -15,7 +16,8 @@ export type ProgressAction =
   | { type: 'UPDATE_CHAPTER_PROGRESS'; chapterId: string; timeSpent: number }
   | { type: 'COMPLETE_CHAPTER'; chapterId: string }
   | { type: 'SET_SPECIAL_CONTENT'; content: SpecialContent | null }
-  | { type: 'SAVE_TEST_RESULT'; result: TestResult };
+  | { type: 'SAVE_TEST_RESULT'; result: TestResult }
+  | { type: 'SAVE_EXERCISE'; exercise: Exercise };
 
 export function progressReducer(
   state: UserProgress,
@@ -24,7 +26,10 @@ export function progressReducer(
   const currentDate = getCurrentDate();
   const todayProgress: DayProgress = state.dailyProgress[currentDate] || {
     chapters: {},
-    exercises: [],
+    exercises: {
+      testResults: [],
+      exercises: []
+    }
   };
 
   switch (action.type) {
@@ -170,14 +175,12 @@ export function progressReducer(
       };
 
     case 'SAVE_TEST_RESULT': {
-      const currentTests =
-        state.dailyProgress[currentDate].exercises.testResults || [];
+      const currentTests = todayProgress.exercises.testResults || [];
 
       const existingTestIndex = currentTests.findIndex(
         (test) =>
           test.id === action.result.id &&
-          test.completedAt.split('T')[0] ===
-            action.result.completedAt.split('T')[0]
+          test.completedAt.split('T')[0] === action.result.completedAt.split('T')[0]
       );
 
       const updatedTestResults = [...currentTests];
@@ -193,10 +196,42 @@ export function progressReducer(
         dailyProgress: {
           ...state.dailyProgress,
           [currentDate]: {
-            ...state.dailyProgress[currentDate],
+            ...todayProgress,
             exercises: {
-              ...state.dailyProgress[currentDate].exercises,
+              ...todayProgress.exercises,
               testResults: updatedTestResults,
+            },
+          },
+        },
+      };
+    }
+
+    case 'SAVE_EXERCISE': {
+      const currentExercises = todayProgress.exercises.exercises || [];
+
+      const existingExerciseIndex = currentExercises.findIndex(
+        (exercise) =>
+          exercise.id === action.exercise.id &&
+          exercise.completedAt.split('T')[0] === action.exercise.completedAt.split('T')[0]
+      );
+
+      const updatedExercises = [...currentExercises];
+
+      if (existingExerciseIndex !== -1) {
+        updatedExercises[existingExerciseIndex] = action.exercise;
+      } else {
+        updatedExercises.push(action.exercise);
+      }
+
+      return {
+        ...state,
+        dailyProgress: {
+          ...state.dailyProgress,
+          [currentDate]: {
+            ...todayProgress,
+            exercises: {
+              ...todayProgress.exercises,
+              exercises: updatedExercises,
             },
           },
         },

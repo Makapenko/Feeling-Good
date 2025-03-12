@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './DayDetails.module.css';
-import { ChapterMap, CalendarDayProgress } from './types';
+import { ChapterMap } from './types';
+import { CalendarDayProgress } from './types';
+import { Exercise, ThreeColumnsExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -35,6 +37,53 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     return { grouped, standalone };
   };
 
+  const renderThreeColumnsExercise = (exercise: ThreeColumnsExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.recordsList}>
+          {exercise.records.map((record, index) => (
+            <div key={index} className={styles.record}>
+              <div className={styles.recordTime}>
+                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </div>
+              <div className={styles.recordContent}>
+                <div className={styles.column}>
+                  <strong>Автоматическая мысль:</strong>
+                  <p>{record.leftColumn}</p>
+                </div>
+                {record.cognitiveDistortion.length > 0 && (
+                  <div className={styles.column}>
+                    <strong>Когнитивные искажения:</strong>
+                    <p>{record.cognitiveDistortion.join(', ')}</p>
+                  </div>
+                )}
+                <div className={styles.column}>
+                  <strong>Рациональный ответ:</strong>
+                  <p>{record.rightColumn}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderExercises = (exercises: Exercise[]) => {
+    return exercises.map(exercise => {
+      switch (exercise.type) {
+        case 'three-columns-method':
+          return renderThreeColumnsExercise(exercise);
+        default:
+          return null;
+      }
+    });
+  };
+
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
@@ -57,6 +106,12 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
               <div className={styles.stat}>
                 <span>Пройдено тестов</span>
                 <strong>{dayProgress.exercises.testResults.length}</strong>
+              </div>
+            )}
+            {dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0 && (
+              <div className={styles.stat}>
+                <span>Выполнено упражнений</span>
+                <strong>{dayProgress.exercises.exercises.length}</strong>
               </div>
             )}
           </div>
@@ -105,6 +160,12 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
                   </span>
                 </div>
               ))}
+            </div>
+          )}
+          {dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0 && (
+            <div className={styles.section}>
+              <h3>Упражнения</h3>
+              {renderExercises(dayProgress.exercises.exercises)}
             </div>
           )}
         </div>

@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ThreeColumnsBase.module.css';
 import { CognitiveDistortions } from '../ThoughtDiary/CognitiveDistortions/CognitiveDistortions';
-
-interface ThoughtRecord {
-  leftColumn: string;
-  cognitiveDistortion: string[];
-  rightColumn: string;
-}
+import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
 
 interface ThreeColumnsBaseProps {
   title: string;
@@ -16,6 +11,8 @@ interface ThreeColumnsBaseProps {
   rightColumnTitle: string;
   rightColumnPlaceholder: string;
   showCognitiveDistortions?: boolean;
+  methodId: string;
+  onSave?: (result: ThreeColumnsMethodResult) => void;
 }
 
 export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
@@ -25,10 +22,12 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   leftColumnPlaceholder,
   rightColumnTitle,
   rightColumnPlaceholder,
-  showCognitiveDistortions = true
+  showCognitiveDistortions = true,
+  methodId,
+  onSave
 }) => {
   const [records, setRecords] = useState<ThoughtRecord[]>([]);
-  const [currentRecord, setCurrentRecord] = useState<ThoughtRecord>({
+  const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp'>>({
     leftColumn: '',
     cognitiveDistortion: [],
     rightColumn: '',
@@ -36,12 +35,29 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
 
   const handleAddRecord = () => {
     if (currentRecord.leftColumn && currentRecord.rightColumn) {
-      setRecords([...records, currentRecord]);
+      const newRecord: ThoughtRecord = {
+        ...currentRecord,
+        timestamp: new Date().toISOString()
+      };
+      const newRecords = [...records, newRecord];
+      setRecords(newRecords);
       setCurrentRecord({
         leftColumn: '',
         cognitiveDistortion: [],
         rightColumn: '',
       });
+
+      // Сохраняем результат
+      if (onSave) {
+        const result: ThreeColumnsMethodResult = {
+          id: methodId,
+          name: title,
+          completed: true,
+          completedAt: new Date().toISOString(),
+          records: newRecords
+        };
+        onSave(result);
+      }
     }
   };
 

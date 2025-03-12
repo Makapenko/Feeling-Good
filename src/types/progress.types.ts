@@ -1,3 +1,5 @@
+import { ThoughtRecord } from '../components/Activities/ThreeColumnsBase/types';
+
 export interface TestResult {
   id: string;
   name: string;
@@ -6,6 +8,17 @@ export interface TestResult {
   maxScore?: number;
   completedAt: string; // ISO date string
 }
+
+export interface ThreeColumnsExercise {
+  type: 'three-columns-method';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: ThoughtRecord[];
+}
+
+export type Exercise = ThreeColumnsExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')
@@ -20,7 +33,8 @@ export interface DayProgress {
     [chapterId: string]: ChapterProgress;
   };
   exercises: {
-    testResults: TestResult[]
+    testResults: TestResult[];
+    exercises: Exercise[];
   };
 }
 

@@ -106,6 +106,11 @@ const ProgressCalendar: React.FC = () => {
             completedAt: test.completedAt
           }));
         }
+
+        // Обработка упражнений
+        if (dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0) {
+          dailyProgress[date].exercises.exercises = dayProgress.exercises.exercises;
+        }
       });
     }
     return dailyProgress;
@@ -211,6 +216,11 @@ const ProgressCalendar: React.FC = () => {
                   {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
                     <div className={styles.indicator}>
                       <span>Тестов: {dayProgress.exercises.testResults.length}</span>
+                    </div>
+                  )}
+                  {dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0 && (
+                    <div className={styles.indicator}>
+                      <span>Упражнений: {dayProgress.exercises.exercises.length}</span>
                     </div>
                   )}
                 </div>
