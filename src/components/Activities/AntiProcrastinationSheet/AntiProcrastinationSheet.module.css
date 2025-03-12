@@ -291,6 +291,28 @@ h2 {
   color: #2c3e50;
 }
 
+.completeButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column: span 2;
+}
+
+.completeButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.completeButton:hover {
+  background-color: #45a049;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 16px;
@@ -314,4 +336,57 @@ h2 {
   .deleteButton {
     justify-self: end;
   }
+}
+
+.ratingInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ratingInput:disabled::-webkit-slider-thumb {
+  background: #a0aec0;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.ratingInput:disabled::-moz-range-thumb {
+  background: #a0aec0;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.ratingInput.better::-webkit-slider-thumb {
+  background: #22c55e !important;
+}
+
+.ratingInput.better::-moz-range-thumb {
+  background: #22c55e !important;
+}
+
+.ratingInput.worse::-webkit-slider-thumb {
+  background: #ef4444 !important;
+}
+
+.ratingInput.worse::-moz-range-thumb {
+  background: #ef4444 !important;
+}
+
+.ratingInput.same::-webkit-slider-thumb {
+  background: #eab308 !important;
+}
+
+.ratingInput.same::-moz-range-thumb {
+  background: #eab308 !important;
+}
+
+.stats .better {
+  color: #22c55e;
+}
+
+.stats .worse {
+  color: #ef4444;
+}
+
+.stats .same {
+  color: #eab308;
 } 

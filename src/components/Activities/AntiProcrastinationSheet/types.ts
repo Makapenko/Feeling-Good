@@ -5,6 +5,7 @@ export interface Task {
   expectedPleasure: number;
   actualDifficulty: number | null;
   actualPleasure: number | null;
+  completed: boolean;
 }
 
 export interface TaskStep {
