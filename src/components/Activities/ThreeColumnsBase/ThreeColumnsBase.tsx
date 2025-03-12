@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './ThreeColumnsBase.module.css';
 import { CognitiveDistortions } from '../ThoughtDiary/CognitiveDistortions/CognitiveDistortions';
 import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
+import { useProgress } from '../../../store/ProgressContext';
 
 interface ThreeColumnsBaseProps {
   title: string;
@@ -26,12 +27,36 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   methodId,
   onSave
 }) => {
-  const [records, setRecords] = useState<ThoughtRecord[]>([]);
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp'>>({
     leftColumn: '',
     cognitiveDistortion: [],
     rightColumn: '',
   });
+
+  // Получаем все записи из прогресса
+  const { progress } = useProgress();
+  
+  // Собираем все записи метода трёх колонок
+  const allRecords = useMemo(() => {
+    if (!progress?.dailyProgress) return [];
+    
+    const allDayRecords: Array<ThoughtRecord & { date: string }> = [];
+    
+    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
+      const exercises = dayProgress.exercises.exercises || [];
+      exercises
+        .filter(exercise => exercise.type === 'three-columns-method' && exercise.id === methodId)
+        .forEach(exercise => {
+          allDayRecords.push(...exercise.records.map(record => ({
+            ...record,
+            date
+          })));
+        });
+    });
+    
+    // Сортируем по дате и времени (новые сверху)
+    return allDayRecords.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  }, [progress, methodId]);
 
   const handleAddRecord = () => {
     if (currentRecord.leftColumn && currentRecord.rightColumn) {
@@ -39,13 +64,17 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
         ...currentRecord,
         timestamp: new Date().toISOString()
       };
-      const newRecords = [...records, newRecord];
-      setRecords(newRecords);
-      setCurrentRecord({
-        leftColumn: '',
-        cognitiveDistortion: [],
-        rightColumn: '',
-      });
+
+      // Получаем текущую дату
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Получаем существующие записи за сегодня
+      const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
+        exercise => exercise.type === 'three-columns-method' && exercise.id === methodId
+      );
+      
+      // Объединяем существующие записи с новой
+      const updatedRecords = todayExercise ? [...todayExercise.records, newRecord] : [newRecord];
 
       // Сохраняем результат
       if (onSave) {
@@ -54,10 +83,17 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
           name: title,
           completed: true,
           completedAt: new Date().toISOString(),
-          records: newRecords
+          records: updatedRecords
         };
         onSave(result);
       }
+
+      // Очищаем форму
+      setCurrentRecord({
+        leftColumn: '',
+        cognitiveDistortion: [],
+        rightColumn: '',
+      });
     }
   };
 
@@ -120,7 +156,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
             </tr>
           </thead>
           <tbody>
-            {records.map((record, index) => (
+            {allRecords.map((record, index) => (
               <tr key={index}>
                 <td>{record.leftColumn}</td>
                 {showCognitiveDistortions && <td>{record.cognitiveDistortion.join(', ')}</td>}
