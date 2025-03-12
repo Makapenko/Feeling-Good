@@ -1,10 +1,15 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import styles from './DailySchedule.module.css';
 import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
+import { useProgress } from '../../../store/ProgressContext';
+import { DailyScheduleExercise } from '../../../types/progress.types';
+
+const SCHEDULE_ID = 'daily-schedule';
 
 const DailySchedule = () => {
-  const [date, setDate] = useState<string>('');
+  const { progress, dispatch } = useProgress();
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
     { time: '8:00-9:00', planned: null, actual: null },
     { time: '9:00-10:00', planned: null, actual: null },
@@ -23,7 +28,86 @@ const DailySchedule = () => {
     { time: '22:00-23:00', planned: null, actual: null },
   ]);
 
+  // Загрузка расписания при изменении даты
+  useEffect(() => {
+    if (!date || !progress?.dailyProgress) return;
+
+    console.log('[LOAD] Trying to load schedule for date:', date);
+
+    const dayProgress = progress.dailyProgress[date];
+    if (!dayProgress?.exercises.exercises) {
+      console.log('[LOAD] No exercises found for date:', date);
+      // Сброс к пустому расписанию
+      setTimeSlots(prevSlots => prevSlots.map(slot => ({
+        time: slot.time,
+        planned: null,
+        actual: null
+      })));
+      return;
+    }
+
+    const schedule = dayProgress.exercises.exercises.find(
+      exercise => exercise.type === 'daily-schedule' && exercise.id === SCHEDULE_ID
+    ) as DailyScheduleExercise | undefined;
+
+    console.log('[LOAD] Found schedule for date:', date, schedule);
+
+    if (schedule?.timeSlots) {
+      console.log('[LOAD] Setting timeslots from schedule');
+      setTimeSlots(schedule.timeSlots);
+    } else {
+      console.log('[LOAD] No schedule found, resetting to empty');
+      setTimeSlots(prevSlots => prevSlots.map(slot => ({
+        time: slot.time,
+        planned: null,
+        actual: null
+      })));
+    }
+  }, [date, progress?.dailyProgress]);
+
+  // Сохранение расписания при изменении
+  const saveSchedule = useCallback(() => {
+    if (!date) return;
+
+    console.log('[SAVE] Saving schedule for date:', date);
+    console.log('[SAVE] TimeSlots to save:', timeSlots);
+
+    const exercise: DailyScheduleExercise = {
+      type: 'daily-schedule',
+      id: SCHEDULE_ID,
+      name: 'Расписание дня',
+      completed: true,
+      completedAt: new Date().toISOString(),
+      date: date, // Используем выбранную дату
+      timeSlots
+    };
+
+    console.log('[SAVE] Dispatching exercise:', exercise);
+
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise
+    });
+  }, [dispatch, date, timeSlots]);
+
+  // Автоматическое сохранение при изменении timeSlots
+  useEffect(() => {
+    const hasActivities = timeSlots.some(slot => slot.planned?.text || slot.actual?.text);
+    console.log('[AUTO-SAVE] TimeSlots changed, has activities:', hasActivities);
+    
+    if (date && hasActivities) {
+      console.log('[AUTO-SAVE] Starting save timeout for date:', date);
+      const timeoutId = setTimeout(() => {
+        console.log('[AUTO-SAVE] Executing delayed save');
+        saveSchedule();
+      }, 1000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [timeSlots, saveSchedule, date]);
+
   const handleActivityChange = useCallback((index: number, text: string, type: 'planned' | 'actual') => {
+    console.log('[CHANGE] Activity change:', { index, text, type, date });
+    
     setTimeSlots(prevSlots => {
       const newTimeSlots = [...prevSlots];
       if (!newTimeSlots[index][type]) {

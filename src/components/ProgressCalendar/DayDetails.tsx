@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -124,6 +124,56 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderDailyScheduleExercise = (exercise: DailyScheduleExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.scheduleTable}>
+          <div className={styles.scheduleHeaders}>
+            <div className={styles.timeHeader}>Время</div>
+            <div className={styles.columnHeader}>План</div>
+            <div className={styles.columnHeader}>Факт</div>
+          </div>
+          {exercise.timeSlots.map((slot, index) => (
+            <div key={index} className={styles.scheduleRow}>
+              <div className={styles.timeCell}>{slot.time}</div>
+              <div className={styles.activityCell}>
+                {slot.planned && (
+                  <div className={styles.activity}>
+                    <p>{slot.planned.text}</p>
+                    <div className={styles.ratings}>
+                      {slot.planned.type.isTask && (
+                        <span className={styles.rating}>⚡ {slot.planned.ratings.task}</span>
+                      )}
+                      {slot.planned.type.isPleasure && (
+                        <span className={styles.rating}>😊 {slot.planned.ratings.pleasure}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className={styles.activityCell}>
+                {slot.actual && (
+                  <div className={styles.activity}>
+                    <p>{slot.actual.text}</p>
+                    <div className={styles.ratings}>
+                      {slot.actual.type.isTask && (
+                        <span className={styles.rating}>⚡ {slot.actual.ratings.task}</span>
+                      )}
+                      {slot.actual.type.isPleasure && (
+                        <span className={styles.rating}>😊 {slot.actual.ratings.pleasure}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
@@ -131,6 +181,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderThreeColumnsExercise(exercise);
         case 'thought-diary':
           return renderThoughtDiaryExercise(exercise);
+        case 'daily-schedule':
+          return renderDailyScheduleExercise(exercise);
         default:
           return null;
       }

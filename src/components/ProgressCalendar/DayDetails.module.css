@@ -179,4 +179,74 @@
 .thought strong {
   color: #2d3748;
   font-size: 0.9em;
+}
+
+.scheduleTable {
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.scheduleHeaders {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+.timeHeader, .columnHeader {
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.scheduleRow {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr;
+  border-bottom: 1px solid #eee;
+}
+
+.scheduleRow:last-child {
+  border-bottom: none;
+}
+
+.timeCell {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-right: 1px solid #eee;
+  font-weight: 500;
+}
+
+.activityCell {
+  padding: 10px;
+  border-right: 1px solid #eee;
+}
+
+.activityCell:last-child {
+  border-right: none;
+}
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.activity p {
+  margin: 0;
+  color: #333;
+}
+
+.ratings {
+  display: flex;
+  gap: 10px;
+}
+
+.rating {
+  font-size: 0.9em;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 } 

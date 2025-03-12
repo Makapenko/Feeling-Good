@@ -41,7 +41,31 @@ export interface ThreeColumnsExercise {
   records: ThoughtRecord[];
 }
 
-export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise;
+export interface DailyScheduleRecord {
+  time: string;
+  planned: {
+    text: string;
+    type: { isTask: boolean; isPleasure: boolean };
+    ratings: { task: number | null; pleasure: number | null };
+  } | null;
+  actual: {
+    text: string;
+    type: { isTask: boolean; isPleasure: boolean };
+    ratings: { task: number | null; pleasure: number | null };
+  } | null;
+}
+
+export interface DailyScheduleExercise {
+  type: 'daily-schedule';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  date: string;
+  timeSlots: DailyScheduleRecord[];
+}
+
+export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

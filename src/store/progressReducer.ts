@@ -207,15 +207,25 @@ export function progressReducer(
     }
 
     case 'SAVE_EXERCISE': {
-      const currentExercises = todayProgress.exercises.exercises || [];
+      // Определяем дату для сохранения
+      const targetDate = action.exercise.type === 'daily-schedule' 
+        ? action.exercise.date 
+        : currentDate;
 
-      const existingExerciseIndex = currentExercises.findIndex(
+      const targetDayProgress = state.dailyProgress[targetDate] || {
+        chapters: {},
+        exercises: {
+          testResults: [],
+          exercises: []
+        }
+      };
+
+      const existingExerciseIndex = targetDayProgress.exercises.exercises.findIndex(
         (exercise) =>
-          exercise.id === action.exercise.id &&
-          exercise.completedAt.split('T')[0] === action.exercise.completedAt.split('T')[0]
+          exercise.id === action.exercise.id
       );
 
-      const updatedExercises = [...currentExercises];
+      const updatedExercises = [...targetDayProgress.exercises.exercises];
 
       if (existingExerciseIndex !== -1) {
         updatedExercises[existingExerciseIndex] = action.exercise;
@@ -227,10 +237,10 @@ export function progressReducer(
         ...state,
         dailyProgress: {
           ...state.dailyProgress,
-          [currentDate]: {
-            ...todayProgress,
+          [targetDate]: {
+            ...targetDayProgress,
             exercises: {
-              ...todayProgress.exercises,
+              ...targetDayProgress.exercises,
               exercises: updatedExercises,
             },
           },
