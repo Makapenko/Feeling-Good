@@ -85,7 +85,26 @@ export interface AntiProcrastinationExercise {
   records: AntiProcrastinationTask[];
 }
 
-export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | AntiProcrastinationExercise;
+export interface PleasureSheetActivity {
+  id: string;
+  text: string;
+  participants: string;
+  expectedPleasure: number;
+  actualPleasure: number | null;
+  timestamp: string;
+  date: string;
+}
+
+export interface PleasureSheetExercise {
+  type: 'pleasure-sheet';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: PleasureSheetActivity[];
+}
+
+export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | AntiProcrastinationExercise | PleasureSheetExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

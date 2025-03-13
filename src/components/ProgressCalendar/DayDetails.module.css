@@ -287,4 +287,77 @@
 
 .taskRatings strong {
   color: #475569;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.activity {
+  background-color: white;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.activityContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityTime {
+  color: #64748b;
+  font-size: 0.9em;
+}
+
+.activityDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.activityDetails p {
+  margin: 0;
+  color: #1e293b;
+}
+
+.activityDetails strong {
+  color: #475569;
+  margin-right: 8px;
+}
+
+.activityRatings {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.activityRatings div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.activityRatings strong {
+  color: #475569;
+  font-weight: 500;
+}
+
+.better {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.worse {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.same {
+  color: #eab308;
+  font-weight: 500;
 } 

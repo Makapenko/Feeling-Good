@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -209,6 +209,52 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const getComparisonClass = (actual: number | null, expected: number) => {
+    if (actual === null) return '';
+    if (actual === expected) return styles.same;
+    return actual > expected ? styles.better : styles.worse;
+  };
+
+  const renderPleasureSheetExercise = (exercise: PleasureSheetExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.activityList}>
+          {exercise.records.map((activity, index) => (
+            <div key={index} className={styles.activity}>
+              <div className={styles.activityContent}>
+                <div className={styles.activityTime}>
+                  {new Date(activity.timestamp).toLocaleTimeString('ru-RU', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </div>
+                <div className={styles.activityDetails}>
+                  <p><strong>Занятие:</strong> {activity.text}</p>
+                  <p><strong>С кем:</strong> {activity.participants}</p>
+                  <div className={styles.activityRatings}>
+                    <div>
+                      <strong>Предполагаемое удовольствие:</strong> 
+                      <span>{activity.expectedPleasure}%</span>
+                    </div>
+                    {activity.actualPleasure !== null && (
+                      <div>
+                        <strong>Реальное удовольствие:</strong> 
+                        <span className={getComparisonClass(activity.actualPleasure, activity.expectedPleasure)}>
+                          {activity.actualPleasure}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
@@ -220,6 +266,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderDailyScheduleExercise(exercise);
         case 'anti-procrastination':
           return renderAntiProcrastinationExercise(exercise);
+        case 'pleasure-sheet':
+          return renderPleasureSheetExercise(exercise);
         default:
           return null;
       }
