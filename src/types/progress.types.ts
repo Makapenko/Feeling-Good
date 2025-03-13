@@ -120,7 +120,24 @@ export interface NoButsExercise {
   records: NoButsPair[];
 }
 
-export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise;
+export interface SupportStatement {
+  id: string;
+  devaluing: string;
+  supporting: string;
+  timestamp: string;
+}
+
+export interface SelfSupportExercise {
+  type: 'self-support';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: SupportStatement[];
+}
+
+export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
+  AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

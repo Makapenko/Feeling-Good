@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -283,6 +283,34 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderSelfSupportExercise = (exercise: SelfSupportExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.statementsTable}>
+          <div className={styles.tableHeader}>
+            <div className={styles.devaluingColumn}>Обесценивающее утверждение</div>
+            <div className={styles.arrowColumn}></div>
+            <div className={styles.supportingColumn}>Поддерживающее утверждение</div>
+          </div>
+          <div className={styles.tableBody}>
+            {exercise.records.map((statement, index) => (
+              <div key={index} className={styles.tableRow}>
+                <div className={styles.devaluingColumn}>
+                  <p>{statement.devaluing}</p>
+                </div>
+                <div className={styles.arrowColumn}>→</div>
+                <div className={styles.supportingColumn}>
+                  <p>{statement.supporting}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
@@ -298,6 +326,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderPleasureSheetExercise(exercise);
         case 'no-buts':
           return renderNoButsExercise(exercise);
+        case 'self-support':
+          return renderSelfSupportExercise(exercise);
         default:
           return null;
       }

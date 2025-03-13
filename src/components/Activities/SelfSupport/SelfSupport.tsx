@@ -1,12 +1,58 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styles from './SelfSupport.module.css';
-import { SupportStatement } from './types';
+import { SupportStatement } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
+import { useProgress } from '../../../store/ProgressContext';
+
+const SHEET_ID = 'self-support';
 
 const SelfSupport = () => {
+  const { progress, dispatch } = useProgress();
   const [statements, setStatements] = useState<SupportStatement[]>([]);
   const [newDevaluing, setNewDevaluing] = useState('');
   const [newSupporting, setNewSupporting] = useState('');
+  // TODO - добавить дату в таблицу старых записей
+  
+  // Получаем все записи из прогресса
+  const allStatements = useMemo(() => {
+    if (!progress?.dailyProgress) return [];
+    
+    const allDayStatements: Array<SupportStatement & { date: string }> = [];
+    
+    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
+      const exercises = dayProgress.exercises.exercises || [];
+      exercises
+        .filter(exercise => exercise.type === 'self-support' && exercise.id === SHEET_ID)
+        .forEach(exercise => {
+          if ('records' in exercise) {
+            allDayStatements.push(...(exercise.records as SupportStatement[]).map(record => ({
+              ...record,
+              date
+            })));
+          }
+        });
+    });
+    
+    // Сортируем по дате и времени (новые сверху)
+    return allDayStatements.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  }, [progress]);
+
+  const saveToProgress = (updatedStatements: SupportStatement[]) => {
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise: {
+        type: 'self-support',
+        id: SHEET_ID,
+        name: 'Самоподдержка',
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records: updatedStatements.map(statement => ({
+          ...statement,
+          timestamp: new Date().toISOString()
+        }))
+      }
+    });
+  };
 
   const handleAddStatement = () => {
     if (!newDevaluing.trim()) return;
@@ -14,28 +60,42 @@ const SelfSupport = () => {
     const statement: SupportStatement = {
       id: uuidv4(),
       devaluing: newDevaluing,
-      supporting: newSupporting
+      supporting: newSupporting,
+      timestamp: new Date().toISOString()
     };
 
-    setStatements([...statements, statement]);
+    const updatedStatements = [...statements, statement];
+    setStatements(updatedStatements);
     setNewDevaluing('');
     setNewSupporting('');
+    saveToProgress(updatedStatements);
   };
 
   const handleUpdateStatement = (id: string, field: 'devaluing' | 'supporting', value: string) => {
-    setStatements(statements.map(statement =>
+    const updatedStatements = statements.map(statement =>
       statement.id === id ? { ...statement, [field]: value } : statement
-    ));
+    );
+    setStatements(updatedStatements);
+    saveToProgress(updatedStatements);
   };
 
   const handleDeleteStatement = (id: string) => {
-    setStatements(statements.filter(statement => statement.id !== id));
+    const updatedStatements = statements.filter(statement => statement.id !== id);
+    setStatements(updatedStatements);
+    saveToProgress(updatedStatements);
   };
 
   return (
     <div className={styles.container}>
       <h2>Самоподдержка</h2>
-      
+      <div className={styles.description}>
+        <p>
+          Отслеживайте обесценивающие мысли и заменяйте их более объективными и поддерживающими.
+          Оказывайте себе поддержку в течение дня даже в мелочах. Продолжайте практиковаться,
+          и вы заметите, как улучшается настроение и растет гордость за свои достижения.
+        </p>
+      </div>
+
       <div className={styles.table}>
         <div className={styles.header}>
           <div className={styles.column}>Обесценивающее утверждение</div>
@@ -93,6 +153,32 @@ const SelfSupport = () => {
           Добавить
         </button>
       </div>
+
+      {allStatements.length > 0 && (
+        <div className={styles.historicalStatements}>
+          <h3>История записей</h3>
+          <div className={styles.statementsTable}>
+            <div className={styles.tableHeader}>
+              <div className={styles.devaluingColumn}>Обесценивающее утверждение</div>
+              <div className={styles.arrowColumn}></div>
+              <div className={styles.supportingColumn}>Поддерживающее утверждение</div>
+            </div>
+            <div className={styles.tableBody}>
+              {allStatements.map((statement) => (
+                <div key={statement.id} className={styles.tableRow}>
+                  <div className={styles.devaluingColumn}>
+                    <p>{statement.devaluing}</p>
+                  </div>
+                  <div className={styles.arrowColumn}>→</div>
+                  <div className={styles.supportingColumn}>
+                    <p>{statement.supporting}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
