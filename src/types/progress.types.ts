@@ -200,9 +200,24 @@ export interface ImagineSuccessExercise {
   records: ImagineSuccessRecord[];
 }
 
+export interface CountAchievementsRecord {
+  id: string;
+  text: string;
+  timestamp: string;
+}
+
+export interface CountAchievementsExercise {
+  type: 'count-achievements';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: CountAchievementsRecord[];
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
-  SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise;
+  SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

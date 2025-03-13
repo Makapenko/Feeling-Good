@@ -1,40 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './CountAchievements.module.css';
+import { useProgress } from '../../../store/ProgressContext';
+import { CountAchievementsRecord, CountAchievementsExercise, Exercise } from '../../../types/progress.types';
+import { v4 as uuidv4 } from 'uuid';
+import { getCurrentDate } from '../../../utils/dateUtils';
 
-interface Achievement {
-  id: string;
-  text: string;
-  date: string;
-}
+const SHEET_ID = 'count-achievements';
 
 const CountAchievements: React.FC = () => {
-  const [achievements, setAchievements] = useState<Achievement[]>(() => {
-    const saved = localStorage.getItem('achievements');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { progress, dispatch } = useProgress();
   const [newAchievement, setNewAchievement] = useState('');
   const today = new Date().toISOString().split('T')[0];
 
-  useEffect(() => {
-    localStorage.setItem('achievements', JSON.stringify(achievements));
-  }, [achievements]);
+  // Получаем все записи из прогресса
+  const records = useMemo(() => {
+    const currentDate = getCurrentDate();
+    const dayProgress = progress.dailyProgress[currentDate];
+    const exercise = dayProgress?.exercises.exercises.find(
+      (ex: Exercise): ex is CountAchievementsExercise => 
+        ex.type === 'count-achievements' && ex.id === SHEET_ID
+    );
+    return exercise?.records || [];
+  }, [progress.dailyProgress]);
+
+  // Сохраняем обновленные записи в прогресс
+  const saveToProgress = (updatedRecords: CountAchievementsRecord[]) => {
+    const exercise: CountAchievementsExercise = {
+      type: 'count-achievements',
+      id: SHEET_ID,
+      name: 'Считайте свои достижения',
+      completed: false,
+      completedAt: '',
+      records: updatedRecords
+    };
+
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise
+    });
+  };
 
   const addAchievement = () => {
     if (!newAchievement.trim()) return;
     
-    setAchievements([
-      ...achievements,
-      { 
-        id: Math.random().toString(),
-        text: newAchievement.trim(),
-        date: today
-      }
-    ]);
+    const newRecord: CountAchievementsRecord = {
+      id: uuidv4(),
+      text: newAchievement.trim(),
+      timestamp: new Date().toISOString()
+    };
+    
+    saveToProgress([...records, newRecord]);
     setNewAchievement('');
   };
 
   const removeAchievement = (id: string) => {
-    setAchievements(achievements.filter(ach => ach.id !== id));
+    const updatedRecords = records.filter(record => record.id !== id);
+    saveToProgress(updatedRecords);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -44,7 +65,34 @@ const CountAchievements: React.FC = () => {
   };
 
   const getTodayAchievements = () => {
-    return achievements.filter(ach => ach.date === today);
+    return records.filter(record => record.timestamp.split('T')[0] === today);
+  };
+
+  const getPastAchievements = () => {
+    // Группируем достижения по датам
+    const pastRecords = records
+      .filter(record => record.timestamp.split('T')[0] !== today)
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    const groupedByDate = pastRecords.reduce((groups: { [key: string]: CountAchievementsRecord[] }, record) => {
+      const date = record.timestamp.split('T')[0];
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(record);
+      return groups;
+    }, {});
+
+    return Object.entries(groupedByDate)
+      .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime());
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ru-RU', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
   };
 
   return (
@@ -107,6 +155,40 @@ const CountAchievements: React.FC = () => {
           )}
         </div>
       </div>
+
+      {getPastAchievements().length > 0 && (
+        <div className={styles.section}>
+          <h3>История достижений</h3>
+          <div className={styles.historyList}>
+            {getPastAchievements().map(([date, dayAchievements]) => (
+              <div key={date} className={styles.historyDay}>
+                <h4 className={styles.historyDate}>{formatDate(date)}</h4>
+                <div className={styles.achievementsList}>
+                  {dayAchievements.map((achievement, index) => (
+                    <div key={achievement.id} className={styles.achievementItem}>
+                      <span className={styles.achievementNumber}>{index + 1}.</span>
+                      <span className={styles.achievementText}>{achievement.text}</span>
+                      <span className={styles.achievementTime}>
+                        {new Date(achievement.timestamp).toLocaleTimeString('ru-RU', {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                      <button
+                        onClick={() => removeAchievement(achievement.id)}
+                        className={styles.removeButton}
+                        aria-label="Удалить достижение"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className={styles.motivation}>
         <p>

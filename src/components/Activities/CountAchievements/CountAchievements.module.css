@@ -172,4 +172,28 @@
 .motivation p {
   margin: 0;
   line-height: 1.6;
+}
+
+.historyList {
+  margin-top: 1rem;
+}
+
+.historyDay {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.historyDate {
+  margin: 0 0 1rem;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+.achievementTime {
+  margin-left: auto;
+  margin-right: 1rem;
+  color: #6c757d;
+  font-size: 0.9rem;
 } 

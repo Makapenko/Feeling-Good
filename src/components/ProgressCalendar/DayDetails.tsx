@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, ImagineSuccessRecord } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, ImagineSuccessRecord, CountAchievementsExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -418,6 +418,29 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderCountAchievementsExercise = (exercise: CountAchievementsExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h3>{exercise.name}</h3>
+        <div className={styles.achievementsList}>
+          {exercise.records.map((record) => (
+            <div key={record.id} className={styles.record}>
+              <div className={styles.timestamp}>
+                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </div>
+              <div className={styles.achievementText}>
+                {record.text}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map((exercise) => {
       switch (exercise.type) {
@@ -441,6 +464,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderMotivationWithoutCoercionExercise(exercise);
         case 'imagine-success':
           return renderImagineSuccessExercise(exercise);
+        case 'count-achievements':
+          return renderCountAchievementsExercise(exercise);
         default:
           return null;
       }
