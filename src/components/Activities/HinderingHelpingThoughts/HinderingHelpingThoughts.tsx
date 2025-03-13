@@ -1,7 +1,28 @@
 import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
+import { useProgress } from '../../../store/ProgressContext';
+import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
+import { ThreeColumnsExercise } from '../../../types/progress.types';
 
- const HinderingHelpingThoughts: React.FC = () => {
+const HinderingHelpingThoughts: React.FC = () => {
+  const { dispatch } = useProgress();
+
+  const handleSave = (result: ThreeColumnsMethodResult) => {
+    const exercise: ThreeColumnsExercise = {
+      type: 'three-columns-method',
+      id: result.id,
+      name: result.name,
+      completed: result.completed,
+      completedAt: result.completedAt,
+      records: result.records
+    };
+
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise
+    });
+  };
+
   return (
     <ThreeColumnsBase
       title="Техника мешающих и помогающих мыслей"
@@ -11,8 +32,10 @@ import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
       rightColumnTitle="Помогающая мысль"
       rightColumnPlaceholder="Замените её на более конструктивную мысль..."
       showCognitiveDistortions={true}
+      methodId="hindering-helping-thoughts"
+      onSave={handleSave}
     />
   );
-}; 
+};
 
-export default HinderingHelpingThoughts
+export default HinderingHelpingThoughts;
