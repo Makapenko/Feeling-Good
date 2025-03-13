@@ -136,8 +136,36 @@ export interface SelfSupportExercise {
   records: SupportStatement[];
 }
 
+export interface SmallStep {
+  id: string;
+  text: string;
+  isCompleted: boolean;
+  duration: number;
+  isRest: boolean;
+  timeLeft: number;
+  timerEnded: boolean;
+}
+
+export interface SmallStepsTask {
+  id: string;
+  title: string;
+  steps: SmallStep[];
+  isActive: boolean;
+  isCompleted?: boolean;
+  currentStepId?: string;
+}
+
+export interface SmallStepsExercise {
+  type: 'small-steps';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: SmallStepsTask[];
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
-  AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise;
+  AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | SmallStepsExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

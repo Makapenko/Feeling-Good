@@ -4,8 +4,8 @@ export interface SmallStep {
   isCompleted: boolean;
   duration: number; // в минутах
   isRest: boolean;
-  timeLeft?: number; // в секундах
-  timerEnded?: boolean; // флаг для отслеживания завершения таймера
+  timeLeft: number; // в секундах
+  timerEnded: boolean; // флаг для отслеживания завершения таймера
 }
 
 export interface SmallStepsTask {
@@ -13,6 +13,6 @@ export interface SmallStepsTask {
   title: string;
   steps: SmallStep[];
   isActive: boolean;
-  currentStepId?: string;
   isCompleted?: boolean; // флаг завершения всей задачи
+  currentStepId?: string;
 } 

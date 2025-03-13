@@ -2,8 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
+import { useProgress } from '../../../store/ProgressContext';
+
+const SHEET_ID = 'small-steps';
 
 const SmallSteps: React.FC = () => {
+  const { dispatch } = useProgress();
   const [tasks, setTasks] = useState<SmallStepsTask[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newStepText, setNewStepText] = useState('');
@@ -11,6 +15,20 @@ const SmallSteps: React.FC = () => {
   const [editingStep, setEditingStep] = useState<{ taskId: string; stepId: string } | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const saveToProgress = (updatedTasks: SmallStepsTask[]) => {
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise: {
+        type: 'small-steps',
+        id: SHEET_ID,
+        name: 'Метод маленьких шагов',
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records: updatedTasks
+      }
+    });
+  };
 
   const addTask = () => {
     if (!newTaskTitle.trim()) return;
@@ -22,8 +40,10 @@ const SmallSteps: React.FC = () => {
       isActive: false
     };
 
-    setTasks([...tasks, newTask]);
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
     setNewTaskTitle('');
+    saveToProgress(updatedTasks);
   };
 
   const addStep = (taskId: string) => {
@@ -39,7 +59,6 @@ const SmallSteps: React.FC = () => {
       timerEnded: false
     };
 
-    // Добавляем шаг отдыха после рабочего шага
     const restStep: SmallStep = {
       id: uuidv4(),
       text: 'Отдых',
@@ -50,7 +69,7 @@ const SmallSteps: React.FC = () => {
       timerEnded: false
     };
 
-    setTasks(tasks.map(task => {
+    const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         return {
           ...task,
@@ -58,21 +77,22 @@ const SmallSteps: React.FC = () => {
         };
       }
       return task;
-    }));
+    });
 
+    setTasks(updatedTasks);
     setNewStepText('');
     setNewStepDuration(3);
+    saveToProgress(updatedTasks);
   };
 
   const updateStep = (taskId: string, stepId: string, updates: Partial<SmallStep>) => {
-    setTasks(tasks.map(task => {
+    const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         return {
           ...task,
           steps: task.steps.map(step => {
             if (step.id === stepId) {
               const updatedStep = { ...step, ...updates };
-              // Обновляем timeLeft при изменении duration
               if (updates.duration) {
                 updatedStep.timeLeft = updates.duration * 60;
               }
@@ -83,7 +103,10 @@ const SmallSteps: React.FC = () => {
         };
       }
       return task;
-    }));
+    });
+
+    setTasks(updatedTasks);
+    saveToProgress(updatedTasks);
   };
 
   const startEditing = (taskId: string, stepId: string) => {
@@ -95,11 +118,10 @@ const SmallSteps: React.FC = () => {
   };
 
   const toggleStep = (taskId: string, stepId: string) => {
-    setTasks(tasks.map(task => {
+    const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         const updatedSteps = task.steps.map(step => {
           if (step.id === stepId && !step.isCompleted) {
-            // Останавливаем звук при отметке выполнения
             if (step.timerEnded && audioRef.current) {
               audioRef.current.pause();
               audioRef.current.currentTime = 0;
@@ -109,7 +131,6 @@ const SmallSteps: React.FC = () => {
           return step;
         });
 
-        // Если отметили шаг как выполненный, переходим к следующему
         if (stepId === task.currentStepId) {
           const currentIndex = updatedSteps.findIndex(step => step.id === stepId);
           const nextStep = updatedSteps[currentIndex + 1];
@@ -120,7 +141,6 @@ const SmallSteps: React.FC = () => {
               currentStepId: nextStep.id
             };
           } else {
-            // Если следующего шага нет, значит задача завершена
             return {
               ...task,
               steps: updatedSteps,
@@ -137,7 +157,10 @@ const SmallSteps: React.FC = () => {
         };
       }
       return task;
-    }));
+    });
+
+    setTasks(updatedTasks);
+    saveToProgress(updatedTasks);
   };
 
   const togglePause = () => {
@@ -145,7 +168,7 @@ const SmallSteps: React.FC = () => {
   };
 
   const startTask = (taskId: string) => {
-    setTasks(tasks.map(task => {
+    const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         const firstIncompleteStep = task.steps.find(step => !step.isCompleted);
         return {
@@ -159,7 +182,10 @@ const SmallSteps: React.FC = () => {
         isActive: false,
         currentStepId: undefined
       };
-    }));
+    });
+
+    setTasks(updatedTasks);
+    saveToProgress(updatedTasks);
   };
 
   useEffect(() => {
@@ -174,7 +200,6 @@ const SmallSteps: React.FC = () => {
             if (step.id === task.currentStepId && !step.isCompleted && step.timeLeft && step.timeLeft > 0) {
               const newTimeLeft = step.timeLeft - 1;
               
-              // Если время вышло, отмечаем шаг и включаем звук
               if (newTimeLeft === 0) {
                 if (audioRef.current) {
                   audioRef.current.play();
@@ -187,7 +212,6 @@ const SmallSteps: React.FC = () => {
             return step;
           });
 
-          // Проверяем, все ли шаги выполнены
           const allStepsCompleted = updatedSteps.every(step => step.isCompleted);
           if (allStepsCompleted) {
             return {

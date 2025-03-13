@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -311,6 +311,41 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderSmallStepsExercise = (exercise: SmallStepsExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.tasksList}>
+          {exercise.records.map((task, index) => (
+            <div key={index} className={styles.task}>
+              <div className={styles.taskContent}>
+                <h5>{task.title}</h5>
+                <div className={styles.stepsList}>
+                  {task.steps.map((step, stepIndex) => (
+                    <div 
+                      key={stepIndex} 
+                      className={`${styles.step} ${step.isCompleted ? styles.completed : ''} ${step.isRest ? styles.restStep : ''}`}
+                    >
+                      <div className={styles.stepContent}>
+                        <span className={styles.stepText}>{step.text}</span>
+                        <span className={styles.stepDuration}>{step.duration} мин</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {task.isCompleted && (
+                  <div className={styles.completionMessage}>
+                    Задача выполнена
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
@@ -328,6 +363,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderNoButsExercise(exercise);
         case 'self-support':
           return renderSelfSupportExercise(exercise);
+        case 'small-steps':
+          return renderSmallStepsExercise(exercise);
         default:
           return null;
       }
