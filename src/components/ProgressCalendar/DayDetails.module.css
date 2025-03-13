@@ -659,4 +659,50 @@
   color: #166534;
   font-size: 0.9rem;
   text-align: center;
+}
+
+.cantDoList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cantDoItem {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.cantDoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.cantDoText {
+  font-size: 16px;
+  color: #333;
+  flex: 1;
+}
+
+.cantDoTime {
+  color: #6c757d;
+  font-size: 14px;
+  margin-left: 12px;
+}
+
+.cantDoMinimum {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.minimumDone {
+  color: #28a745;
+  font-weight: 500;
 } 

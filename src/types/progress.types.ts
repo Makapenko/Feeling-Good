@@ -215,9 +215,27 @@ export interface CountAchievementsExercise {
   records: CountAchievementsRecord[];
 }
 
+export interface CheckCantDoRecord {
+  id: string;
+  text: string;
+  minimumDone: boolean;
+  minimumDescription: string;
+  timestamp: string;
+}
+
+export interface CheckCantDoExercise {
+  type: 'check-cant-do';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: CheckCantDoRecord[];
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
-  SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise;
+  SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |
+  CheckCantDoExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

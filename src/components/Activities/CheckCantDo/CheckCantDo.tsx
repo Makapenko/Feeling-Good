@@ -1,51 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './CheckCantDo.module.css';
+import { useProgress } from '../../../store/ProgressContext';
+import { CheckCantDoRecord, CheckCantDoExercise, Exercise } from '../../../types/progress.types';
+import { v4 as uuidv4 } from 'uuid';
+import { getCurrentDate } from '../../../utils/dateUtils';
 
-interface Task {
-  id: string;
-  text: string;
-  minimumDone: boolean;
-  minimumDescription: string;
-}
+const SHEET_ID = 'check-cant-do';
 
 const CheckCantDo: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    const saved = localStorage.getItem('cantDoTasks');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { progress, dispatch } = useProgress();
   const [newTask, setNewTask] = useState('');
   const [minimumDescription, setMinimumDescription] = useState('');
 
-  useEffect(() => {
-    localStorage.setItem('cantDoTasks', JSON.stringify(tasks));
-  }, [tasks]);
+  // Получаем все записи из прогресса
+  const records = useMemo(() => {
+    const currentDate = getCurrentDate();
+    const dayProgress = progress.dailyProgress[currentDate];
+    const exercise = dayProgress?.exercises.exercises.find(
+      (ex: Exercise): ex is CheckCantDoExercise => 
+        ex.type === 'check-cant-do' && ex.id === SHEET_ID
+    );
+    return exercise?.records || [];
+  }, [progress.dailyProgress]);
+
+  // Сохраняем обновленные записи в прогресс
+  const saveToProgress = (updatedRecords: CheckCantDoRecord[]) => {
+    const exercise: CheckCantDoExercise = {
+      type: 'check-cant-do',
+      id: SHEET_ID,
+      name: 'Проверяйте свои «не могу»',
+      completed: false,
+      completedAt: '',
+      records: updatedRecords
+    };
+
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise
+    });
+  };
 
   const addTask = () => {
     if (!newTask.trim() || !minimumDescription.trim()) return;
     
-    setTasks([
-      ...tasks,
-      { 
-        id: Math.random().toString(),
-        text: newTask.trim(),
-        minimumDone: false,
-        minimumDescription: minimumDescription.trim()
-      }
-    ]);
+    const newRecord: CheckCantDoRecord = {
+      id: uuidv4(),
+      text: newTask.trim(),
+      minimumDone: false,
+      minimumDescription: minimumDescription.trim(),
+      timestamp: new Date().toISOString()
+    };
+    
+    saveToProgress([...records, newRecord]);
     setNewTask('');
     setMinimumDescription('');
   };
 
   const removeTask = (id: string) => {
-    setTasks(tasks.filter(task => task.id !== id));
+    const updatedRecords = records.filter(record => record.id !== id);
+    saveToProgress(updatedRecords);
   };
 
   const toggleMinimumDone = (id: string) => {
-    setTasks(tasks.map(task => 
-      task.id === id 
-        ? { ...task, minimumDone: !task.minimumDone }
-        : task
-    ));
+    const updatedRecords = records.map(record => 
+      record.id === id 
+        ? { ...record, minimumDone: !record.minimumDone }
+        : record
+    );
+    saveToProgress(updatedRecords);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -53,6 +75,13 @@ const CheckCantDo: React.FC = () => {
       addTask();
     }
   };
+
+  // Сортируем записи по времени создания (новые сверху)
+  const sortedRecords = useMemo(() => {
+    return [...records].sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  }, [records]);
 
   return (
     <div className={styles.container}>
@@ -104,8 +133,8 @@ const CheckCantDo: React.FC = () => {
         </div>
 
         <div className={styles.tasksList}>
-          {tasks.length > 0 ? (
-            tasks.map((task) => (
+          {sortedRecords.length > 0 ? (
+            sortedRecords.map((task) => (
               <div key={task.id} className={styles.taskItem}>
                 <div className={styles.taskContent}>
                   <div className={styles.taskHeader}>
@@ -115,6 +144,15 @@ const CheckCantDo: React.FC = () => {
                   <div className={styles.taskMinimum}>
                     <h4>Минимальный шаг:</h4>
                     <span className={styles.minimumText}>{task.minimumDescription}</span>
+                  </div>
+                  <div className={styles.taskTime}>
+                    {new Date(task.timestamp).toLocaleString('ru-RU', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
                   </div>
                 </div>
                 <div className={styles.taskActions}>
