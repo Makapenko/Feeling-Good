@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styles from './AntiProcrastinationSheet.module.css';
 import { Task } from './types';
 import { v4 as uuidv4 } from 'uuid';
+import { useProgress } from '../../../store/ProgressContext';
+import { AntiProcrastinationTask } from '../../../types/progress.types';
+
+const SHEET_ID = 'anti-procrastination';
 
 const RatingInput = ({ 
   value, 
@@ -50,9 +54,123 @@ const RatingInput = ({
   );
 };
 
+const HistoricalRating = ({ 
+  value, 
+  compareValue = null,
+  isReversed = false
+}: { 
+  value: number | null;
+  compareValue?: number | null;
+  isReversed?: boolean;
+}) => {
+  const getComparisonClass = () => {
+    if (value === null || compareValue === null) return '';
+    
+    if (value === compareValue) return 'same';
+    if (isReversed) {
+      return value < compareValue ? 'better' : 'worse';
+    }
+    return value > compareValue ? 'better' : 'worse';
+  };
+
+  return (
+    <div className={styles.historicalRating}>
+      <span className={styles[getComparisonClass()]}>
+        {value ?? '-'}%
+      </span>
+    </div>
+  );
+};
+
+const TaskAnalysis = ({ tasks, title = "Анализ выполненных задач" }: { tasks: Task[]; title?: string }) => {
+  const difficultyDiff = Math.round(tasks
+    .filter(t => t.actualDifficulty !== null)
+    .reduce((acc, t) => acc + (t.actualDifficulty! - t.expectedDifficulty), 0) / 
+    tasks.filter(t => t.actualDifficulty !== null).length || 0);
+
+  const pleasureDiff = Math.round(tasks
+    .filter(t => t.actualPleasure !== null)
+    .reduce((acc, t) => acc + (t.actualPleasure! - t.expectedPleasure), 0) / 
+    tasks.filter(t => t.actualPleasure !== null).length || 0);
+
+  const getDiffClass = (diff: number, isReversed = false) => {
+    if (diff === 0) return 'same';
+    if (isReversed) {
+      return diff < 0 ? 'better' : 'worse';
+    }
+    return diff > 0 ? 'better' : 'worse';
+  };
+
+  if (tasks.length === 0) return null;
+
+  return (
+    <div className={styles.analysis}>
+      <h3>{title}</h3>
+      <div className={styles.stats}>
+        <div>
+          <strong>Средняя разница в сложности: </strong>
+          <span className={styles[getDiffClass(difficultyDiff, true)]}>
+            {difficultyDiff}%
+          </span>
+        </div>
+        <div>
+          <strong>Средняя разница в удовольствии: </strong>
+          <span className={styles[getDiffClass(pleasureDiff)]}>
+            {pleasureDiff}%
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AntiProcrastinationSheet = () => {
+  const { progress, dispatch } = useProgress();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState('');
+
+  // Получаем все записи из прогресса
+  const allTasks = useMemo(() => {
+    if (!progress?.dailyProgress) return [];
+    
+    const allDayTasks: Array<AntiProcrastinationTask & { date: string }> = [];
+    
+    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
+      const exercises = dayProgress.exercises.exercises || [];
+      exercises
+        .filter(exercise => exercise.type === 'anti-procrastination' && exercise.id === SHEET_ID)
+        .forEach(exercise => {
+          if ('records' in exercise) {
+            allDayTasks.push(...(exercise.records as AntiProcrastinationTask[]).map(record => ({
+              ...record,
+              date
+            })));
+          }
+        });
+    });
+    
+    // Сортируем по дате и времени (новые сверху)
+    return allDayTasks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  }, [progress]);
+
+  const saveToProgress = (updatedTasks: Task[]) => {
+    const records: AntiProcrastinationTask[] = updatedTasks.map(task => ({
+      ...task,
+      timestamp: new Date().toISOString()
+    }));
+
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise: {
+        type: 'anti-procrastination',
+        id: SHEET_ID,
+        name: 'Листок антипрокрастинации',
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records
+      }
+    });
+  };
 
   const handleAddTask = () => {
     if (!newTask.trim()) return;
@@ -67,8 +185,10 @@ const AntiProcrastinationSheet = () => {
       completed: false
     };
 
-    setTasks([...tasks, task]);
+    const updatedTasks = [...tasks, task];
+    setTasks(updatedTasks);
     setNewTask('');
+    saveToProgress(updatedTasks);
   };
 
   const handleRatingChange = (
@@ -76,19 +196,25 @@ const AntiProcrastinationSheet = () => {
     field: 'expectedDifficulty' | 'expectedPleasure' | 'actualDifficulty' | 'actualPleasure',
     value: number
   ) => {
-    setTasks(tasks.map(task => 
+    const updatedTasks = tasks.map(task => 
       task.id === taskId ? { ...task, [field]: value } : task
-    ));
+    );
+    setTasks(updatedTasks);
+    saveToProgress(updatedTasks);
   };
 
   const handleCompleteTask = (taskId: string) => {
-    setTasks(tasks.map(task =>
+    const updatedTasks = tasks.map(task =>
       task.id === taskId ? { ...task, completed: true } : task
-    ));
+    );
+    setTasks(updatedTasks);
+    saveToProgress(updatedTasks);
   };
 
   const handleDeleteTask = (taskId: string) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    setTasks(updatedTasks);
+    saveToProgress(updatedTasks);
   };
 
   return (
@@ -181,47 +307,35 @@ const AntiProcrastinationSheet = () => {
         ))}
       </div>
 
-      {tasks.length > 0 && (
-        <div className={styles.analysis}>
-          <h3>Анализ выполненных задач</h3>
-          <div className={styles.stats}>
-            {(() => {
-              const difficultyDiff = Math.round(tasks
-                .filter(t => t.actualDifficulty !== null)
-                .reduce((acc, t) => acc + (t.actualDifficulty! - t.expectedDifficulty), 0) / 
-                tasks.filter(t => t.actualDifficulty !== null).length || 0);
+      {tasks.length > 0 && <TaskAnalysis tasks={tasks} />}
 
-              const pleasureDiff = Math.round(tasks
-                .filter(t => t.actualPleasure !== null)
-                .reduce((acc, t) => acc + (t.actualPleasure! - t.expectedPleasure), 0) / 
-                tasks.filter(t => t.actualPleasure !== null).length || 0);
-
-              const getDiffClass = (diff: number, isReversed = false) => {
-                if (diff === 0) return 'same';
-                if (isReversed) {
-                  return diff < 0 ? 'better' : 'worse';
-                }
-                return diff > 0 ? 'better' : 'worse';
-              };
-
-              return (
-                <>
-                  <div>
-                    <strong>Средняя разница в сложности: </strong>
-                    <span className={styles[getDiffClass(difficultyDiff, true)]}>
-                      {difficultyDiff}%
-                    </span>
-                  </div>
-                  <div>
-                    <strong>Средняя разница в удовольствии: </strong>
-                    <span className={styles[getDiffClass(pleasureDiff)]}>
-                      {pleasureDiff}%
-                    </span>
-                  </div>
-                </>
-              );
-            })()}
+      {allTasks.length > 0 && (
+        <div className={styles.historicalTasks}>
+          <h3>История задач</h3>
+          <div className={styles.taskList}>
+            {allTasks.map(task => (
+              <div key={task.id} className={styles.taskRow}>
+                <div className={styles.taskDate}>
+                  {new Date(task.timestamp).toLocaleDateString('ru-RU')}
+                </div>
+                <div className={styles.taskText}>{task.text}</div>
+                <div className={styles.ratings}>
+                  <HistoricalRating value={task.expectedDifficulty} />
+                  <HistoricalRating value={task.expectedPleasure} />
+                  <HistoricalRating 
+                    value={task.actualDifficulty} 
+                    compareValue={task.expectedDifficulty}
+                    isReversed={true}
+                  />
+                  <HistoricalRating 
+                    value={task.actualPleasure}
+                    compareValue={task.expectedPleasure}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
+          <TaskAnalysis tasks={allTasks} title="Анализ всех задач" />
         </div>
       )}
     </div>

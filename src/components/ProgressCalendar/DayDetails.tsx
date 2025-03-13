@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -174,6 +174,41 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderAntiProcrastinationExercise = (exercise: AntiProcrastinationExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.tasksList}>
+          {exercise.records.map((task, index) => (
+            <div key={index} className={styles.task}>
+              <div className={styles.taskContent}>
+                <p className={styles.taskText}>{task.text}</p>
+                <div className={styles.taskRatings}>
+                  <div>
+                    <strong>Ожидаемая сложность:</strong> {task.expectedDifficulty}%
+                  </div>
+                  <div>
+                    <strong>Ожидаемое удовольствие:</strong> {task.expectedPleasure}%
+                  </div>
+                  {task.completed && (
+                    <>
+                      <div>
+                        <strong>Реальная сложность:</strong> {task.actualDifficulty ?? '-'}%
+                      </div>
+                      <div>
+                        <strong>Реальное удовольствие:</strong> {task.actualPleasure ?? '-'}%
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
@@ -183,6 +218,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderThoughtDiaryExercise(exercise);
         case 'daily-schedule':
           return renderDailyScheduleExercise(exercise);
+        case 'anti-procrastination':
+          return renderAntiProcrastinationExercise(exercise);
         default:
           return null;
       }

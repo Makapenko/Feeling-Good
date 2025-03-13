@@ -65,7 +65,27 @@ export interface DailyScheduleExercise {
   timeSlots: DailyScheduleRecord[];
 }
 
-export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise;
+export interface AntiProcrastinationTask {
+  id: string;
+  text: string;
+  expectedDifficulty: number;
+  expectedPleasure: number;
+  actualDifficulty: number | null;
+  actualPleasure: number | null;
+  completed: boolean;
+  timestamp: string;
+}
+
+export interface AntiProcrastinationExercise {
+  type: 'anti-procrastination';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: AntiProcrastinationTask[];
+}
+
+export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | AntiProcrastinationExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')
