@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThreeColumnsExercise } from '../../../types/progress.types';
-import ExerciseWrapper from './renderExerciseWrapper';
+import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 
 interface ThreeColumnsExerciseProps {

@@ -2,10 +2,20 @@ import React, { useState } from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, ImagineSuccessRecord, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise } from '../../types/progress.types';
-import ThreeColumnsExerciseComponent from './render/renderThreeColumnsExercise';
-import ExerciseWrapper from './render/renderExerciseWrapper';
-
+import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise } from '../../types/progress.types';
+import ThreeColumnsExerciseComponent from './render/ThreeColumnsExerciseComponent';
+import ThoughtDiaryExerciseComponent from './render/ThoughtDiaryExerciseComponent';
+import DailyScheduleExerciseComponent from './render/DailyScheduleExerciseComponent';
+import AntiProcrastinationExerciseComponent from './render/AntiProcrastinationExerciseComponent';
+import SmallStepsExerciseComponent from './render/SmallStepsExerciseComponent';
+import SelfSupportExerciseComponent from './render/SelfSupportExerciseComponent';
+import NoButsExerciseComponent from './render/NoButsExerciseComponent';
+import MotivationWithoutCoercionExerciseComponent from './render/MotivationWithoutCoercionExerciseComponent';
+import ImagineSuccessExerciseComponent from './render/ImagineSuccessExerciseComponent';
+import NoLoseTechniqueExerciseComponent from './render/NoLoseTechniqueExerciseComponent';
+import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseComponent';
+import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
+import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
 interface DayDetailsProps {
   date: string;
   dayProgress: CalendarDayProgress;
@@ -18,8 +28,8 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
   const [expandedSections, setExpandedSections] = useState<string[]>(['chapters', 'tests', 'exercises']);
 
   const toggleExercise = (exerciseId: string) => {
-    setExpandedExercises(prev => 
-      prev.includes(exerciseId) 
+    setExpandedExercises(prev =>
+      prev.includes(exerciseId)
         ? prev.filter(id => id !== exerciseId)
         : [...prev, exerciseId]
     );
@@ -58,518 +68,104 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
     return { grouped, standalone };
   };
 
-  const renderThoughtDiaryExercise = (exercise: ThoughtDiaryExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.recordsList}>
-          {exercise.records.map((record, index) => (
-            <div key={index} className={styles.record}>
-              <div className={styles.recordTime}>
-                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </div>
-              <div className={styles.recordContent}>
-                <div className={styles.column}>
-                  <strong>Ситуация:</strong>
-                  <p>{record.situation}</p>
-                </div>
-                <div className={styles.column}>
-                  <strong>Эмоции:</strong>
-                  <ul>
-                    {record.emotions.map((emotion, i) => (
-                      <li key={i}>{emotion.name} - {emotion.intensity}%</li>
-                    ))}
-                  </ul>
-                </div>
-                {record.automaticThoughts.map((thought, i) => (
-                  <div key={i} className={styles.thought}>
-                    <p><strong>Автоматическая мысль:</strong> {thought.thought}</p>
-                    <p><strong>Когнитивные искажения:</strong> {thought.cognitiveDistortions.join(', ')}</p>
-                    <p><strong>Рациональный ответ:</strong> {thought.rationalResponse}</p>
-                  </div>
-                ))}
-                {record.result.emotions.length > 0 && (
-                  <div className={styles.column}>
-                    <strong>Результат:</strong>
-                    <ul>
-                      {record.result.emotions.map((emotion, i) => (
-                        <li key={i}>{emotion.name} - {emotion.intensity}%</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
 
-  const renderDailyScheduleExercise = (exercise: DailyScheduleExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.scheduleTable}>
-          <div className={styles.scheduleHeaders}>
-            <div className={styles.timeHeader}>Время</div>
-            <div className={styles.columnHeader}>План</div>
-            <div className={styles.columnHeader}>Факт</div>
-          </div>
-          {exercise.timeSlots.map((slot, index) => (
-            <div key={index} className={styles.scheduleRow}>
-              <div className={styles.timeCell}>{slot.time}</div>
-              <div className={styles.activityCell}>
-                {slot.planned && (
-                  <div className={styles.activity}>
-                    <p>{slot.planned.text}</p>
-                    <div className={styles.ratings}>
-                      {slot.planned.type.isTask && (
-                        <span className={styles.rating}>⚡ {slot.planned.ratings.task}</span>
-                      )}
-                      {slot.planned.type.isPleasure && (
-                        <span className={styles.rating}>😊 {slot.planned.ratings.pleasure}</span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className={styles.activityCell}>
-                {slot.actual && (
-                  <div className={styles.activity}>
-                    <p>{slot.actual.text}</p>
-                    <div className={styles.ratings}>
-                      {slot.actual.type.isTask && (
-                        <span className={styles.rating}>⚡ {slot.actual.ratings.task}</span>
-                      )}
-                      {slot.actual.type.isPleasure && (
-                        <span className={styles.rating}>😊 {slot.actual.ratings.pleasure}</span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
 
-  const renderAntiProcrastinationExercise = (exercise: AntiProcrastinationExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.tasksList}>
-          {exercise.records.map((task, index) => (
-            <div key={index} className={styles.task}>
-              <div className={styles.taskContent}>
-                <p className={styles.taskText}>{task.text}</p>
-                <div className={styles.taskRatings}>
-                  <div>
-                    <strong>Ожидаемая сложность:</strong> {task.expectedDifficulty}%
-                  </div>
-                  <div>
-                    <strong>Ожидаемое удовольствие:</strong> {task.expectedPleasure}%
-                  </div>
-                  {task.completed && (
-                    <>
-                      <div>
-                        <strong>Реальная сложность:</strong> {task.actualDifficulty ?? '-'}%
-                      </div>
-                      <div>
-                        <strong>Реальное удовольствие:</strong> {task.actualPleasure ?? '-'}%
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
 
-  const getComparisonClass = (actual: number | null, expected: number) => {
-    if (actual === null) return '';
-    if (actual === expected) return styles.same;
-    return actual > expected ? styles.better : styles.worse;
-  };
-
-  const renderPleasureSheetExercise = (exercise: PleasureSheetExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.activityList}>
-          {exercise.records.map((activity, index) => (
-            <div key={index} className={styles.activity}>
-              <div className={styles.activityContent}>
-                <div className={styles.activityTime}>
-                  {new Date(activity.timestamp).toLocaleTimeString('ru-RU', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </div>
-                <div className={styles.activityDetails}>
-                  <p><strong>Занятие:</strong> {activity.text}</p>
-                  <p><strong>С кем:</strong> {activity.participants}</p>
-                  <div className={styles.activityRatings}>
-                    <div>
-                      <strong>Предполагаемое удовольствие:</strong> 
-                      <span>{activity.expectedPleasure}%</span>
-                    </div>
-                    {activity.actualPleasure !== null && (
-                      <div>
-                        <strong>Реальное удовольствие:</strong> 
-                        <span className={getComparisonClass(activity.actualPleasure, activity.expectedPleasure)}>
-                          {activity.actualPleasure}%
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderNoButsExercise = (exercise: NoButsExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.pairsTable}>
-          <div className={styles.tableHeader}>
-            <div className={styles.butColumn}>Отговорка</div>
-            <div className={styles.arrowColumn}></div>
-            <div className={styles.noButColumn}>Альтернатива</div>
-          </div>
-          <div className={styles.tableBody}>
-            {exercise.records.map((pair, index) => (
-              <div key={index} className={styles.tableRow}>
-                <div className={styles.butColumn}>
-                  <p>{pair.but}</p>
-                </div>
-                <div className={styles.arrowColumn}>→</div>
-                <div className={styles.noButColumn}>
-                  <p>{pair.noBut}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderSelfSupportExercise = (exercise: SelfSupportExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.statementsTable}>
-          <div className={styles.tableHeader}>
-            <div className={styles.devaluingColumn}>Обесценивающее утверждение</div>
-            <div className={styles.arrowColumn}></div>
-            <div className={styles.supportingColumn}>Поддерживающее утверждение</div>
-          </div>
-          <div className={styles.tableBody}>
-            {exercise.records.map((statement, index) => (
-              <div key={index} className={styles.tableRow}>
-                <div className={styles.devaluingColumn}>
-                  <p>{statement.devaluing}</p>
-                </div>
-                <div className={styles.arrowColumn}>→</div>
-                <div className={styles.supportingColumn}>
-                  <p>{statement.supporting}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderSmallStepsExercise = (exercise: SmallStepsExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.tasksList}>
-          {exercise.records.map((task, index) => (
-            <div key={index} className={styles.task}>
-              <div className={styles.taskContent}>
-                <h5>{task.title}</h5>
-                <div className={styles.stepsList}>
-                  {task.steps.map((step, stepIndex) => (
-                    <div 
-                      key={stepIndex} 
-                      className={`${styles.step} ${step.isCompleted ? styles.completed : ''} ${step.isRest ? styles.restStep : ''}`}
-                    >
-                      <div className={styles.stepContent}>
-                        <span className={styles.stepText}>{step.text}</span>
-                        <span className={styles.stepDuration}>{step.duration} мин</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                {task.isCompleted && (
-                  <div className={styles.completionMessage}>
-                    Задача выполнена
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderMotivationWithoutCoercionExercise = (exercise: MotivationWithoutCoercionExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.recordsList}>
-          {exercise.records.map((record, index) => (
-            <div key={index} className={styles.record}>
-              <div className={styles.recordTime}>
-                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </div>
-              <div className={styles.recordContent}>
-                <div className={styles.column}>
-                  <strong>Мысль:</strong>
-                  <p>{record.thought}</p>
-                </div>
-                <div className={styles.columnsContainer}>
-                  <div className={styles.column}>
-                    <strong>Преимущества:</strong>
-                    <ul>
-                      {record.advantages.map((advantage, i) => (
-                        <li key={i}>{advantage}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className={styles.column}>
-                    <strong>Недостатки:</strong>
-                    <ul>
-                      {record.disadvantages.map((disadvantage, i) => (
-                        <li key={i}>{disadvantage}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderImagineSuccessExercise = (exercise: ImagineSuccessExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.exerciseSection}>
-          <h3>{exercise.name}</h3>
-          {exercise.records.map((record: ImagineSuccessRecord) => (
-            <div key={record.id} className={styles.record}>
-              <div className={styles.timestamp}>
-                {new Date(record.timestamp).toLocaleString()}
-              </div>
-              <div className={styles.content}>
-                <div className={styles.goal}>
-                  <strong>Цель:</strong> {record.goal}
-                </div>
-                <div className={styles.advantages}>
-                  <strong>Преимущества:</strong>
-                  <ul>
-                    {record.advantages.map((advantage) => (
-                      <li key={advantage.id}>{advantage.text}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderCountAchievementsExercise = (exercise: CountAchievementsExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.exerciseSection}>
-          <h3>{exercise.name}</h3>
-          <div className={styles.achievementsList}>
-            {exercise.records.map((record) => (
-              <div key={record.id} className={styles.record}>
-                <div className={styles.timestamp}>
-                  {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </div>
-                <div className={styles.achievementText}>
-                  {record.text}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderCheckCantDoExercise = (exercise: CheckCantDoExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.exerciseSection}>
-          <h3>{exercise.name}</h3>
-          <div className={styles.cantDoList}>
-            {exercise.records.map((record) => (
-              <div key={record.id} className={styles.cantDoItem}>
-                <div className={styles.cantDoHeader}>
-                  <span className={styles.cantDoText}>{record.text}</span>
-                  <span className={styles.cantDoTime}>
-                    {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </span>
-                </div>
-                <div className={styles.cantDoMinimum}>
-                  <span>Минимальный шаг: {record.minimumDescription}</span>
-                  {record.minimumDone && (
-                    <span className={styles.minimumDone}>✓ Минимум выполнен</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </ExerciseWrapper>
-    );
-  };
-
-  const renderNoLoseTechniqueExercise = (exercise: NoLoseTechniqueExercise) => {
-    return (
-      <ExerciseWrapper
-        exercise={exercise}
-        expandedExercises={expandedExercises}
-        toggleExercise={toggleExercise}
-      >
-        <div className={styles.recordsList}>
-          {exercise.records.map((record) => (
-            <div key={record.id} className={styles.record}>
-              <div className={styles.recordTime}>
-                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </div>
-              <div className={styles.recordContent}>
-                <div className={styles.column}>
-                  <strong>Негативные последствия:</strong>
-                  <p>{record.leftColumn}</p>
-                </div>
-                {record.cognitiveDistortion.length > 0 && (
-                  <div className={styles.column}>
-                    <strong>Когнитивные искажения:</strong>
-                    <p>{record.cognitiveDistortion.join(', ')}</p>
-                  </div>
-                )}
-                <div className={styles.column}>
-                  <strong>Позитивные мысли и стратегии:</strong>
-                  <p>{record.rightColumn}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ExerciseWrapper>
-    );
-  };
 
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map((exercise) => {
       switch (exercise.type) {
         case 'three-columns-method':
-          return <ThreeColumnsExerciseComponent 
+          return <ThreeColumnsExerciseComponent
             key={exercise.id}
             exercise={exercise as ThreeColumnsExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
         case 'thought-diary':
-          return renderThoughtDiaryExercise(exercise);
+          return <ThoughtDiaryExerciseComponent
+            key={exercise.id}
+            exercise={exercise as ThoughtDiaryExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'daily-schedule':
-          return renderDailyScheduleExercise(exercise);
+          return <DailyScheduleExerciseComponent
+            key={exercise.id}
+            exercise={exercise as DailyScheduleExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'anti-procrastination':
-          return renderAntiProcrastinationExercise(exercise);
+          return <AntiProcrastinationExerciseComponent
+            key={exercise.id}
+            exercise={exercise as AntiProcrastinationExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'pleasure-sheet':
-          return renderPleasureSheetExercise(exercise);
+          return <PleasureSheetExerciseComponent
+            key={exercise.id}
+            exercise={exercise as PleasureSheetExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'no-buts':
-          return renderNoButsExercise(exercise);
+          return <NoButsExerciseComponent
+            key={exercise.id}
+            exercise={exercise as NoButsExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'self-support':
-          return renderSelfSupportExercise(exercise);
+          return <SelfSupportExerciseComponent
+            key={exercise.id}
+            exercise={exercise as SelfSupportExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'small-steps':
-          return renderSmallStepsExercise(exercise);
+          return <SmallStepsExerciseComponent
+            key={exercise.id}
+            exercise={exercise as SmallStepsExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'motivation-without-coercion':
-          return renderMotivationWithoutCoercionExercise(exercise);
+          return <MotivationWithoutCoercionExerciseComponent
+            key={exercise.id}
+            exercise={exercise as MotivationWithoutCoercionExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'imagine-success':
-          return renderImagineSuccessExercise(exercise);
+          return <ImagineSuccessExerciseComponent
+            key={exercise.id}
+            exercise={exercise as ImagineSuccessExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'count-achievements':
-          return renderCountAchievementsExercise(exercise);
+          return <CountAchievementsExerciseComponent
+          key={exercise.id}
+          exercise={exercise as CountAchievementsExercise}
+          expandedExercises={expandedExercises}
+          toggleExercise={toggleExercise}
+        />;
         case 'check-cant-do':
-          return renderCheckCantDoExercise(exercise as CheckCantDoExercise);
+          return <CheckCantDoExerciseComponent
+            key={exercise.id}
+            exercise={exercise as CheckCantDoExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         case 'no-lose-technique':
-          return renderNoLoseTechniqueExercise(exercise as NoLoseTechniqueExercise);
+          return <NoLoseTechniqueExerciseComponent
+            key={exercise.id}
+            exercise={exercise as NoLoseTechniqueExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+          />;
         default:
           return null;
       }
@@ -580,7 +176,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
     const isExpanded = expandedSections.includes(sectionId);
     return (
       <div className={styles.section}>
-        <div 
+        <div
           className={styles.sectionHeader}
           onClick={() => toggleSection(sectionId)}
         >
@@ -598,7 +194,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <div className={styles.header}>
-          <h2>{new Date(date).toLocaleDateString('ru-RU', { 
+          <h2>{new Date(date).toLocaleDateString('ru-RU', {
             day: 'numeric',
             month: 'long',
             year: 'numeric'
