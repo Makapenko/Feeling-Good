@@ -1,28 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './MotivationWithoutCoercion.module.css';
+import { useProgress } from '../../../store/ProgressContext';
+import { MotivationWithoutCoercionRecord, MotivationWithoutCoercionExercise, Exercise } from '../../../types/progress.types';
+import { v4 as uuidv4 } from 'uuid';
+import { getCurrentDate } from '../../../utils/dateUtils';
 
-interface ComparisonRecord {
-  thought: string;
-  advantages: string[];
-  disadvantages: string[];
-}
-// DisarmingTechnique
+const SHEET_ID = 'motivation-without-coercion';
 
- const MotivationWithoutCoercion: React.FC = () => {
+const MotivationWithoutCoercion: React.FC = () => {
+  const { progress, dispatch } = useProgress();
   const [currentThought, setCurrentThought] = useState('');
   const [currentAdvantage, setCurrentAdvantage] = useState('');
   const [currentDisadvantage, setCurrentDisadvantage] = useState('');
-  const [records, setRecords] = useState<ComparisonRecord[]>([]);
-  const [activeRecord, setActiveRecord] = useState<ComparisonRecord | null>(null);
+  const [activeRecord, setActiveRecord] = useState<MotivationWithoutCoercionRecord | null>(null);
+
+  // Получаем все записи из прогресса
+  const records = useMemo(() => {
+    const currentDate = getCurrentDate();
+    const dayProgress = progress.dailyProgress[currentDate];
+    const exercise = dayProgress?.exercises.exercises.find(
+      (ex: Exercise): ex is MotivationWithoutCoercionExercise => 
+        ex.type === 'motivation-without-coercion' && ex.id === SHEET_ID
+    );
+    return exercise?.records || [];
+  }, [progress.dailyProgress]);
+
+  // Сохраняем обновленные записи в прогресс
+  const saveToProgress = (updatedRecords: MotivationWithoutCoercionRecord[]) => {
+    const exercise: MotivationWithoutCoercionExercise = {
+      type: 'motivation-without-coercion',
+      id: SHEET_ID,
+      name: 'Мотивация без принуждения',
+      completed: false,
+      completedAt: '',
+      records: updatedRecords
+    };
+
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise
+    });
+  };
 
   const handleAddThought = () => {
     if (currentThought.trim()) {
-      const newRecord: ComparisonRecord = {
+      const newRecord: MotivationWithoutCoercionRecord = {
+        id: uuidv4(),
         thought: currentThought,
         advantages: [],
-        disadvantages: []
+        disadvantages: [],
+        timestamp: new Date().toISOString()
       };
-      setRecords([...records, newRecord]);
+      const updatedRecords = [...records, newRecord];
+      saveToProgress(updatedRecords);
       setActiveRecord(newRecord);
       setCurrentThought('');
     }
@@ -30,12 +60,12 @@ interface ComparisonRecord {
 
   const handleAddAdvantage = () => {
     if (currentAdvantage.trim() && activeRecord) {
-      const updatedRecords = records.map(record => 
-        record.thought === activeRecord.thought
+      const updatedRecords = records.map((record: MotivationWithoutCoercionRecord) => 
+        record.id === activeRecord.id
           ? { ...record, advantages: [...record.advantages, currentAdvantage] }
           : record
       );
-      setRecords(updatedRecords);
+      saveToProgress(updatedRecords);
       setActiveRecord({ ...activeRecord, advantages: [...activeRecord.advantages, currentAdvantage] });
       setCurrentAdvantage('');
     }
@@ -43,17 +73,17 @@ interface ComparisonRecord {
 
   const handleAddDisadvantage = () => {
     if (currentDisadvantage.trim() && activeRecord) {
-      const updatedRecords = records.map(record => 
-        record.thought === activeRecord.thought
+      const updatedRecords = records.map((record: MotivationWithoutCoercionRecord) => 
+        record.id === activeRecord.id
           ? { ...record, disadvantages: [...record.disadvantages, currentDisadvantage] }
           : record
       );
-      setRecords(updatedRecords);
+      saveToProgress(updatedRecords);
       setActiveRecord({ ...activeRecord, disadvantages: [...activeRecord.disadvantages, currentDisadvantage] });
       setCurrentDisadvantage('');
     }
   };
- // TODO на самом деле это техника Мотивация без принуждения, а эту технику нужно сделать в другом компоненте
+
   return (
     <div className={styles.container}>
       <h2>Мотивация без принуждения</h2>
@@ -137,10 +167,10 @@ interface ComparisonRecord {
         <div className={styles.recordsList}>
           <h3>Записанные мысли:</h3>
           <div className={styles.thoughts}>
-            {records.map((record, index) => (
+            {records.map((record: MotivationWithoutCoercionRecord) => (
               <button
-                key={index}
-                className={`${styles.thoughtButton} ${activeRecord?.thought === record.thought ? styles.active : ''}`}
+                key={record.id}
+                className={`${styles.thoughtButton} ${activeRecord?.id === record.id ? styles.active : ''}`}
                 onClick={() => setActiveRecord(record)}
               >
                 {record.thought}
@@ -151,6 +181,6 @@ interface ComparisonRecord {
       )}
     </div>
   );
-}; 
+};
 
-export default MotivationWithoutCoercion
+export default MotivationWithoutCoercion;

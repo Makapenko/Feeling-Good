@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -346,6 +346,50 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderMotivationWithoutCoercionExercise = (exercise: MotivationWithoutCoercionExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.recordsList}>
+          {exercise.records.map((record, index) => (
+            <div key={index} className={styles.record}>
+              <div className={styles.recordTime}>
+                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </div>
+              <div className={styles.recordContent}>
+                <div className={styles.column}>
+                  <strong>Мысль:</strong>
+                  <p>{record.thought}</p>
+                </div>
+                <div className={styles.columnsContainer}>
+                  <div className={styles.column}>
+                    <strong>Преимущества:</strong>
+                    <ul>
+                      {record.advantages.map((advantage, i) => (
+                        <li key={i}>{advantage}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className={styles.column}>
+                    <strong>Недостатки:</strong>
+                    <ul>
+                      {record.disadvantages.map((disadvantage, i) => (
+                        <li key={i}>{disadvantage}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
@@ -365,6 +409,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderSelfSupportExercise(exercise);
         case 'small-steps':
           return renderSmallStepsExercise(exercise);
+        case 'motivation-without-coercion':
+          return renderMotivationWithoutCoercionExercise(exercise);
         default:
           return null;
       }

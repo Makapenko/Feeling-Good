@@ -164,8 +164,26 @@ export interface SmallStepsExercise {
   records: SmallStepsTask[];
 }
 
+export interface MotivationWithoutCoercionRecord {
+  id: string;
+  thought: string;
+  advantages: string[];
+  disadvantages: string[];
+  timestamp: string;
+}
+
+export interface MotivationWithoutCoercionExercise {
+  type: 'motivation-without-coercion';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: MotivationWithoutCoercionRecord[];
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
-  AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | SmallStepsExercise;
+  AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
+  SmallStepsExercise | MotivationWithoutCoercionExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')
