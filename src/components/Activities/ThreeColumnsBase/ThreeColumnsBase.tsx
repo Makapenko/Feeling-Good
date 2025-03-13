@@ -3,6 +3,10 @@ import styles from './ThreeColumnsBase.module.css';
 import { CognitiveDistortions } from '../ThoughtDiary/CognitiveDistortions/CognitiveDistortions';
 import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
 import { useProgress } from '../../../store/ProgressContext';
+import { v4 as uuidv4 } from 'uuid';
+import { ThreeColumnsExercise, NoLoseTechniqueExercise } from '../../../types/progress.types';
+
+type ExerciseWithRecords = ThreeColumnsExercise | NoLoseTechniqueExercise;
 
 interface ThreeColumnsBaseProps {
   title: string;
@@ -27,7 +31,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   methodId,
   onSave
 }) => {
-  const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp'>>({
+  const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp' | 'id'>>({
     leftColumn: '',
     cognitiveDistortion: [],
     rightColumn: '',
@@ -36,7 +40,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   // Получаем все записи из прогресса
   const { progress } = useProgress();
   
-  // Собираем все записи метода трёх колонок
+  // Собираем все записи метода
   const allRecords = useMemo(() => {
     if (!progress?.dailyProgress) return [];
     
@@ -45,7 +49,10 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
-        .filter(exercise => exercise.type === 'three-columns-method' && exercise.id === methodId)
+        .filter((exercise): exercise is ExerciseWithRecords => 
+          (exercise.type === 'three-columns-method' || exercise.type === 'no-lose-technique') && 
+          exercise.id === methodId
+        )
         .forEach(exercise => {
           allDayRecords.push(...exercise.records.map(record => ({
             ...record,
@@ -62,6 +69,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
     if (currentRecord.leftColumn && currentRecord.rightColumn) {
       const newRecord: ThoughtRecord = {
         ...currentRecord,
+        id: uuidv4(),
         timestamp: new Date().toISOString()
       };
 
@@ -70,7 +78,9 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
       
       // Получаем существующие записи за сегодня
       const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
-        exercise => exercise.type === 'three-columns-method' && exercise.id === methodId
+        (exercise): exercise is ExerciseWithRecords => 
+          (exercise.type === 'three-columns-method' || exercise.type === 'no-lose-technique') && 
+          exercise.id === methodId
       );
       
       // Объединяем существующие записи с новой
@@ -157,7 +167,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
           </thead>
           <tbody>
             {allRecords.map((record, index) => (
-              <tr key={index}>
+              <tr key={record.id}>
                 <td>{record.leftColumn}</td>
                 {showCognitiveDistortions && <td>{record.cognitiveDistortion.join(', ')}</td>}
                 <td>{record.rightColumn}</td>

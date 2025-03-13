@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, ImagineSuccessRecord, CountAchievementsExercise, CheckCantDoExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, ImagineSuccessRecord, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -470,6 +470,42 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderNoLoseTechniqueExercise = (exercise: NoLoseTechniqueExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.recordsList}>
+          {exercise.records.map((record, index) => (
+            <div key={record.id} className={styles.record}>
+              <div className={styles.recordTime}>
+                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </div>
+              <div className={styles.recordContent}>
+                <div className={styles.column}>
+                  <strong>Негативные последствия:</strong>
+                  <p>{record.leftColumn}</p>
+                </div>
+                {record.cognitiveDistortion.length > 0 && (
+                  <div className={styles.column}>
+                    <strong>Когнитивные искажения:</strong>
+                    <p>{record.cognitiveDistortion.join(', ')}</p>
+                  </div>
+                )}
+                <div className={styles.column}>
+                  <strong>Позитивные мысли и стратегии:</strong>
+                  <p>{record.rightColumn}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map((exercise) => {
       switch (exercise.type) {
@@ -497,6 +533,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderCountAchievementsExercise(exercise);
         case 'check-cant-do':
           return renderCheckCantDoExercise(exercise as CheckCantDoExercise);
+        case 'no-lose-technique':
+          return renderNoLoseTechniqueExercise(exercise as NoLoseTechniqueExercise);
         default:
           return null;
       }

@@ -232,10 +232,27 @@ export interface CheckCantDoExercise {
   records: CheckCantDoRecord[];
 }
 
+export interface NoLoseTechniqueRecord {
+  id: string;
+  leftColumn: string;
+  cognitiveDistortion: string[];
+  rightColumn: string;
+  timestamp: string;
+}
+
+export interface NoLoseTechniqueExercise {
+  type: 'no-lose-technique';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: NoLoseTechniqueRecord[];
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
   SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |
-  CheckCantDoExercise;
+  CheckCantDoExercise | NoLoseTechniqueExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

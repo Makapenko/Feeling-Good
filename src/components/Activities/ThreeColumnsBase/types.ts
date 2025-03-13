@@ -1,4 +1,5 @@
 export interface ThoughtRecord {
+  id: string;
   leftColumn: string;
   cognitiveDistortion: string[];
   rightColumn: string;
