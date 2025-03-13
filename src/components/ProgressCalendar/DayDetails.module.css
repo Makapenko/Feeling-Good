@@ -360,4 +360,153 @@
 .same {
   color: #eab308;
   font-weight: 500;
+}
+
+.pairsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.pair {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pairTime {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.pairContent {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.butContent,
+.noButContent {
+  flex: 1;
+  background-color: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.butContent strong,
+.noButContent strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #495057;
+}
+
+.butContent p,
+.noButContent p {
+  margin: 0;
+  color: #212529;
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  color: #6c757d;
+  font-size: 1.25rem;
+  padding: 0 0.5rem;
+}
+
+.pairsTable {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 500;
+  color: #475569;
+}
+
+.tableHeader > div {
+  padding: 12px 16px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.tableHeader > div:last-child {
+  border-right: none;
+}
+
+.tableBody {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: white;
+  transition: background-color 0.2s;
+}
+
+.tableRow:hover {
+  background-color: #f8fafc;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.butColumn,
+.arrowColumn,
+.noButColumn {
+  padding: 12px 16px;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+}
+
+.butColumn,
+.noButColumn {
+  line-height: 1.5;
+}
+
+.butColumn p,
+.noButColumn p {
+  margin: 0;
+  white-space: pre-wrap;
+  color: #1e293b;
+}
+
+.arrowColumn {
+  justify-content: center;
+  color: #64748b;
+  font-size: 1.25rem;
+  border-right: 1px solid #e2e8f0;
+}
+
+.noButColumn {
+  border-right: none;
+}
+
+@media (max-width: 768px) {
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 30px 1fr;
+  }
+
+  .butColumn,
+  .arrowColumn,
+  .noButColumn {
+    padding: 8px 12px;
+    font-size: 0.875rem;
+  }
 } 

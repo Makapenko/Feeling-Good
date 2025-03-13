@@ -1,12 +1,57 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styles from './NoButsSheet.module.css';
 import { ButPair } from './types';
 import { v4 as uuidv4 } from 'uuid';
+import { useProgress } from '../../../store/ProgressContext';
+
+const SHEET_ID = 'no-buts';
 
 const NoButsSheet = () => {
+  const { progress, dispatch } = useProgress();
   const [pairs, setPairs] = useState<ButPair[]>([]);
   const [newBut, setNewBut] = useState('');
   const [newNoBut, setNewNoBut] = useState('');
+
+  // Получаем все записи из прогресса
+  const allPairs = useMemo(() => {
+    if (!progress?.dailyProgress) return [];
+    
+    const allDayPairs: Array<ButPair & { date: string }> = [];
+    
+    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
+      const exercises = dayProgress.exercises.exercises || [];
+      exercises
+        .filter(exercise => exercise.type === 'no-buts' && exercise.id === SHEET_ID)
+        .forEach(exercise => {
+          if ('records' in exercise) {
+            allDayPairs.push(...(exercise.records as ButPair[]).map(record => ({
+              ...record,
+              date
+            })));
+          }
+        });
+    });
+    
+    // Сортируем по дате и времени (новые сверху)
+    return allDayPairs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  }, [progress]);
+
+  const saveToProgress = (updatedPairs: ButPair[]) => {
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise: {
+        type: 'no-buts',
+        id: SHEET_ID,
+        name: 'Никаких "но"',
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records: updatedPairs.map(pair => ({
+          ...pair,
+          timestamp: new Date().toISOString()
+        }))
+      }
+    });
+  };
 
   const handleAddPair = () => {
     if (!newBut.trim()) return;
@@ -14,26 +59,42 @@ const NoButsSheet = () => {
     const pair: ButPair = {
       id: uuidv4(),
       but: newBut,
-      noBut: newNoBut
+      noBut: newNoBut,
+      timestamp: new Date().toISOString()
     };
 
-    setPairs([...pairs, pair]);
+    const updatedPairs = [...pairs, pair];
+    setPairs(updatedPairs);
     setNewBut('');
     setNewNoBut('');
+    saveToProgress(updatedPairs);
   };
 
   const handleUpdatePair = (id: string, field: 'but' | 'noBut', value: string) => {
-    setPairs(pairs.map(pair =>
+    const updatedPairs = pairs.map(pair =>
       pair.id === id ? { ...pair, [field]: value } : pair
-    ));
+    );
+    setPairs(updatedPairs);
+    saveToProgress(updatedPairs);
   };
 
   const handleDeletePair = (id: string) => {
-    setPairs(pairs.filter(pair => pair.id !== id));
+    const updatedPairs = pairs.filter(pair => pair.id !== id);
+    setPairs(updatedPairs);
+    saveToProgress(updatedPairs);
   };
 
   return (
     <div className={styles.container}>
+      <h2>Никаких "но"</h2>
+      <div className={styles.description}>
+        <p>
+          Метод "Никаких но" поможет вам преодолеть самооправдания и отговорки, которые мешают действовать.
+          Запишите ваше "но" - отговорку или негативную мысль, а затем найдите конструктивную альтернативу,
+          которая поможет вам двигаться вперёд.
+        </p>
+      </div>
+
       <div className={styles.thoughtsContainer}>
         <div className={styles.column}>
           <div className={styles.columnHeader}>Ваше "но":</div>
@@ -67,7 +128,6 @@ const NoButsSheet = () => {
               >
                 ✕
               </button>
-             
             </div>
           ))}
         </div>
@@ -82,7 +142,6 @@ const NoButsSheet = () => {
               placeholder="Опишите вашу отговорку или негативную мысль..."
               className={`${styles.textArea} ${styles.butArea}`}
             />
-            
           </div>
           <div className={styles.inputGroup}>
             <textarea
@@ -97,6 +156,36 @@ const NoButsSheet = () => {
           Добавить
         </button>
       </div>
+
+      {allPairs.length > 0 && (
+        <div className={styles.historicalPairs}>
+          <h3>История записей</h3>
+          <div className={styles.pairsTable}>
+            <div className={styles.tableHeader}>
+              <div className={styles.dateColumn}>Дата</div>
+              <div className={styles.butColumn}>Отговорка</div>
+              <div className={styles.arrowColumn}></div>
+              <div className={styles.noButColumn}>Альтернатива</div>
+            </div>
+            <div className={styles.tableBody}>
+              {allPairs.map((pair) => (
+                <div key={pair.id} className={styles.tableRow}>
+                  <div className={styles.dateColumn}>
+                    {new Date(pair.timestamp).toLocaleDateString('ru-RU')}
+                  </div>
+                  <div className={styles.butColumn}>
+                    <p>{pair.but}</p>
+                  </div>
+                  <div className={styles.arrowColumn}>→</div>
+                  <div className={styles.noButColumn}>
+                    <p>{pair.noBut}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

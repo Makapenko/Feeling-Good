@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -255,6 +255,34 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderNoButsExercise = (exercise: NoButsExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h4>{exercise.name}</h4>
+        <div className={styles.pairsTable}>
+          <div className={styles.tableHeader}>
+            <div className={styles.butColumn}>Отговорка</div>
+            <div className={styles.arrowColumn}></div>
+            <div className={styles.noButColumn}>Альтернатива</div>
+          </div>
+          <div className={styles.tableBody}>
+            {exercise.records.map((pair, index) => (
+              <div key={index} className={styles.tableRow}>
+                <div className={styles.butColumn}>
+                  <p>{pair.but}</p>
+                </div>
+                <div className={styles.arrowColumn}>→</div>
+                <div className={styles.noButColumn}>
+                  <p>{pair.noBut}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map(exercise => {
       switch (exercise.type) {
@@ -268,6 +296,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderAntiProcrastinationExercise(exercise);
         case 'pleasure-sheet':
           return renderPleasureSheetExercise(exercise);
+        case 'no-buts':
+          return renderNoButsExercise(exercise);
         default:
           return null;
       }

@@ -104,7 +104,23 @@ export interface PleasureSheetExercise {
   records: PleasureSheetActivity[];
 }
 
-export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | AntiProcrastinationExercise | PleasureSheetExercise;
+export interface NoButsPair {
+  id: string;
+  but: string;
+  noBut: string;
+  timestamp: string;
+}
+
+export interface NoButsExercise {
+  type: 'no-buts';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: NoButsPair[];
+}
+
+export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')
