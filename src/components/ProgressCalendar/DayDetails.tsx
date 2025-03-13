@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, ThoughtDiaryExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, ImagineSuccessRecord } from '../../types/progress.types';
 
 interface DayDetailsProps {
   date: string;
@@ -390,8 +390,36 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
     );
   };
 
+  const renderImagineSuccessExercise = (exercise: ImagineSuccessExercise) => {
+    return (
+      <div key={exercise.id} className={styles.exerciseSection}>
+        <h3>{exercise.name}</h3>
+        {exercise.records.map((record: ImagineSuccessRecord) => (
+          <div key={record.id} className={styles.record}>
+            <div className={styles.timestamp}>
+              {new Date(record.timestamp).toLocaleString()}
+            </div>
+            <div className={styles.content}>
+              <div className={styles.goal}>
+                <strong>Цель:</strong> {record.goal}
+              </div>
+              <div className={styles.advantages}>
+                <strong>Преимущества:</strong>
+                <ul>
+                  {record.advantages.map((advantage) => (
+                    <li key={advantage.id}>{advantage.text}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const renderExercises = (exercises: Exercise[]) => {
-    return exercises.map(exercise => {
+    return exercises.map((exercise) => {
       switch (exercise.type) {
         case 'three-columns-method':
           return renderThreeColumnsExercise(exercise);
@@ -411,6 +439,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, 
           return renderSmallStepsExercise(exercise);
         case 'motivation-without-coercion':
           return renderMotivationWithoutCoercionExercise(exercise);
+        case 'imagine-success':
+          return renderImagineSuccessExercise(exercise);
         default:
           return null;
       }

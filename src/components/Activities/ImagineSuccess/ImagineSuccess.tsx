@@ -1,28 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './ImagineSuccess.module.css';
+import { useProgress } from '../../../store/ProgressContext';
+import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
+import { v4 as uuidv4 } from 'uuid';
+import { getCurrentDate } from '../../../utils/dateUtils';
 
-interface Advantage {
-  id: string;
-  text: string;
-}
+const SHEET_ID = 'imagine-success';
 
 const ImagineSuccess: React.FC = () => {
+  const { progress, dispatch } = useProgress();
   const [goal, setGoal] = useState('');
-  const [advantages, setAdvantages] = useState<Advantage[]>([]);
+  const [advantages, setAdvantages] = useState<Array<{ id: string; text: string }>>([]);
   const [newAdvantage, setNewAdvantage] = useState('');
+  const [currentRecordId, setCurrentRecordId] = useState<string | null>(null);
+
+  // Получаем все записи из прогресса
+  const records = useMemo(() => {
+    const currentDate = getCurrentDate();
+    const dayProgress = progress.dailyProgress[currentDate];
+    const exercise = dayProgress?.exercises.exercises.find(
+      (ex: Exercise): ex is ImagineSuccessExercise => 
+        ex.type === 'imagine-success' && ex.id === SHEET_ID
+    );
+    return exercise?.records || [];
+  }, [progress.dailyProgress]);
+
+  // Сохраняем обновленные записи в прогресс
+  const saveToProgress = (updatedRecords: ImagineSuccessRecord[]) => {
+    const exercise: ImagineSuccessExercise = {
+      type: 'imagine-success',
+      id: SHEET_ID,
+      name: 'Метод "Представьте успех"',
+      completed: false,
+      completedAt: '',
+      records: updatedRecords
+    };
+
+    dispatch({
+      type: 'SAVE_EXERCISE',
+      exercise
+    });
+  };
 
   const addAdvantage = () => {
     if (!newAdvantage.trim()) return;
     
-    setAdvantages([
-      ...advantages,
-      { id: Math.random().toString(), text: newAdvantage.trim() }
-    ]);
+    const newAdvantageObj = { 
+      id: Math.random().toString(), 
+      text: newAdvantage.trim() 
+    };
+    
+    const updatedAdvantages = [...advantages, newAdvantageObj];
+    setAdvantages(updatedAdvantages);
     setNewAdvantage('');
+
+    // Обновляем существующую запись или создаем новую
+    const updatedRecords = records.filter(record => record.id !== currentRecordId);
+    const newRecord: ImagineSuccessRecord = {
+      id: currentRecordId || uuidv4(),
+      goal,
+      advantages: updatedAdvantages,
+      timestamp: new Date().toISOString()
+    };
+    setCurrentRecordId(newRecord.id);
+    saveToProgress([...updatedRecords, newRecord]);
   };
 
   const removeAdvantage = (id: string) => {
-    setAdvantages(advantages.filter(adv => adv.id !== id));
+    const updatedAdvantages = advantages.filter(adv => adv.id !== id);
+    setAdvantages(updatedAdvantages);
+
+    // Обновляем существующую запись
+    const updatedRecords = records.filter(record => record.id !== currentRecordId);
+    const newRecord: ImagineSuccessRecord = {
+      id: currentRecordId || uuidv4(),
+      goal,
+      advantages: updatedAdvantages,
+      timestamp: new Date().toISOString()
+    };
+    saveToProgress([...updatedRecords, newRecord]);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

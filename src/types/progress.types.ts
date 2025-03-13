@@ -181,9 +181,28 @@ export interface MotivationWithoutCoercionExercise {
   records: MotivationWithoutCoercionRecord[];
 }
 
+export interface ImagineSuccessRecord {
+  id: string;
+  goal: string;
+  advantages: Array<{
+    id: string;
+    text: string;
+  }>;
+  timestamp: string;
+}
+
+export interface ImagineSuccessExercise {
+  type: 'imagine-success';
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt: string;
+  records: ImagineSuccessRecord[];
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
-  SmallStepsExercise | MotivationWithoutCoercionExercise;
+  SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')
