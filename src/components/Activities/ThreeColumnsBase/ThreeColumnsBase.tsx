@@ -166,7 +166,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
             </tr>
           </thead>
           <tbody>
-            {allRecords.map((record, index) => (
+            {allRecords.map((record) => (
               <tr key={record.id}>
                 <td>{record.leftColumn}</td>
                 {showCognitiveDistortions && <td>{record.cognitiveDistortion.join(', ')}</td>}

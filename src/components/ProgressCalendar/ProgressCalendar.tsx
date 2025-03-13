@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProgress } from '../../store/ProgressContext';
 import styles from './ProgressCalendar.module.css';
 import chaptersData from '../ListOfChapters/chapters.json';
-import DayDetails from './DayDetails';
+import { DayDetails } from './DayDetails';
 import { ChapterMap, CalendarDayProgress } from './types';
 
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];

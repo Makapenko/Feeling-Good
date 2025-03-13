@@ -59,13 +59,44 @@
 }
 
 .section {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
 }
 
-.section h3 {
-  margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #eee;
+.sectionHeader {
+  padding: 15px;
+  background-color: #f8fafc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.sectionHeader:hover {
+  background-color: #f1f5f9;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: #333;
+}
+
+.sectionContent {
+  padding: 15px;
+  background-color: white;
+  display: none;
+  border-top: 1px solid #e2e8f0;
+}
+
+.sectionContent.expanded {
+  display: block;
+  animation: slideDown 0.3s ease-out;
 }
 
 .chapter, .test {
@@ -92,15 +123,63 @@
 }
 
 .exerciseSection {
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: #f9f9f9;
+  margin-bottom: 10px;
   border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
 }
 
-.exerciseSection h4 {
-  margin-bottom: 15px;
+.exerciseHeader {
+  padding: 15px;
+  background-color: #f8fafc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.exerciseHeader:hover {
+  background-color: #f1f5f9;
+}
+
+.exerciseHeader h4 {
+  margin: 0;
   color: #333;
+}
+
+.exerciseContent {
+  padding: 20px;
+  background-color: white;
+  display: none;
+  border-top: 1px solid #e2e8f0;
+}
+
+.exerciseContent.expanded {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.arrow {
+  font-size: 12px;
+  color: #64748b;
+  transition: transform 0.3s ease;
+}
+
+.arrow.expanded {
+  transform: rotate(180deg);
 }
 
 .recordsList {
@@ -408,14 +487,6 @@
 .noButContent p {
   margin: 0;
   color: #212529;
-}
-
-.arrow {
-  display: flex;
-  align-items: center;
-  color: #6c757d;
-  font-size: 1.25rem;
-  padding: 0 0.5rem;
 }
 
 .pairsTable {
