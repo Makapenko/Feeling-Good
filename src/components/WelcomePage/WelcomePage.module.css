@@ -66,9 +66,18 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
 }
 
-.unlockButton:hover {
+.unlockButton:hover:not(:disabled) {
   background-color: #2980b9;
+}
+
+.unlockButton.unlocked {
+  background-color: #2ecc71;
+  cursor: default;
+}
+
+.unlockButton:disabled {
+  opacity: 1;
 } 

@@ -1,11 +1,20 @@
 import { useProgress } from '../../store/ProgressContext';
 import styles from './WelcomePage.module.css';
+import chaptersData from '../ListOfChapters/chapters.json';
+import type { ChaptersData } from '../../types/chapters.types';
+
+const typedChaptersData = chaptersData as ChaptersData;
 
 const WelcomePage: React.FC = () => {
-  const { dispatch } = useProgress();
+  const { progress, dispatch } = useProgress();
+
+  // Проверяем, все ли главы разблокированы
+  const isAllContentUnlocked = progress.unlockedContent?.chapters?.length === typedChaptersData.chapters.length;
 
   const handleUnlockContent = () => {
-    dispatch({ type: 'UNLOCK_ALL_CONTENT' });
+    if (!isAllContentUnlocked) {
+      dispatch({ type: 'UNLOCK_ALL_CONTENT' });
+    }
   };
 
   return (
@@ -41,10 +50,11 @@ const WelcomePage: React.FC = () => {
             Проект находится в разработке. Новые функции и улучшения добавляются регулярно.
           </p>
           <button 
-            className={styles.unlockButton}
+            className={`${styles.unlockButton} ${isAllContentUnlocked ? styles.unlocked : ''}`}
             onClick={handleUnlockContent}
+            disabled={isAllContentUnlocked}
           >
-            Разблокировать весь контент
+            {isAllContentUnlocked ? 'Весь контент разблокирован' : 'Разблокировать весь контент'}
           </button>
         </div>
       </div>

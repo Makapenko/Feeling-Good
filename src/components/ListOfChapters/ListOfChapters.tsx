@@ -36,15 +36,9 @@ function ListOfChapters() {
   };
 
   // Проверяет доступность подглавы
-  const isSubchapterAvailable = (chapter: Chapter, sectionIndex: number): boolean => {
-    // Если глава доступна, первая подглава всегда доступна
-    if (sectionIndex === 0) {
-      return isChapterAvailable(chapter.id);
-    }
-
-    // Для остальных подглав проверяем завершенность предыдущей
-    const prevSection = chapter.sections[sectionIndex - 1];
-    return isSubchapterCompleted(prevSection.id);
+  const isSubchapterAvailable = (chapter: Chapter): boolean => {
+    // Если глава доступна, все её подглавы тоже доступны
+    return isChapterAvailable(chapter.id);
   };
 
   // Проверяет, завершены ли все подглавы главы
@@ -115,12 +109,12 @@ function ListOfChapters() {
                             <li
                               key={section.id}
                               onClick={() => 
-                                isSubchapterAvailable(chapter, index) && 
+                                isSubchapterAvailable(chapter) && 
                                 handleChapterClick(section.path, section.id, section.title)
                               }
                               className={`
                                 ${styles.sectionItem} 
-                                ${!isSubchapterAvailable(chapter, index) ? styles.disabled : ''}
+                                ${!isSubchapterAvailable(chapter) ? styles.disabled : ''}
                                 ${isSubchapterCompleted(section.id) ? styles.completed : ''}
                                 ${progress.currentChapter?.id === section.id ? styles.active : ''}
                               `}
