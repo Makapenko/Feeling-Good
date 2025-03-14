@@ -3,7 +3,7 @@ import styles from './ChapterReader.module.css';
 import DOMPurify from 'dompurify';
 import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData, Section } from '../../types/chapters.types';
-import { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -14,10 +14,10 @@ interface ChapterReaderProps {
   onNext?: () => void;
 }
 
-const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNext }) => {
+const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapterId, onNext }) => {
   const { dispatch } = useProgress();
 
-  const findNextChapter = () => {
+  const findNextChapter = useCallback(() => {
     // Находим текущую главу
     const currentChapter = typedChaptersData.chapters.find(ch => {
       // Проверяем, является ли текущий ID главой или подглавой
@@ -63,9 +63,9 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
     }
 
     return null;
-  };
+  }, [chapterId]);
 
-  const handleComplete = async () => {
+  const handleComplete = useCallback(async () => {
     // Отмечаем текущую главу как завершенную
     dispatch({ type: 'COMPLETE_CHAPTER', chapterId });
 
@@ -95,22 +95,27 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
     }
 
     onNext?.();
-  };
+  }, [chapterId, dispatch, findNextChapter, onNext]);
 
   // Очищаем HTML и разрешаем только безопасные теги и атрибуты
   const sanitizedContent = useMemo(() => {
-    return DOMPurify.sanitize(content, {
+    const config = {
       ALLOWED_TAGS: ['p', 'br', 'img', 'i', 'b', 'sup', 'sub', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'center'],
       ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'border', 'id', 'name', 'href'],
-    });
+    };
+    return DOMPurify.sanitize(content, config);
   }, [content]);
+
+  const contentElement = useMemo(() => (
+    <div 
+      className={styles.content}
+      dangerouslySetInnerHTML={{ __html: sanitizedContent }} 
+    />
+  ), [sanitizedContent]);
 
   return (
     <div className={styles.chapterContent}>
-      <div 
-        className={styles.content}
-        dangerouslySetInnerHTML={{ __html: sanitizedContent }} 
-      />
+      {contentElement}
       <button 
         className={styles.nextButton}
         onClick={handleComplete}
@@ -119,6 +124,6 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
       </button>
     </div>
   );
-};
+});
 
 export default ChapterReader; 
