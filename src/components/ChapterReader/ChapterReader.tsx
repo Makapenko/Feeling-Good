@@ -3,7 +3,8 @@ import styles from './ChapterReader.module.css';
 import DOMPurify from 'dompurify';
 import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData, Section } from '../../types/chapters.types';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import ImageModal from './ImageModal';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -16,6 +17,29 @@ interface ChapterReaderProps {
 
 const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapterId, onNext }) => {
   const { dispatch } = useProgress();
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+
+  // Обработчик кликов по изображениям
+  useEffect(() => {
+    const handleImageClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'IMG') {
+        const img = target as HTMLImageElement;
+        setSelectedImage({
+          src: img.src,
+          alt: img.alt || ''
+        });
+      }
+    };
+
+    const contentElement = document.querySelector(`.${styles.content}`);
+    if (contentElement) {
+      contentElement.addEventListener('click', handleImageClick);
+      return () => {
+        contentElement.removeEventListener('click', handleImageClick);
+      };
+    }
+  }, []);
 
   const findNextChapter = useCallback(() => {
     // Находим текущую главу
@@ -122,6 +146,13 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
       >
         Далее
       </button>
+      {selectedImage && (
+        <ImageModal
+          src={selectedImage.src}
+          alt={selectedImage.alt}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
     </div>
   );
 });
