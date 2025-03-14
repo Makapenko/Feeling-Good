@@ -285,6 +285,7 @@ export interface Chapter {
 }
 
 export type SpecialContent = 
+  | 'welcome'
   | 'burns-checklist'
   | 'novaco-scale'
   | 'cognitive-biases'
@@ -306,8 +307,7 @@ export type SpecialContent =
   | 'count-achievements'
   | 'check-cant-do'
   | 'progress-calendar'
-  | 'welcome'
-  | null;
+  | 'today-tasks';
 
 export interface UnlockedContent {
   chapters: string[];  // массив id открытых глав

@@ -3,6 +3,7 @@ import styles from './MainContent.module.css';
 import { useProgress } from '../../store/ProgressContext';
 import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
+import TodayTasks from '../Activities/TodayTasks/TodayTasks';
 
 import Survey, { burnsConfig, novacoConfig } from '../Activities/Survey';
 import { SurveyResult } from '../Activities/Survey/types';
@@ -51,6 +52,8 @@ const MainContent: React.FC = () => {
         return <WelcomePage />;
       case 'burns-checklist':
         return <Survey config={burnsConfig} onComplete={handleTestComplete} />;
+      case 'today-tasks':
+        return <TodayTasks />;
       case 'novaco-scale':
         return <Survey config={novacoConfig} onComplete={handleTestComplete} />;
       case 'cognitive-biases':

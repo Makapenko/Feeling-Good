@@ -1,0 +1,65 @@
+.container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tasksList {
+  margin-top: 20px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.task {
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background-color: #f8f9fa;
+}
+
+.taskHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: default;
+  accent-color: #4CAF50;
+}
+
+.taskTitle {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.taskProgress {
+  display: flex;
+  gap: 16px;
+  margin-left: 32px;
+  color: #666;
+}
+
+.timeSpent {
+  color: #2196F3;
+  font-weight: 500;
+}
+
+.remainingTime {
+  color: #FF9800;
+  font-weight: 500;
+} 

@@ -12,6 +12,10 @@ const Header: React.FC = () => {
     dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'welcome' });
   };
 
+  const handleTodayTasksClick = () => {
+    dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'today-tasks' });
+  };
+
   return (
     <header className={styles.header}>
       <h1 
@@ -20,12 +24,20 @@ const Header: React.FC = () => {
       >
         Терапия настроения
       </h1>
-      <button 
-        className={styles.calendarButton}
-        onClick={handleCalendarClick}
-      >
-        Календарь прогресса
-      </button>
+      <div className={styles.buttonGroup}>
+        <button 
+          className={styles.headerButton}
+          onClick={handleTodayTasksClick}
+        >
+          Задания на сегодня
+        </button>
+        <button 
+          className={styles.headerButton}
+          onClick={handleCalendarClick}
+        >
+          Календарь прогресса
+        </button>
+      </div>
     </header>
   );
 };

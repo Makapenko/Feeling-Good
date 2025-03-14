@@ -32,4 +32,4 @@ export const useProgress = () => {
   return context;
 };
 
-export type { Chapter, SpecialContent }; 
+export type { Chapter, SpecialContent };
