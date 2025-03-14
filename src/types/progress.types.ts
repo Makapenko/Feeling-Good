@@ -317,7 +317,11 @@ export interface UnlockedContent {
 export interface UserProgress {
   currentChapter: Chapter | null;
   specialContent: SpecialContent | null;
-  dailyProgress: DailyProgress;
   chapters: Chapter[];
-  unlockedContent: UnlockedContent;
+  dailyProgress: Record<string, DayProgress>;
+  unlockedContent: {
+    chapters: string[];
+    activities: string[];
+  };
+  completedChapters: string[]; // Массив ID завершенных глав и подглав
 }

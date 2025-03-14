@@ -25,20 +25,39 @@ function ListOfChapters() {
 
   // Проверяет, завершена ли конкретная подглава
   const isSubchapterCompleted = (subchapterId: string): boolean => {
-    return Object.values(progress.dailyProgress).some(dayProgress => {
-      return dayProgress.chapters[subchapterId]?.completed ?? false;
-    });
+    return progress.completedChapters.includes(subchapterId);
   };
 
   // Проверяет доступность главы
   const isChapterAvailable = (chapterId: string): boolean => {
+    // Если есть маркер 'all', все доступно
+    if (progress.unlockedContent?.chapters?.includes('all')) {
+      return true;
+    }
     return progress.unlockedContent?.chapters?.includes(chapterId) ?? false;
   };
 
   // Проверяет доступность подглавы
-  const isSubchapterAvailable = (chapter: Chapter): boolean => {
-    // Если глава доступна, все её подглавы тоже доступны
-    return isChapterAvailable(chapter.id);
+  const isSubchapterAvailable = (chapter: Chapter, sectionId: string): boolean => {
+    // Если глава недоступна, подглавы тоже недоступны
+    if (!isChapterAvailable(chapter.id)) {
+      return false;
+    }
+
+    // Если это первая подглава, она доступна
+    const firstSection = chapter.sections[0];
+    if (firstSection && firstSection.id === sectionId) {
+      return true;
+    }
+
+    // Для остальных подглав проверяем, завершена ли предыдущая
+    const sectionIndex = chapter.sections.findIndex(s => s.id === sectionId);
+    if (sectionIndex > 0) {
+      const previousSection = chapter.sections[sectionIndex - 1];
+      return progress.completedChapters.includes(previousSection.id);
+    }
+
+    return false;
   };
 
   // Проверяет, завершены ли все подглавы главы
@@ -105,16 +124,16 @@ function ListOfChapters() {
                       </div>
                       {isExpanded && (
                         <ul className={styles.subSections}>
-                          {chapter.sections.map((section: Section, index) => (
+                          {chapter.sections.map((section: Section) => (
                             <li
                               key={section.id}
                               onClick={() => 
-                                isSubchapterAvailable(chapter) && 
+                                isSubchapterAvailable(chapter, section.id) && 
                                 handleChapterClick(section.path, section.id, section.title)
                               }
                               className={`
                                 ${styles.sectionItem} 
-                                ${!isSubchapterAvailable(chapter) ? styles.disabled : ''}
+                                ${!isSubchapterAvailable(chapter, section.id) ? styles.disabled : ''}
                                 ${isSubchapterCompleted(section.id) ? styles.completed : ''}
                                 ${progress.currentChapter?.id === section.id ? styles.active : ''}
                               `}

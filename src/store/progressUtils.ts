@@ -7,13 +7,14 @@ export function getInitialState(): UserProgress {
   if (savedProgress) {
     try {
       const parsed = JSON.parse(savedProgress);
-      // Убедимся, что unlockedContent существует
+      // Убедимся, что все необходимые поля существуют
       return {
         ...parsed,
         unlockedContent: parsed.unlockedContent || {
           chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
           activities: []
-        }
+        },
+        completedChapters: parsed.completedChapters || []
       };
     } catch (e) {
       console.error('Error parsing saved progress:', e);
@@ -38,7 +39,8 @@ export function getInitialState(): UserProgress {
     unlockedContent: {
       chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
       activities: []
-    }
+    },
+    completedChapters: []
   };
 }
 
@@ -63,6 +65,7 @@ export function getInitialProgress(): UserProgress {
     unlockedContent: {
       chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
       activities: []
-    }
+    },
+    completedChapters: []
   };
 } 

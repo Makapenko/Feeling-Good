@@ -163,47 +163,58 @@ export function progressReducer(
         ch.id === action.chapterId ? { ...ch, completed: true } : ch
       );
 
-      // Находим следующую главу и разблокируем её
-      const currentChapterIndex = typedChaptersData.chapters.findIndex(
-        ch => ch.id === action.chapterId
-      );
-      
-      let updatedUnlockedContent = state.unlockedContent;
-      let nextChapter = null;
-      
-      if (currentChapterIndex !== -1 && currentChapterIndex < typedChaptersData.chapters.length - 1) {
-        nextChapter = typedChaptersData.chapters[currentChapterIndex + 1];
-        if (!state.unlockedContent.chapters.includes(nextChapter.id)) {
-          updatedUnlockedContent = {
-            ...state.unlockedContent,
-            chapters: [...state.unlockedContent.chapters, nextChapter.id]
-          };
-        }
-      }
+      // Добавляем главу в список завершенных, если её там ещё нет
+      const updatedCompletedChapters = state.completedChapters.includes(action.chapterId)
+        ? state.completedChapters
+        : [...state.completedChapters, action.chapterId];
 
-      // Если есть следующая глава, добавляем её в текущие главы
-      if (nextChapter) {
-        const existingNextChapterIndex = chaptersWithCompleted.findIndex(ch => ch.id === nextChapter.id);
-        if (existingNextChapterIndex === -1) {
-          chaptersWithCompleted.push({
-            id: nextChapter.id,
-            title: nextChapter.title,
-            content: '', // Контент будет загружен при открытии главы
-            timeSpent: 0,
-            completed: false
-          });
+      let updatedUnlockedContent = state.unlockedContent;
+
+      // Находим текущую главу в структуре данных
+      const currentMainChapter = typedChaptersData.chapters.find(ch => {
+        // Проверяем, является ли это главной главой или подглавой
+        if (ch.id === action.chapterId) return true;
+        return ch.sections.some(section => section.id === action.chapterId);
+      });
+
+      if (currentMainChapter) {
+        // Если это подглава, проверяем, нужно ли разблокировать следующую
+        const currentSectionIndex = currentMainChapter.sections.findIndex(s => s.id === action.chapterId);
+        
+        if (currentSectionIndex !== -1 && currentSectionIndex < currentMainChapter.sections.length - 1) {
+          // Есть следующая подглава - разблокируем её
+          const nextSection = currentMainChapter.sections[currentSectionIndex + 1];
+          if (!state.unlockedContent.chapters.includes(nextSection.id)) {
+            updatedUnlockedContent = {
+              ...state.unlockedContent,
+              chapters: [...state.unlockedContent.chapters, nextSection.id]
+            };
+          }
+        } else if (currentSectionIndex === currentMainChapter.sections.length - 1 || currentMainChapter.sections.length === 0) {
+          // Это последняя подглава или глава без подглав - разблокируем следующую главу
+          const currentChapterIndex = typedChaptersData.chapters.findIndex(ch => ch.id === currentMainChapter.id);
+          if (currentChapterIndex !== -1 && currentChapterIndex < typedChaptersData.chapters.length - 1) {
+            const nextChapter = typedChaptersData.chapters[currentChapterIndex + 1];
+            if (!state.unlockedContent.chapters.includes(nextChapter.id)) {
+              updatedUnlockedContent = {
+                ...state.unlockedContent,
+                chapters: [...state.unlockedContent.chapters, nextChapter.id]
+              };
+            }
+          }
         }
       }
 
       return {
         ...state,
-        currentChapter: null, // Оставляем null, так как контент следующей главы ещё не загружен
+        currentChapter: null,
         chapters: chaptersWithCompleted,
         dailyProgress: {
           ...state.dailyProgress,
           [currentDate]: updatedTodayProgress,
         },
-        unlockedContent: updatedUnlockedContent
+        unlockedContent: updatedUnlockedContent,
+        completedChapters: updatedCompletedChapters
       };
     }
 
@@ -296,7 +307,7 @@ export function progressReducer(
         ...state,
         unlockedContent: {
           ...state.unlockedContent,
-          chapters: allChapterIds,
+          chapters: [...allChapterIds, 'all'], // Добавляем специальный маркер 'all'
           activities: []
         }
       };

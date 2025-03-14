@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ActivitiesPanel.module.css';
 import { useProgress } from '../../store/ProgressContext';
 import { SpecialContent } from '../../store/ProgressContext';
+import { getAvailableActivities } from '../../data/activitiesMapping';
 
 interface ActivityButton {
   content: SpecialContent;
@@ -59,6 +60,7 @@ const activitySections: ActivitySection[] = [
 
 const ActivitiesPanel: React.FC = () => {
   const { progress, dispatch } = useProgress();
+  const availableActivities = getAvailableActivities(progress.unlockedContent?.chapters || []);
 
   const handleActivityClick = (content: SpecialContent) => {
     dispatch({
@@ -67,12 +69,18 @@ const ActivitiesPanel: React.FC = () => {
     });
   };
 
+  // Фильтруем секции, чтобы показывать только те, в которых есть доступные активности
+  const filteredSections = activitySections.map(section => ({
+    ...section,
+    buttons: section.buttons.filter(button => availableActivities.has(button.content))
+  })).filter(section => section.buttons.length > 0);
+
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Активные задания</h2>
+      <h2 className={styles.title}>Доступные задания</h2>
 
       <div className={styles.sections}>
-        {activitySections.map((section) => (
+        {filteredSections.map((section) => (
           <div key={section.title} className={styles.section}>
             <h3 className={styles.sectionTitle}>{section.title}</h3>
             <div className={styles.specialTools}>
@@ -93,7 +101,6 @@ const ActivitiesPanel: React.FC = () => {
       <div className={styles.activeTasksList}>
         <h3>Текущие задания:</h3>
         <ul>
-
         </ul>
       </div>
     </div>

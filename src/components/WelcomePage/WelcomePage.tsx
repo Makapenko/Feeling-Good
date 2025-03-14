@@ -1,15 +1,11 @@
 import { useProgress } from '../../store/ProgressContext';
 import styles from './WelcomePage.module.css';
-import chaptersData from '../ListOfChapters/chapters.json';
-import type { ChaptersData } from '../../types/chapters.types';
-
-const typedChaptersData = chaptersData as ChaptersData;
 
 const WelcomePage: React.FC = () => {
   const { progress, dispatch } = useProgress();
 
   // Проверяем, все ли главы разблокированы
-  const isAllContentUnlocked = progress.unlockedContent?.chapters?.length === typedChaptersData.chapters.length;
+  const isAllContentUnlocked = progress.unlockedContent?.chapters?.includes('all');
 
   const handleUnlockContent = () => {
     if (!isAllContentUnlocked) {
