@@ -8,9 +8,18 @@ const Header: React.FC = () => {
     dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'progress-calendar' });
   };
 
+  const handleTitleClick = () => {
+    dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'welcome' });
+  };
+
   return (
     <header className={styles.header}>
-      <h1>Терапия настроения</h1>
+      <h1 
+        onClick={handleTitleClick}
+        className={styles.title}
+      >
+        Терапия настроения
+      </h1>
       <button 
         className={styles.calendarButton}
         onClick={handleCalendarClick}

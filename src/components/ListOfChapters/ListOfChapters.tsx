@@ -30,18 +30,14 @@ function ListOfChapters() {
     });
   };
 
-  // Проверяет, завершена ли последняя подглава главы
-  const isLastSubchapterCompleted = (chapter: Chapter): boolean => {
-    if (!chapter.sections || chapter.sections.length === 0) {
-      return isSubchapterCompleted(chapter.id);
-    }
-    const lastSection = chapter.sections[chapter.sections.length - 1];
-    return isSubchapterCompleted(lastSection.id);
+  // Проверяет доступность главы
+  const isChapterAvailable = (chapterId: string): boolean => {
+    return progress.unlockedContent?.chapters?.includes(chapterId) ?? false;
   };
 
   // Проверяет доступность подглавы
   const isSubchapterAvailable = (chapter: Chapter, sectionIndex: number): boolean => {
-    // Первая подглава всегда доступна, если доступна сама глава
+    // Если глава доступна, первая подглава всегда доступна
     if (sectionIndex === 0) {
       return isChapterAvailable(chapter.id);
     }
@@ -49,27 +45,6 @@ function ListOfChapters() {
     // Для остальных подглав проверяем завершенность предыдущей
     const prevSection = chapter.sections[sectionIndex - 1];
     return isSubchapterCompleted(prevSection.id);
-  };
-
-  const isChapterAvailable = (chapterId: string): boolean => {
-    // Вступительные материалы всегда доступны
-    if (chapterId === 'acknowledgments' || chapterId === 'foreword' || chapterId === 'introduction') {
-      return true;
-    }
-    
-    // Первая глава всегда доступна
-    if (chapterId === 'ch1') return true;
-    
-    // Для остальных глав проверяем завершенность предыдущей
-    const chapterNumber = parseInt(chapterId.slice(2));
-    const prevChapterId = `ch${chapterNumber - 1}`;
-    
-    // Находим предыдущую главу
-    const prevChapter = typedChaptersData.chapters.find(ch => ch.id === prevChapterId);
-    if (!prevChapter) return false;
-
-    // Проверяем завершенность последней подглавы предыдущей главы
-    return isLastSubchapterCompleted(prevChapter);
   };
 
   // Проверяет, завершены ли все подглавы главы

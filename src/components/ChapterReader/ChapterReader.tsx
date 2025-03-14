@@ -76,16 +76,19 @@ const ChapterReader: React.FC<ChapterReaderProps> = ({ content, chapterId, onNex
         const response = await fetch(nextChapter.path);
         const content = await response.text();
         
-        dispatch({
-          type: 'SET_CURRENT_CHAPTER',
-          chapter: {
-            id: nextChapter.id,
-            title: nextChapter.title,
-            content,
-            timeSpent: 0,
-            completed: false
-          }
-        });
+        // Небольшая задержка для анимации
+        setTimeout(() => {
+          dispatch({
+            type: 'SET_CURRENT_CHAPTER',
+            chapter: {
+              id: nextChapter.id,
+              title: nextChapter.title,
+              content,
+              timeSpent: 0,
+              completed: false
+            }
+          });
+        }, 300);
       } catch (error) {
         console.error('Error loading next chapter:', error);
       }

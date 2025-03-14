@@ -9,6 +9,11 @@ import {
   Exercise
 } from '../types/progress.types';
 import { getCurrentDate } from '../utils/dateUtils';
+import chaptersData from '../components/ListOfChapters/chapters.json';
+import type { ChaptersData } from '../types/chapters.types';
+
+// Указываем тип для импортированных данных
+const typedChaptersData = chaptersData as ChaptersData;
 
 export type ProgressAction =
   | { type: 'SET_CURRENT_CHAPTER'; chapter: Chapter }
@@ -17,7 +22,9 @@ export type ProgressAction =
   | { type: 'COMPLETE_CHAPTER'; chapterId: string }
   | { type: 'SET_SPECIAL_CONTENT'; content: SpecialContent | null }
   | { type: 'SAVE_TEST_RESULT'; result: TestResult }
-  | { type: 'SAVE_EXERCISE'; exercise: Exercise };
+  | { type: 'SAVE_EXERCISE'; exercise: Exercise }
+  | { type: 'UNLOCK_ALL_CONTENT' }
+  | { type: 'UNLOCK_CONTENT'; contentId: string; contentType: 'chapter' | 'activity' };
 
 export function progressReducer(
   state: UserProgress,
@@ -156,14 +163,47 @@ export function progressReducer(
         ch.id === action.chapterId ? { ...ch, completed: true } : ch
       );
 
+      // Находим следующую главу и разблокируем её
+      const currentChapterIndex = typedChaptersData.chapters.findIndex(
+        ch => ch.id === action.chapterId
+      );
+      
+      let updatedUnlockedContent = state.unlockedContent;
+      let nextChapter = null;
+      
+      if (currentChapterIndex !== -1 && currentChapterIndex < typedChaptersData.chapters.length - 1) {
+        nextChapter = typedChaptersData.chapters[currentChapterIndex + 1];
+        if (!state.unlockedContent.chapters.includes(nextChapter.id)) {
+          updatedUnlockedContent = {
+            ...state.unlockedContent,
+            chapters: [...state.unlockedContent.chapters, nextChapter.id]
+          };
+        }
+      }
+
+      // Если есть следующая глава, добавляем её в текущие главы
+      if (nextChapter) {
+        const existingNextChapterIndex = chaptersWithCompleted.findIndex(ch => ch.id === nextChapter.id);
+        if (existingNextChapterIndex === -1) {
+          chaptersWithCompleted.push({
+            id: nextChapter.id,
+            title: nextChapter.title,
+            content: '', // Контент будет загружен при открытии главы
+            timeSpent: 0,
+            completed: false
+          });
+        }
+      }
+
       return {
         ...state,
-        currentChapter: null,
+        currentChapter: null, // Оставляем null, так как контент следующей главы ещё не загружен
         chapters: chaptersWithCompleted,
         dailyProgress: {
           ...state.dailyProgress,
           [currentDate]: updatedTodayProgress,
         },
+        unlockedContent: updatedUnlockedContent
       };
     }
 
@@ -246,6 +286,37 @@ export function progressReducer(
           },
         },
       };
+    }
+
+    case 'UNLOCK_ALL_CONTENT': {
+      // Получаем все ID глав из chapters.json
+      const allChapterIds = typedChaptersData.chapters.map((chapter: { id: string }) => chapter.id);
+      
+      return {
+        ...state,
+        unlockedContent: {
+          ...state.unlockedContent,
+          chapters: allChapterIds,
+          activities: []
+        }
+      };
+    }
+
+    case 'UNLOCK_CONTENT': {
+      const { contentId, contentType } = action;
+      const contentArrayKey = contentType === 'chapter' ? 'chapters' : 'activities';
+      const contentArray = state.unlockedContent[contentArrayKey];
+      
+      if (!contentArray.includes(contentId)) {
+        return {
+          ...state,
+          unlockedContent: {
+            ...state.unlockedContent,
+            [contentArrayKey]: [...contentArray, contentId]
+          }
+        };
+      }
+      return state;
     }
 
     default:

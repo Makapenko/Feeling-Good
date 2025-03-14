@@ -6,7 +6,15 @@ export function getInitialState(): UserProgress {
   const savedProgress = localStorage.getItem(STORAGE_KEY);
   if (savedProgress) {
     try {
-      return JSON.parse(savedProgress);
+      const parsed = JSON.parse(savedProgress);
+      // Убедимся, что unlockedContent существует
+      return {
+        ...parsed,
+        unlockedContent: parsed.unlockedContent || {
+          chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
+          activities: []
+        }
+      };
     } catch (e) {
       console.error('Error parsing saved progress:', e);
     }
@@ -21,19 +29,30 @@ export function getInitialState(): UserProgress {
       [today]: {
         chapters: {},
         exercises: {
-          testResults: []
+          testResults: [],
+          exercises: []
         }
       }
     },
     chapters: [],
-    
+    unlockedContent: {
+      chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
+      activities: []
+    }
   };
 }
 
 export function getInitialProgress(): UserProgress {
   const savedProgress = localStorage.getItem('userProgress');
   if (savedProgress) {
-    return JSON.parse(savedProgress);
+    const parsed = JSON.parse(savedProgress);
+    return {
+      ...parsed,
+      unlockedContent: parsed.unlockedContent || {
+        chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
+        activities: []
+      }
+    };
   }
 
   return {
@@ -41,5 +60,9 @@ export function getInitialProgress(): UserProgress {
     specialContent: null,
     dailyProgress: {},
     chapters: [],
+    unlockedContent: {
+      chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
+      activities: []
+    }
   };
 } 

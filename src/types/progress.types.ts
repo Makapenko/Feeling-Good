@@ -306,11 +306,18 @@ export type SpecialContent =
   | 'count-achievements'
   | 'check-cant-do'
   | 'progress-calendar'
+  | 'welcome'
   | null;
+
+export interface UnlockedContent {
+  chapters: string[];  // массив id открытых глав
+  activities: string[]; // массив id открытых заданий
+}
 
 export interface UserProgress {
   currentChapter: Chapter | null;
-  specialContent: SpecialContent;
+  specialContent: SpecialContent | null;
   dailyProgress: DailyProgress;
   chapters: Chapter[];
+  unlockedContent: UnlockedContent;
 }

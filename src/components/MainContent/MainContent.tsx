@@ -24,6 +24,7 @@ import ImagineSuccess from '../Activities/ImagineSuccess/ImagineSuccess';
 import CountAchievements from '../Activities/CountAchievements/CountAchievements';
 import CheckCantDo from '../Activities/CheckCantDo/CheckCantDo';
 import DisarmingTechnique from '../Activities/DisarmingTechnique/DisarmingTechnique';
+import WelcomePage from '../WelcomePage/WelcomePage';
 
 const MainContent: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -45,66 +46,68 @@ const MainContent: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (progress.specialContent === 'burns-checklist') {
-      return <Survey config={burnsConfig} onComplete={handleTestComplete} />;
-    } else if (progress.specialContent === 'novaco-scale') {
-      return <Survey config={novacoConfig} onComplete={handleTestComplete} />;
-    } else if (progress.specialContent === 'cognitive-biases') {
-      return <ListOfCognitiveBiases />;
-    } else if (progress.specialContent === 'cognitive-biases-test') {
-      return <TestOfCognitiveBiases onComplete={handleTestComplete} />;
-    } else if (progress.specialContent === 'three-columns-method') {
-      return <ThreeColumnsMethod />;
-    } else if (progress.specialContent === 'thought-diary') {
-      return <ThoughtDiary />;
-    } else if (progress.specialContent === 'daily-schedule') {
-      return <DailySchedule />;
-    } else if (progress.specialContent === 'anti-procrastination') {
-      return <AntiProcrastinationSheet />;
-    } else if (progress.specialContent === 'pleasure-sheet') {
-      return <PleasureSheet />;
-    } else if (progress.specialContent === 'no-buts') {
-      return <NoButsSheet />;
-    } else if (progress.specialContent === 'self-support') {
-      return <SelfSupport />;
-    } else if (progress.specialContent === 'self-activation') {
-      return <SelfActivationMethods />;
-    } else if (progress.specialContent === 'hindering-helping-thoughts') {
-      return <HinderingHelpingThoughts />;
-    } else if (progress.specialContent === 'disarming-technique') {
-      return <DisarmingTechnique />;
-    } else if (progress.specialContent === 'motivation-without-coercion') {
-      return <MotivationWithoutCoercion />;
-    } else if (progress.specialContent === 'no-lose-technique') {
-      return <NoLoseTechnique />;
-    } else if (progress.specialContent === 'small-steps') {
-      return <SmallSteps />;
-    } else if (progress.specialContent === 'imagine-success') {
-      return <ImagineSuccess />;
-    } else if (progress.specialContent === 'count-achievements') {
-      return <CountAchievements />;
-    } else if (progress.specialContent === 'check-cant-do') {
-      return <CheckCantDo />;
-    } else if (progress.specialContent === 'progress-calendar') {
-      return <ProgressCalendar />;
+    switch (progress.specialContent) {
+      case 'welcome':
+        return <WelcomePage />;
+      case 'burns-checklist':
+        return <Survey config={burnsConfig} onComplete={handleTestComplete} />;
+      case 'novaco-scale':
+        return <Survey config={novacoConfig} onComplete={handleTestComplete} />;
+      case 'cognitive-biases':
+        return <ListOfCognitiveBiases />;
+      case 'cognitive-biases-test':
+        return <TestOfCognitiveBiases onComplete={handleTestComplete} />;
+      case 'three-columns-method':
+        return <ThreeColumnsMethod />;
+      case 'thought-diary':
+        return <ThoughtDiary />;
+      case 'daily-schedule':
+        return <DailySchedule />;
+      case 'anti-procrastination':
+        return <AntiProcrastinationSheet />;
+      case 'pleasure-sheet':
+        return <PleasureSheet />;
+      case 'no-buts':
+        return <NoButsSheet />;
+      case 'self-support':
+        return <SelfSupport />;
+      case 'self-activation':
+        return <SelfActivationMethods />;
+      case 'hindering-helping-thoughts':
+        return <HinderingHelpingThoughts />;
+      case 'disarming-technique':
+        return <DisarmingTechnique />;
+      case 'motivation-without-coercion':
+        return <MotivationWithoutCoercion />;
+      case 'no-lose-technique':
+        return <NoLoseTechnique />;
+      case 'small-steps':
+        return <SmallSteps />;
+      case 'imagine-success':
+        return <ImagineSuccess />;
+      case 'count-achievements':
+        return <CountAchievements />;
+      case 'check-cant-do':
+        return <CheckCantDo />;
+      case 'progress-calendar':
+        return <ProgressCalendar />;
+      default:
+        if (progress.currentChapter) {
+          const { id, content } = progress.currentChapter;
+          return (
+            <ChapterContainer
+              content={content}
+              chapterId={id}
+            />
+          );
+        }
+        return (
+          <div className={styles.welcome}>
+            <h2>Выберите главу для изучения</h2>
+            <p>Здесь будет текст выбранной главы или задания.</p>
+          </div>
+        );
     }
-
-    if (progress.currentChapter) {
-      const { id, content } = progress.currentChapter;
-      return (
-        <ChapterContainer
-          content={content}
-          chapterId={id}
-        />
-      );
-    }
-
-    return (
-      <div className={styles.welcome}>
-        <h2>Выберите главу для изучения</h2>
-        <p>Здесь будет текст выбранной главы или задания.</p>
-      </div>
-    );
   };
 
   return (
