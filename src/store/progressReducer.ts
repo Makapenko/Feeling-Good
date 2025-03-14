@@ -300,14 +300,20 @@ export function progressReducer(
     }
 
     case 'UNLOCK_ALL_CONTENT': {
-      // Получаем все ID глав из chapters.json
-      const allChapterIds = typedChaptersData.chapters.map((chapter: { id: string }) => chapter.id);
+      // Собираем все ID глав и подглав из chapters.json
+      const allChapterIds = typedChaptersData.chapters.flatMap(chapter => {
+        const ids = [chapter.id];
+        if (chapter.sections) {
+          ids.push(...chapter.sections.map(section => section.id));
+        }
+        return ids;
+      });
       
       return {
         ...state,
         unlockedContent: {
           ...state.unlockedContent,
-          chapters: [...allChapterIds, 'all'], // Добавляем специальный маркер 'all'
+          chapters: [...allChapterIds, 'all'], // Добавляем все ID и маркер 'all'
           activities: []
         }
       };

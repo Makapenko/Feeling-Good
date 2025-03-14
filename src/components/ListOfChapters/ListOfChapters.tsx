@@ -39,25 +39,18 @@ function ListOfChapters() {
 
   // Проверяет доступность подглавы
   const isSubchapterAvailable = (chapter: Chapter, sectionId: string): boolean => {
+    // Если есть маркер 'all', все подглавы доступны
+    if (progress.unlockedContent?.chapters?.includes('all')) {
+      return true;
+    }
+
     // Если глава недоступна, подглавы тоже недоступны
     if (!isChapterAvailable(chapter.id)) {
       return false;
     }
 
-    // Если это первая подглава, она доступна
-    const firstSection = chapter.sections[0];
-    if (firstSection && firstSection.id === sectionId) {
-      return true;
-    }
-
-    // Для остальных подглав проверяем, завершена ли предыдущая
-    const sectionIndex = chapter.sections.findIndex(s => s.id === sectionId);
-    if (sectionIndex > 0) {
-      const previousSection = chapter.sections[sectionIndex - 1];
-      return progress.completedChapters.includes(previousSection.id);
-    }
-
-    return false;
+    // Проверяем, разблокирована ли конкретная подглава
+    return progress.unlockedContent?.chapters?.includes(sectionId);
   };
 
   // Проверяет, завершены ли все подглавы главы
