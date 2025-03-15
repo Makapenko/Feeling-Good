@@ -3,11 +3,77 @@ import styles from './TodayTasks.module.css';
 import { useProgress } from '../../../store/ProgressContext';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { getAvailableActivities } from '../../../data/activitiesMapping';
+import chaptersData from '../../../components/ListOfChapters/chapters.json';
+import type { ChaptersData } from '../../../types/chapters.types';
+
+const typedChaptersData = chaptersData as ChaptersData;
 
 const TodayTasks: React.FC = () => {
-  const { progress } = useProgress();
+  const { progress, dispatch } = useProgress();
   const currentDate = getCurrentDate();
   const todayProgress = progress.dailyProgress[currentDate];
+
+  // Находим первую непрочитанную главу или подглаву
+  const findFirstUnreadChapter = () => {
+    // Пропускаем первые три главы (acknowledgments, foreword, introduction)
+    const mainChapters = typedChaptersData.chapters.slice(3);
+    
+    for (const chapter of mainChapters) {
+      // Проверяем доступность главы
+      if (!progress.unlockedContent.chapters.includes(chapter.id)) {
+        continue;
+      }
+
+      // Если у главы есть подглавы
+      if (chapter.sections && chapter.sections.length > 0) {
+        for (const section of chapter.sections) {
+          if (
+            progress.unlockedContent.chapters.includes(section.id) && 
+            !progress.completedChapters.includes(section.id)
+          ) {
+            return {
+              id: section.id,
+              title: section.title,
+              path: section.path
+            };
+          }
+        }
+      } else if (!progress.completedChapters.includes(chapter.id)) {
+        // Если это глава без подглав
+        return {
+          id: chapter.id,
+          title: chapter.title,
+          path: chapter.path
+        };
+      }
+    }
+    return null;
+  };
+
+  const handleReadingClick = async () => {
+    if (readingGoalAchieved) return;
+
+    const firstUnreadChapter = findFirstUnreadChapter();
+    if (firstUnreadChapter && firstUnreadChapter.path) {
+      try {
+        const response = await fetch(firstUnreadChapter.path);
+        const content = await response.text();
+        
+        dispatch({
+          type: 'SET_CURRENT_CHAPTER',
+          chapter: {
+            id: firstUnreadChapter.id,
+            title: firstUnreadChapter.title,
+            content,
+            timeSpent: 0,
+            completed: false
+          }
+        });
+      } catch (error) {
+        console.error('Error loading chapter:', error);
+      }
+    }
+  };
 
   // Подсчитываем общее время чтения за сегодня
   const getTotalReadingTime = () => {
@@ -65,11 +131,21 @@ const TodayTasks: React.FC = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  const handleOpenBurnsChecklist = () => {
+    dispatch({
+      type: 'SET_SPECIAL_CONTENT',
+      content: 'burns-checklist'
+    });
+  };
+
   return (
     <div className={styles.container}>
       <h2>Задания на сегодня</h2>
       <div className={styles.tasksList}>
-        <div className={styles.task}>
+        <div 
+          className={`${styles.task} ${!readingGoalAchieved ? styles.clickable : ''}`}
+          onClick={handleReadingClick}
+        >
           <div className={styles.taskHeader}>
             <div className={styles.checkbox}>
               <input
@@ -87,15 +163,23 @@ const TodayTasks: React.FC = () => {
               Время чтения: {formatTime(totalReadingTime)}
             </span>
             {!readingGoalAchieved && (
-              <span className={styles.remainingTime}>
-                Осталось: {formatTime(300 - totalReadingTime)}
-              </span>
+              <>
+                <span className={styles.remainingTime}>
+                  Осталось: {formatTime(300 - totalReadingTime)}
+                </span>
+                <span className={styles.openLink}>
+                  Нажмите, чтобы продолжить чтение
+                </span>
+              </>
             )}
           </div>
         </div>
 
         {burnsStatus && (
-          <div className={styles.task}>
+          <div 
+            className={`${styles.task} ${burnsStatus.needToComplete ? styles.clickable : ''}`}
+            onClick={burnsStatus.needToComplete ? handleOpenBurnsChecklist : undefined}
+          >
             <div className={styles.taskHeader}>
               <div className={styles.checkbox}>
                 <input
@@ -112,6 +196,13 @@ const TodayTasks: React.FC = () => {
               <div className={styles.taskProgress}>
                 <span className={styles.timeSpent}>
                   {burnsStatus.message}
+                </span>
+              </div>
+            )}
+            {burnsStatus.needToComplete && (
+              <div className={styles.taskProgress}>
+                <span className={styles.openLink}>
+                  Нажмите, чтобы открыть опросник
                 </span>
               </div>
             )}

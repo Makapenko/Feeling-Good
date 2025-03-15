@@ -22,6 +22,16 @@ h2 {
   background-color: #f8f9fa;
 }
 
+.task.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.task.clickable:hover {
+  background-color: #f0f0f0;
+  border-color: #4a90e2;
+}
+
 .taskHeader {
   display: flex;
   align-items: center;
@@ -61,5 +71,11 @@ h2 {
 
 .remainingTime {
   color: #FF9800;
+  font-weight: 500;
+}
+
+.openLink {
+  color: #4a90e2;
+  font-size: 0.9rem;
   font-weight: 500;
 } 
