@@ -5,6 +5,7 @@ import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
 import { useProgress } from '../../../store/ProgressContext';
 import { v4 as uuidv4 } from 'uuid';
 import { ThreeColumnsExercise, NoLoseTechniqueExercise } from '../../../types/progress.types';
+import ActivityTimer from '../ActivityTimer';
 
 type ExerciseWithRecords = ThreeColumnsExercise | NoLoseTechniqueExercise;
 
@@ -70,7 +71,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
       const newRecord: ThoughtRecord = {
         ...currentRecord,
         id: uuidv4(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       // Получаем текущую дату
@@ -109,6 +110,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
 
   return (
     <div className={styles.container}>
+      <ActivityTimer activityId={methodId} />
       <h2>{title}</h2>
       <p className={styles.description}>{description}</p>
 

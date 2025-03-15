@@ -21,6 +21,7 @@ export interface ThoughtDiaryRecord {
     emotions: Array<{ name: string; intensity: number }>;
   };
   timestamp: string;
+  timeSpent?: number;
 }
 
 export interface ThoughtDiaryExercise {
