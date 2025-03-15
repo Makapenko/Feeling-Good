@@ -3,6 +3,7 @@ import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
 import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise } from '../../types/progress.types';
+import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import ThreeColumnsExerciseComponent from './render/ThreeColumnsExerciseComponent';
 import ThoughtDiaryExerciseComponent from './render/ThoughtDiaryExerciseComponent';
 import DailyScheduleExerciseComponent from './render/DailyScheduleExerciseComponent';
@@ -67,10 +68,6 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
 
     return { grouped, standalone };
   };
-
-
-
-
 
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map((exercise) => {
@@ -207,6 +204,10 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             <div className={styles.stat}>
               <span>Время чтения</span>
               <strong>{dayProgress.chapters && formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</strong>
+            </div>
+            <div className={styles.stat}>
+              <span>Время в методе трёх колонок</span>
+              <strong>{formatTime(getStoredActivityTime('three-columns-method'))}</strong>
             </div>
             {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
               <div className={styles.stat}>
