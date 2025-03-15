@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { getStoredActivityTime, saveActivityTime } from '../../utils/activityTimerStorage';
+import { getStoredActivityTime, saveActivityTime } from '../../../utils/activityTimerStorage';
 import styles from './Activities.module.css';
 
 interface ActivityTimerProps {

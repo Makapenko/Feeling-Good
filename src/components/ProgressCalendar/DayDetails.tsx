@@ -206,8 +206,8 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
               <strong>{dayProgress.chapters && formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</strong>
             </div>
             <div className={styles.stat}>
-              <span>Время в методе трёх колонок</span>
-              <strong>{formatTime(getStoredActivityTime('three-columns-method'))}</strong>
+              <span>Время работы с самооценкой</span>
+              <strong>{formatTime(getStoredActivityTime('three-columns-method') + getStoredActivityTime('thought-diary'))}</strong>
             </div>
             {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
               <div className={styles.stat}>

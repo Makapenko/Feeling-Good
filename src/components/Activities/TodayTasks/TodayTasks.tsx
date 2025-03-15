@@ -3,6 +3,7 @@ import styles from './TodayTasks.module.css';
 import { useProgress } from '../../../store/ProgressContext';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { getAvailableActivities } from '../../../data/activitiesMapping';
+import { getStoredActivityTime } from '../../../utils/activityTimerStorage';
 import chaptersData from '../../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../../types/chapters.types';
 
@@ -87,6 +88,10 @@ const TodayTasks: React.FC = () => {
   const totalReadingTime = getTotalReadingTime();
   const readingGoalAchieved = totalReadingTime >= 300; // 5 минут = 300 секунд
 
+  // Проверяем время работы с методами
+  const totalMethodsTime = getStoredActivityTime('three-columns-method') + getStoredActivityTime('thought-diary');
+  const methodsGoalAchieved = totalMethodsTime >= 900; // 15 минут = 900 секунд
+
   // Проверяем статус опросника Бернса
   const checkBurnsStatus = () => {
     const availableActivities = getAvailableActivities(progress.unlockedContent.chapters);
@@ -138,6 +143,20 @@ const TodayTasks: React.FC = () => {
     });
   };
 
+  const handleOpenThreeColumns = () => {
+    dispatch({
+      type: 'SET_SPECIAL_CONTENT',
+      content: 'three-columns-method'
+    });
+  };
+
+  const handleOpenThoughtDiary = () => {
+    dispatch({
+      type: 'SET_SPECIAL_CONTENT',
+      content: 'thought-diary'
+    });
+  };
+
   return (
     <div className={styles.container}>
       <h2>Задания на сегодня</h2>
@@ -170,6 +189,47 @@ const TodayTasks: React.FC = () => {
                 <span className={styles.openLink}>
                   Нажмите, чтобы продолжить чтение
                 </span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className={`${styles.task} ${!methodsGoalAchieved ? styles.clickable : ''}`}>
+          <div className={styles.taskHeader}>
+            <div className={styles.checkbox}>
+              <input
+                type="checkbox"
+                checked={methodsGoalAchieved}
+                readOnly
+              />
+            </div>
+            <span className={styles.taskTitle}>
+              Поработать с методом трёх колонок или Дневником автоматических мыслей (минимум 15 минут)
+            </span>
+          </div>
+          <div className={styles.taskProgress}>
+            <span className={styles.timeSpent}>
+              Время работы: {formatTime(totalMethodsTime)}
+            </span>
+            {!methodsGoalAchieved && (
+              <>
+                <span className={styles.remainingTime}>
+                  Осталось: {formatTime(900 - totalMethodsTime)}
+                </span>
+                <div className={styles.methodLinks}>
+                  <span 
+                    className={styles.openLink} 
+                    onClick={handleOpenThreeColumns}
+                  >
+                    Открыть метод трёх колонок
+                  </span>
+                  <span 
+                    className={styles.openLink} 
+                    onClick={handleOpenThoughtDiary}
+                  >
+                    Открыть дневник мыслей
+                  </span>
+                </div>
               </>
             )}
           </div>

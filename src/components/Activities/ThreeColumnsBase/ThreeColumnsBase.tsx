@@ -5,7 +5,7 @@ import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
 import { useProgress } from '../../../store/ProgressContext';
 import { v4 as uuidv4 } from 'uuid';
 import { ThreeColumnsExercise, NoLoseTechniqueExercise } from '../../../types/progress.types';
-import ActivityTimer from '../ActivityTimer';
+import ActivityTimer from '../ActivityTimer/ActivityTimer';
 
 type ExerciseWithRecords = ThreeColumnsExercise | NoLoseTechniqueExercise;
 

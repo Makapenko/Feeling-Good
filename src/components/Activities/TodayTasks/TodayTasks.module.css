@@ -78,4 +78,21 @@ h2 {
   color: #4a90e2;
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+.methodLinks {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.methodLinks .openLink {
+  color: #4299e1;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+.methodLinks .openLink:hover {
+  color: #2b6cb0;
 } 

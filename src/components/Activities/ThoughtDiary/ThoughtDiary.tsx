@@ -7,6 +7,7 @@ import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useProgress } from '../../../store/ProgressContext';
 import { ThoughtDiaryRecord } from '../../../types/progress.types';
+import ActivityTimer from '../ActivityTimer/ActivityTimer';
 
 const DIARY_ID = 'thought-diary';
 
@@ -223,6 +224,7 @@ const ThoughtDiary: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      <ActivityTimer activityId={DIARY_ID} />
       <h2>Дневник автоматических мыслей</h2>
 
       <div className={styles.diaryGrid}>
