@@ -8,7 +8,7 @@ export interface Part {
 }
 
 export interface SurveyConfig {
-  id: string;
+  id?: string;
   title: string;
   parts: {
     title: string;

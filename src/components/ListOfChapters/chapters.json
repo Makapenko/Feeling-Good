@@ -3,7 +3,7 @@
     {
       "id": "acknowledgments",
       "title": "Благодарности",
-      "path": "/content/chapters/ch01.html",
+      "path": "content/chapters/ch01.html",
       "order": 1,
       "sections": [
         {
@@ -15,7 +15,7 @@
     {
       "id": "foreword",
       "title": "Предисловие",
-      "path": "/content/chapters/ch02.html",
+      "path": "content/chapters/ch02.html",
       "order": 2,
       "sections": [
         {
@@ -27,7 +27,7 @@
     {
       "id": "introduction",
       "title": "Введение",
-      "path": "/content/chapters/ch03.html",
+      "path": "content/chapters/ch03.html",
       "order": 3,
       "sections": [
         {
@@ -39,7 +39,7 @@
     {
       "id": "ch1",
       "title": "Глава 1. Прорыв в лечении аффективных расстройств",
-      "path": "/content/chapters/ch1.html",
+      "path": "content/chapters/ch1.html",
       "order": 4,
       "sections": [
         {
@@ -51,7 +51,7 @@
     {
       "id": "ch2",
       "title": "Глава 2. Диагностика настроения. Первый шаг к исцелению",
-      "path": "/content/chapters/ch2.html",
+      "path": "content/chapters/ch2.html",
       "order": 5,
       "sections": [
         {
@@ -63,706 +63,706 @@
     {
       "id": "ch3",
       "title": "Глава 3. Понимание своего настроения. Каковы мысли, таковы и чувства",
-      "path": "/content/chapters/ch3-0.html",
+      "path": "content/chapters/ch3-0.html",
       "order": 6,
       "sections": [
         {
           "id": "ch3-0",
           "title": "Введение",
-          "path": "/content/chapters/ch3-0.html"
+          "path": "content/chapters/ch3-0.html"
         },
         {
           "id": "ch3-1",
           "title": "Чувства — не факты",
-          "path": "/content/chapters/ch3-1.html"
+          "path": "content/chapters/ch3-1.html"
         }
       ]
     },
     {
       "id": "ch4",
       "title": "Глава 4. Начните с самооценки",
-      "path": "/content/chapters/ch4-0.html",
+      "path": "content/chapters/ch4-0.html",
       "order": 7,
       "sections": [
         {
           "id": "ch4-0",
           "title": "Введение",
-          "path": "/content/chapters/ch4-0.html"
+          "path": "content/chapters/ch4-0.html"
         },
         {
           "id": "ch4-1",
           "title": "Преодоление чувства никчемности",
-          "path": "/content/chapters/ch4-1.html"
+          "path": "content/chapters/ch4-1.html"
         },
         {
           "id": "ch4-2",
           "title": "Конкретные методы повышения самооценки",
-          "path": "/content/chapters/ch4-2.html"
+          "path": "content/chapters/ch4-2.html"
         }
       ]
     },
     {
       "id": "ch5",
       "title": "Глава 5. Как справиться с бездельем",
-      "path": "/content/chapters/ch5-0.html",
+      "path": "content/chapters/ch5-0.html",
       "order": 8,
       "sections": [
         {
           "id": "ch5-0",
           "title": "Введение",
-          "path": "/content/chapters/ch5-0.html"
+          "path": "content/chapters/ch5-0.html"
         },
         {
           "id": "ch5-1",
           "title": "Расписание дня",
-          "path": "/content/chapters/ch5-1.html"
+          "path": "content/chapters/ch5-1.html"
         },
         {
           "id": "ch5-2",
           "title": "Листок антипрокрастинации",
-          "path": "/content/chapters/ch5-2.html"
+          "path": "content/chapters/ch5-2.html"
         },
         {
           "id": "ch5-3",
           "title": "Дневник записи автоматических мыслей",
-          "path": "/content/chapters/ch5-3.html"
+          "path": "content/chapters/ch5-3.html"
         },
         {
           "id": "ch5-4",
           "title": "Листок предполагаемого удовольствия",
-          "path": "/content/chapters/ch5-4.html"
+          "path": "content/chapters/ch5-4.html"
         },
         {
           "id": "ch5-5",
           "title": "Никаких но, или Как избавиться от сомнений",
-          "path": "/content/chapters/ch5-5.html"
+          "path": "content/chapters/ch5-5.html"
         },
         {
           "id": "ch5-6",
           "title": "Научитесь поддерживать себя",
-          "path": "/content/chapters/ch5-6.html"
+          "path": "content/chapters/ch5-6.html"
         },
         {
           "id": "ch5-7",
           "title": "Техника мешающих и помогающих мыслей",
-          "path": "/content/chapters/ch5-7.html"
+          "path": "content/chapters/ch5-7.html"
         },
         {
           "id": "ch5-8",
           "title": "Начните с маленьких шагов",
-          "path": "/content/chapters/ch5-8.html"
+          "path": "content/chapters/ch5-8.html"
         },
         {
           "id": "ch5-9",
           "title": "Мотивация без принуждения",
-          "path": "/content/chapters/ch5-9.html"
+          "path": "content/chapters/ch5-9.html"
         },
         {
           "id": "ch5-10",
           "title": "Техника обезоруживания",
-          "path": "/content/chapters/ch5-10.html"
+          "path": "content/chapters/ch5-10.html"
         },
         {
           "id": "ch5-11",
           "title": "Представьте успех",
-          "path": "/content/chapters/ch5-11.html"
+          "path": "content/chapters/ch5-11.html"
         },
         {
           "id": "ch5-12",
           "title": "Считайте свои достижения",
-          "path": "/content/chapters/ch5-12.html"
+          "path": "content/chapters/ch5-12.html"
         },
         {
           "id": "ch5-13",
           "title": "Проверяйте свои «не могу»",
-          "path": "/content/chapters/ch5-13.html"
+          "path": "content/chapters/ch5-13.html"
         },
         {
           "id": "ch5-14",
           "title": "Беспроигрышная техника",
-          "path": "/content/chapters/ch5-14.html"
+          "path": "content/chapters/ch5-14.html"
         },
         {
           "id": "ch5-15",
           "title": "Не путайте причину и следствие!",
-          "path": "/content/chapters/ch5-15.html"
+          "path": "content/chapters/ch5-15.html"
         }
       ]
     },
     {
       "id": "ch6",
       "title": "Глава 6. Вербальное дзюдо: учитесь давать отпор критике",
-      "path": "/content/chapters/ch6-0.html",
+      "path": "content/chapters/ch6-0.html",
       "order": 9,
       "sections": [
         {
           "id": "ch6-0",
           "title": "Введение",
-          "path": "/content/chapters/ch6-0.html"
+          "path": "content/chapters/ch6-0.html"
         },
         {
           "id": "ch6-1",
           "title": "Шаг первый. Эмпатия",
-          "path": "/content/chapters/ch6-1.html"
+          "path": "content/chapters/ch6-1.html"
         },
         {
           "id": "ch6-2",
           "title": "Шаг второй. Разоружение оппонента",
-          "path": "/content/chapters/ch6-2.html"
+          "path": "content/chapters/ch6-2.html"
         },
         {
           "id": "ch6-3",
           "title": "Шаг третий. Обратная связь и переговоры",
-          "path": "/content/chapters/ch6-3.html"
+          "path": "content/chapters/ch6-3.html"
         },
         {
           "id": "ch6-4",
           "title": "Техника общения с теми, кто любит перебивать или задавать слишком много вопросов",
-          "path": "/content/chapters/ch6-4.html"
+          "path": "content/chapters/ch6-4.html"
         },
         {
           "id": "ch6-5",
           "title": "Подводя итоги",
-          "path": "/content/chapters/ch6-5.html"
+          "path": "content/chapters/ch6-5.html"
         }
       ]
     },
     {
       "id": "ch7",
       "title": "Глава 7. Вы злитесь? Каков ваш IQ?",
-      "path": "/content/chapters/ch7-0.html",
+      "path": "content/chapters/ch7-0.html",
       "order": 10,
       "sections": [
         {
           "id": "ch7-0",
           "title": "Введение",
-          "path": "/content/chapters/ch7-0.html"
+          "path": "content/chapters/ch7-0.html"
         },
         {
           "id": "ch7-1",
           "title": "Шкала раздражения Новако",
-          "path": "/content/chapters/ch7-1.html"
+          "path": "content/chapters/ch7-1.html"
         },
         {
           "id": "ch7-2",
           "title": "Кто именно вызывает у вас чувство гнева?",
-          "path": "/content/chapters/ch7-2.html"
+          "path": "content/chapters/ch7-2.html"
         },
         {
           "id": "ch7-3",
           "title": "Стоит только захотеть",
-          "path": "/content/chapters/ch7-3.html"
+          "path": "content/chapters/ch7-3.html"
         },
         {
           "id": "ch7-4",
           "title": "Остудите «горячие» мысли",
-          "path": "/content/chapters/ch7-4.html"
+          "path": "content/chapters/ch7-4.html"
         },
         {
           "id": "ch7-5",
           "title": "Воображаемые сцены",
-          "path": "/content/chapters/ch7-5.html"
+          "path": "content/chapters/ch7-5.html"
         },
         {
           "id": "ch7-6",
           "title": "Перепишите правила",
-          "path": "/content/chapters/ch7-6.html"
+          "path": "content/chapters/ch7-6.html"
         },
         {
           "id": "ch7-7",
           "title": "Научитесь ожидать неадекватного поведения",
-          "path": "/content/chapters/ch7-7.html"
+          "path": "content/chapters/ch7-7.html"
         },
         {
           "id": "ch7-8",
           "title": "Грамотные манипуляции",
-          "path": "/content/chapters/ch7-8.html"
+          "path": "content/chapters/ch7-8.html"
         },
         {
           "id": "ch7-9",
           "title": "Снижение требований",
-          "path": "/content/chapters/ch7-9.html"
+          "path": "content/chapters/ch7-9.html"
         },
         {
           "id": "ch7-10",
           "title": "Стратегии переговоров",
-          "path": "/content/chapters/ch7-10.html"
+          "path": "content/chapters/ch7-10.html"
         },
         {
           "id": "ch7-11",
           "title": "Точная эмпатия",
-          "path": "/content/chapters/ch7-11.html"
+          "path": "content/chapters/ch7-11.html"
         },
         {
           "id": "ch7-12",
           "title": "Обобщаем: мысленная репетиция",
-          "path": "/content/chapters/ch7-12.html"
+          "path": "content/chapters/ch7-12.html"
         },
         {
           "id": "ch7-13",
           "title": "Десять вещей, которые вам следует знать о своем гневе",
-          "path": "/content/chapters/ch7-13.html"
+          "path": "content/chapters/ch7-13.html"
         }
       ]
       },
       {
         "id": "ch8",
         "title": "Глава 8. Как справиться с чувством вины",
-        "path": "/content/chapters/ch8-0.html",
+        "path": "content/chapters/ch8-0.html",
         "order": 11,
         "sections": [
           {
             "id": "ch8-0",
             "title": "Введение",
-            "path": "/content/chapters/ch8-0.html"
+            "path": "content/chapters/ch8-0.html"
           },
           {
             "id": "ch8-1",
             "title": "Порочный круг вины",
-            "path": "/content/chapters/ch8-1.html"
+            "path": "content/chapters/ch8-1.html"
           },
           {
             "id": "ch8-2",
             "title": "Вина — это безответственно",
-            "path": "/content/chapters/ch8-2.html"
+            "path": "content/chapters/ch8-2.html"
           }
         ]
       },
       {
         "id": "ch9",
         "title": "Глава 9. Грусть — это не депрессия",
-        "path": "/content/chapters/ch9-0.html",
+        "path": "content/chapters/ch9-0.html",
         "order": 12,
         "sections": [
           {
             "id": "ch9-0",
             "title": "Введение",
-            "path": "/content/chapters/ch8-0.html"
+            "path": "content/chapters/ch8-0.html"
           },
           {
             "id": "ch9-1",
             "title": "Перед лицом смерти",
-            "path": "/content/chapters/ch9-1.html"
+            "path": "content/chapters/ch9-1.html"
           },
           {
             "id": "ch9-2",
             "title": "Потеря конечности",
-            "path": "/content/chapters/ch9-2.html"
+            "path": "content/chapters/ch9-2.html"
           },
           {
             "id": "ch9-3",
             "title": "Потеря работы",
-            "path": "/content/chapters/ch9-3.html"
+            "path": "content/chapters/ch9-3.html"
           },
           {
             "id": "ch9-4",
             "title": "Потеря любимого человека",
-            "path": "/content/chapters/ch9-4.html"
+            "path": "content/chapters/ch9-4.html"
           },
           {
             "id": "ch9-5",
             "title": "Печаль без страдания",
-            "path": "/content/chapters/ch9-5.html"
+            "path": "content/chapters/ch9-5.html"
           }
         ]
       },
       {
         "id": "ch10",
         "title": "Глава 10. Причина всех проблем",
-        "path": "/content/chapters/ch10-0.html",
+        "path": "content/chapters/ch10-0.html",
         "order": 13,
         "sections": [
           {
             "id": "ch10-0",
             "title": "Введение",
-            "path": "/content/chapters/ch10-0.html"
+            "path": "content/chapters/ch10-0.html"
           },
           {
             "id": "ch10-1",
             "title": "Шкала дисфункциональных убеждений (ШДУ)",
-            "path": "/content/chapters/ch10-1.html"
+            "path": "content/chapters/ch10-1.html"
           },
           {
             "id": "ch10-2",
             "title": "Интерпретация результатов по ШДУ",
-            "path": "/content/chapters/ch10-2.html"
+            "path": "content/chapters/ch10-2.html"
           }
         ]
       },
       {
         "id": "ch11",
         "title": "Глава 11. Зависимость от одобрения",
-        "path": "/content/chapters/ch11-0.html",
+        "path": "content/chapters/ch11-0.html",
         "order": 14,
         "sections": [
           {
             "id": "ch11-0",
             "title": "Введение",
-            "path": "/content/chapters/ch11-0.html"
+            "path": "content/chapters/ch11-0.html"
           },
           {
             "id": "ch11-1",
             "title": "Источник проблемы",
-            "path": "/content/chapters/ch11-1.html"
+            "path": "content/chapters/ch11-1.html"
           },
           {
             "id": "ch11-2",
             "title": "Путь к независимости и самоуважению",
-            "path": "/content/chapters/ch11-2.html"
+            "path": "content/chapters/ch11-2.html"
           },
           {
             "id": "ch11-3",
             "title": "Перепишите убеждение",
-            "path": "/content/chapters/ch11-3.html"
+            "path": "content/chapters/ch11-3.html"
           },
           {
             "id": "ch11-4",
             "title": "Проект «Самоуважение»",
-            "path": "/content/chapters/ch11-4.html"
+            "path": "content/chapters/ch11-4.html"
           },
           {
             "id": "ch11-5",
             "title": "Вербальные методы",
-            "path": "/content/chapters/ch11-5.html"
+            "path": "content/chapters/ch11-5.html"
           },
           {
             "id": "ch11-6",
             "title": "Отвержение — это ни в коем случае не ваша вина!",
-            "path": "/content/chapters/ch11-6.html"
+            "path": "content/chapters/ch11-6.html"
           },
           {
             "id": "ch11-7",
             "title": "Как прийти в себя после неодобрения или отвержения",
-            "path": "/content/chapters/ch11-7.html"
+            "path": "content/chapters/ch11-7.html"
           },
           {
             "id": "ch11-8",
             "title": "Включите «внутренний свет»",
-            "path": "/content/chapters/ch11-8.html"
+            "path": "content/chapters/ch11-8.html"
           }
         ]
       },
       {
         "id": "ch12",
         "title": "Глава 12. Зависимость от любви",
-        "path": "/content/chapters/ch12-0.html",
+        "path": "content/chapters/ch12-0.html",
         "order": 15,
         "sections": [
           {
             "id": "ch12-0",
             "title": "Введение",
-            "path": "/content/chapters/ch12-0.html"
+            "path": "content/chapters/ch12-0.html"
           },
           {
             "id": "ch12-1",
             "title": "Недостатки любовной зависимости",
-            "path": "/content/chapters/ch12-1.html"
+            "path": "content/chapters/ch12-1.html"
           },
           {
             "id": "ch12-2",
             "title": "Разница между «быть одному» и «быть одиноким»",
-            "path": "/content/chapters/ch12-2.html"
+            "path": "content/chapters/ch12-2.html"
           },
           {
             "id": "ch12-3",
             "title": "Техника предполагаемого удовольствия",
-            "path": "/content/chapters/ch12-3.html"
+            "path": "content/chapters/ch12-3.html"
           },
           {
             "id": "ch12-4",
             "title": "Корректировка убеждения",
-            "path": "/content/chapters/ch12-4.html"
+            "path": "content/chapters/ch12-4.html"
           }
         ]
       },
       {
         "id": "ch13",
         "title": "Глава 13. Работа не определяет вашу ценность",
-        "path": "/content/chapters/ch13-0.html",
+        "path": "content/chapters/ch13-0.html",
         "order": 16,
         "sections": [
           {
             "id": "ch13-0",
             "title": "Введение",
-            "path": "/content/chapters/ch13-0.html"
+            "path": "content/chapters/ch13-0.html"
           },
           {
             "id": "ch13-1",
             "title": "Работа = ценность?",
-            "path": "/content/chapters/ch13-1.html"
+            "path": "content/chapters/ch13-1.html"
           },
           {
             "id": "ch13-2",
             "title": "Четыре способа укрепить самооценку",
-            "path": "/content/chapters/ch13-2.html"
+            "path": "content/chapters/ch13-2.html"
           },
           {
             "id": "ch13-3",
             "title": "Побег из ловушки достижения",
-            "path": "/content/chapters/ch13-3.html"
+            "path": "content/chapters/ch13-3.html"
           },
           {
             "id": "ch13-4",
             "title": "Не забывайте отвечать на нападки",
-            "path": "/content/chapters/ch13-4.html"
+            "path": "content/chapters/ch13-4.html"
           },
           {
             "id": "ch13-5",
             "title": "Делайте то, что вас заводит",
-            "path": "/content/chapters/ch13-5.html"
+            "path": "content/chapters/ch13-5.html"
           }
         ]
       },
       {
         "id": "ch14",
         "title": "Глава 14. Осмельтесь быть посредственным. Способы преодоления перфекционизма",
-        "path": "/content/chapters/ch14-0.html",
+        "path": "content/chapters/ch14-0.html",
         "order": 17,
         "sections": [
           {
             "id": "ch14-0",
             "title": "Введение",
-            "path": "/content/chapters/ch14-0.html"
+            "path": "content/chapters/ch14-0.html"
           },
           {
             "id": "ch14-1",
             "title": "Почему уметь ошибаться — здорово",
-            "path": "/content/chapters/ch14-1.html"
+            "path": "content/chapters/ch14-1.html"
           }
         ]
       },
       {
         "id": "ch15",
         "title": "Глава 15. Окончательная победа: выбирая жизнь",
-        "path": "/content/chapters/ch15-0.html",
+        "path": "content/chapters/ch15-0.html",
         "order": 17,
         "sections": [
           {
             "id": "ch15-0",
             "title": "Введение",
-            "path": "/content/chapters/ch15-0.html"
+            "path": "content/chapters/ch15-0.html"
           },
           {
             "id": "ch15-1",
             "title": "Оценка суицидальных побуждений",
-            "path": "/content/chapters/ch15-1.html"
+            "path": "content/chapters/ch15-1.html"
           },
           {
             "id": "ch15-2",
             "title": "Нелогичность суицида",
-            "path": "/content/chapters/ch15-2.html"
+            "path": "content/chapters/ch15-2.html"
           }
         ]
       },
       {
         "id": "ch16",
         "title": "Глава 16.  Как я следую своим же советам",
-        "path": "/content/chapters/ch16-0.html",
+        "path": "content/chapters/ch16-0.html",
         "order": 18,
         "sections": [
           {
             "id": "ch16-0",
             "title": "Введение",
-            "path": "/content/chapters/ch16-0.html"
+            "path": "content/chapters/ch16-0.html"
           },
           {
             "id": "ch16-1",
             "title": "Преодоление враждебности: человек, отказавшийся от 20 врачей",
-            "path": "/content/chapters/ch16-1.html"
+            "path": "content/chapters/ch16-1.html"
           },
           {
             "id": "ch16-2",
             "title": "Преодоление неблагодарности: женщина, которая не могла сказать спасибо",
-            "path": "/content/chapters/ch16-2.html"
+            "path": "content/chapters/ch16-2.html"
           },
           {
             "id": "ch16-3",
             "title": "Преодоление чувства неопределенности и беспомощности: женщина, которая решила совершить самоубийство",
-            "path": "/content/chapters/ch16-3.html"
+            "path": "content/chapters/ch16-3.html"
           }
         ]
       },
       {
         "id": "ch17",
         "title": "Глава 17.  В поисках «черной желчи»",
-        "path": "/content/chapters/ch17-0.html",
+        "path": "content/chapters/ch17-0.html",
         "order": 19,
         "sections": [
           {
             "id": "ch17-0",
             "title": "Введение",
-            "path": "/content/chapters/ch17-0.html"
+            "path": "content/chapters/ch17-0.html"
           },
           {
             "id": "ch17-1",
             "title": "Что играет бóльшую роль в возникновении депрессии — генетика или среда?",
-            "path": "/content/chapters/ch17-1.html"
+            "path": "content/chapters/ch17-1.html"
           },
           {
             "id": "ch17-2",
             "title": "Вызвана ли депрессия нарушением «химического баланса» в мозге?",
-            "path": "/content/chapters/ch17-2.html"
+            "path": "content/chapters/ch17-2.html"
           },
           {
             "id": "ch17-3",
             "title": "Как работает мозг?",
-            "path": "/content/chapters/ch17-3.html"
+            "path": "content/chapters/ch17-3.html"
           },
           {
             "id": "ch17-4",
             "title": "Что происходит при депрессии?",
-            "path": "/content/chapters/ch17-4.html"
+            "path": "content/chapters/ch17-4.html"
           },
           {
             "id": "ch17-5",
             "title": "Как работают антидепрессанты?",
-            "path": "/content/chapters/ch17-5.html"
+            "path": "content/chapters/ch17-5.html"
           }
         ]
       },
       {
         "id": "ch18",
         "title": "Глава 18.  Проблема ума и тела",
-        "path": "/content/chapters/ch18-0.html",
+        "path": "content/chapters/ch18-0.html",
         "order": 20,
         "sections": [
           {
             "id": "ch18-0",
             "title": "Введение",
-            "path": "/content/chapters/ch18-0.html"
+            "path": "content/chapters/ch18-0.html"
           },
           {
             "id": "ch18-1",
             "title": "Если депрессия — это наследственное заболевание, не означает ли это, что следует лечить ее лекарствами?",
-            "path": "/content/chapters/ch18-1.html"
+            "path": "content/chapters/ch18-1.html"
           },
           {
             "id": "ch18-2",
             "title": "Какое лечение лучше: психотерапия или прием лекарств?",
-            "path": "/content/chapters/ch18-2.html"
+            "path": "content/chapters/ch18-2.html"
           }
         ]
       },
       {
         "id": "ch19",
         "title": "Глава 19.  Что следует знать о распространенных антидепрессантах",
-        "path": "/content/chapters/ch19-0.html",
+        "path": "content/chapters/ch19-0.html",
         "order": 21,
         "sections": [
           {
             "id": "ch19-0",
             "title": "Введение",
-            "path": "/content/chapters/ch19-0.html"
+            "path": "content/chapters/ch19-0.html"
           },
           {
             "id": "ch19-1",
             "title": "Если я в депрессии, значит ли это, что в моем мозге присутствует «химический дисбаланс»?",
-            "path": "/content/chapters/ch19-1.html"
+            "path": "content/chapters/ch19-1.html"
           },
           {
             "id": "ch19-2",
             "title": "Если я в депрессии, значит ли это, что мне следует принимать антидепрессант?",
-            "path": "/content/chapters/ch19-2.html"
+            "path": "content/chapters/ch19-2.html"
           },
           {
             "id": "ch19-3",
             "title": "Как решить, принимать антидепрессант или нет?",
-            "path": "/content/chapters/ch19-3.html"
+            "path": "content/chapters/ch19-3.html"
           },
           {
             "id": "ch19-4",
             "title": "Кому можно принимать антидепрессанты?",
-            "path": "/content/chapters/ch19-4.html"
+            "path": "content/chapters/ch19-4.html"
           },
           {
             "id": "ch19-5",
             "title": "Кому можно принимать антидепрессанты?",
-            "path": "/content/chapters/ch19-5.html"
+            "path": "content/chapters/ch19-5.html"
           },
           {
             "id": "ch19-6",
             "title": "Как быстро и насколько хорошо действуют антидепрессанты?",
-            "path": "/content/chapters/ch19-6.html"
+            "path": "content/chapters/ch19-6.html"
           },
           {
             "id": "ch19-7",
             "title": "Какие антидепрессанты наиболее эффективны?",
-            "path": "/content/chapters/ch19-7.html"
+            "path": "content/chapters/ch19-7.html"
           },
           {
             "id": "ch19-8",
             "title": "Как понять, действительно ли антидепрессант работает?",
-            "path": "/content/chapters/ch19-8.html"
+            "path": "content/chapters/ch19-8.html"
           },
           {
             "id": "ch19-9",
             "title": "Каких улучшений настроения я могу ожидать?",
-            "path": "/content/chapters/ch19-9.html"
+            "path": "content/chapters/ch19-9.html"
           },
           {
             "id": "ch19-10",
             "title": "Если один антидепрессант действует, возможно, будет еще лучше принимать сразу два антидепрессанта или более?",
-            "path": "/content/chapters/ch19-10.html"
+            "path": "content/chapters/ch19-10.html"
           },
           {
             "id": "ch19-11",
             "title": "Сколько времени пройдет, прежде чем я почувствую улучшение?",
-            "path": "/content/chapters/ch19-11.html"
+            "path": "content/chapters/ch19-11.html"
           },
           {
             "id": "ch19-12",
             "title": "Что делать, если мой антидепрессант не работает?",
-            "path": "/content/chapters/ch19-12.html"
+            "path": "content/chapters/ch19-12.html"
           },
           {
             "id": "ch19-13",
             "title": "Как долго надо принимать антидепрессант, если он не действует?",
-            "path": "/content/chapters/ch19-13.html"
+            "path": "content/chapters/ch19-13.html"
           },
           {
             "id": "ch19-14",
             "title": "Как долго следует продолжать принимать антидепрессант, если он помогает?",
-            "path": "/content/chapters/ch19-14.html"
+            "path": "content/chapters/ch19-14.html"
           },
           {
             "id": "ch19-15",
             "title": "А если доктор говорит, что я должен продолжать прием антидепрессанта неограниченное время?",
-            "path": "/content/chapters/ch19-15.html"
+            "path": "content/chapters/ch19-15.html"
           },
           {
             "id": "ch19-16",
             "title": "Что делать, если моя депрессия усилится, когда я начну сокращать прием лекарства?",
-            "path": "/content/chapters/ch19-16.html"
+            "path": "content/chapters/ch19-16.html"
           },
           {
             "id": "ch19-17",
             "title": "Что я должен делать, если депрессия вернется в будущем?",
-            "path": "/content/chapters/ch19-17.html"
+            "path": "content/chapters/ch19-17.html"
           },
           {
             "id": "ch19-18",
             "title": "Каковы наиболее распространенные побочные эффекты антидепрессантов?",
-            "path": "/content/chapters/ch19-18.html"
+            "path": "content/chapters/ch19-18.html"
           },
           {
             "id": "ch19-19",
             "title": "Почему у антидепрессантов есть побочные эффекты?",
-            "path": "/content/chapters/ch19-19.html"
+            "path": "content/chapters/ch19-19.html"
           },
           {
             "id": "ch19-20",
             "title": "Что я могу сделать, чтобы предотвратить или свести к минимуму побочные эффекты антидепрессантов?",
-            "path": "/content/chapters/ch19-20.html"
+            "path": "content/chapters/ch19-20.html"
           },
           {
             "id": "ch19-21",
             "title": "Как предотвратить потенциально опасное взаимодействие между антидепрессантами и другими лекарствами, в том числе безрецептурными?",
-            "path": "/content/chapters/ch19-21.html"
+            "path": "content/chapters/ch19-21.html"
           },
           {
             "id": "ch19-22",
             "title": "Как и почему возникают эти взаимодействия препаратов?",
-            "path": "/content/chapters/ch19-22.html"
+            "path": "content/chapters/ch19-22.html"
           }
         ]
       }

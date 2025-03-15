@@ -58,7 +58,7 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
 
     // Создаем объект результата
     const result: SurveyResult = {
-      id: config.id,
+      id: config.id ?? `survey-${new Date().getTime()}`,
       name: config.title,
       score: state.score,
       maxScore,
