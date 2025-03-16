@@ -210,17 +210,17 @@ const ProgressCalendar: React.FC = () => {
                 <div className={styles.dayContent}>
                   {dayProgress.chapters && dayProgress.chapters.length > 0 && (
                     <div className={styles.indicator}>
-                      <span>Глав: {dayProgress.chapters.length}</span>
+                      <span>📖 {dayProgress.chapters.length}</span>
                     </div>
                   )}
                   {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
                     <div className={styles.indicator}>
-                      <span>Тестов: {dayProgress.exercises.testResults.length}</span>
+                      <span>✍️ {dayProgress.exercises.testResults.length}</span>
                     </div>
                   )}
                   {dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0 && (
                     <div className={styles.indicator}>
-                      <span>Упражнений: {dayProgress.exercises.exercises.length}</span>
+                      <span>🎯 {dayProgress.exercises.exercises.length}</span>
                     </div>
                   )}
                 </div>
