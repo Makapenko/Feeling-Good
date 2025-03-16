@@ -165,3 +165,121 @@
   color: #4CAF50;
   font-weight: 500;
 }
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: calc(100vh - 60px);
+    padding: 12px;
+    margin: 0;
+    border-radius: 0;
+    background-color: #fff;
+  }
+
+  .sidebar h3 {
+    font-size: 1.2rem;
+    margin: 8px 0 16px;
+    padding: 0 4px;
+  }
+
+  .sidebar h4 {
+    font-size: 1rem;
+    margin: 16px 0 12px;
+    padding: 0 4px;
+    color: #2d3748;
+  }
+
+  .chapterItem {
+    padding: 16px;
+    margin: 4px 0;
+    border-radius: 8px;
+    background-color: #f7fafc;
+    border: 1px solid #edf2f7;
+    font-size: 0.95rem;
+  }
+
+  .chapterTitle {
+    padding: 16px;
+    margin: 4px 0;
+    border-radius: 8px;
+    background-color: #f7fafc;
+    border: 1px solid #edf2f7;
+    font-size: 0.95rem;
+  }
+
+  .accordion {
+    padding: 16px;
+  }
+
+  .arrow {
+    font-size: 14px;
+  }
+
+  .subSections {
+    margin-left: 12px;
+    margin-top: 4px;
+  }
+
+  .sectionItem {
+    padding: 14px 16px;
+    margin: 4px 0;
+    font-size: 0.9rem;
+    background-color: #f7fafc;
+    border: 1px solid #edf2f7;
+    border-radius: 8px;
+  }
+
+  .chapterItem:active,
+  .sectionItem:active,
+  .accordion:active {
+    background-color: #edf2f7;
+    transform: scale(0.98);
+  }
+
+  .chapterItem.active,
+  .sectionItem.active,
+  .accordion.active {
+    background-color: #e6ffed;
+    border-color: #9ae6b4;
+    color: #2f855a;
+  }
+
+  .completed::after {
+    right: 12px;
+    font-size: 1.1rem;
+  }
+
+  .disabled {
+    opacity: 0.6;
+  }
+
+  /* Оптимизация скролла */
+  .sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
+
+  /* Анимация для мобильных устройств */
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .subSections {
+    animation: slideDown 0.15s ease-out;
+  }
+}
