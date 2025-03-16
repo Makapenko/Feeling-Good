@@ -109,6 +109,8 @@
     font-size: 1.2rem;
     margin: 8px 0 16px;
     padding: 0 4px;
+    color: #2d3748;
+    font-weight: 600;
   }
 
   .sections {
@@ -122,17 +124,19 @@
 
   .sectionTitle {
     font-size: 1rem;
-    margin-bottom: 12px;
+    margin: 16px 0 12px;
+    padding: 0 4px;
     color: #2d3748;
     font-weight: 600;
   }
 
   .specialTools {
-    gap: 8px;
+    gap: 4px;
   }
 
   .specialTools button {
-    padding: 16px;
+    padding: 14px 16px;
+    margin: 4px 0;
     font-size: 0.95rem;
     background-color: #f7fafc;
     border: 1px solid #edf2f7;
@@ -141,12 +145,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+    text-align: left;
   }
 
   .specialTools button::after {
     content: '›';
     font-size: 1.2rem;
     color: #a0aec0;
+    margin-left: 8px;
   }
 
   .specialTools button:active {
@@ -167,25 +174,29 @@
   .activeTasksList {
     margin-top: 16px;
     padding-top: 16px;
+    border-top: 1px solid #edf2f7;
   }
 
   .activeTasksList h3 {
     font-size: 1rem;
-    margin-bottom: 12px;
+    margin: 16px 0 12px;
     padding: 0 4px;
+    color: #2d3748;
+    font-weight: 600;
   }
 
   .taskItem {
-    padding: 16px;
+    padding: 14px 16px;
+    margin: 4px 0;
+    font-size: 0.95rem;
     background-color: #f7fafc;
     border: 1px solid #edf2f7;
-    margin-bottom: 8px;
     border-radius: 8px;
   }
 
   /* Оптимизация скролла */
   .container::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
 
   .container::-webkit-scrollbar-track {
@@ -194,7 +205,7 @@
 
   .container::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   /* Анимация при нажатии */
@@ -208,6 +219,6 @@
   }
 
   .specialTools button:active {
-    animation: buttonPress 0.1s ease-out forwards;
+    animation: buttonPress 0.15s ease-out forwards;
   }
 } 

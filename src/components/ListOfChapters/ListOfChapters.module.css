@@ -180,6 +180,8 @@
     font-size: 1.2rem;
     margin: 8px 0 16px;
     padding: 0 4px;
+    color: #2d3748;
+    font-weight: 600;
   }
 
   .sidebar h4 {
@@ -187,19 +189,30 @@
     margin: 16px 0 12px;
     padding: 0 4px;
     color: #2d3748;
+    font-weight: 600;
   }
 
   .chapterItem {
-    padding: 16px;
+    padding: 14px 16px;
     margin: 4px 0;
     border-radius: 8px;
     background-color: #f7fafc;
     border: 1px solid #edf2f7;
     font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chapterItem::after {
+    content: '›';
+    font-size: 1.2rem;
+    color: #a0aec0;
+    margin-left: 8px;
   }
 
   .chapterTitle {
-    padding: 16px;
+    padding: 14px 16px;
     margin: 4px 0;
     border-radius: 8px;
     background-color: #f7fafc;
@@ -208,11 +221,15 @@
   }
 
   .accordion {
-    padding: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .arrow {
-    font-size: 14px;
+    font-size: 1.2rem;
+    color: #a0aec0;
   }
 
   .subSections {
@@ -223,10 +240,20 @@
   .sectionItem {
     padding: 14px 16px;
     margin: 4px 0;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     background-color: #f7fafc;
     border: 1px solid #edf2f7;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sectionItem::after {
+    content: '›';
+    font-size: 1.2rem;
+    color: #a0aec0;
+    margin-left: 8px;
   }
 
   .chapterItem:active,
@@ -234,6 +261,7 @@
   .accordion:active {
     background-color: #edf2f7;
     transform: scale(0.98);
+    animation: buttonPress 0.15s ease-out forwards;
   }
 
   .chapterItem.active,
@@ -242,6 +270,12 @@
     background-color: #e6ffed;
     border-color: #9ae6b4;
     color: #2f855a;
+  }
+
+  .chapterItem.active::after,
+  .sectionItem.active::after,
+  .accordion.active .arrow {
+    color: #68d391;
   }
 
   .completed::after {
@@ -268,14 +302,12 @@
   }
 
   /* Анимация для мобильных устройств */
-  @keyframes slideDown {
+  @keyframes buttonPress {
     from {
-      opacity: 0;
-      transform: translateY(-8px);
+      transform: scale(1);
     }
     to {
-      opacity: 1;
-      transform: translateY(0);
+      transform: scale(0.98);
     }
   }
 
