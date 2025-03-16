@@ -110,19 +110,117 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 10px;
+    padding: 12px;
+    margin-top: 60px;
+  }
+
+  .description {
+    font-size: 1rem;
+    margin-bottom: 20px;
   }
 
   .inputSection {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
   }
 
   .column h3 {
     min-height: auto;
     margin-bottom: 8px;
+    font-size: 1.1rem;
   }
 
   .column textarea {
-    min-height: 120px;
+    min-height: 100px;
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  .addButton {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    position: fixed;
+    bottom: 70px;
+    left: 0;
+    margin: 0 12px;
+    width: calc(100% - 24px);
+    z-index: 100;
+    border-radius: 8px;
+  }
+
+  /* Адаптация таблицы для мобильных */
+  .recordsList {
+    margin-bottom: 100px; /* Отступ для кнопки */
+  }
+
+  .recordsList table {
+    display: block;
+    margin-top: 12px;
+  }
+
+  .recordsList thead {
+    display: none; /* Скрываем заголовки на мобильных */
+  }
+
+  .recordsList tbody {
+    display: block;
+  }
+
+  .recordsList tr {
+    display: block;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .recordsList td {
+    display: block;
+    padding: 8px 0;
+    border: none;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .recordsList td:not(:last-child) {
+    margin-bottom: 12px;
+  }
+
+  .recordsList td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    display: block;
+    margin: -8px -12px 8px -12px;
+    font-size: 0.9rem;
+    background: #f7fafc;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .recordsList td[data-label="Автоматическая мысль"]::before,
+  .recordsList td[data-label="Мешающая мысль"]::before,
+  .recordsList td[data-label="Негативная мысль"]::before {
+    color: #e53e3e;
+    background: #fff5f5;
+    border-bottom-color: #fed7d7;
+  }
+
+  .recordsList td[data-label="Когнитивные искажения"]::before {
+    color: #718096;
+    background: #f7fafc;
+    border-bottom-color: #e2e8f0;
+  }
+
+  .recordsList td[data-label="Рациональный ответ"]::before,
+  .recordsList td[data-label="Помогающая мысль"]::before {
+    color: #38a169;
+    background: #f0fff4;
+    border-bottom-color: #c6f6d5;
   }
 } 

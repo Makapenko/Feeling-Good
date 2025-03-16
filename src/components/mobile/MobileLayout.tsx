@@ -7,6 +7,8 @@ import MainContent from '../MainContent/MainContent';
 import ActivitiesPanel from '../ActivitiesPanel/ActivitiesPanel';
 import styles from './MobileLayout.module.css';
 
+// TODO исправить - при переходе из ежедневных заданий - иконка не переключается на книгу и на активности
+
 type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
 
 const MobileLayout: FC = () => {

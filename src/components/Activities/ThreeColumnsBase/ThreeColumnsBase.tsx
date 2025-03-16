@@ -6,6 +6,7 @@ import { useProgress } from '../../../store/ProgressContext';
 import { v4 as uuidv4 } from 'uuid';
 import { ThreeColumnsExercise, NoLoseTechniqueExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
+// TODO - поправить верхний и нижний паддинги в таблице старых записей в мобильной версии
 
 type ExerciseWithRecords = ThreeColumnsExercise | NoLoseTechniqueExercise;
 
@@ -170,9 +171,11 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
           <tbody>
             {allRecords.map((record) => (
               <tr key={record.id}>
-                <td>{record.leftColumn}</td>
-                {showCognitiveDistortions && <td>{record.cognitiveDistortion.join(', ')}</td>}
-                <td>{record.rightColumn}</td>
+                <td data-label={leftColumnTitle}>{record.leftColumn}</td>
+                {showCognitiveDistortions && (
+                  <td data-label="Когнитивные искажения">{record.cognitiveDistortion.join(', ')}</td>
+                )}
+                <td data-label={rightColumnTitle}>{record.rightColumn}</td>
               </tr>
             ))}
           </tbody>
