@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Survey.module.css";
 import { SurveyConfig, SurveyState, SurveyResult } from "./types";
 
@@ -10,6 +10,18 @@ interface SurveyProps {
 const Survey = ({ config, onComplete }: SurveyProps) => {
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleRadioChange = (questionIndex: number, value: string) => {
     setState((prevState) => {
@@ -75,6 +87,26 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
     setIsCompleted(false);
   };
 
+  const renderMobileAnswers = (globalIndex: number) => (
+    <td>
+      <div>
+        {config.answers.map((answer) => (
+          <label key={answer.value}>
+            <input
+              type="radio"
+              name={`question-${globalIndex}`}
+              value={answer.value.toString()}
+              checked={state.answers[globalIndex] === answer.value}
+              onChange={() => handleRadioChange(globalIndex, answer.value.toString())}
+              disabled={isCompleted}
+            />
+            <span>{answer.label}</span>
+          </label>
+        ))}
+      </div>
+    </td>
+  );
+
   return (
     <>
       <h2 className={styles.surveyTitle}>{config.title}</h2>
@@ -82,9 +114,7 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
         <thead className={styles.thead}>
           <tr>
             <th rowSpan={2}>Вопросы</th>
-          </tr>
-          <tr className={styles.thAnswers}>
-            {config.answers.map((answer) => (
+            {!isMobile && config.answers.map((answer) => (
               <th key={answer.value}>
                 {answer.label} ({answer.value})
               </th>
@@ -104,20 +134,22 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
                 return (
                   <tr key={globalIndex}>
                     <td>{question.text}</td>
-                    {config.answers.map((answer) => (
-                      <td key={answer.value}>
-                        <input
-                          type="radio"
-                          name={`question-${globalIndex}`}
-                          value={answer.value.toString()}
-                          checked={state.answers[globalIndex] === answer.value}
-                          onChange={() =>
-                            handleRadioChange(globalIndex, answer.value.toString())
-                          }
-                          disabled={isCompleted}
-                        />
-                      </td>
-                    ))}
+                    {isMobile ? (
+                      renderMobileAnswers(globalIndex)
+                    ) : (
+                      config.answers.map((answer) => (
+                        <td key={answer.value}>
+                          <input
+                            type="radio"
+                            name={`question-${globalIndex}`}
+                            value={answer.value.toString()}
+                            checked={state.answers[globalIndex] === answer.value}
+                            onChange={() => handleRadioChange(globalIndex, answer.value.toString())}
+                            disabled={isCompleted}
+                          />
+                        </td>
+                      ))
+                    )}
                   </tr>
                 );
               })}

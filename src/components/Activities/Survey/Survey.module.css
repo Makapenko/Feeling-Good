@@ -114,4 +114,152 @@
 
 .resetButton:hover {
   background-color: #cbd5e0;
+}
+
+@media (max-width: 768px) {
+  .surveyTitle {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .table {
+    display: block;
+    border: none;
+    box-shadow: none;
+    margin: 1rem 0;
+    max-height: none;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody {
+    display: block;
+  }
+
+  .table tr {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .table td:first-child {
+    width: 100%;
+  }
+
+  /* Заголовок части опроса */
+  .partTitle {
+    display: block;
+    padding: 16px;
+    margin: 24px 0 16px 0;
+    background-color: #f7fafc;
+    font-weight: 600;
+    color: #2d3748;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 1.1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Карточка вопроса */
+  .table tr:not(.partTitle) {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+  }
+
+  /* Текст вопроса */
+  .table td:first-child {
+    display: block;
+    padding: 0 0 16px 0;
+    border: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #2d3748;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+  }
+
+  /* Контейнер для радио-кнопок */
+  .table td:not(:first-child) {
+    display: block;
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+  }
+
+  /* Радио кнопки и их лейблы */
+  .table td label {
+    display: flex !important;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 0 !important;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+
+  .table td label:hover {
+    background-color: #f7fafc;
+  }
+
+  .table td label span {
+    margin-left: 12px !important;
+    font-size: 1rem !important;
+    color: #4a5568 !important;
+  }
+
+  .table input[type="radio"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  /* Группа радио-кнопок */
+  .table td > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Результаты */
+  .result {
+    margin: 1rem 0 5rem 0;
+    border-radius: 12px;
+  }
+
+  .score {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .evaluation {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  /* Кнопки */
+  .actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+  }
+
+  .completeButton,
+  .resetButton {
+    width: 100%;
+    padding: 16px;
+    font-size: 1rem;
+    border-radius: 8px;
+    margin-bottom: 60px;
+  }
 } 
