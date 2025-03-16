@@ -55,52 +55,217 @@ const MainContent: React.FC = () => {
     setActiveTab('chapters');
   };
 
+  const handleBackToActivities = () => {
+    dispatch({ type: 'SET_SPECIAL_CONTENT', content: null });
+    setActiveTab('activities');
+  };
+
   const renderContent = () => {
     switch (progress.specialContent) {
       case 'welcome':
         return <WelcomePage />;
       case 'burns-checklist':
-        return <Survey config={burnsConfig} onComplete={handleTestComplete} />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <Survey config={burnsConfig} onComplete={handleTestComplete} />
+          </>
+        );
       case 'today-tasks':
         return <TodayTasks />;
       case 'novaco-scale':
-        return <Survey config={novacoConfig} onComplete={handleTestComplete} />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <Survey config={novacoConfig} onComplete={handleTestComplete} />
+          </>
+        );
       case 'cognitive-biases':
-        return <ListOfCognitiveBiases />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <ListOfCognitiveBiases />
+          </>
+        );
       case 'cognitive-biases-test':
-        return <TestOfCognitiveBiases onComplete={handleTestComplete} />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <TestOfCognitiveBiases onComplete={handleTestComplete} />
+          </>
+        );
       case 'three-columns-method':
-        return <ThreeColumnsMethod />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <ThreeColumnsMethod />
+          </>
+        );
       case 'thought-diary':
-        return <ThoughtDiary />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <ThoughtDiary />
+          </>
+        );
       case 'daily-schedule':
-        return <DailySchedule />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <DailySchedule />
+          </>
+        );
       case 'anti-procrastination':
-        return <AntiProcrastinationSheet />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <AntiProcrastinationSheet />
+          </>
+        );
       case 'pleasure-sheet':
-        return <PleasureSheet />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <PleasureSheet />
+          </>
+        );
       case 'no-buts':
-        return <NoButsSheet />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <NoButsSheet />
+          </>
+        );
       case 'self-support':
-        return <SelfSupport />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <SelfSupport />
+          </>
+        );
       case 'self-activation':
-        return <SelfActivationMethods />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <SelfActivationMethods />
+          </>
+        );
       case 'hindering-helping-thoughts':
-        return <HinderingHelpingThoughts />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <HinderingHelpingThoughts />
+          </>
+        );
       case 'disarming-technique':
-        return <DisarmingTechnique />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <DisarmingTechnique />
+          </>
+        );
       case 'motivation-without-coercion':
-        return <MotivationWithoutCoercion />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <MotivationWithoutCoercion />
+          </>
+        );
       case 'no-lose-technique':
-        return <NoLoseTechnique />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <NoLoseTechnique />
+          </>
+        );
       case 'small-steps':
-        return <SmallSteps />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <SmallSteps />
+          </>
+        );
       case 'imagine-success':
-        return <ImagineSuccess />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <ImagineSuccess />
+          </>
+        );
       case 'count-achievements':
-        return <CountAchievements />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <CountAchievements />
+          </>
+        );
       case 'check-cant-do':
-        return <CheckCantDo />;
+        return (
+          <>
+            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+              <span>К списку заданий</span>
+            </div>
+            <CheckCantDo />
+          </>
+        );
       case 'progress-calendar':
         return <ProgressCalendar />;
       default:

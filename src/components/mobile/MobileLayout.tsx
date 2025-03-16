@@ -21,11 +21,16 @@ const MobileLayout: FC = () => {
       dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'today-tasks' });
     } else if (tab === 'about') {
       dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'welcome' });
+    } else if (tab === 'chapters' || tab === 'activities') {
+      dispatch({ type: 'SET_SPECIAL_CONTENT', content: null });
     }
   };
 
   const renderContent = () => {
-    if (progress.currentChapter && activeTab !== 'activities') {
+    if ((progress.currentChapter && activeTab !== 'activities') || 
+        (progress.specialContent && 
+         !(activeTab === 'chapters' && progress.specialContent !== 'progress-calendar' && 
+           progress.specialContent !== 'today-tasks' && progress.specialContent !== 'welcome'))) {
       return <MainContent />;
     }
 
@@ -34,10 +39,6 @@ const MobileLayout: FC = () => {
         return <ListOfChapters />;
       case 'activities':
         return <ActivitiesPanel />;
-      case 'today':
-      case 'calendar':
-      case 'about':
-        return <MainContent />;
       default:
         return <MainContent />;
     }
