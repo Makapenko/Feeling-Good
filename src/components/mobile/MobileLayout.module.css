@@ -4,11 +4,65 @@
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background-color: #fff;
 }
 
 .content {
   flex: 1;
   overflow-y: auto;
   padding: 16px;
-  padding-bottom: 72px; /* Учитываем высоту нижней панели навигации */
+  padding-bottom: 80px; /* Учитываем высоту нижней панели навигации */
+  -webkit-overflow-scrolling: touch; /* Для плавного скролла на iOS */
+}
+
+/* Стили для WelcomePage на мобильных устройствах */
+:global(.welcomePage) {
+  padding: 1rem !important;
+  margin: 0 !important;
+}
+
+:global(.welcomePage h1) {
+  font-size: 1.5rem !important;
+  line-height: 1.3 !important;
+  margin-bottom: 1rem !important;
+}
+
+:global(.welcomePage .content p) {
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+  margin-bottom: 1rem !important;
+}
+
+:global(.welcomePage .content h2) {
+  font-size: 1.3rem !important;
+  margin: 1.5rem 0 1rem !important;
+}
+
+:global(.welcomePage .content ul) {
+  margin: 1rem 0 !important;
+}
+
+:global(.welcomePage .content li) {
+  margin-bottom: 0.8rem !important;
+  padding-left: 1.2rem !important;
+}
+
+:global(.welcomePage .notice) {
+  padding: 1rem !important;
+  margin: 1.5rem 0 !important;
+}
+
+:global(.welcomePage .notice h3) {
+  font-size: 1.1rem !important;
+}
+
+:global(.welcomePage .disclaimer) {
+  margin-top: 1.5rem !important;
+  padding-top: 1rem !important;
+}
+
+:global(.welcomePage .unlockButton) {
+  width: 100% !important;
+  margin-top: 1rem !important;
+  padding: 1rem !important;
 } 
