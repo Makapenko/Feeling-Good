@@ -62,7 +62,6 @@ function ListOfChapters() {
   };
 
   const handleChapterClick = async (path: string | undefined, chapterId: string, title: string) => {
-    
     if (path) {
       try {
         const response = await fetch(path);
@@ -73,7 +72,7 @@ function ListOfChapters() {
           chapter: {
             id: chapterId,
             title: title,
-          content,
+            content,
             timeSpent: 0,
             completed: false
           }

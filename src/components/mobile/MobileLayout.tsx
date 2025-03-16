@@ -11,7 +11,7 @@ type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
 
 const MobileLayout: FC = () => {
   const { activeTab, setActiveTab } = useMobile();
-  const { dispatch } = useProgress();
+  const { progress, dispatch } = useProgress();
 
   const handleTabChange = (tab: MobileTab) => {
     setActiveTab(tab);
@@ -25,6 +25,10 @@ const MobileLayout: FC = () => {
   };
 
   const renderContent = () => {
+    if (progress.currentChapter && activeTab !== 'activities') {
+      return <MainContent />;
+    }
+
     switch (activeTab) {
       case 'chapters':
         return <ListOfChapters />;

@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import styles from './MainContent.module.css';
 import { useProgress } from '../../store/ProgressContext';
+import { useMobile } from '../../store/MobileContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
 import TodayTasks from '../Activities/TodayTasks/TodayTasks';
@@ -29,6 +32,7 @@ import WelcomePage from '../WelcomePage/WelcomePage';
 
 const MainContent: React.FC = () => {
   const { progress, dispatch } = useProgress();
+  const { setActiveTab } = useMobile();
 
   useEffect(() => {
     if (progress.currentChapter?.id) {
@@ -44,6 +48,11 @@ const MainContent: React.FC = () => {
       type: 'SAVE_TEST_RESULT',
       result
     });
+  };
+
+  const handleBackToChapters = () => {
+    dispatch({ type: 'SET_CURRENT_CHAPTER', chapter: null });
+    setActiveTab('chapters');
   };
 
   const renderContent = () => {
@@ -98,10 +107,16 @@ const MainContent: React.FC = () => {
         if (progress.currentChapter) {
           const { id, content } = progress.currentChapter;
           return (
-            <ChapterContainer
-              content={content}
-              chapterId={id}
-            />
+            <>
+              <div className={styles.mobileBackButton} onClick={handleBackToChapters}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+                <span>К списку глав</span>
+              </div>
+              <ChapterContainer
+                content={content}
+                chapterId={id}
+              />
+            </>
           );
         }
         return (

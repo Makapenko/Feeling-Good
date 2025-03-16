@@ -16,7 +16,7 @@ import type { ChaptersData } from '../types/chapters.types';
 const typedChaptersData = chaptersData as ChaptersData;
 
 export type ProgressAction =
-  | { type: 'SET_CURRENT_CHAPTER'; chapter: Chapter }
+  | { type: 'SET_CURRENT_CHAPTER'; chapter: Chapter | null }
   | { type: 'START_CHAPTER_READING'; chapterId: string }
   | { type: 'UPDATE_CHAPTER_PROGRESS'; chapterId: string; timeSpent: number }
   | { type: 'COMPLETE_CHAPTER'; chapterId: string }
@@ -41,6 +41,14 @@ export function progressReducer(
 
   switch (action.type) {
     case 'SET_CURRENT_CHAPTER': {
+      if (!action.chapter) {
+        return {
+          ...state,
+          currentChapter: null,
+          specialContent: null,
+        };
+      }
+
       const chapters = state.chapters || [];
       const existingChapterIndex = chapters.findIndex(
         (ch) => ch.id === action.chapter.id
@@ -50,7 +58,7 @@ export function progressReducer(
       const todayTimeSpent =
         todayProgress.chapters[action.chapter.id]?.timeSpent || 0;
 
-      const newChapter = {
+      const newChapter: Chapter = {
         ...action.chapter,
         timeSpent: todayTimeSpent,
       };
