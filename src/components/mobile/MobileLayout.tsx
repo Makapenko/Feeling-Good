@@ -1,13 +1,26 @@
 import { FC } from 'react';
 import { useMobile } from '../../store/MobileContext';
+import { useProgress } from '../../store/ProgressContext';
 import MobileNavBar from './MobileNavBar';
 import ListOfChapters from '../ListOfChapters/ListOfChapters';
 import MainContent from '../MainContent/MainContent';
 import ActivitiesPanel from '../ActivitiesPanel/ActivitiesPanel';
 import styles from './MobileLayout.module.css';
 
+type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
+
 const MobileLayout: FC = () => {
   const { activeTab, setActiveTab } = useMobile();
+  const { dispatch } = useProgress();
+
+  const handleTabChange = (tab: MobileTab) => {
+    setActiveTab(tab);
+    if (tab === 'calendar') {
+      dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'progress-calendar' });
+    } else if (tab === 'about') {
+      dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'welcome' });
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -18,9 +31,8 @@ const MobileLayout: FC = () => {
       case 'today':
         return <MainContent />;
       case 'calendar':
-        return <div>Календарь прогресса</div>;
       case 'about':
-        return <div>О приложении</div>;
+        return <MainContent />;
       default:
         return <MainContent />;
     }
@@ -33,7 +45,7 @@ const MobileLayout: FC = () => {
       </div>
       <MobileNavBar 
         activeTab={activeTab} 
-        onTabChange={(tab) => setActiveTab(tab as any)} 
+        onTabChange={handleTabChange} 
       />
     </div>
   );

@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faCalendarDay, 
-  faBookOpen, 
+import {
+  faCalendarDay,
+  faBookOpen,
   faTasks,
   faCircleInfo,
   faCalendarAlt
@@ -10,43 +10,39 @@ import {
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import styles from './MobileNavBar.module.css';
 
+type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
+
 interface NavItem {
-  id: string;
+  id: MobileTab;
   icon: IconDefinition;
-  label: string;
 }
 
 const navItems: NavItem[] = [
   {
     id: 'today',
-    icon: faCalendarDay,
-    label: 'Задания на сегодня'
+    icon: faCalendarDay
   },
   {
     id: 'chapters',
-    icon: faBookOpen,
-    label: 'Список глав'
+    icon: faBookOpen
   },
   {
     id: 'activities',
-    icon: faTasks,
-    label: 'Доступные задания'
+    icon: faTasks
   },
   {
     id: 'calendar',
-    icon: faCalendarAlt,
-    label: 'Календарь'
+    icon: faCalendarAlt
   },
   {
     id: 'about',
-    icon: faCircleInfo,
-    label: 'О приложении'
+    icon: faCircleInfo
   }
 ];
 
 interface MobileNavBarProps {
-  activeTab: string;
-  onTabChange: (tabId: string) => void;
+  activeTab: MobileTab;
+  onTabChange: (tabId: MobileTab) => void;
 }
 
 const MobileNavBar: FC<MobileNavBarProps> = ({ activeTab, onTabChange }) => {
@@ -59,7 +55,6 @@ const MobileNavBar: FC<MobileNavBarProps> = ({ activeTab, onTabChange }) => {
           onClick={() => onTabChange(item.id)}
         >
           <FontAwesomeIcon icon={item.icon} className={styles.icon} />
-          <span className={styles.label}>{item.label}</span>
         </button>
       ))}
     </nav>
