@@ -108,7 +108,7 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
   );
 
   return (
-    <>
+    <div className={styles.survey}>
       <h2 className={styles.surveyTitle}>{config.title}</h2>
       <table className={styles.table}>
         <thead className={styles.thead}>
@@ -184,7 +184,7 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

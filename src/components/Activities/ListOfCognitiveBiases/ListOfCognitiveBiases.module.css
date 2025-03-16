@@ -1,45 +1,71 @@
 .listOfCognitiveBiases {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.listOfCognitiveBiases h2 {
+  margin-bottom: 24px;
+  color: #2d3748;
 }
 
 .listOfCognitiveBiases ol {
-  list-style-position: inside;
-  padding: 0;
+  list-style-position: outside;
+  padding-left: 24px;
 }
 
 .listOfCognitiveBiases li {
   margin-bottom: 20px;
+  padding-left: 8px;
 }
 
 .biasHeader {
   cursor: pointer;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  padding: 16px;
+  background-color: #f7fafc;
+  border-radius: 12px;
+  transition: all 0.2s;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  border: 1px solid #e2e8f0;
+  margin: -4px 0;
 }
 
 .headerContent {
   flex: 1;
+  padding-right: 16px;
 }
 
 .biasHeader:hover {
-  background-color: #e8e8e8;
+  background-color: #edf2f7;
+  border-color: #cbd5e0;
 }
 
 .biasHeader b {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: #2d3748;
+  font-size: 1.1rem;
+}
+
+.biasHeader span {
+  color: #4a5568;
+  line-height: 1.5;
 }
 
 .arrow {
   margin-left: 10px;
   font-size: 12px;
   transition: transform 0.2s ease;
-  color: #666;
+  color: #718096;
+  flex-shrink: 0;
+}
+
+.biasHeader.open {
+  background-color: #edf2f7;
+  border-radius: 12px 12px 0 0;
+  border-bottom-color: transparent;
 }
 
 .biasHeader.open .arrow {
@@ -47,17 +73,79 @@
 }
 
 .biasDescription {
-  padding: 15px 10px;
+  padding: 20px;
   background-color: #ffffff;
-  border-radius: 0 0 4px 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  border-top: none;
+  margin-bottom: 8px;
 }
 
 .biasDescription p {
-  margin: 0 0 10px 0;
-  line-height: 1.5;
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+  color: #4a5568;
 }
 
 .biasDescription p:last-child {
   margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .listOfCognitiveBiases {
+    padding: 0;
+    margin-top: 60px;
+  }
+
+  .listOfCognitiveBiases h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .listOfCognitiveBiases ol {
+    padding-left: 0;
+  }
+
+  .listOfCognitiveBiases li {
+    margin-bottom: 16px;
+    padding-left: 4px;
+  }
+
+  .biasHeader {
+    padding: 12px;
+    margin: -4px 0;
+  }
+
+  .headerContent {
+    padding-right: 12px;
+  }
+
+  .biasHeader b {
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .biasHeader span {
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .arrow {
+    margin-top: 4px;
+  }
+
+  .biasDescription {
+    padding: 16px;
+    font-size: 0.95rem;
+  }
+
+  .biasDescription p {
+    margin-bottom: 12px;
+  }
 }
