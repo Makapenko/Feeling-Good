@@ -87,9 +87,43 @@
 }
 
 .details {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #e2e8f0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.detailsOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+.detailsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
 }
 
 .details h5 {
@@ -180,21 +214,6 @@
   pointer-events: none;
 }
 
-.detailsHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.detailsHeader h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #2d3748;
-}
-
 .closeButton {
   background: none;
   border: none;
@@ -238,7 +257,7 @@
   }
 
   .days {
-    gap: 1px;
+    gap: 2px;
   }
 
   .weekDays {
@@ -247,13 +266,13 @@
   }
 
   .day {
-    padding: 4px 2px;
-    border-radius: 2px;
+    padding: 3px;
+    border: none;
+    background-color: #f8fafc;
   }
 
   .dayHeader {
-    margin-bottom: 1px;
-    padding-bottom: 1px;
+    margin-bottom: 2px;
   }
 
   .dayHeader h3 {
@@ -265,18 +284,21 @@
   }
 
   .dayContent {
-    font-size: 0.6rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: center;
   }
 
   .indicator {
-    font-size: 0.7rem;
-    padding: 0;
+    font-size: 0.8rem;
   }
 
   .indicator span {
     display: flex;
     align-items: center;
-    gap: 2px;
+    justify-content: center;
   }
 
   .monthHeader {
@@ -303,45 +325,74 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: white;
-    z-index: 1000;
-    margin: 0;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
     padding: 16px;
-    overflow-y: auto;
   }
 
-  .details h5 {
+  .detailsOverlay {
+    backdrop-filter: none;
+  }
+
+  .detailsHeader {
+    padding: 12px 0;
+    margin-bottom: 16px;
+  }
+
+  .detailsSection {
+    margin-bottom: 16px;
+  }
+
+  .detailsSection h4 {
     font-size: 1rem;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .chapter, .subChapter, .test {
-    font-size: 0.9rem;
+  .detailsSection h4::before {
+    font-size: 1.2rem;
+  }
+
+  .detailsSection:nth-child(2) h4::before {
+    content: "📖";
+  }
+
+  .detailsSection:nth-child(3) h4::before {
+    content: "✍️";
+  }
+
+  .detailsSection:nth-child(4) h4::before {
+    content: "🎯";
+  }
+
+  .chapter, .subChapter, .test, .exercise {
     padding: 8px 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f0f0f0;
   }
 
   .chapterGroup {
-    margin: 12px 0;
-    padding: 12px;
+    margin: 8px 0;
+    padding: 8px;
+    background-color: #f8fafc;
+    border-radius: 8px;
   }
 
   .parentChapter {
     font-size: 0.9rem;
     margin-bottom: 8px;
-    padding-bottom: 8px;
+    color: #2d3748;
+    font-weight: 600;
   }
 
   .detailsHeader {
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 1;
     padding: 12px 0;
     margin-bottom: 16px;
-  }
-
-  .detailsHeader h3 {
-    font-size: 1.1rem;
   }
 
   .closeButton {
@@ -349,17 +400,51 @@
   }
 
   .detailsSection {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .detailsSection h4 {
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .exercise {
-    padding: 12px 0;
+  .detailsSection h4::before {
+    font-size: 1.2rem;
+  }
+
+  .detailsSection:nth-child(2) h4::before {
+    content: "📖";
+  }
+
+  .detailsSection:nth-child(3) h4::before {
+    content: "✍️";
+  }
+
+  .detailsSection:nth-child(4) h4::before {
+    content: "🎯";
+  }
+
+  .chapter, .subChapter, .test, .exercise {
+    padding: 8px 0;
     font-size: 0.9rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .chapterGroup {
+    margin: 8px 0;
+    padding: 8px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+  }
+
+  .parentChapter {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #2d3748;
+    font-weight: 600;
   }
 
   .day.hasContent {
