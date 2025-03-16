@@ -17,6 +17,8 @@ const MobileLayout: FC = () => {
     setActiveTab(tab);
     if (tab === 'calendar') {
       dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'progress-calendar' });
+    } else if (tab === 'today') {
+      dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'today-tasks' });
     } else if (tab === 'about') {
       dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'welcome' });
     }
@@ -29,7 +31,6 @@ const MobileLayout: FC = () => {
       case 'activities':
         return <ActivitiesPanel />;
       case 'today':
-        return <MainContent />;
       case 'calendar':
       case 'about':
         return <MainContent />;
