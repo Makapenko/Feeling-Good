@@ -2,6 +2,8 @@
   padding: 20px;
   background-color: #f5f5f5;
   border-radius: 8px;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .title {
@@ -92,4 +94,120 @@
 .taskItem span:last-child {
   color: #718096;
   font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+    background-color: #fff;
+    border-radius: 0;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
+  .title {
+    font-size: 1.2rem;
+    margin: 8px 0 16px;
+    padding: 0 4px;
+  }
+
+  .sections {
+    gap: 16px;
+  }
+
+  .section {
+    padding-bottom: 16px;
+    margin: 0 4px;
+  }
+
+  .sectionTitle {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #2d3748;
+    font-weight: 600;
+  }
+
+  .specialTools {
+    gap: 8px;
+  }
+
+  .specialTools button {
+    padding: 16px;
+    font-size: 0.95rem;
+    background-color: #f7fafc;
+    border: 1px solid #edf2f7;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .specialTools button::after {
+    content: '›';
+    font-size: 1.2rem;
+    color: #a0aec0;
+  }
+
+  .specialTools button:active {
+    background-color: #edf2f7;
+    transform: scale(0.98);
+  }
+
+  .specialTools button.active {
+    background-color: #e6ffed;
+    border-color: #9ae6b4;
+    color: #2f855a;
+  }
+
+  .specialTools button.active::after {
+    color: #68d391;
+  }
+
+  .activeTasksList {
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+
+  .activeTasksList h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+
+  .taskItem {
+    padding: 16px;
+    background-color: #f7fafc;
+    border: 1px solid #edf2f7;
+    margin-bottom: 8px;
+    border-radius: 8px;
+  }
+
+  /* Оптимизация скролла */
+  .container::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+  }
+
+  /* Анимация при нажатии */
+  @keyframes buttonPress {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(0.98);
+    }
+  }
+
+  .specialTools button:active {
+    animation: buttonPress 0.1s ease-out forwards;
+  }
 } 
