@@ -20,10 +20,14 @@
   top: 20px;
   right: 20px;
   background: #fff;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 10px 15px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: #4a5568;
+  font-weight: 500;
   z-index: 100;
+  border: 1px solid #e2e8f0;
 }
 
 .nextButton {
@@ -114,7 +118,7 @@
   }
 
   .chapterContent {
-    margin-top: 20px;
+    margin-top: 60px;
   }
 
   .content {
@@ -125,20 +129,20 @@
   }
 
   .timer {
-    position: sticky;
-    top: 0;
-    right: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(5px);
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    width: auto;
+    background: #fff;
     margin: 0;
-    padding: 8px;
-    border-radius: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 99;
   }
 
   .nextButton {

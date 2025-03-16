@@ -43,7 +43,7 @@ const ActivityTimer: React.FC<ActivityTimerProps> = React.memo(({ activityId, on
 
   return (
     <div className={styles.activityTimer}>
-      Время на странице: {formatTime(seconds)}
+      {formatTime(seconds)}
     </div>
   );
 });

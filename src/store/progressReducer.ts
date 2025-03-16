@@ -49,17 +49,18 @@ export function progressReducer(
         };
       }
 
+      const chapter = action.chapter;
       const chapters = state.chapters || [];
       const existingChapterIndex = chapters.findIndex(
-        (ch) => ch.id === action.chapter.id
+        (ch) => ch.id === chapter.id
       );
       const updatedChapters = [...chapters];
 
       const todayTimeSpent =
-        todayProgress.chapters[action.chapter.id]?.timeSpent || 0;
+        todayProgress.chapters[chapter.id]?.timeSpent || 0;
 
       const newChapter: Chapter = {
-        ...action.chapter,
+        ...chapter,
         timeSpent: todayTimeSpent,
       };
 
