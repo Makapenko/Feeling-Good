@@ -1,83 +1,162 @@
-.column {
+.emotionsSection {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  border-radius: 8px;
+  gap: 16px;
 }
 
-.column h3 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.inputSection {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 6px;
-  border: 1px solid #e9ecef;
-}
-
-.emotionInput {
-  flex: 1;
-}
-
-.intensitySlider {
-  flex: 2;
+.header {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.addButton {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.header h3 {
+  color: #2d3748;
+  font-size: 1.1rem;
+  margin: 0;
 }
 
-.addButton:hover {
-  background: #45a049;
+.tooltip {
+  color: #718096;
+  font-size: 0.9rem;
+  cursor: help;
+}
+
+.emotionInput {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.emotionField {
+  flex: 1;
+}
+
+.emotionField label {
+  display: block;
+  color: #4a5568;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.emotionField input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.emotionField input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.intensityField {
+  width: 120px;
+}
+
+.addButton {
+  padding: 10px 16px;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+  height: 40px;
+}
+
+.addButton:hover:not(:disabled) {
+  background-color: #3182ce;
+}
+
+.addButton:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
 }
 
 .emotionsList {
-  margin-top: 12px;
-  border-top: 1px solid #e9ecef;
-  padding-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.emotionItem {
+.emotionTag {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  background: #f8f9fa;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: #edf2f7;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
-  margin-bottom: 8px;
-  border: 1px solid #e9ecef;
+  font-size: 0.95rem;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emotionTag:hover {
+  background-color: #e2e8f0;
+  border-color: #cbd5e0;
 }
 
 .emotionName {
   font-weight: 500;
-  color: #2c3e50;
-  flex: 1;
 }
 
-.intensityValue {
-  background: #e9ecef;
-  color: #495057;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  font-weight: 500;
+.emotionIntensity {
+  color: #718096;
+}
+
+@media (max-width: 768px) {
+  .emotionsSection {
+    gap: 12px;
+  }
+
+  .header h3 {
+    font-size: 1rem;
+  }
+
+  .tooltip {
+    font-size: 0.85rem;
+  }
+
+  .emotionInput {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .emotionField {
+    width: 100%;
+  }
+
+  .intensityField {
+    width: 100%;
+  }
+
+  .emotionField label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  .emotionField input {
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .addButton {
+    width: 100%;
+    margin-top: 8px;
+    height: 44px;
+  }
+
+  .emotionTag {
+    padding: 4px 10px;
+    font-size: 0.9rem;
+  }
 }

@@ -5,7 +5,8 @@
   height: 100%;
   background: white;
   border-radius: 8px;
-  padding: 15px;
+  margin-top: 16px;
+  /* padding: 15px; */
 }
 
 .column h3 {
