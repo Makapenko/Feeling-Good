@@ -274,35 +274,162 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .description {
+    margin: 12px 0;
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .addActivity {
+    margin: 16px 0;
+    padding: 16px;
+    border-radius: 6px;
+  }
+
+  .inputGroup {
+    margin-bottom: 12px;
+  }
+
+  .dateInput,
+  .textInput {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .ratingLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .addButton {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  .activityList {
+    margin-top: 20px;
+  }
+
   .headers {
     display: none;
   }
 
   .activityRow {
-    grid-template-columns: 1fr;
-    gap: 5px;
-    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
     position: relative;
   }
 
   .activityRow > div {
-    padding: 5px 0;
+    width: 100%;
   }
 
-  .activityRow > div:before {
+  .activityRow > div:not(.ratingCell):not(:empty)::before {
     content: attr(data-label);
-    font-weight: bold;
-    display: inline-block;
-    width: 150px;
+    display: block;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 4px;
   }
 
   .deleteButton {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
+    padding: 8px;
+  }
+
+  .ratingCell {
+    margin-top: 4px;
+  }
+
+  .ratingInputContainer {
+    padding: 20px 0 10px;
+  }
+
+  .ratingValue {
+    top: -4px;
+    font-size: 0.9rem;
+  }
+
+  .ratingInput {
+    height: 10px;
+  }
+
+  .ratingInput::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ratingInput::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+  }
+
+  .completeButton {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .historicalActivities {
+    margin-top: 24px;
+    padding-top: 16px;
+  }
+
+  .historicalActivities h3 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+  }
+
+  .analysis {
+    margin-top: 20px;
+    padding: 16px;
+  }
+
+  .analysis h3 {
+    font-size: 1.1rem;
   }
 
   .stats {
-    grid-template-columns: 1fr;
+    font-size: 0.95rem;
+  }
+
+  .stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ratingCell::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+
+  .ratingCell:nth-of-type(1)::before {
+    content: "Предполагаемый уровень";
+  }
+
+  .ratingCell:nth-of-type(2)::before {
+    content: "Реальный уровень";
   }
 } 

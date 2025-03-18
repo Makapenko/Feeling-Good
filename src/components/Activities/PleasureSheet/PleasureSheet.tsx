@@ -247,9 +247,9 @@ const PleasureSheet = () => {
 
         {activities.map(activity => (
           <div key={activity.id} className={styles.activityRow}>
-            <div>{new Date(activity.date).toLocaleDateString()}</div>
-            <div>{activity.text}</div>
-            <div>{activity.participants}</div>
+            <div data-label="Дата">{new Date(activity.date).toLocaleDateString()}</div>
+            <div data-label="Занятие">{activity.text}</div>
+            <div data-label="С кем">{activity.participants}</div>
             <div className={styles.ratingCell}>
               <RatingInput
                 value={activity.expectedPleasure}
@@ -301,9 +301,9 @@ const PleasureSheet = () => {
 
             {allActivities.map(activity => (
               <div key={activity.id} className={styles.activityRow}>
-                <div>{new Date(activity.timestamp).toLocaleDateString('ru-RU')}</div>
-                <div>{activity.text}</div>
-                <div>{activity.participants}</div>
+                <div data-label="Дата">{new Date(activity.timestamp).toLocaleDateString('ru-RU')}</div>
+                <div data-label="Занятие">{activity.text}</div>
+                <div data-label="С кем">{activity.participants}</div>
                 <div className={styles.ratingCell}>
                   <HistoricalRating value={activity.expectedPleasure} />
                 </div>
