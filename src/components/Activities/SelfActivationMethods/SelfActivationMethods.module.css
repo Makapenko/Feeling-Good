@@ -85,9 +85,18 @@
 }
 
 @media (max-width: 768px) {
-  .header,
+  h2 {
+    margin-top: 60px;
+  }
+
+  .header {
+    display: none;
+  }
+
   .row {
     grid-template-columns: 1fr;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 20px;
   }
 
   .header .cell {
