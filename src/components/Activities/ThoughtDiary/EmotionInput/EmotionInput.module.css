@@ -82,3 +82,12 @@
   background: #dee2e6;
   cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+  .inputSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+}

@@ -110,58 +110,58 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 12px;
-    margin-top: 60px;
+    padding: 8px;
+    margin-top: 20px;
   }
 
   .description {
-    font-size: 1rem;
-    margin-bottom: 20px;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
   }
 
   .inputSection {
     grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 16px;
   }
 
   .column h3 {
     min-height: auto;
-    margin-bottom: 8px;
-    font-size: 1.1rem;
+    margin-bottom: 6px;
+    font-size: 1rem;
   }
 
   .column textarea {
-    min-height: 100px;
-    padding: 10px;
-    font-size: 1rem;
+    min-height: 80px;
+    padding: 8px;
+    font-size: 0.95rem;
   }
 
   .addButton {
     width: 100%;
-    padding: 14px;
-    margin-bottom: 20px;
+    padding: 12px;
+    margin-bottom: 16px;
     position: fixed;
-    bottom: 70px;
+    bottom: 60px;
     left: 0;
-    margin: 0 12px;
-    width: calc(100% - 24px);
+    margin: 0 8px;
+    width: calc(100% - 16px);
     z-index: 100;
     border-radius: 8px;
   }
 
-  /* Адаптация таблицы для мобильных */
   .recordsList {
-    margin-bottom: 100px; /* Отступ для кнопки */
+    margin-bottom: 80px;
+    padding-bottom: 16px;
   }
 
   .recordsList table {
     display: block;
-    margin-top: 12px;
+    margin-top: 8px;
   }
 
   .recordsList thead {
-    display: none; /* Скрываем заголовки на мобильных */
+    display: none;
   }
 
   .recordsList tbody {
@@ -170,37 +170,37 @@
 
   .recordsList tr {
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 12px;
+    border-radius: 6px;
+    padding: 8px;
     background: #fff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   .recordsList td {
     display: block;
-    padding: 8px 0;
+    padding: 6px 0;
     border: none;
     position: relative;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    line-height: 1.4;
   }
 
   .recordsList td:not(:last-child) {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 
   .recordsList td::before {
     content: attr(data-label);
     font-weight: 600;
     display: block;
-    margin: -8px -12px 8px -12px;
-    font-size: 0.9rem;
+    margin: -8px -8px 6px -8px;
+    font-size: 0.85rem;
     background: #f7fafc;
-    padding: 8px 12px;
+    padding: 6px 8px;
     border-bottom: 1px solid #e2e8f0;
-    border-radius: 8px 8px 0 0;
+    border-radius: 6px 6px 0 0;
   }
 
   .recordsList td[data-label="Автоматическая мысль"]::before,
