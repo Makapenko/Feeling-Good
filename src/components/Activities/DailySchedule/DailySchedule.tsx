@@ -193,12 +193,14 @@ const DailySchedule = () => {
               onActivityChange={(text) => handleActivityChange(index, text, 'planned')}
               onTypeToggle={(type) => toggleActivityType(index, type, 'planned')}
               onRatingChange={(type, value) => handleRatingChange(index, type, 'planned', value)}
+              placeholder="Планируемое занятие"
             />
             <ActivityColumn
               activity={slot.actual}
               onActivityChange={(text) => handleActivityChange(index, text, 'actual')}
               onTypeToggle={(type) => toggleActivityType(index, type, 'actual')}
               onRatingChange={(type, value) => handleRatingChange(index, type, 'actual', value)}
+              placeholder="Фактическое занятие"
             />
           </div>
         ))}

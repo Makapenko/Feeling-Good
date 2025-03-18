@@ -7,21 +7,23 @@ interface ActivityColumnProps {
   onActivityChange: (text: string) => void;
   onTypeToggle: (type: 'task' | 'pleasure') => void;
   onRatingChange: (type: 'task' | 'pleasure', value: number) => void;
+  placeholder: string;
 }
 
 const ActivityColumn = memo(({ 
   activity, 
   onActivityChange, 
   onTypeToggle, 
-  onRatingChange 
+  onRatingChange,
+  placeholder 
 }: ActivityColumnProps) => (
   <div className={styles.activityContainer}>
-    <input
-      type="text"
+    <textarea
       value={activity?.text || ''}
       onChange={(e) => onActivityChange(e.target.value)}
-      placeholder="Введите занятие..."
+      placeholder={placeholder}
       className={styles.activityInput}
+      rows={1}
     />
     {activity?.text && (
       <div className={styles.ratings}>
