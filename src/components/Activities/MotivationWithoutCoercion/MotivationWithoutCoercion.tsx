@@ -108,7 +108,22 @@ const MotivationWithoutCoercion: React.FC = () => {
           Добавить мысль
         </button>
       </div>
-
+      {records.length > 0 && (
+        <div className={styles.recordsList}>
+          <h3>Записанные мысли:</h3>
+          <div className={styles.thoughts}>
+            {records.map((record: MotivationWithoutCoercionRecord) => (
+              <button
+                key={record.id}
+                className={`${styles.thoughtButton} ${activeRecord?.id === record.id ? styles.active : ''}`}
+                onClick={() => setActiveRecord(record)}
+              >
+                {record.thought}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {activeRecord && (
         <div className={styles.columnsContainer}>
           <div className={styles.column}>
@@ -159,23 +174,6 @@ const MotivationWithoutCoercion: React.FC = () => {
                 <li key={index}>{disadvantage}</li>
               ))}
             </ul>
-          </div>
-        </div>
-      )}
-
-      {records.length > 0 && (
-        <div className={styles.recordsList}>
-          <h3>Записанные мысли:</h3>
-          <div className={styles.thoughts}>
-            {records.map((record: MotivationWithoutCoercionRecord) => (
-              <button
-                key={record.id}
-                className={`${styles.thoughtButton} ${activeRecord?.id === record.id ? styles.active : ''}`}
-                onClick={() => setActiveRecord(record)}
-              >
-                {record.thought}
-              </button>
-            ))}
           </div>
         </div>
       )}
