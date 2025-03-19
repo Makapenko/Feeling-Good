@@ -96,46 +96,42 @@ const NoButsSheet = () => {
       </div>
 
       <div className={styles.thoughtsContainer}>
-        <div className={styles.column}>
-          <div className={styles.columnHeader}>Ваше "но":</div>
-          {pairs.map((pair, index) => (
-            <div key={pair.id} className={styles.thoughtItem}>
+        {pairs.map((pair, index) => (
+          <div key={pair.id} className={styles.thoughtItem}>
+            <button
+              onClick={() => handleDeletePair(pair.id)}
+              className={styles.deleteButton}
+              aria-label="Удалить пару"
+            >
+              ✕
+            </button>
+            <div className={styles.butSection}>
               <textarea
                 value={pair.but}
                 onChange={(e) => handleUpdatePair(pair.id, 'but', e.target.value)}
                 className={`${styles.textArea} ${styles.butArea}`}
               />
-              <div className={styles.arrow}>→</div>
-              {index < pairs.length - 1 && (
-                <div className={styles.verticalArrow}>↓</div>
-              )}
             </div>
-          ))}
-        </div>
-        <div className={styles.column}>
-          <div className={styles.columnHeader}>Конструктивная альтернатива:</div>
-          {pairs.map((pair) => (
-            <div key={pair.id} className={styles.thoughtItem}>
+            <div className={styles.thoughtArrow}>
+              <div className={styles.arrow}>→</div>
+            </div>
+            <div className={styles.noButSection}>
               <textarea
                 value={pair.noBut}
                 onChange={(e) => handleUpdatePair(pair.id, 'noBut', e.target.value)}
                 className={`${styles.textArea} ${styles.noButArea}`}
               />
-              <button
-                onClick={() => handleDeletePair(pair.id)}
-                className={styles.deleteButton}
-                aria-label="Удалить пару"
-              >
-                ✕
-              </button>
             </div>
-          ))}
-        </div>
+            {index < pairs.length - 1 && (
+              <div className={styles.verticalArrow}>↓</div>
+            )}
+          </div>
+        ))}
       </div>
 
       <div className={styles.addNewSection}>
         <div className={styles.addPair}>
-          <div className={styles.inputGroup}>
+          <div className={styles.inputGroup} data-label="Ваше 'но':">
             <textarea
               value={newBut}
               onChange={(e) => setNewBut(e.target.value)}
@@ -143,7 +139,7 @@ const NoButsSheet = () => {
               className={`${styles.textArea} ${styles.butArea}`}
             />
           </div>
-          <div className={styles.inputGroup}>
+          <div className={styles.inputGroup} data-label="Конструктивная альтернатива:">
             <textarea
               value={newNoBut}
               onChange={(e) => setNewNoBut(e.target.value)}
@@ -176,7 +172,9 @@ const NoButsSheet = () => {
                   <div className={styles.butColumn}>
                     <p>{pair.but}</p>
                   </div>
-                  <div className={styles.arrowColumn}>→</div>
+                  <div className={styles.arrowColumn}>
+                    <div className={styles.arrowHistory}>→</div>
+                    </div>
                   <div className={styles.noButColumn}>
                     <p>{pair.noBut}</p>
                   </div>

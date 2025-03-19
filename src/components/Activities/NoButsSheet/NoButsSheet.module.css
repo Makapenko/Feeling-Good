@@ -5,29 +5,36 @@
 }
 
 .thoughtsContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 20px;
-  position: relative;
-}
-
-.column {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.columnHeader {
-  font-size: 14px;
-  font-weight: 500;
-  color: #2d3748;
-  margin-bottom: 10px;
+  gap: 24px;
+  margin-bottom: 20px;
 }
 
 .thoughtItem {
   position: relative;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.butSection::before {
+  content: "Ваше 'но':";
+  display: block;
+  font-weight: 500;
+  color: #2d3748;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.noButSection::before {
+  content: "Конструктивная альтернатива:";
+  display: block;
+  font-weight: 500;
+  color: #2d3748;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
 .textArea {
@@ -56,24 +63,23 @@
   border-color: #9ae6b4;
 }
 
-.arrow {
-  position: absolute;
+.thoughtArrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: #718096;
   font-size: 20px;
-  right: -30px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
+  padding-top: 32px;
 }
 
 .verticalArrow {
   position: absolute;
   color: #718096;
   font-size: 20px;
-  right: -30px;
-  bottom: -25%;
-  transform: rotate(45deg);
-  z-index: 1;
+  left: 50%;
+  bottom: -32px;
+  transform: translateX(-50%);
+  rotate: 45deg;
 }
 
 .deleteButton {
@@ -132,26 +138,6 @@
 
 .addButton:hover {
   background-color: #3182ce;
-}
-
-@media (max-width: 768px) {
-  .thoughtsContainer,
-  .addPair {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .arrow {
-    right: auto;
-    left: 50%;
-    top: auto;
-    bottom: -25px;
-    transform: translateX(-50%) rotate(90deg);
-  }
-
-  .verticalArrow {
-    display: none;
-  }
 }
 
 .description {
@@ -256,17 +242,202 @@
   border-right: none;
 }
 
+
 @media (max-width: 768px) {
-  .tableHeader,
-  .tableRow {
-    grid-template-columns: 100px 1fr 30px 1fr;
+  .container {
+    padding: 16px;
   }
 
-  .dateColumn,
+  .description {
+    margin: 16px 0;
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .thoughtsContainer {
+    gap: 32px;
+  }
+
+  .thoughtItem {
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: white;
+    padding: 16px;
+    padding-top: 48px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .butSection::before,
+  .noButSection::before {
+    font-size: 0.9rem;
+    color: #4a5568;
+  }
+
+  .textArea {
+    font-size: 0.95rem;
+    padding: 12px;
+    min-height: 80px;
+  }
+
+  .thoughtArrow {
+    padding: 8px 0;
+  }
+
+  .arrow {
+    rotate: 90deg;
+  }
+
+  .verticalArrow {
+    display: none;
+  }
+
+  .deleteButton {
+    right: 8px;
+    top: 8px;
+    color: #718096;
+    padding: 8px;
+    font-size: 18px;
+  }
+
+  .addNewSection {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+
+  .addPair {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+
+  .inputGroup {
+    background: white;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+
+  .inputGroup::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .addButton {
+    width: 100%;
+    height: 44px;
+    font-size: 1rem;
+    border-radius: 6px;
+  }
+
+  .historicalPairs {
+    margin-top: 32px;
+  }
+
+  .historicalPairs h3 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+  }
+
+  .pairsTable {
+    border: none;
+    border-radius: 0;
+  }
+
+  .tableHeader {
+    display: none;
+  }
+
+  .tableBody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .tableRow {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: white;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .dateColumn {
+    order: -1;
+    font-size: 0.85rem;
+    color: #718096;
+    padding: 4px 8px;
+    background: #f8fafc;
+    border-radius: 4px;
+    width: fit-content;
+  }
+
   .butColumn,
-  .arrowColumn,
   .noButColumn {
-    padding: 8px 12px;
-    font-size: 0.875rem;
+    padding: 0;
+    border: none;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .butColumn::before {
+    content: "Ваше 'но':";
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .noButColumn::before {
+    content: "Конструктивная альтернатива:";
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .arrowColumn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border: none;
+    color: #4a5568;
+    font-size: 1.5rem;
+     }
+
+  .arrowHistory {
+    rotate: 90deg;
+  }
+
+  .butColumn p,
+  .noButColumn p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 0;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .butColumn p {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+  }
+
+  .noButColumn p {
+    background-color: #f0fff4;
+    border: 1px solid #9ae6b4;
   }
 } 
