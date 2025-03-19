@@ -118,14 +118,14 @@ const SelfSupport = () => {
                   onChange={(e) => handleUpdateStatement(statement.id, 'supporting', e.target.value)}
                   className={`${styles.textArea} ${styles.supportingArea}`}
                 />
-                <button
+              </div>
+              <button
                   onClick={() => handleDeleteStatement(statement.id)}
                   className={styles.deleteButton}
                   aria-label="Удалить утверждение"
                 >
                   ✕
                 </button>
-              </div>
             </div>
           ))}
         </div>
@@ -169,7 +169,9 @@ const SelfSupport = () => {
                   <div className={styles.devaluingColumn}>
                     <p>{statement.devaluing}</p>
                   </div>
-                  <div className={styles.arrowColumn}>→</div>
+                  <div className={styles.arrowColumn}>
+                    <div className={styles.arrow}>→</div>
+                  </div>
                   <div className={styles.supportingColumn}>
                     <p>{statement.supporting}</p>
                   </div>

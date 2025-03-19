@@ -89,7 +89,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .addButton {
@@ -198,27 +198,184 @@
 }
 
 @media (max-width: 768px) {
-  .header,
-  .row,
-  .addRow {
+  .container {
+    padding: 16px;
+  }
+
+  .description {
+    margin: 16px 0;
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .header {
+    display: none;
+  }
+
+  .statements {
+    gap: 32px;
+  }
+
+  .row {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 8px;
+    background: white;
+    padding: 16px;
+    padding-top: 48px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .column {
+    position: relative;
+  }
+
+  .column:first-child::before {
+    content: "Обесценивающее утверждение";
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .column:nth-child(2):before {
+    content: "Поддерживающее утверждение";
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .textArea {
+    font-size: 0.95rem;
+    padding: 12px;
+    min-height: 80px;
   }
 
   .deleteButton {
-    right: 0;
-    top: -25px;
+    right: 8px;
+    color: #718096;
+    padding: 8px;
+    font-size: 18px;
   }
 
-  .tableHeader,
+  .addRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .addRow .column {
+    background: white;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+
+  .addButton {
+    width: 100%;
+    height: 44px;
+    font-size: 1rem;
+    border-radius: 6px;
+  }
+
+  .historicalStatements {
+    margin-top: 32px;
+  }
+
+  .historicalStatements h3 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+  }
+
+  .statementsTable {
+    border: none;
+    border-radius: 0;
+  }
+
+  .tableHeader {
+    display: none;
+  }
+
+  .tableBody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: none;
+  }
+
   .tableRow {
-    grid-template-columns: 1fr 30px 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: white;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .devaluingColumn,
-  .arrowColumn,
   .supportingColumn {
-    padding: 8px 12px;
-    font-size: 0.875rem;
+    padding: 0;
+    border: none;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .devaluingColumn::before {
+    content: "Обесценивающее утверждение";
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .supportingColumn::before {
+    content: "Поддерживающее утверждение";
+    display: block;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .arrowColumn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 0;
+    border: none;
+    color: #4a5568;
+    font-size: 1.5rem;
+  }
+
+  .arrow {
+    rotate: 90deg;
+  }
+
+  .devaluingColumn p,
+  .supportingColumn p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 0;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .devaluingColumn p {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+  }
+
+  .supportingColumn p {
+    background-color: #f0fff4;
+    border: 1px solid #9ae6b4;
   }
 } 
