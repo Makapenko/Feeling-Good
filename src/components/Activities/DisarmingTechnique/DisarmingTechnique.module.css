@@ -76,3 +76,9 @@
   left: 8px;
   top: -1px;
 } 
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+}

@@ -58,6 +58,48 @@
   border-radius: 4px;
 }
 
+/* Стили для табов */
+.tabsContainer {
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+
+.tabButton {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+  color: #4299e1;
+}
+
+.activeTab {
+  color: #4299e1;
+  border-bottom-color: #4299e1;
+}
+
+.tabContent {
+  min-height: 200px;
+}
+
+.emptyState {
+  padding: 40px 20px;
+  text-align: center;
+  color: #64748b;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
 .section {
   margin-bottom: 10px;
   border-radius: 8px;
@@ -568,20 +610,6 @@
   border-right: none;
 }
 
-@media (max-width: 768px) {
-  .tableHeader,
-  .tableRow {
-    grid-template-columns: 1fr 30px 1fr;
-  }
-
-  .butColumn,
-  .arrowColumn,
-  .noButColumn {
-    padding: 8px 12px;
-    font-size: 0.875rem;
-  }
-}
-
 .statementsTable {
   width: 100%;
   border: 1px solid #e2e8f0;
@@ -659,20 +687,6 @@
 
 .supportingColumn {
   border-right: none;
-}
-
-@media (max-width: 768px) {
-  .tableHeader,
-  .tableRow {
-    grid-template-columns: 1fr 30px 1fr;
-  }
-
-  .devaluingColumn,
-  .arrowColumn,
-  .supportingColumn {
-    padding: 8px 12px;
-    font-size: 0.875rem;
-  }
 }
 
 .stepsList {
@@ -776,4 +790,85 @@
 .minimumDone {
   color: #28a745;
   font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    padding: 16px;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .header {
+    margin-bottom: 16px;
+  }
+  
+  .header h2 {
+    font-size: 1.25rem;
+  }
+
+  .summary {
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .stat {
+    padding: 8px 12px;
+    min-width: 70px;
+  }
+
+  .tabsContainer {
+    gap: 0;
+    margin-bottom: 16px;
+  }
+
+  .tabButton {
+    padding: 10px 0;
+    flex: 1;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .chapter, .test {
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+  }
+
+  .subChapter {
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 10px 10px 16px;
+  }
+
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 30px 1fr;
+  }
+
+  .butColumn,
+  .arrowColumn,
+  .noButColumn,
+  .devaluingColumn,
+  .supportingColumn {
+    padding: 8px 12px;
+    font-size: 0.875rem;
+  }
+
+  .scheduleHeaders {
+    grid-template-columns: 70px 1fr 1fr;
+  }
+
+  .scheduleRow {
+    grid-template-columns: 70px 1fr 1fr;
+  }
+
+  .timeHeader, .columnHeader, .timeCell, .activityCell {
+    padding: 8px;
+    font-size: 0.875rem;
+  }
 } 
