@@ -339,14 +339,16 @@ const SmallSteps: React.FC = () => {
               placeholder="Опишите маленький шаг..."
               className={styles.input}
             />
-            <input
-              type="number"
-              value={newStepDuration}
-              onChange={(e) => setNewStepDuration(Number(e.target.value))}
-              min="1"
-              className={styles.durationInput}
-            />
-            <span className={styles.durationLabel}>мин</span>
+            <div className={styles.durationWrapper}>
+              <input
+                type="number"
+                value={newStepDuration}
+                onChange={(e) => setNewStepDuration(Number(e.target.value))}
+                min="1"
+                className={styles.durationInput}
+              />
+              <span className={styles.durationLabel}>мин</span>
+            </div>
             <button onClick={() => addStep(task.id)} className={styles.button}>
               Добавить шаг
             </button>

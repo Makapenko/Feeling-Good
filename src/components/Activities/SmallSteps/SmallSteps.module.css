@@ -369,4 +369,136 @@
 
 .pauseButton:hover {
   background: linear-gradient(135deg, #dd6b20 0%, #c05621 100%);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+
+  .description {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .description h2 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+
+  .description p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .description li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+
+  .newTask {
+    flex-direction: column;
+    padding: 16px;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+
+  .task {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .task h3 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+  }
+
+  .newStep {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    margin: 16px 0;
+    gap: 16px;
+  }
+
+  .input, 
+  .durationInput {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .durationWrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .durationInput {
+    flex: 1;
+  }
+
+  .durationLabel {
+    flex-shrink: 0;
+  }
+
+  .button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .step {
+    flex-wrap: wrap;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .checkbox {
+    margin-right: 8px;
+  }
+
+  .stepText {
+    flex: 1 0 60%;
+    font-size: 0.95rem;
+    word-break: break-word;
+    margin-bottom: 6px;
+  }
+
+  .editStep {
+    flex: 1 0 100%;
+    margin: 8px 0;
+  }
+
+  .editDuration {
+    width: 80px;
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  .duration {
+    font-size: 0.9rem;
+    min-width: 55px;
+  }
+
+  .timer {
+    font-size: 1rem;
+    min-width: 65px;
+  }
+
+  .startButton, 
+  .pauseButton {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .completionMessage {
+    padding: 16px;
+    font-size: 1rem;
+    margin: 12px 0;
+  }
 } 
