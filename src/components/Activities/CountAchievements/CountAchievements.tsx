@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styles from './CountAchievements.module.css';
 import { useProgress } from '../../../store/ProgressContext';
 import { CountAchievementsRecord, CountAchievementsExercise, Exercise } from '../../../types/progress.types';
@@ -10,7 +10,22 @@ const SHEET_ID = 'count-achievements';
 const CountAchievements: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const [newAchievement, setNewAchievement] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
   const today = new Date().toISOString().split('T')[0];
+
+  // Детектор мобильного устройства
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   // Получаем все записи из прогресса
   const records = useMemo(() => {
@@ -125,10 +140,14 @@ const CountAchievements: React.FC = () => {
             value={newAchievement}
             onChange={(e) => setNewAchievement(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Опишите то, что вы сделали сегодня самостоятельно..."
+            placeholder={isMobile ? "Ваше достижение..." : "Опишите то, что вы сделали сегодня самостоятельно..."}
             className={styles.input}
           />
-          <button onClick={addAchievement} className={styles.addButton}>
+          <button 
+            onClick={addAchievement} 
+            className={styles.addButton}
+            disabled={!newAchievement.trim()}
+          >
             Добавить
           </button>
         </div>

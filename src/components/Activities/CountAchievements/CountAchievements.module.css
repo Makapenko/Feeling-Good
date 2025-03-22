@@ -196,4 +196,159 @@
   margin-right: 1rem;
   color: #6c757d;
   font-size: 0.9rem;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+
+  .container h2 {
+    font-size: 1.6em;
+    margin-bottom: 20px;
+  }
+
+  .description, 
+  .section {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .description h3, 
+  .section h3 {
+    font-size: 1.2em;
+    margin-bottom: 12px;
+  }
+
+  .tips {
+    padding: 12px;
+  }
+
+  .tips h4 {
+    font-size: 1.1em;
+  }
+
+  .tips ul {
+    padding-left: 16px;
+  }
+
+  .inputContainer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    height: 48px;
+  }
+
+  .addButton {
+    width: 100%;
+    padding: 14px;
+    height: 48px;
+  }
+
+  .achievementItem {
+    padding: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .achievementNumber {
+    flex: 0 0 30px;
+    font-size: 16px;
+    margin-right: 10px;
+    color: #3498db;
+  }
+
+  .achievementText {
+    flex: 1;
+    margin-right: 40px;
+    font-size: 16px;
+    word-break: break-word;
+  }
+
+  .achievementTime {
+    margin-left: 0;
+    font-size: 0.8rem;
+    display: block;
+    width: 100%;
+    text-align: right;
+    margin-top: 5px;
+  }
+
+  .removeButton {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    padding: 5px;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+  }
+
+  .placeholder {
+    padding: 15px;
+    font-size: 0.9em;
+  }
+
+  .motivation {
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 0.9em;
+  }
+
+  .historyDay {
+    margin-bottom: 1.5rem;
+    padding: 0.8rem;
+  }
+
+  .historyDate {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  /* Улучшаем отображение элементов в истории */
+  .historyDay .achievementItem {
+    padding: 12px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .historyDay .achievementNumber {
+    flex: 0 0 30px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+
+  .historyDay .achievementText {
+    flex: 1;
+    margin-right: 40px;
+    word-break: break-word;
+  }
+
+  .historyDay .achievementTime {
+    width: 100%;
+    text-align: right;
+    margin-top: 5px;
+    padding-left: 40px;
+  }
+
+  .historyDay .removeButton {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+  }
 } 
