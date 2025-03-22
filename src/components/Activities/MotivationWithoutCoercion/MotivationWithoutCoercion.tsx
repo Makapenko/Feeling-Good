@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
 
 const SHEET_ID = 'motivation-without-coercion';
-
+// TODO добавить отображение в ежедневных задачах
 const MotivationWithoutCoercion: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const [currentThought, setCurrentThought] = useState('');
