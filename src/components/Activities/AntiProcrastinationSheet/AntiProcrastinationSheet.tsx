@@ -7,15 +7,15 @@ import { AntiProcrastinationTask } from '../../../types/progress.types';
 
 const SHEET_ID = 'anti-procrastination';
 
-const RatingInput = ({ 
-  value, 
-  onChange, 
-  placeholder = '', 
+const RatingInput = ({
+  value,
+  onChange,
+  placeholder = '',
   isActual = false,
   disabled = false,
   compareValue = null,
   isReversed = false
-}: { 
+}: {
   value: number | null;
   onChange: (value: number) => void;
   placeholder?: string;
@@ -26,7 +26,7 @@ const RatingInput = ({
 }) => {
   const getComparisonClass = () => {
     if (!isActual || value === null || compareValue === null) return '';
-    
+
     if (value === compareValue) return 'same';
     if (isReversed) {
       return value < compareValue ? 'better' : 'worse';
@@ -54,18 +54,18 @@ const RatingInput = ({
   );
 };
 
-const HistoricalRating = ({ 
-  value, 
+const HistoricalRating = ({
+  value,
   compareValue = null,
   isReversed = false
-}: { 
+}: {
   value: number | null;
   compareValue?: number | null;
   isReversed?: boolean;
 }) => {
   const getComparisonClass = () => {
     if (value === null || compareValue === null) return '';
-    
+
     if (value === compareValue) return 'same';
     if (isReversed) {
       return value < compareValue ? 'better' : 'worse';
@@ -85,12 +85,12 @@ const HistoricalRating = ({
 const TaskAnalysis = ({ tasks, title = "Анализ выполненных задач" }: { tasks: Task[]; title?: string }) => {
   const difficultyDiff = Math.round(tasks
     .filter(t => t.actualDifficulty !== null)
-    .reduce((acc, t) => acc + (t.actualDifficulty! - t.expectedDifficulty), 0) / 
+    .reduce((acc, t) => acc + (t.actualDifficulty! - t.expectedDifficulty), 0) /
     tasks.filter(t => t.actualDifficulty !== null).length || 0);
 
   const pleasureDiff = Math.round(tasks
     .filter(t => t.actualPleasure !== null)
-    .reduce((acc, t) => acc + (t.actualPleasure! - t.expectedPleasure), 0) / 
+    .reduce((acc, t) => acc + (t.actualPleasure! - t.expectedPleasure), 0) /
     tasks.filter(t => t.actualPleasure !== null).length || 0);
 
   const getDiffClass = (diff: number, isReversed = false) => {
@@ -129,12 +129,24 @@ const AntiProcrastinationSheet = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState('');
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
   // Получаем все записи из прогресса
   const allTasks = useMemo(() => {
     if (!progress?.dailyProgress) return [];
-    
+
     const allDayTasks: Array<AntiProcrastinationTask & { date: string }> = [];
-    
+
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
@@ -148,7 +160,7 @@ const AntiProcrastinationSheet = () => {
           }
         });
     });
-    
+
     // Сортируем по дате и времени (новые сверху)
     return allDayTasks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [progress]);
@@ -196,7 +208,7 @@ const AntiProcrastinationSheet = () => {
     field: 'expectedDifficulty' | 'expectedPleasure' | 'actualDifficulty' | 'actualPleasure',
     value: number
   ) => {
-    const updatedTasks = tasks.map(task => 
+    const updatedTasks = tasks.map(task =>
       task.id === taskId ? { ...task, [field]: value } : task
     );
     setTasks(updatedTasks);
@@ -219,14 +231,24 @@ const AntiProcrastinationSheet = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Листок антипрокрастинации</h2>
+      <div className={styles.titleContainer}>
+        <h2>Листок антипрокрастинации</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
+
       <div className={styles.description}>
         <p>
           Запишите ваш прогноз относительно того, насколько трудной и интересной окажется задача,
           прежде чем вы к ней приступите. После выполнения каждого этапа задачи запишите,
           насколько трудным и интересным он оказался.
         </p> <br />
-        <p>Если задача требует существенных затрат времени и усилий, лучше всего разбить ее на несколько небольших этапов, каждый из которых займет не более 15 минут. </p> 
+        <p>Если задача требует существенных затрат времени и усилий, лучше всего разбить ее на несколько небольших этапов, каждый из которых займет не более 15 минут. </p>
       </div>
 
       <div className={styles.addTask}>
@@ -322,12 +344,12 @@ const AntiProcrastinationSheet = () => {
                 <div className={styles.ratings}>
                   <HistoricalRating value={task.expectedDifficulty} />
                   <HistoricalRating value={task.expectedPleasure} />
-                  <HistoricalRating 
-                    value={task.actualDifficulty} 
+                  <HistoricalRating
+                    value={task.actualDifficulty}
                     compareValue={task.expectedDifficulty}
                     isReversed={true}
                   />
-                  <HistoricalRating 
+                  <HistoricalRating
                     value={task.actualPleasure}
                     compareValue={task.expectedPleasure}
                   />

@@ -7,6 +7,39 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.titleContainer h2 {
+  margin-bottom: 0;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+  line-height: 1;
+}
+
+.favoriteButton:hover {
+  color: #f1c40f;
+}
+
+.favoriteButton.isFavorite {
+  color: #f1c40f;
+}
+
 h2 {
   color: #2c3e50;
   margin-bottom: 1.5rem;
@@ -314,6 +347,15 @@ h2 {
     border-radius: 0;
     box-shadow: none;
   }
+
+    .titleContainer {
+      margin-bottom: 20px;
+    }
+  
+    .favoriteButton {
+      font-size: 24px;
+      right: 10px;
+    }
 
   h2 {
     font-size: 1.4rem;
