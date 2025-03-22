@@ -13,15 +13,28 @@ const CountAchievements: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const today = new Date().toISOString().split('T')[0];
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   // Детектор мобильного устройства
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
-    
+
     return () => {
       window.removeEventListener('resize', checkIfMobile);
     };
@@ -32,7 +45,7 @@ const CountAchievements: React.FC = () => {
     const currentDate = getCurrentDate();
     const dayProgress = progress.dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
-      (ex: Exercise): ex is CountAchievementsExercise => 
+      (ex: Exercise): ex is CountAchievementsExercise =>
         ex.type === 'count-achievements' && ex.id === SHEET_ID
     );
     return exercise?.records || [];
@@ -57,13 +70,13 @@ const CountAchievements: React.FC = () => {
 
   const addAchievement = () => {
     if (!newAchievement.trim()) return;
-    
+
     const newRecord: CountAchievementsRecord = {
       id: uuidv4(),
       text: newAchievement.trim(),
       timestamp: new Date().toISOString()
     };
-    
+
     saveToProgress([...records, newRecord]);
     setNewAchievement('');
   };
@@ -112,13 +125,22 @@ const CountAchievements: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Считайте свои достижения</h2>
+      <div className={styles.titleContainer}>
+        <h2>Считайте свои достижения</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
 
       <div className={styles.description}>
         <h3>О методе</h3>
         <p>
-          Этот метод помогает преодолеть негативное мышление и повысить уверенность в себе путем 
-          подсчета ваших ежедневных достижений. Каждый вечер записывайте все, что вы сделали 
+          Этот метод помогает преодолеть негативное мышление и повысить уверенность в себе путем
+          подсчета ваших ежедневных достижений. Каждый вечер записывайте все, что вы сделали
           самостоятельно, без напоминаний и подталкиваний со стороны других людей.
         </p>
         <div className={styles.tips}>
@@ -143,8 +165,8 @@ const CountAchievements: React.FC = () => {
             placeholder={isMobile ? "Ваше достижение..." : "Опишите то, что вы сделали сегодня самостоятельно..."}
             className={styles.input}
           />
-          <button 
-            onClick={addAchievement} 
+          <button
+            onClick={addAchievement}
             className={styles.addButton}
             disabled={!newAchievement.trim()}
           >
@@ -211,8 +233,8 @@ const CountAchievements: React.FC = () => {
 
       <div className={styles.motivation}>
         <p>
-          Помните: каждое действие, которое вы совершаете самостоятельно, 
-          укрепляет вашу уверенность в себе и доказывает, что вы способны 
+          Помните: каждое действие, которое вы совершаете самостоятельно,
+          укрепляет вашу уверенность в себе и доказывает, что вы способны
           на большее, чем думаете.
         </p>
       </div>
