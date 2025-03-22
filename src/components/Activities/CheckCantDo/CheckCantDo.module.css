@@ -226,4 +226,147 @@
   margin: 0;
   font-style: italic;
   color: #666;
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+
+  .container h2 {
+    font-size: 1.6em;
+    margin-bottom: 20px;
+  }
+
+  .description,
+  .section {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .description h3,
+  .section h3 {
+    font-size: 1.3em;
+    margin-bottom: 12px;
+  }
+
+  .example {
+    padding: 12px;
+  }
+
+  .example h4 {
+    font-size: 1.1em;
+  }
+
+  .inputContainer {
+    gap: 12px;
+  }
+
+  .inputGroup label {
+    font-size: 14px;
+  }
+
+  .input {
+    padding: 14px;
+    font-size: 16px;
+    height: 48px;
+  }
+
+  .addButton {
+    width: 100%;
+    padding: 14px;
+    height: 48px;
+    align-self: center;
+  }
+
+  .tasksList {
+    gap: 12px;
+  }
+
+  .taskItem {
+    padding: 12px;
+    position: relative;
+  }
+
+  .taskContent {
+    gap: 12px;
+  }
+
+  .taskHeader h4,
+  .taskMinimum h4 {
+    font-weight: bold;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .taskText,
+  .minimumText {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .taskTime {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .taskActions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .checkbox {
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  .checkmark {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .checkbox input:checked + .checkmark:after {
+    left: 8px;
+    top: 4px;
+    width: 6px;
+    height: 12px;
+  }
+
+  .checkboxLabel {
+    font-size: 14px;
+    flex: 1;
+  }
+
+  .removeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .placeholder {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  .motivation {
+    padding: 15px;
+    margin-top: 20px;
+  }
+
+  .motivation p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
 } 

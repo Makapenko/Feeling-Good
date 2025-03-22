@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styles from './CheckCantDo.module.css';
 import { useProgress } from '../../../store/ProgressContext';
 import { CheckCantDoRecord, CheckCantDoExercise, Exercise } from '../../../types/progress.types';
@@ -11,6 +11,21 @@ const CheckCantDo: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const [newTask, setNewTask] = useState('');
   const [minimumDescription, setMinimumDescription] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Детектор мобильного устройства
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   // Получаем все записи из прогресса
   const records = useMemo(() => {
@@ -112,8 +127,9 @@ const CheckCantDo: React.FC = () => {
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Например: Я не могу читать..."
+              placeholder={isMobile ? "Ваше «не могу»" : "Например: Я не могу читать..."}
               className={styles.input}
+              aria-label="Что вы не можете сделать"
             />
           </div>
           <div className={styles.inputGroup}>
@@ -123,11 +139,16 @@ const CheckCantDo: React.FC = () => {
               value={minimumDescription}
               onChange={(e) => setMinimumDescription(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Например: Прочитать одно предложение..."
+              placeholder={isMobile ? "Минимальный шаг" : "Например: Прочитать одно предложение..."}
               className={styles.input}
+              aria-label="Минимальный шаг для проверки"
             />
           </div>
-          <button onClick={addTask} className={styles.addButton}>
+          <button 
+            onClick={addTask} 
+            className={styles.addButton}
+            disabled={!newTask.trim() || !minimumDescription.trim()}
+          >
             Добавить
           </button>
         </div>
@@ -135,7 +156,7 @@ const CheckCantDo: React.FC = () => {
         <div className={styles.tasksList}>
           {sortedRecords.length > 0 ? (
             sortedRecords.map((task) => (
-              <div key={task.id} className={styles.taskItem}>
+              <div key={task.id} className={styles.taskItem} data-id={task.id}>
                 <div className={styles.taskContent}>
                   <div className={styles.taskHeader}>
                     <h4>Убеждение "не могу":</h4>
