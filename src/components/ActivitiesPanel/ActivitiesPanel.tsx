@@ -97,12 +97,6 @@ const ActivitiesPanel: React.FC = () => {
           </div>
         ))}
       </div>
-
-      <div className={styles.activeTasksList}>
-        <h3>Текущие задания:</h3>
-        <ul>
-        </ul>
-      </div>
     </div>
   );
 };

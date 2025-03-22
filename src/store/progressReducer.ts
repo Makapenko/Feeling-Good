@@ -24,7 +24,8 @@ export type ProgressAction =
   | { type: 'SAVE_TEST_RESULT'; result: TestResult }
   | { type: 'SAVE_EXERCISE'; exercise: Exercise }
   | { type: 'UNLOCK_ALL_CONTENT' }
-  | { type: 'UNLOCK_CONTENT'; contentId: string; contentType: 'chapter' | 'activity' };
+  | { type: 'UNLOCK_CONTENT'; contentId: string; contentType: 'chapter' | 'activity' }
+  | { type: 'TOGGLE_FAVORITE_ACTIVITY'; activityId: string };
 
 export function progressReducer(
   state: UserProgress,
@@ -343,6 +344,25 @@ export function progressReducer(
         };
       }
       return state;
+    }
+
+    case 'TOGGLE_FAVORITE_ACTIVITY': {
+      const { activityId } = action;
+      const favoriteActivities = state.favoriteActivities || [];
+      
+      if (favoriteActivities.includes(activityId)) {
+        // Удаляем из избранного
+        return {
+          ...state,
+          favoriteActivities: favoriteActivities.filter(id => id !== activityId)
+        };
+      } else {
+        // Добавляем в избранное
+        return {
+          ...state,
+          favoriteActivities: [...favoriteActivities, activityId]
+        };
+      }
     }
 
     default:

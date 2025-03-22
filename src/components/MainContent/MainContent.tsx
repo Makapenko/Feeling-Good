@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
-import TodayTasks from '../Activities/TodayTasks/TodayTasks';
+import TodayTasks from '../TodayTasks/TodayTasks';
 
 import Survey, { burnsConfig, novacoConfig } from '../Activities/Survey';
 import { SurveyResult } from '../Activities/Survey/types';

@@ -318,11 +318,12 @@ export interface UnlockedContent {
 export interface UserProgress {
   currentChapter: Chapter | null;
   specialContent: SpecialContent | null;
+  dailyProgress: { [key: string]: DayProgress };
   chapters: Chapter[];
-  dailyProgress: Record<string, DayProgress>;
   unlockedContent: {
     chapters: string[];
     activities: string[];
   };
-  completedChapters: string[]; // Массив ID завершенных глав и подглав
+  completedChapters: string[];
+  favoriteActivities: string[]; // Список избранных активностей (их ID)
 }

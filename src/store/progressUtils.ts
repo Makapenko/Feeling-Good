@@ -14,7 +14,8 @@ export function getInitialState(): UserProgress {
           chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
           activities: []
         },
-        completedChapters: parsed.completedChapters || []
+        completedChapters: parsed.completedChapters || [],
+        favoriteActivities: parsed.favoriteActivities || []
       };
     } catch (e) {
       console.error('Error parsing saved progress:', e);
@@ -40,7 +41,8 @@ export function getInitialState(): UserProgress {
       chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
       activities: []
     },
-    completedChapters: []
+    completedChapters: [],
+    favoriteActivities: []
   };
 }
 
@@ -53,7 +55,8 @@ export function getInitialProgress(): UserProgress {
       unlockedContent: parsed.unlockedContent || {
         chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
         activities: []
-      }
+      },
+      favoriteActivities: parsed.favoriteActivities || []
     };
   }
 
@@ -66,6 +69,7 @@ export function getInitialProgress(): UserProgress {
       chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
       activities: []
     },
-    completedChapters: []
+    completedChapters: [],
+    favoriteActivities: []
   };
 } 

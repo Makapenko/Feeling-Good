@@ -197,4 +197,71 @@
   .task.clickable:active {
     animation: buttonPress 0.1s ease-out forwards;
   }
+}
+
+/* Стили для секции избранных активностей */
+.favoritesTitle {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  color: #2c3e50;
+  font-size: 1.5em;
+}
+
+.favoritesList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.favoriteItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.favoriteItem:hover {
+  background-color: #e9f7fe;
+  transform: translateX(5px);
+}
+
+.favoriteIcon {
+  color: #f1c40f;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.favoriteTitle {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+  .favoritesTitle {
+    font-size: 1.3em;
+    margin-top: 25px;
+    padding-top: 15px;
+  }
+  
+  .favoritesList {
+    gap: 8px;
+  }
+  
+  .favoriteItem {
+    padding: 10px 12px;
+  }
+  
+  .favoriteIcon {
+    font-size: 18px;
+  }
+  
+  .favoriteTitle {
+    font-size: 14px;
+  }
 } 

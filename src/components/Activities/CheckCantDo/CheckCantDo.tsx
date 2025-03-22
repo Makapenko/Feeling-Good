@@ -6,12 +6,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
 
 const SHEET_ID = 'check-cant-do';
+const ACTIVITY_NAME = 'Проверяйте свои «не могу»';
 
 const CheckCantDo: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const [newTask, setNewTask] = useState('');
   const [minimumDescription, setMinimumDescription] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
 
   // Детектор мобильного устройства
   useEffect(() => {
@@ -43,7 +49,7 @@ const CheckCantDo: React.FC = () => {
     const exercise: CheckCantDoExercise = {
       type: 'check-cant-do',
       id: SHEET_ID,
-      name: 'Проверяйте свои «не могу»',
+      name: ACTIVITY_NAME,
       completed: false,
       completedAt: '',
       records: updatedRecords
@@ -98,9 +104,26 @@ const CheckCantDo: React.FC = () => {
     );
   }, [records]);
 
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Проверяйте свои «не могу»</h2>
+      <div className={styles.titleContainer}>
+        <h2>Проверяйте свои «не могу»</h2>
+        <button 
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
 
       <div className={styles.description}>
         <h3>О методе</h3>

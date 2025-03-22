@@ -11,6 +11,39 @@
   font-size: 2em;
 }
 
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.titleContainer h2 {
+  margin-bottom: 0;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+  line-height: 1;
+}
+
+.favoriteButton:hover {
+  color: #f1c40f;
+}
+
+.favoriteButton.isFavorite {
+  color: #f1c40f;
+}
+
 .description {
   background-color: #f5f5f5;
   padding: 20px;
@@ -231,7 +264,16 @@
 /* Мобильная версия */
 @media (max-width: 768px) {
   .container {
-    padding: 0;
+    padding: 10px;
+  }
+
+  .titleContainer {
+    margin-bottom: 20px;
+  }
+
+  .favoriteButton {
+    font-size: 24px;
+    right: 10px;
   }
 
   .container h2 {

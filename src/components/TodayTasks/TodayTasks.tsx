@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './TodayTasks.module.css';
-import { useProgress } from '../../../store/ProgressContext';
-import { getCurrentDate } from '../../../utils/dateUtils';
-import { getAvailableActivities } from '../../../data/activitiesMapping';
-import { getStoredActivityTime } from '../../../utils/activityTimerStorage';
-import chaptersData from '../../../components/ListOfChapters/chapters.json';
-import type { ChaptersData } from '../../../types/chapters.types';
+import { useProgress } from '../../store/ProgressContext';
+import { getCurrentDate } from '../../utils/dateUtils';
+import { getAvailableActivities } from '../../data/activitiesMapping';
+import { getStoredActivityTime } from '../../utils/activityTimerStorage';
+import chaptersData from '../ListOfChapters/chapters.json';
+import type { ChaptersData } from '../../types/chapters.types';
+import { SpecialContent } from '../../types/progress.types';
 
 const typedChaptersData = chaptersData as ChaptersData;
 
@@ -13,6 +14,43 @@ const TodayTasks: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const currentDate = getCurrentDate();
   const todayProgress = progress.dailyProgress[currentDate];
+
+  // Получаем избранные активности напрямую из Redux
+  const favoriteActivities = useMemo(() => {
+    const favoriteIds = progress.favoriteActivities || [];
+    return favoriteIds.map(id => ({
+      id,
+      name: getActivityNameById(id)
+    })).filter(activity => activity.name); // Фильтруем по наличию имени
+  }, [progress.favoriteActivities]);
+
+  // Функция для получения имени активности по ID
+  function getActivityNameById(id: string): string {
+    // Здесь можно использовать маппинг для получения имени активности
+    const activityMap: {[key: string]: string} = {
+      'three-columns-method': 'Метод трёх колонок',
+      'thought-diary': 'Дневник автоматических мыслей',
+      'daily-schedule': 'Расписание дня',
+      'anti-procrastination': 'Листок антипрокрастинации',
+      'pleasure-sheet': 'Листок предполагаемого удовольствия',
+      'no-buts': 'Техника «Никаких но»',
+      'self-support': 'Самоподдержка',
+      'hindering-helping-thoughts': 'Техника мешающих и помогающих мыслей',
+      'small-steps': 'Метод маленьких шагов',
+      'motivation-without-coercion': 'Мотивация без принуждения',
+      'disarming-technique': 'Техника обезоруживания',
+      'imagine-success': 'Представьте успех',
+      'count-achievements': 'Считайте достижения',
+      'check-cant-do': 'Проверяйте свои «не могу»',
+      'no-lose-technique': 'Беспроигрышная техника',
+      'burns-checklist': 'Опросник депрессии Бернса',
+      'cognitive-biases': 'Список когнитивных искажений',
+      'cognitive-biases-test': 'Тест на когнитивные искажения',
+      'novaco-scale': 'Шкала раздражения Новако',
+    };
+    
+    return activityMap[id] || '';
+  }
 
   // Находим первую непрочитанную главу или подглаву
   const findFirstUnreadChapter = () => {
@@ -157,6 +195,13 @@ const TodayTasks: React.FC = () => {
     });
   };
 
+  const handleOpenActivity = (activityId: string) => {
+    dispatch({
+      type: 'SET_SPECIAL_CONTENT',
+      content: activityId as SpecialContent
+    });
+  };
+
   return (
     <div className={styles.container}>
       <h2>Задания на сегодня</h2>
@@ -269,6 +314,24 @@ const TodayTasks: React.FC = () => {
           </div>
         )}
       </div>
+
+      {favoriteActivities.length > 0 && (
+        <>
+          <h2 className={styles.favoritesTitle}>Избранное</h2>
+          <div className={styles.favoritesList}>
+            {favoriteActivities.map(activity => (
+              <div 
+                key={activity.id} 
+                className={`${styles.favoriteItem} ${styles.clickable}`}
+                onClick={() => handleOpenActivity(activity.id)}
+              >
+                <div className={styles.favoriteIcon}>★</div>
+                <span className={styles.favoriteTitle}>{activity.name}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
