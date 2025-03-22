@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import styles from './DailySchedule.module.css';
 import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
 import { useProgress } from '../../../store/ProgressContext';
 import { DailyScheduleExercise } from '../../../types/progress.types';
 
-const SCHEDULE_ID = 'daily-schedule';
+const SHEET_ID = 'daily-schedule';
 
 const DailySchedule = () => {
   const { progress, dispatch } = useProgress();
@@ -42,9 +42,8 @@ const DailySchedule = () => {
       })));
       return;
     }
-
     const schedule = dayProgress.exercises.exercises.find(
-      exercise => exercise.type === 'daily-schedule' && exercise.id === SCHEDULE_ID
+      exercise => exercise.type === 'daily-schedule' && exercise.id === SHEET_ID
     ) as DailyScheduleExercise | undefined;
 
 
@@ -59,12 +58,25 @@ const DailySchedule = () => {
     }
   }, [date, progress?.dailyProgress]);
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   // Сохранение расписания при изменении
   const saveSchedule = useCallback(() => {
     if (!date) return;
     const exercise: DailyScheduleExercise = {
       type: 'daily-schedule',
-      id: SCHEDULE_ID,
+      id: SHEET_ID,
       name: 'Расписание дня',
       completed: true,
       completedAt: new Date().toISOString(),
@@ -81,7 +93,7 @@ const DailySchedule = () => {
   // Автоматическое сохранение при изменении timeSlots
   useEffect(() => {
     const hasActivities = timeSlots.some(slot => slot.planned?.text || slot.actual?.text);
-    
+
     if (date && hasActivities) {
       const timeoutId = setTimeout(() => {
         saveSchedule();
@@ -91,7 +103,7 @@ const DailySchedule = () => {
   }, [timeSlots, saveSchedule, date]);
 
   const handleActivityChange = useCallback((index: number, text: string, type: 'planned' | 'actual') => {
-    
+
     setTimeSlots(prevSlots => {
       const newTimeSlots = [...prevSlots];
       if (!newTimeSlots[index][type]) {
@@ -111,7 +123,7 @@ const DailySchedule = () => {
     setTimeSlots(prevSlots => {
       const newTimeSlots = prevSlots.map((slot, i) => {
         if (i !== index) return slot;
-        
+
         const activity = slot[columnType];
         if (!activity) return slot;
 
@@ -131,15 +143,15 @@ const DailySchedule = () => {
   }, []);
 
   const handleRatingChange = useCallback((
-    index: number, 
-    activityType: 'task' | 'pleasure', 
+    index: number,
+    activityType: 'task' | 'pleasure',
     columnType: 'planned' | 'actual',
     value: number
   ) => {
     setTimeSlots(prevSlots => {
       const newTimeSlots = prevSlots.map((slot, i) => {
         if (i !== index) return slot;
-        
+
         const activity = slot[columnType];
         if (!activity) return slot;
 
@@ -160,7 +172,16 @@ const DailySchedule = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Расписание дня</h2>
+      <div className={styles.titleContainer}>
+        <h2>Расписание дня</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
       <div className={styles.dateContainer}>
         <label>
           Дата:
