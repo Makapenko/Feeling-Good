@@ -51,6 +51,23 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     }
   }, []);
 
+  // Функция для адаптации путей к изображениям в зависимости от окружения
+  const adaptImagePaths = useCallback((htmlContent: string): string => {
+    // Получаем базовый путь из окружения или из URL
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    const basePath = import.meta.env.BASE_URL || '/';
+    
+    // Если мы на GitHub Pages или basePath не равен '/', оставляем путь как есть
+    // Если мы в локальной среде, удаляем префикс '/Feeling-Good'
+    if (!isGitHubPages && basePath === '/') {
+      return htmlContent
+        .replace(/src="\/Feeling-Good\/content\/images\//g, 'src="/content/images/')
+        .replace(/src="\/content\/images\//g, 'src="/content/images/');
+    }
+    
+    return htmlContent;
+  }, []);
+
   const findNextChapter = useCallback(() => {
     // Находим текущую главу
     const currentChapter = typedChaptersData.chapters.find(ch => {
@@ -139,14 +156,16 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     });
   }, [dispatch]);
 
-  // Очищаем HTML и разрешаем только безопасные теги и атрибуты
+  // Очищаем HTML, адаптируем пути к изображениям и разрешаем только безопасные теги и атрибуты
   const sanitizedContent = useMemo(() => {
     const config = {
       ALLOWED_TAGS: ['p', 'br', 'img', 'i', 'b', 'sup', 'sub', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'center'],
       ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'border', 'id', 'name', 'href'],
     };
-    return DOMPurify.sanitize(content, config);
-  }, [content]);
+    // Применяем санитайзер и адаптируем пути
+    const sanitized = DOMPurify.sanitize(content, config);
+    return adaptImagePaths(sanitized);
+  }, [content, adaptImagePaths]);
 
   const contentElement = useMemo(() => (
     <div 
