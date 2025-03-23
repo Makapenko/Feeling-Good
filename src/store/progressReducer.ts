@@ -32,7 +32,6 @@ export type ProgressAction =
 
 // Функция для определения вновь разблокированных активностей
 export const getNewlyUnlockedActivities = (
-  prevUnlockedChapters: string[],
   newlyUnlockedChapter: string
 ): SpecialContent[] => {
   // Получаем список активностей, связанных с новой главой
@@ -233,7 +232,6 @@ export function progressReducer(
 
       // Получаем список новых активностей, связанных с разблокированной главой
       const newlyUnlockedActivities = getNewlyUnlockedActivities(
-        state.unlockedContent.chapters,
         newlyUnlockedChapter
       );
 
@@ -366,7 +364,6 @@ export function progressReducer(
         let newlyUnlockedActivities: SpecialContent[] = [];
         if (contentType === 'chapter') {
           newlyUnlockedActivities = getNewlyUnlockedActivities(
-            state.unlockedContent.chapters,
             contentId
           );
         }

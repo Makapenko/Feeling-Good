@@ -6,10 +6,11 @@ import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useProgress } from '../../../store/ProgressContext';
-import { ThoughtDiaryRecord } from '../../../types/progress.types';
+import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 
-const SHEET_ID = 'thought-diary';
+const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 // TODO валидация перед сохранением, стили, сохранение 
 
 const ThoughtDiary: React.FC = () => {
@@ -36,10 +37,21 @@ const ThoughtDiary: React.FC = () => {
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
-        .filter(exercise => exercise.type === 'thought-diary' && exercise.id === SHEET_ID)
+        .filter(exercise => exercise.type === ACTIVITY_IDS.THOUGHT_DIARY && exercise.id === SHEET_ID)
         .forEach(exercise => {
-          if ('records' in exercise && exercise.type === 'thought-diary') {
-            allDayRecords.push(...exercise.records.map(record => ({
+          if ('records' in exercise && exercise.type === ACTIVITY_IDS.THOUGHT_DIARY) {
+            // Проверяем тип записей перед добавлением
+            const thoughtDiaryExercise = exercise as ThoughtDiaryExercise;
+            // Сначала преобразуем в unknown, затем фильтруем
+            const records = thoughtDiaryExercise.records as unknown as Record<string, unknown>[];
+            const validRecords = records.filter(record => 
+              'situation' in record && 
+              'emotions' in record && 
+              'automaticThoughts' in record && 
+              'result' in record
+            ) as unknown as ThoughtDiaryRecord[];
+            
+            allDayRecords.push(...validRecords.map(record => ({
               ...record,
               date
             })));
@@ -151,25 +163,36 @@ const ThoughtDiary: React.FC = () => {
       
       // Получаем существующие записи за сегодня
       const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
-        exercise => exercise.type === 'thought-diary' && exercise.id === SHEET_ID
+        exercise => exercise.type === ACTIVITY_IDS.THOUGHT_DIARY && exercise.id === SHEET_ID
       );
       
-      // Объединяем существующие записи с новой
-      const updatedRecords = todayExercise && 'records' in todayExercise && todayExercise.type === 'thought-diary'
-        ? [...todayExercise.records, newRecord]
-        : [newRecord];
+      // Фильтруем существующие записи, чтобы убедиться, что они правильного типа
+      let existingRecords: ThoughtDiaryRecord[] = [];
+      if (todayExercise && 'records' in todayExercise && todayExercise.type === ACTIVITY_IDS.THOUGHT_DIARY) {
+        // Сначала приводим к unknown, затем фильтруем
+        const records = todayExercise.records as unknown as Record<string, unknown>[];
+        existingRecords = records.filter(record => 
+          'situation' in record && 
+          'emotions' in record && 
+          'automaticThoughts' in record && 
+          'result' in record
+        ) as unknown as ThoughtDiaryRecord[];
+      }
+      
+      // Объединяем с новой записью
+      const updatedRecords: ThoughtDiaryRecord[] = [...existingRecords, newRecord];
 
       // Сохраняем в редюсер
       dispatch({
         type: 'SAVE_EXERCISE',
         exercise: {
-          type: 'thought-diary',
+          type: ACTIVITY_IDS.THOUGHT_DIARY,
           id: SHEET_ID,
           name: 'Дневник автоматических мыслей',
           completed: true,
           completedAt: new Date().toISOString(),
           records: updatedRecords
-        }
+        } as ThoughtDiaryExercise
       });
 
       // Очищаем форму

@@ -152,21 +152,25 @@ const TodayTasks: React.FC = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  // Создадим константы для внутренних идентификаторов
+  const DAILY_MOOD_ID = 'daily-mood';
+  const AUTOMATIC_THOUGHTS_ID = 'automatic-thoughts';
+  
   const handleActivityClick = (activityId: string) => {
     switch (activityId) {
-      case 'daily-mood':
+      case DAILY_MOOD_ID:
         dispatch({
           type: 'SET_SPECIAL_CONTENT',
           content: ACTIVITY_IDS.BURNS_CHECKLIST
         });
         break;
-      case 'automatic-thoughts':
+      case AUTOMATIC_THOUGHTS_ID:
         dispatch({
           type: 'SET_SPECIAL_CONTENT',
           content: ACTIVITY_IDS.THREE_COLUMNS_METHOD
         });
         break;
-      case 'thought-diary':
+      case ACTIVITY_IDS.THOUGHT_DIARY:
         dispatch({
           type: 'SET_SPECIAL_CONTENT',
           content: ACTIVITY_IDS.THOUGHT_DIARY
@@ -248,13 +252,13 @@ const TodayTasks: React.FC = () => {
                 <div className={styles.methodLinks}>
                   <span 
                     className={styles.openLink} 
-                    onClick={() => handleActivityClick('automatic-thoughts')}
+                    onClick={() => handleActivityClick(AUTOMATIC_THOUGHTS_ID)}
                   >
                     Открыть метод трёх колонок
                   </span>
                   <span 
                     className={styles.openLink} 
-                    onClick={() => handleActivityClick('thought-diary')}
+                    onClick={() => handleActivityClick(ACTIVITY_IDS.THOUGHT_DIARY)}
                   >
                     Открыть дневник мыслей
                   </span>
@@ -267,7 +271,7 @@ const TodayTasks: React.FC = () => {
         {burnsStatus && (
           <div 
             className={`${styles.task} ${burnsStatus.needToComplete ? styles.clickable : ''}`}
-            onClick={burnsStatus.needToComplete ? () => handleActivityClick('daily-mood') : undefined}
+            onClick={burnsStatus.needToComplete ? () => handleActivityClick(DAILY_MOOD_ID) : undefined}
           >
             <div className={styles.taskHeader}>
               <div className={styles.checkbox}>

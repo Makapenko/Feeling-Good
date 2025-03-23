@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import styles from './SelfSupport.module.css';
 import { SupportStatement } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';

@@ -68,91 +68,91 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
   const renderExercises = (exercises: Exercise[]) => {
     return exercises.map((exercise) => {
       switch (exercise.type) {
-        case 'three-columns-method':
+        case ACTIVITY_IDS.THREE_COLUMNS_METHOD:
           return <ThreeColumnsExerciseComponent
             key={exercise.id}
             exercise={exercise as ThreeColumnsExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'thought-diary':
+        case ACTIVITY_IDS.THOUGHT_DIARY:
           return <ThoughtDiaryExerciseComponent
             key={exercise.id}
             exercise={exercise as ThoughtDiaryExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'daily-schedule':
+        case ACTIVITY_IDS.DAILY_SCHEDULE:
           return <DailyScheduleExerciseComponent
             key={exercise.id}
             exercise={exercise as DailyScheduleExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'anti-procrastination':
+        case ACTIVITY_IDS.ANTI_PROCRASTINATION:
           return <AntiProcrastinationExerciseComponent
             key={exercise.id}
             exercise={exercise as AntiProcrastinationExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'pleasure-sheet':
+        case ACTIVITY_IDS.PLEASURE_SHEET:
           return <PleasureSheetExerciseComponent
             key={exercise.id}
             exercise={exercise as PleasureSheetExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'no-buts':
+        case ACTIVITY_IDS.NO_BUTS:
           return <NoButsExerciseComponent
             key={exercise.id}
             exercise={exercise as NoButsExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'self-support':
+        case ACTIVITY_IDS.SELF_SUPPORT:
           return <SelfSupportExerciseComponent
             key={exercise.id}
             exercise={exercise as SelfSupportExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'small-steps':
+        case ACTIVITY_IDS.SMALL_STEPS:
           return <SmallStepsExerciseComponent
             key={exercise.id}
             exercise={exercise as SmallStepsExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'motivation-without-coercion':
+        case ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION:
           return <MotivationWithoutCoercionExerciseComponent
             key={exercise.id}
             exercise={exercise as MotivationWithoutCoercionExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'imagine-success':
+        case ACTIVITY_IDS.IMAGINE_SUCCESS:
           return <ImagineSuccessExerciseComponent
             key={exercise.id}
             exercise={exercise as ImagineSuccessExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'count-achievements':
+        case ACTIVITY_IDS.COUNT_ACHIEVEMENTS:
           return <CountAchievementsExerciseComponent
           key={exercise.id}
           exercise={exercise as CountAchievementsExercise}
           expandedExercises={expandedExercises}
           toggleExercise={toggleExercise}
         />;
-        case 'check-cant-do':
+        case ACTIVITY_IDS.CHECK_CANT_DO:
           return <CheckCantDoExerciseComponent
             key={exercise.id}
             exercise={exercise as CheckCantDoExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
-        case 'no-lose-technique':
+        case ACTIVITY_IDS.NO_LOSE_TECHNIQUE:
           return <NoLoseTechniqueExerciseComponent
             key={exercise.id}
             exercise={exercise as NoLoseTechniqueExercise}
