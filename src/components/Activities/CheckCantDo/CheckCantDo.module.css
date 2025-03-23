@@ -14,18 +14,33 @@
 .titleContainer {
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: space-between;
   margin-bottom: 30px;
-}
+  }
+  
+  .actionButtons {
+  display: flex;
+  gap: 10px;
+  }
+
+  .chapterButton {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .chapterButton:hover {
+    color: #0056b3;
+  }
 
 .titleContainer h2 {
   margin-bottom: 0;
 }
 
 .favoriteButton {
-  position: absolute;
-  right: 0;
   background: none;
   border: none;
   font-size: 28px;

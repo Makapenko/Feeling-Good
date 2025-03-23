@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import styles from './DisarmingTechnique.module.css';
 import { useProgress } from '../../../store/ProgressContext';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
 const DisarmingTechnique: React.FC = () => {
 
@@ -23,13 +24,16 @@ const DisarmingTechnique: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2>Техника обезоруживания</h2>
-        <button
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </button>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
       </div>
 
       <div className={styles.description}>

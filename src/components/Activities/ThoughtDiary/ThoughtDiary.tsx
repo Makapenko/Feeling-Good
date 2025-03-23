@@ -8,7 +8,8 @@ import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useProgress } from '../../../store/ProgressContext';
 import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
-import { ACTIVITY_IDS } from '../../../constants/activities';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
 const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 // TODO валидация перед сохранением, стили, сохранение 
@@ -31,9 +32,9 @@ const ThoughtDiary: React.FC = () => {
   // Получаем все записи из прогресса
   const allRecords = useMemo(() => {
     if (!progress?.dailyProgress) return [];
-    
+
     const allDayRecords: Array<ThoughtDiaryRecord & { date: string }> = [];
-    
+
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
@@ -44,13 +45,13 @@ const ThoughtDiary: React.FC = () => {
             const thoughtDiaryExercise = exercise as ThoughtDiaryExercise;
             // Сначала преобразуем в unknown, затем фильтруем
             const records = thoughtDiaryExercise.records as unknown as Record<string, unknown>[];
-            const validRecords = records.filter(record => 
-              'situation' in record && 
-              'emotions' in record && 
-              'automaticThoughts' in record && 
+            const validRecords = records.filter(record =>
+              'situation' in record &&
+              'emotions' in record &&
+              'automaticThoughts' in record &&
               'result' in record
             ) as unknown as ThoughtDiaryRecord[];
-            
+
             allDayRecords.push(...validRecords.map(record => ({
               ...record,
               date
@@ -58,7 +59,7 @@ const ThoughtDiary: React.FC = () => {
           }
         });
     });
-    
+
     // Сортируем по дате и времени (новые сверху)
     return allDayRecords.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [progress]);
@@ -160,25 +161,25 @@ const ThoughtDiary: React.FC = () => {
 
       // Получаем текущую дату
       const today = new Date().toISOString().split('T')[0];
-      
+
       // Получаем существующие записи за сегодня
       const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
         exercise => exercise.type === ACTIVITY_IDS.THOUGHT_DIARY && exercise.id === SHEET_ID
       );
-      
+
       // Фильтруем существующие записи, чтобы убедиться, что они правильного типа
       let existingRecords: ThoughtDiaryRecord[] = [];
       if (todayExercise && 'records' in todayExercise && todayExercise.type === ACTIVITY_IDS.THOUGHT_DIARY) {
         // Сначала приводим к unknown, затем фильтруем
         const records = todayExercise.records as unknown as Record<string, unknown>[];
-        existingRecords = records.filter(record => 
-          'situation' in record && 
-          'emotions' in record && 
-          'automaticThoughts' in record && 
+        existingRecords = records.filter(record =>
+          'situation' in record &&
+          'emotions' in record &&
+          'automaticThoughts' in record &&
           'result' in record
         ) as unknown as ThoughtDiaryRecord[];
       }
-      
+
       // Объединяем с новой записью
       const updatedRecords: ThoughtDiaryRecord[] = [...existingRecords, newRecord];
 
@@ -188,7 +189,7 @@ const ThoughtDiary: React.FC = () => {
         exercise: {
           type: ACTIVITY_IDS.THOUGHT_DIARY,
           id: SHEET_ID,
-          name: 'Дневник автоматических мыслей',
+          name: ACTIVITY_NAMES[ACTIVITY_IDS.THOUGHT_DIARY],
           completed: true,
           completedAt: new Date().toISOString(),
           records: updatedRecords
@@ -245,31 +246,34 @@ const ThoughtDiary: React.FC = () => {
   };
 
   // Получаем статус избранного из Redux
-const isFavorite = useMemo(() => {
-  return progress.favoriteActivities?.includes(SHEET_ID) || false;
-}, [progress.favoriteActivities]);
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
 
   // Добавление или удаление из избранного через Redux
-const toggleFavorite = () => {
-  dispatch({
-    type: 'TOGGLE_FAVORITE_ACTIVITY',
-    activityId: SHEET_ID
-  });
-};
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
 
   return (
     <div className={styles.container}>
       <ActivityTimer activityId={SHEET_ID} />
       <div className={styles.titleContainer}>
-  <h2>Дневник автоматических мыслей</h2>
-  <button 
-    className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-    onClick={toggleFavorite}
-    aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-  >
-    ★
-  </button>
-</div>
+        <h2>Дневник автоматических мыслей</h2>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
+      </div>
 
       <div className={styles.diaryGrid}>
         {/* Первая строка: Ситуация и эмоции */}
@@ -338,6 +342,6 @@ const toggleFavorite = () => {
       <RecordsList records={allRecords} />
     </div>
   );
-}; 
+};
 
 export default ThoughtDiary

@@ -2,8 +2,10 @@ import { useMemo, useState } from 'react';
 import styles from './ListOfCognitiveBiases.module.css';
 import { cognitiveBiases } from './cognitiveBiases';
 import { useProgress } from '../../../store/ProgressContext';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 
-const SHEET_ID = 'cognitive-biases';
+const SHEET_ID = ACTIVITY_IDS.COGNITIVE_BIASES;
 
 const ListOfCognitiveBiases: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -30,13 +32,16 @@ const ListOfCognitiveBiases: React.FC = () => {
     <div className={styles.listOfCognitiveBiases}>
       <div className={styles.titleContainer}>
         <h2>Список когнитивных искажений</h2>
-        <button
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </button>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
       </div>
       <ol>
         {cognitiveBiases.map((bias, index) => (

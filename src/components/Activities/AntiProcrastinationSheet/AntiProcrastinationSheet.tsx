@@ -8,7 +8,9 @@ import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
-// Идентификатор главы, связанной с методикой антипрокрастинации
+
+//TODO нет кнопки "выполнил" чтобы ввести реальные оценки 
+//TODO Поправить вёрстку заголовков в таблице
 
 const RatingInput = ({
   value,

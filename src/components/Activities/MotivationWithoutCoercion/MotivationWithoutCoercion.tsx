@@ -4,9 +4,13 @@ import { useProgress } from '../../../store/ProgressContext';
 import { MotivationWithoutCoercionRecord, MotivationWithoutCoercionExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
-const SHEET_ID = 'motivation-without-coercion';
+const SHEET_ID = ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION;
+
 // TODO добавить отображение в ежедневных задачах
+
 const MotivationWithoutCoercion: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const [currentThought, setCurrentThought] = useState('');
@@ -28,9 +32,9 @@ const MotivationWithoutCoercion: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: MotivationWithoutCoercionRecord[]) => {
     const exercise: MotivationWithoutCoercionExercise = {
-      type: 'motivation-without-coercion',
+      type: SHEET_ID,
       id: SHEET_ID,
-      name: 'Мотивация без принуждения',
+      name: ACTIVITY_NAMES[SHEET_ID],
       completed: false,
       completedAt: '',
       records: updatedRecords
@@ -101,13 +105,16 @@ const MotivationWithoutCoercion: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2>Мотивация без принуждения</h2>
-        <button
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </button>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
       </div>
       <p className={styles.description}>
         Запишите мысль, которая вас беспокоит, и проанализируйте преимущества и недостатки

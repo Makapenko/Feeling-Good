@@ -7,8 +7,9 @@ interface SurveyProps {
   config: SurveyConfig;
   onComplete?: (result: SurveyResult) => void;
 }
- // tTODO - добавить предупреждение, если очки по суициду выше нуля
-const Survey = ({ config, onComplete }: SurveyProps) => {
+ // TODO - добавить предупреждение, если очки по суициду выше нуля
+
+ const Survey = ({ config, onComplete }: SurveyProps) => {
   const { progress, dispatch } = useProgress();
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);

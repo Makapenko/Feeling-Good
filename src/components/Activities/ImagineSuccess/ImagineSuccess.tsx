@@ -5,9 +5,12 @@ import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../..
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
+
+// TODO нужно показывать цели и из прошлых дней, а не только за сегодня
 
 const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
-// TODO нужно показывать цели и из прошлых дней, а не только за сегодня
+
 const ImagineSuccess: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const [goal, setGoal] = useState('');
@@ -158,13 +161,16 @@ const ImagineSuccess: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2>Представьте успех</h2>
-        <button
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </button>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
       </div>
 
       {isAddingNewGoal && (

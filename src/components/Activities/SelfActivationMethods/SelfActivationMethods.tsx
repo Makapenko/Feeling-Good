@@ -6,7 +6,6 @@ import { ProgressAction } from '../../../store/progressReducer';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
-//TODO - не работает добавление в избранное
 const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
 
 

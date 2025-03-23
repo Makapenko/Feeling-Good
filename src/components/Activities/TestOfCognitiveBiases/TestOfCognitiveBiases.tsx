@@ -4,6 +4,8 @@ import { explanationOfFirstQuestion } from './explanationOfFirstQuestion';
 import styles from './TestOfCognitiveBiases.module.css';
 import { SurveyResult } from '../Survey/types';
 import { useProgress } from '../../../store/ProgressContext';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
 interface AnswerState {
   selectedAnswers: number[];
@@ -14,7 +16,7 @@ interface TestOfCognitiveBiasesProps {
   onComplete?: (result: SurveyResult) => void;
 }
 
-const SHEET_ID = 'cognitive-biases-test';
+const SHEET_ID = ACTIVITY_IDS.COGNITIVE_BIASES_TEST;
 
 const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplete }) => {
   const { dispatch, progress } = useProgress();
@@ -31,19 +33,19 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
     setAnswers(prev => {
       const newAnswers = [...prev];
       const currentAnswers = [...prev[currentQuestion].selectedAnswers];
-      
+
       const existingIndex = currentAnswers.indexOf(index);
       if (existingIndex === -1) {
         currentAnswers.push(index);
       } else {
         currentAnswers.splice(existingIndex, 1);
       }
-      
+
       newAnswers[currentQuestion] = {
         ...prev[currentQuestion],
         selectedAnswers: currentAnswers,
       };
-      
+
       return newAnswers;
     });
   };
@@ -64,18 +66,18 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
       setShowExplanation(true);
     } else if (currentQuestion === listOfQuestions.length - 1) {
       setIsTestCompleted(true);
-      
+
       // Сохраняем результат теста
       const score = calculateTotalScore();
       const result: SurveyResult = {
-        id: 'cognitive-biases-test',
-        name: 'Тест на понимание когнитивных искажений',
+        id: ACTIVITY_IDS.COGNITIVE_BIASES_TEST,
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.COGNITIVE_BIASES_TEST],
         score,
         maxScore: 100,
         completed: true,
         completedAt: new Date().toISOString()
       };
-      
+
       onComplete?.(result);
     }
   };
@@ -106,7 +108,7 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
     for (let i = 0; i < totalOptions; i++) {
       const isSelected = userAnswers.includes(i);
       const shouldBeSelected = question.rightAnswers.includes(i);
-      
+
       // Если ответ выбран правильно или правильно не выбран
       if (isSelected === shouldBeSelected) {
         correctChoices++;
@@ -121,7 +123,7 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
     const totalScore = answers.reduce((sum, _, index) => {
       return sum + calculateQuestionScore(index);
     }, 0);
-    
+
     return Math.round(totalScore / listOfQuestions.length);
   };
 
@@ -130,7 +132,7 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
       const isSubmitted = answers[currentQuestion].isSubmitted;
       const isSelected = answers[currentQuestion].selectedAnswers.includes(index);
       const isCorrectAnswer = getCurrentQuestionData().rightAnswers.includes(index);
-      
+
       let className = styles.answerOption;
       if (isSubmitted) {
         if (isCorrectAnswer) {
@@ -155,31 +157,34 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
   };
 
   // Получаем статус избранного из Redux
-const isFavorite = useMemo(() => {
-  return progress.favoriteActivities?.includes(SHEET_ID) || false;
-}, [progress.favoriteActivities]);
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
 
   // Добавление или удаление из избранного через Redux
-const toggleFavorite = () => {
-  dispatch({
-    type: 'TOGGLE_FAVORITE_ACTIVITY',
-    activityId: SHEET_ID
-  });
-};
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
 
   return (
     <div className={styles.testContainer}>
-     <div className={styles.titleContainer}>
-  <h2>Тест на понимание когнитивных искажений</h2>
-  <button 
-    className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-    onClick={toggleFavorite}
-    aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-  >
-    ★
-  </button>
-</div>
-      
+      <div className={styles.titleContainer}>
+        <h2>Тест на понимание когнитивных искажений</h2>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
+      </div>
+
       <div className={styles.questionBlock}>
         <p className={styles.questionNumber}>Вопрос {currentQuestion + 1} из {listOfQuestions.length}</p>
         <p className={styles.questionText}>{getCurrentQuestionData().question}</p>
@@ -189,7 +194,7 @@ const toggleFavorite = () => {
         </div>
 
         {!answers[currentQuestion].isSubmitted && (
-          <button 
+          <button
             className={styles.button}
             onClick={handleSubmitAnswer}
             disabled={answers[currentQuestion].selectedAnswers.length === 0}
@@ -202,12 +207,12 @@ const toggleFavorite = () => {
           <div className={styles.resultBlock}>
             <p className={calculateQuestionScore(currentQuestion) === 100 ? styles.correct : styles.incorrect}>
               {calculateQuestionScore(currentQuestion) === 100
-                ? 'Правильно!' 
-                : 'Неправильно. Правильные ответы: ' + 
-                  getCurrentQuestionData().rightAnswers.map(index => 
-                    getCurrentQuestionData().answers[index]).join(', ')}
+                ? 'Правильно!'
+                : 'Неправильно. Правильные ответы: ' +
+                getCurrentQuestionData().rightAnswers.map(index =>
+                  getCurrentQuestionData().answers[index]).join(', ')}
             </p>
-            
+
             {currentQuestion === 0 && showExplanation && (
               <div className={styles.explanation}>
                 <h3>Объяснение:</h3>
@@ -216,7 +221,7 @@ const toggleFavorite = () => {
             )}
 
             {!isTestCompleted && (
-              <button 
+              <button
                 className={styles.button}
                 onClick={handleNextQuestion}
               >
@@ -231,7 +236,7 @@ const toggleFavorite = () => {
         <div className={styles.testResults}>
           <h3>Тест завершен!</h3>
           <p>Ваш результат: {calculateTotalScore()}%</p>
-          <button 
+          <button
             className={styles.button}
             onClick={handleRetry}
           >

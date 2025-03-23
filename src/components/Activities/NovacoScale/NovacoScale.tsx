@@ -3,6 +3,8 @@ import Survey from "../Survey";
 import { novacoConfig } from "../Survey/configs";
 import { SurveyResult } from "../Survey/types";
 
+// TODO: Добавить кнопку перехода к главе
+
 const NovacoScale: React.FC = () => {
   const { dispatch } = useProgress();
 

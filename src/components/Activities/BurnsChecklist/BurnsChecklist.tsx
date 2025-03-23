@@ -4,6 +4,8 @@ import { burnsConfig } from "../Survey/configs";
 import { SurveyResult } from "../Survey/types";
 
 // TODO - перепроверить добавление в избранное в других браузерах
+// TODO - добавить кнопку с октрытием главы
+
 
 const BurnsChecklist: React.FC = () => {
   const { dispatch } = useProgress();
