@@ -6,15 +6,15 @@ import { useProgress } from '../../../store/ProgressContext';
 
 const SHEET_ID = 'pleasure-sheet';
 
-const RatingInput = ({ 
-  value, 
-  onChange, 
-  placeholder = '', 
+const RatingInput = ({
+  value,
+  onChange,
+  placeholder = '',
   isActual = false,
   disabled = false,
   compareValue = null,
   isReversed = false
-}: { 
+}: {
   value: number | null;
   onChange: (value: number) => void;
   placeholder?: string;
@@ -25,7 +25,7 @@ const RatingInput = ({
 }) => {
   const getComparisonClass = () => {
     if (!isActual || value === null || compareValue === null) return '';
-    
+
     if (value === compareValue) return 'same';
     if (isReversed) {
       return value < compareValue ? 'better' : 'worse';
@@ -53,18 +53,18 @@ const RatingInput = ({
   );
 };
 
-const HistoricalRating = ({ 
-  value, 
+const HistoricalRating = ({
+  value,
   compareValue = null,
   isReversed = false
-}: { 
+}: {
   value: number | null;
   compareValue?: number | null;
   isReversed?: boolean;
 }) => {
   const getComparisonClass = () => {
     if (value === null || compareValue === null) return '';
-    
+
     if (value === compareValue) return 'same';
     if (isReversed) {
       return value < compareValue ? 'better' : 'worse';
@@ -94,9 +94,9 @@ const PleasureSheet = () => {
   // Получаем все записи из прогресса
   const allActivities = useMemo(() => {
     if (!progress?.dailyProgress) return [];
-    
+
     const allDayActivities: Array<Activity & { date: string }> = [];
-    
+
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
@@ -110,7 +110,7 @@ const PleasureSheet = () => {
           }
         });
     });
-    
+
     // Сортируем по дате и времени (новые сверху)
     return allDayActivities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [progress]);
@@ -159,7 +159,7 @@ const PleasureSheet = () => {
     field: 'actualPleasure',
     value: number
   ) => {
-    const updatedActivities = activities.map(activity => 
+    const updatedActivities = activities.map(activity =>
       activity.id === activityId ? { ...activity, [field]: value } : activity
     );
     setActivities(updatedActivities);
@@ -180,9 +180,31 @@ const PleasureSheet = () => {
     saveToProgress(updatedActivities);
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Листок предполагаемого удовольствия</h2>
+      <div className={styles.titleContainer}>
+        <h2>Листок предполагаемого удовольствия</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
       <div className={styles.description}>
         <p>
           Запишите занятие, вызывающее удовлетворенность, с кем вы это делали и оцените
@@ -253,7 +275,7 @@ const PleasureSheet = () => {
             <div className={styles.ratingCell}>
               <RatingInput
                 value={activity.expectedPleasure}
-                onChange={() => {}}
+                onChange={() => { }}
                 disabled={activity.completed}
               />
             </div>
@@ -308,7 +330,7 @@ const PleasureSheet = () => {
                   <HistoricalRating value={activity.expectedPleasure} />
                 </div>
                 <div className={styles.ratingCell}>
-                  <HistoricalRating 
+                  <HistoricalRating
                     value={activity.actualPleasure}
                     compareValue={activity.expectedPleasure}
                   />
@@ -324,14 +346,14 @@ const PleasureSheet = () => {
                 <strong>Средняя разница в удовольствии: </strong>
                 {Math.round(allActivities
                   .filter(a => a.actualPleasure !== null)
-                  .reduce((acc, a) => acc + (a.actualPleasure! - a.expectedPleasure), 0) / 
+                  .reduce((acc, a) => acc + (a.actualPleasure! - a.expectedPleasure), 0) /
                   allActivities.filter(a => a.actualPleasure !== null).length || 0)}%
               </div>
               <div>
                 <strong>Среднее удовольствие: </strong>
                 {Math.round(allActivities
                   .filter(a => a.actualPleasure !== null)
-                  .reduce((acc, a) => acc + a.actualPleasure!, 0) / 
+                  .reduce((acc, a) => acc + a.actualPleasure!, 0) /
                   allActivities.filter(a => a.actualPleasure !== null).length || 0)}%
               </div>
             </div>
