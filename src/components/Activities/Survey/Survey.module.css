@@ -6,12 +6,28 @@
 
 .titleContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 2rem;
-  text-align: center;
-}
+  justify-content: space-between;
+  margin-bottom: 30px;
+  }
+  
+  .actionButtons {
+  display: flex;
+  gap: 10px;
+  }
+  
+  .chapterButton {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .chapterButton:hover {
+    color: #0056b3;
+  }
 
 .favoriteButton {
   background: none;
@@ -32,6 +48,25 @@
 
 .favoriteButton.isFavorite {
   color: #f8c51c;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.chapterButton {
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.chapterButton:hover {
+  color: #0056b3;
 }
 
 .table {

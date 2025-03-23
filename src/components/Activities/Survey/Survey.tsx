@@ -6,10 +6,11 @@ import { useProgress } from "../../../store/ProgressContext";
 interface SurveyProps {
   config: SurveyConfig;
   onComplete?: (result: SurveyResult) => void;
+  actionButtons?: React.ReactNode;
 }
  // TODO - добавить предупреждение, если очки по суициду выше нуля
 
- const Survey = ({ config, onComplete }: SurveyProps) => {
+ const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
   const { progress, dispatch } = useProgress();
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);
@@ -130,14 +131,17 @@ interface SurveyProps {
     <div className={styles.survey}>
       <div className={styles.titleContainer}>
         <h2 className={styles.surveyTitle}>{config.title}</h2>
-        <span 
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          role="button"
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </span>
+        {actionButtons ? (
+          actionButtons
+        ) : (
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        )}
       </div>
       <table className={styles.table}>
         <thead className={styles.thead}>
