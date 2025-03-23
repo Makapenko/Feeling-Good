@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './SelfActivationMethods.module.css';
 import { selfActivationMethods } from '../../../data/selfActivationMethods';
 import { useProgress, SpecialContent } from '../../../store/ProgressContext';
 import { ProgressAction } from '../../../store/progressReducer';
 
+//TODO - не работает добавление в избранное
+const SHEET_ID = 'self-activation';
+
 const SelfActivationMethods: React.FC = () => {
-  const { dispatch } = useProgress();
+  const { progress, dispatch } = useProgress();
 
   const handleTechniqueClick = (technique: string) => {
     let content: SpecialContent | undefined = undefined;
-    
+
     switch (technique) {
       case 'Метод маленьких шагов':
         content = 'small-steps';
@@ -58,9 +61,31 @@ const SelfActivationMethods: React.FC = () => {
     } as ProgressAction);
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Обзор методов самоактивации</h2>
+      <div className={styles.titleContainer}>
+        <h2>Обзор методов самоактивации</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
       <div className={styles.table}>
         <div className={styles.header}>
           <div className={styles.cell}>Симптомы</div>
@@ -72,7 +97,7 @@ const SelfActivationMethods: React.FC = () => {
             <div className={styles.cell}>{method.symptom}</div>
             <div className={styles.cell}>
               {method.hasComponent ? (
-                <button 
+                <button
                   className={styles.techniqueButton}
                   onClick={() => handleTechniqueClick(method.technique)}
                 >
