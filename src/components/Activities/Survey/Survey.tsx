@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styles from "./Survey.module.css";
 import { SurveyConfig, SurveyState, SurveyResult } from "./types";
+import { useProgress } from "../../../store/ProgressContext";
 
 interface SurveyProps {
   config: SurveyConfig;
@@ -8,9 +9,26 @@ interface SurveyProps {
 }
  // tTODO - добавить предупреждение, если очки по суициду выше нуля
 const Survey = ({ config, onComplete }: SurveyProps) => {
+  const { progress, dispatch } = useProgress();
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Используем ID опроса из конфигурации или генерируем на основе названия
+  const SURVEY_ID = config.id || `survey-${config.title.toLowerCase().replace(/\s+/g, '-')}`;
+
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SURVEY_ID) || false;
+  }, [progress.favoriteActivities, SURVEY_ID]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SURVEY_ID
+    });
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -109,7 +127,17 @@ const Survey = ({ config, onComplete }: SurveyProps) => {
 
   return (
     <div className={styles.survey}>
-      <h2 className={styles.surveyTitle}>{config.title}</h2>
+      <div className={styles.titleContainer}>
+        <h2 className={styles.surveyTitle}>{config.title}</h2>
+        <span 
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          role="button"
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </span>
+      </div>
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>

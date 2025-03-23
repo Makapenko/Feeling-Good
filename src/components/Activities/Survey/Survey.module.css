@@ -1,7 +1,37 @@
 .surveyTitle {
-  text-align: center;
   color: #333;
+  display: inline;
+  margin: 0;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 2rem;
+  text-align: center;
+}
+
+.favoriteButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  line-height: 1;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.favoriteButton:hover {
+  color: #f8c51c;
+}
+
+.favoriteButton.isFavorite {
+  color: #f8c51c;
 }
 
 .table {
@@ -123,7 +153,14 @@
 
   .surveyTitle {
     font-size: 1.5rem;
-    margin: 1rem 0;
+  }
+
+  .titleContainer {
+    margin-bottom: 1rem;
+  }
+
+  .favoriteButton {
+    font-size: 22px;
   }
 
   .table {

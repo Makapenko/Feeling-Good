@@ -8,7 +8,6 @@ import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
 import TodayTasks from '../TodayTasks/TodayTasks';
 
-import Survey, { burnsConfig, novacoConfig } from '../Activities/Survey';
 import { SurveyResult } from '../Activities/Survey/types';
 import ListOfCognitiveBiases from '../Activities/ListOfCognitiveBiases/ListOfCognitiveBiases';
 import TestOfCognitiveBiases from '../Activities/TestOfCognitiveBiases/TestOfCognitiveBiases';
@@ -29,6 +28,8 @@ import CountAchievements from '../Activities/CountAchievements/CountAchievements
 import CheckCantDo from '../Activities/CheckCantDo/CheckCantDo';
 import DisarmingTechnique from '../Activities/DisarmingTechnique/DisarmingTechnique';
 import WelcomePage from '../WelcomePage/WelcomePage';
+import BurnsChecklist from '../Activities/BurnsChecklist';
+import NovacoScale from '../Activities/NovacoScale';
 
 const MainContent: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -74,7 +75,7 @@ const MainContent: React.FC = () => {
               <FontAwesomeIcon icon={faArrowLeft} />
               <span>К списку заданий</span>
             </div>
-            <Survey config={burnsConfig} onComplete={handleTestComplete} />
+            <BurnsChecklist />
           </>
         );
       case 'today-tasks':
@@ -86,7 +87,7 @@ const MainContent: React.FC = () => {
               <FontAwesomeIcon icon={faArrowLeft} />
               <span>К списку заданий</span>
             </div>
-            <Survey config={novacoConfig} onComplete={handleTestComplete} />
+            <NovacoScale />
           </>
         );
       case 'cognitive-biases':
