@@ -1,5 +1,7 @@
 import { useProgress } from '../../store/ProgressContext';
 import styles from './Header.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt, faListCheck, faHome } from '@fortawesome/free-solid-svg-icons';
 
 const Header: React.FC = () => {
   const { dispatch } = useProgress();
@@ -18,25 +20,38 @@ const Header: React.FC = () => {
 
   return (
     <header className={styles.header}>
-      <h1 
-        onClick={handleTitleClick}
-        className={styles.title}
-      >
-        Терапия настроения
-      </h1>
-      <div className={styles.buttonGroup}>
-        <button 
-          className={styles.headerButton}
-          onClick={handleTodayTasksClick}
-        >
-          Задания на сегодня
-        </button>
-        <button 
-          className={styles.headerButton}
-          onClick={handleCalendarClick}
-        >
-          Календарь прогресса
-        </button>
+      <div className={styles.headerContent}>
+        <div className={styles.titleContainer}>
+          <FontAwesomeIcon
+            icon={faHome}
+            className={styles.homeIcon}
+            onClick={handleTitleClick}
+          />
+          <h1
+            onClick={handleTitleClick}
+            className={styles.title}
+          >
+            Терапия настроения
+          </h1>
+        </div>
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.iconButton}
+            onClick={handleTodayTasksClick}
+            title="Задания на сегодня"
+            aria-label="Задания на сегодня"
+          >
+            <FontAwesomeIcon icon={faListCheck} className={styles.buttonIcon} />
+          </button>
+          <button
+            className={styles.iconButton}
+            onClick={handleCalendarClick}
+            title="Календарь прогресса"
+            aria-label="Календарь прогресса"
+          >
+            <FontAwesomeIcon icon={faCalendarAlt} className={styles.buttonIcon} />
+          </button>
+        </div>
       </div>
     </header>
   );
