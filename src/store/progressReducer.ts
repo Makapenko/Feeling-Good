@@ -11,6 +11,7 @@ import {
 import { getCurrentDate } from '../utils/dateUtils';
 import chaptersData from '../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../types/chapters.types';
+import { chapterToActivitiesMap } from '../data/activitiesMapping';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -25,7 +26,18 @@ export type ProgressAction =
   | { type: 'SAVE_EXERCISE'; exercise: Exercise }
   | { type: 'UNLOCK_ALL_CONTENT' }
   | { type: 'UNLOCK_CONTENT'; contentId: string; contentType: 'chapter' | 'activity' }
-  | { type: 'TOGGLE_FAVORITE_ACTIVITY'; activityId: string };
+  | { type: 'TOGGLE_FAVORITE_ACTIVITY'; activityId: string }
+  | { type: 'RESET_NEWLY_UNLOCKED' };
+
+// Функция для определения вновь разблокированных активностей
+export const getNewlyUnlockedActivities = (
+  prevUnlockedChapters: string[],
+  newlyUnlockedChapter: string
+): SpecialContent[] => {
+  // Получаем список активностей, связанных с новой главой
+  const unlockedActivities = chapterToActivitiesMap[newlyUnlockedChapter] || [];
+  return unlockedActivities;
+};
 
 export function progressReducer(
   state: UserProgress,
@@ -179,6 +191,7 @@ export function progressReducer(
         : [...state.completedChapters, action.chapterId];
 
       let updatedUnlockedContent = state.unlockedContent;
+      let newlyUnlockedChapter = '';
 
       // Находим текущую главу в структуре данных
       const currentMainChapter = typedChaptersData.chapters.find(ch => {
@@ -195,6 +208,7 @@ export function progressReducer(
           // Есть следующая подглава - разблокируем её
           const nextSection = currentMainChapter.sections[currentSectionIndex + 1];
           if (!state.unlockedContent.chapters.includes(nextSection.id)) {
+            newlyUnlockedChapter = nextSection.id;
             updatedUnlockedContent = {
               ...state.unlockedContent,
               chapters: [...state.unlockedContent.chapters, nextSection.id]
@@ -206,6 +220,7 @@ export function progressReducer(
           if (currentChapterIndex !== -1 && currentChapterIndex < typedChaptersData.chapters.length - 1) {
             const nextChapter = typedChaptersData.chapters[currentChapterIndex + 1];
             if (!state.unlockedContent.chapters.includes(nextChapter.id)) {
+              newlyUnlockedChapter = nextChapter.id;
               updatedUnlockedContent = {
                 ...state.unlockedContent,
                 chapters: [...state.unlockedContent.chapters, nextChapter.id]
@@ -215,7 +230,14 @@ export function progressReducer(
         }
       }
 
-      return {
+      // Получаем список новых активностей, связанных с разблокированной главой
+      const newlyUnlockedActivities = getNewlyUnlockedActivities(
+        state.unlockedContent.chapters,
+        newlyUnlockedChapter
+      );
+
+      // Добавляем метку для последней разблокированной главы, чтобы использовать в уведомлениях
+      const result = {
         ...state,
         currentChapter: null,
         chapters: chaptersWithCompleted,
@@ -224,8 +246,12 @@ export function progressReducer(
           [currentDate]: updatedTodayProgress,
         },
         unlockedContent: updatedUnlockedContent,
-        completedChapters: updatedCompletedChapters
+        completedChapters: updatedCompletedChapters,
+        lastUnlockedChapter: newlyUnlockedChapter || null,
+        lastUnlockedActivities: newlyUnlockedActivities
       };
+
+      return result;
     }
 
     case 'SET_SPECIAL_CONTENT':
@@ -335,12 +361,23 @@ export function progressReducer(
       const contentArray = state.unlockedContent[contentArrayKey];
       
       if (!contentArray.includes(contentId)) {
+        // Если разблокируем главу, проверяем какие активности будут разблокированы
+        let newlyUnlockedActivities: SpecialContent[] = [];
+        if (contentType === 'chapter') {
+          newlyUnlockedActivities = getNewlyUnlockedActivities(
+            state.unlockedContent.chapters,
+            contentId
+          );
+        }
+        
         return {
           ...state,
           unlockedContent: {
             ...state.unlockedContent,
             [contentArrayKey]: [...contentArray, contentId]
-          }
+          },
+          lastUnlockedChapter: contentType === 'chapter' ? contentId : null,
+          lastUnlockedActivities: newlyUnlockedActivities
         };
       }
       return state;
@@ -363,6 +400,14 @@ export function progressReducer(
           favoriteActivities: [...favoriteActivities, activityId]
         };
       }
+    }
+
+    case 'RESET_NEWLY_UNLOCKED': {
+      return {
+        ...state,
+        lastUnlockedChapter: null,
+        lastUnlockedActivities: []
+      };
     }
 
     default:

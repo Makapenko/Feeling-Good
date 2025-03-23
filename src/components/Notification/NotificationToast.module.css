@@ -1,0 +1,111 @@
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 12px;
+  width: 350px;
+  max-width: 90vw;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  color: #333;
+  transform: translateX(120%);
+  transition: transform 0.3s ease-out;
+  overflow: hidden;
+  z-index: 1100;
+}
+
+.toast::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+}
+
+.toast.visible {
+  transform: translateX(0);
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.content {
+  flex: 1;
+}
+
+.message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  margin-left: 8px;
+  transition: color 0.2s;
+}
+
+.closeButton:hover {
+  color: #333;
+}
+
+/* Стили для разных типов уведомлений */
+.success {
+  border-left: 5px solid #4CAF50;
+}
+
+.success .icon {
+  color: #4CAF50;
+}
+
+.error {
+  border-left: 5px solid #F44336;
+}
+
+.error .icon {
+  color: #F44336;
+}
+
+.warning {
+  border-left: 5px solid #FF9800;
+}
+
+.warning .icon {
+  color: #FF9800;
+}
+
+.info {
+  border-left: 5px solid #2196F3;
+}
+
+.info .icon {
+  color: #2196F3;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .toast {
+    width: calc(100% - 32px);
+    max-width: 100%;
+    margin-bottom: 8px;
+  }
+} 

@@ -326,4 +326,6 @@ export interface UserProgress {
   };
   completedChapters: string[];
   favoriteActivities: string[]; // Список избранных активностей (их ID)
+  lastUnlockedChapter: string | null; // ID последней разблокированной главы
+  lastUnlockedActivities: SpecialContent[]; // Список активностей, разблокированных последней главой
 }

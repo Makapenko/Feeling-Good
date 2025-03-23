@@ -7,6 +7,9 @@ import ActivitiesPanel from './components/ActivitiesPanel/ActivitiesPanel';
 import MobileLayout from './components/mobile/MobileLayout';
 import { ProgressProvider } from './store/ProgressContext';
 import { MobileProvider } from './store/MobileContext';
+import { NotificationProvider } from './store/NotificationContext';
+import NotificationContainer from './components/Notification/NotificationContainer';
+import UnlockNotifier from './components/Notification/UnlockNotifier';
 
 function App() {
   const [isMobile, setIsMobile] = useState(false);
@@ -27,24 +30,28 @@ function App() {
   return (
     <ProgressProvider>
       <MobileProvider>
-        {isMobile ? (
-          <MobileLayout />
-        ) : (
-          <div className={styles.appLayout}>
-            <header className={styles.header}>
-              <Header />
-            </header>
-            <nav className={styles.chaptersPanel}>
-              <ListOfChapters />
-            </nav>
-            <main className={styles.mainContent}>
-              <MainContent />
-            </main>
-            <aside className={styles.activitiesPanel}>
-              <ActivitiesPanel />
-            </aside>
-          </div>
-        )}
+        <NotificationProvider>
+          <UnlockNotifier />
+          <NotificationContainer />
+          {isMobile ? (
+            <MobileLayout />
+          ) : (
+            <div className={styles.appLayout}>
+              <header className={styles.header}>
+                <Header />
+              </header>
+              <nav className={styles.chaptersPanel}>
+                <ListOfChapters />
+              </nav>
+              <main className={styles.mainContent}>
+                <MainContent />
+              </main>
+              <aside className={styles.activitiesPanel}>
+                <ActivitiesPanel />
+              </aside>
+            </div>
+          )}
+        </NotificationProvider>
       </MobileProvider>
     </ProgressProvider>
   );
