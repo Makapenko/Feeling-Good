@@ -9,8 +9,7 @@ import { useProgress } from '../../../store/ProgressContext';
 import { ThoughtDiaryRecord } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 
-const DIARY_ID = 'thought-diary';
-
+const SHEET_ID = 'thought-diary';
 // TODO валидация перед сохранением, стили, сохранение 
 
 const ThoughtDiary: React.FC = () => {
@@ -37,7 +36,7 @@ const ThoughtDiary: React.FC = () => {
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
-        .filter(exercise => exercise.type === 'thought-diary' && exercise.id === DIARY_ID)
+        .filter(exercise => exercise.type === 'thought-diary' && exercise.id === SHEET_ID)
         .forEach(exercise => {
           if ('records' in exercise && exercise.type === 'thought-diary') {
             allDayRecords.push(...exercise.records.map(record => ({
@@ -152,7 +151,7 @@ const ThoughtDiary: React.FC = () => {
       
       // Получаем существующие записи за сегодня
       const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
-        exercise => exercise.type === 'thought-diary' && exercise.id === DIARY_ID
+        exercise => exercise.type === 'thought-diary' && exercise.id === SHEET_ID
       );
       
       // Объединяем существующие записи с новой
@@ -165,7 +164,7 @@ const ThoughtDiary: React.FC = () => {
         type: 'SAVE_EXERCISE',
         exercise: {
           type: 'thought-diary',
-          id: DIARY_ID,
+          id: SHEET_ID,
           name: 'Дневник автоматических мыслей',
           completed: true,
           completedAt: new Date().toISOString(),
@@ -222,10 +221,32 @@ const ThoughtDiary: React.FC = () => {
     }));
   };
 
+  // Получаем статус избранного из Redux
+const isFavorite = useMemo(() => {
+  return progress.favoriteActivities?.includes(SHEET_ID) || false;
+}, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+const toggleFavorite = () => {
+  dispatch({
+    type: 'TOGGLE_FAVORITE_ACTIVITY',
+    activityId: SHEET_ID
+  });
+};
+
   return (
     <div className={styles.container}>
-      <ActivityTimer activityId={DIARY_ID} />
-      <h2>Дневник автоматических мыслей</h2>
+      <ActivityTimer activityId={SHEET_ID} />
+      <div className={styles.titleContainer}>
+  <h2>Дневник автоматических мыслей</h2>
+  <button 
+    className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+    onClick={toggleFavorite}
+    aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+  >
+    ★
+  </button>
+</div>
 
       <div className={styles.diaryGrid}>
         {/* Первая строка: Ситуация и эмоции */}

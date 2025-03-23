@@ -10,6 +10,39 @@
   font-size: 1.5rem;
 }
 
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.titleContainer h2 {
+  margin-bottom: 0;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+  line-height: 1;
+}
+
+.favoriteButton:hover {
+  color: #f1c40f;
+}
+
+.favoriteButton.isFavorite {
+  color: #f1c40f;
+}
+
 .diaryGrid {
   display: grid;
   grid-template-rows: auto auto auto;
@@ -147,6 +180,15 @@ select option {
     font-size: 1.25rem;
     margin-top: 0;
     margin-bottom: 20px;
+  }
+
+  .titleContainer {
+    margin-bottom: 20px;
+  }
+
+  .favoriteButton {
+    font-size: 24px;
+    right: 10px;
   }
 
   .diaryGrid {
