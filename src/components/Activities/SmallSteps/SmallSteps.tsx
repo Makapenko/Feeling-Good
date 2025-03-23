@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
@@ -7,7 +7,7 @@ import { useProgress } from '../../../store/ProgressContext';
 const SHEET_ID = 'small-steps';
 
 const SmallSteps: React.FC = () => {
-  const { dispatch } = useProgress();
+  const { dispatch, progress } = useProgress();
   const [tasks, setTasks] = useState<SmallStepsTask[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newStepText, setNewStepText] = useState('');
@@ -192,21 +192,21 @@ const SmallSteps: React.FC = () => {
     const interval = setInterval(() => {
       if (isPaused) return;
 
-      setTasks(prevTasks => 
+      setTasks(prevTasks =>
         prevTasks.map(task => {
           if (!task.isActive) return task;
 
           const updatedSteps = task.steps.map(step => {
             if (step.id === task.currentStepId && !step.isCompleted && step.timeLeft && step.timeLeft > 0) {
               const newTimeLeft = step.timeLeft - 1;
-              
+
               if (newTimeLeft === 0) {
                 if (audioRef.current) {
                   audioRef.current.play();
                 }
                 return { ...step, timeLeft: 0, timerEnded: true };
               }
-              
+
               return { ...step, timeLeft: newTimeLeft };
             }
             return step;
@@ -241,11 +241,33 @@ const SmallSteps: React.FC = () => {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.container}>
       <audio ref={audioRef} src="/notification.mp3" />
       <div className={styles.description}>
-        <h2>Метод маленьких шагов</h2>
+        <div className={styles.titleContainer}>
+          <h2>Метод маленьких шагов</h2>
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
         <p>
           Этот инструмент поможет вам разделить большую задачу на маленькие управляемые части.
           После каждого выполненного шага у вас будет минута отдыха.
@@ -275,11 +297,11 @@ const SmallSteps: React.FC = () => {
       {tasks.map(task => (
         <div key={task.id} className={styles.task}>
           <h3>{task.title}</h3>
-          
+
           <div className={styles.steps}>
             {task.steps.map(step => (
-              <div 
-                key={step.id} 
+              <div
+                key={step.id}
                 className={`${styles.step} 
                   ${step.isRest ? styles.restStep : ''} 
                   ${step.isCompleted ? styles.completed : ''} 
@@ -305,7 +327,7 @@ const SmallSteps: React.FC = () => {
                     />
                   </div>
                 ) : (
-                  <span 
+                  <span
                     className={`${styles.stepText} ${!task.isActive ? styles.editable : ''}`}
                     onClick={() => !task.isActive && startEditing(task.id, step.id)}
                   >
@@ -355,7 +377,7 @@ const SmallSteps: React.FC = () => {
           </div>
 
           {task.isActive && (
-            <button 
+            <button
               onClick={() => togglePause()}
               className={`${styles.button} ${styles.pauseButton}`}
             >
@@ -364,7 +386,7 @@ const SmallSteps: React.FC = () => {
           )}
 
           {!task.isActive && task.steps.length > 0 && !task.isCompleted && (
-            <button 
+            <button
               onClick={() => startTask(task.id)}
               className={styles.startButton}
             >
@@ -377,7 +399,7 @@ const SmallSteps: React.FC = () => {
             </div>
           )}
         </div>
-        
+
       ))}
     </div>
   );

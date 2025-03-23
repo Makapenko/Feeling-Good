@@ -4,6 +4,7 @@
   padding: 20px;
 }
 
+
 .description {
   background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
   padding: 25px;
@@ -29,6 +30,40 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.titleContainer h2 {
+  margin-bottom: 0;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+  line-height: 1;
+}
+
+.favoriteButton:hover {
+  color: #f1c40f;
+}
+
+.favoriteButton.isFavorite {
+  color: #f1c40f;
+}
+
 
 .description p {
   color: #4a5568;
@@ -374,6 +409,15 @@
 @media (max-width: 768px) {
   .container {
     padding: 0;
+  }
+
+  .titleContainer {
+    margin-bottom: 20px;
+  }
+
+  .favoriteButton {
+    font-size: 24px;
+    right: 10px;
   }
 
   .description {
