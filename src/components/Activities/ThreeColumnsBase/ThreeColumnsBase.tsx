@@ -20,6 +20,7 @@ interface ThreeColumnsBaseProps {
   showCognitiveDistortions?: boolean;
   methodId: string;
   onSave?: (result: ThreeColumnsMethodResult) => void;
+  favoriteButton?: React.ReactNode;
 }
 
 export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
@@ -31,7 +32,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   rightColumnPlaceholder,
   showCognitiveDistortions = true,
   methodId,
-  onSave
+  onSave,
+  favoriteButton
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp' | 'id'>>({
     leftColumn: '',
@@ -112,7 +114,10 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   return (
     <div className={styles.container}>
       <ActivityTimer activityId={methodId} />
-      <h2>{title}</h2>
+      <div className={styles.titleContainer}>
+        <h2>{title}</h2>
+        {favoriteButton}
+      </div>
       <p className={styles.description}>{description}</p>
 
       <div className={styles.inputSection}>

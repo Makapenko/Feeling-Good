@@ -4,10 +4,43 @@
   margin: 0 auto;
 }
 
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.titleContainer h2 {
+  margin: 0;
+}
+
 .description {
   color: #4a5568;
   margin-bottom: 30px;
   font-size: 1.1rem;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+  line-height: 1;
+}
+
+.favoriteButton:hover {
+  color: #f1c40f;
+}
+
+.favoriteButton.isFavorite {
+  color: #f1c40f;
 }
 
 .inputSection {
@@ -112,6 +145,15 @@
   .container {
     padding: 8px;
     margin-top: 20px;
+  }
+
+  .titleContainer {
+    margin-bottom: 16px;
+  }
+
+  .favoriteButton {
+    font-size: 24px;
+    right: 10px;
   }
 
   .description {
