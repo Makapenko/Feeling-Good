@@ -12,13 +12,13 @@ const SelfSupport = () => {
   const [newDevaluing, setNewDevaluing] = useState('');
   const [newSupporting, setNewSupporting] = useState('');
   // TODO - добавить дату в таблицу старых записей
-  
+
   // Получаем все записи из прогресса
   const allStatements = useMemo(() => {
     if (!progress?.dailyProgress) return [];
-    
+
     const allDayStatements: Array<SupportStatement & { date: string }> = [];
-    
+
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
@@ -32,7 +32,7 @@ const SelfSupport = () => {
           }
         });
     });
-    
+
     // Сортируем по дате и времени (новые сверху)
     return allDayStatements.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [progress]);
@@ -85,9 +85,31 @@ const SelfSupport = () => {
     saveToProgress(updatedStatements);
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Самоподдержка</h2>
+      <div className={styles.titleContainer}>
+        <h2>Самоподдержка</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
       <div className={styles.description}>
         <p>
           Отслеживайте обесценивающие мысли и заменяйте их более объективными и поддерживающими.
@@ -120,12 +142,12 @@ const SelfSupport = () => {
                 />
               </div>
               <button
-                  onClick={() => handleDeleteStatement(statement.id)}
-                  className={styles.deleteButton}
-                  aria-label="Удалить утверждение"
-                >
-                  ✕
-                </button>
+                onClick={() => handleDeleteStatement(statement.id)}
+                className={styles.deleteButton}
+                aria-label="Удалить утверждение"
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
