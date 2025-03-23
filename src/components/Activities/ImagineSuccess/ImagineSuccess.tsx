@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
 
 const SHEET_ID = 'imagine-success';
-
+// TODO нужно показывать цели и из прошлых дней, а не только за сегодня
 const ImagineSuccess: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const [goal, setGoal] = useState('');
@@ -21,10 +21,10 @@ const ImagineSuccess: React.FC = () => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
-    
+
     return () => {
       window.removeEventListener('resize', checkIfMobile);
     };
@@ -35,7 +35,7 @@ const ImagineSuccess: React.FC = () => {
     const currentDate = getCurrentDate();
     const dayProgress = progress.dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
-      (ex: Exercise): ex is ImagineSuccessExercise => 
+      (ex: Exercise): ex is ImagineSuccessExercise =>
         ex.type === 'imagine-success' && ex.id === SHEET_ID
     );
     return exercise?.records || [];
@@ -58,14 +58,27 @@ const ImagineSuccess: React.FC = () => {
     });
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   const addAdvantage = () => {
     if (!newAdvantage.trim()) return;
-    
-    const newAdvantageObj = { 
-      id: Math.random().toString(), 
-      text: newAdvantage.trim() 
+
+    const newAdvantageObj = {
+      id: Math.random().toString(),
+      text: newAdvantage.trim()
     };
-    
+
     const updatedAdvantages = [...advantages, newAdvantageObj];
     setAdvantages(updatedAdvantages);
     setNewAdvantage('');
@@ -105,7 +118,7 @@ const ImagineSuccess: React.FC = () => {
 
   const handleAddGoal = () => {
     if (!goal.trim()) return;
-    
+
     // Создаем новую запись
     const newRecord: ImagineSuccessRecord = {
       id: uuidv4(),
@@ -113,7 +126,7 @@ const ImagineSuccess: React.FC = () => {
       advantages: [],
       timestamp: new Date().toISOString()
     };
-    
+
     saveToProgress([...records, newRecord]);
     setCurrentRecordId(newRecord.id);
     setAdvantages([]);
@@ -142,8 +155,17 @@ const ImagineSuccess: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Метод "Представьте успех"</h2>
-      
+      <div className={styles.titleContainer}>
+        <h2>Представьте успех</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
+
       {isAddingNewGoal && (
         <div className={styles.section}>
           <h3>Определите свою цель</h3>
@@ -157,14 +179,14 @@ const ImagineSuccess: React.FC = () => {
               autoFocus
             />
             <div className={styles.buttonGroup}>
-              <button 
+              <button
                 onClick={handleAddGoal}
                 className={styles.addButton}
                 disabled={!goal.trim()}
               >
                 Добавить цель
               </button>
-              <button 
+              <button
                 onClick={cancelAddingGoal}
                 className={styles.cancelButton}
               >
@@ -179,7 +201,7 @@ const ImagineSuccess: React.FC = () => {
         <div className={styles.recordsHeader}>
           <h3>{records.length > 0 ? 'Сохраненные цели:' : 'Нет сохраненных целей'}</h3>
           {!isAddingNewGoal && (
-            <button 
+            <button
               onClick={startNewRecord}
               className={styles.newRecordButton}
             >
@@ -209,7 +231,7 @@ const ImagineSuccess: React.FC = () => {
             Составьте список всех положительных последствий, которые вы получите после достижения цели.
             Перечислите как можно больше пунктов.
           </p>
-          
+
           <div className={styles.advantagesInput}>
             <input
               type="text"
