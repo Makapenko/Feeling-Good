@@ -1,26 +1,52 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './DisarmingTechnique.module.css';
+import { useProgress } from '../../../store/ProgressContext';
 
- const DisarmingTechnique: React.FC = () => {
+const DisarmingTechnique: React.FC = () => {
+
+  const SHEET_ID = 'disarming-technique';
+  const { progress, dispatch } = useProgress();
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
+
   return (
     <div className={styles.container}>
-      <h2>Техника обезоруживания</h2>
+      <div className={styles.titleContainer}>
+        <h2>Техника обезоруживания</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
 
       <div className={styles.description}>
         <h3>О методе</h3>
         <p>
-          Техника обезоруживания — это эффективный метод, который помогает справиться 
-          с ситуациями, когда вы чувствуете давление или принуждение со стороны других людей. 
-          Суть метода заключается в том, чтобы согласиться с собеседником, сохраняя при этом 
+          Техника обезоруживания — это эффективный метод, который помогает справиться
+          с ситуациями, когда вы чувствуете давление или принуждение со стороны других людей.
+          Суть метода заключается в том, чтобы согласиться с собеседником, сохраняя при этом
           свою автономность и чувство собственного достоинства.
         </p>
 
         <div className={styles.section}>
           <h4>Почему это работает?</h4>
           <p>
-            Когда мы чувствуем давление, наша естественная реакция — сопротивляться. 
-            Это один из основных законов психологии: на каждое действие есть противодействие. 
-            Чем сильнее на нас давят, тем сильнее мы сопротивляемся, даже если 
+            Когда мы чувствуем давление, наша естественная реакция — сопротивляться.
+            Это один из основных законов психологии: на каждое действие есть противодействие.
+            Чем сильнее на нас давят, тем сильнее мы сопротивляемся, даже если
             предложение разумно и полезно для нас.
           </p>
         </div>
@@ -28,8 +54,8 @@ import styles from './DisarmingTechnique.module.css';
         <div className={styles.section}>
           <h4>Как это работает?</h4>
           <p>
-            Вместо того чтобы сопротивляться или подчиняться, вы соглашаетесь с 
-            собеседником, но делаете акцент на том, что это ваше собственное решение. 
+            Вместо того чтобы сопротивляться или подчиняться, вы соглашаетесь с
+            собеседником, но делаете акцент на том, что это ваше собственное решение.
             Таким образом вы:
           </p>
           <ul>
