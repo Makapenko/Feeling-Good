@@ -60,6 +60,8 @@ const MainContent: React.FC = () => {
     setActiveTab('activities');
   };
 
+  //TODO - переписать  case - много повторяющихся строк
+
   const renderContent = () => {
     switch (progress.specialContent) {
       case 'welcome':

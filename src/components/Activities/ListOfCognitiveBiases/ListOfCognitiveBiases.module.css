@@ -1,12 +1,47 @@
+
 .listOfCognitiveBiases {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+
 .listOfCognitiveBiases h2 {
   margin-bottom: 24px;
   color: #2d3748;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.titleContainer h2 {
+  margin-bottom: 0;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+  line-height: 1;
+}
+
+.favoriteButton:hover {
+  color: #f1c40f;
+}
+
+.favoriteButton.isFavorite {
+  color: #f1c40f;
 }
 
 .listOfCognitiveBiases ol {
@@ -93,6 +128,16 @@
 }
 
 @media (max-width: 768px) {
+
+  .titleContainer {
+    margin-bottom: 20px;
+  }
+
+  .favoriteButton {
+    font-size: 24px;
+    right: 10px;
+  }
+
   .listOfCognitiveBiases {
     padding: 0;
     margin-top: 60px;

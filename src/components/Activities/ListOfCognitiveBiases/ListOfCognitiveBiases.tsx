@@ -1,21 +1,47 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './ListOfCognitiveBiases.module.css';
 import { cognitiveBiases } from './cognitiveBiases';
+import { useProgress } from '../../../store/ProgressContext';
 
-const ListOfCognitiveBiases = () => {
+const SHEET_ID = 'cognitive-biases';
+
+const ListOfCognitiveBiases: React.FC = () => {
+  const { progress, dispatch } = useProgress();
   const [openBiasIndex, setOpenBiasIndex] = useState<number | null>(null);
 
   const handleBiasClick = (index: number) => {
     setOpenBiasIndex(openBiasIndex === index ? null : index);
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.listOfCognitiveBiases}>
-      <h2>Определение когнитивных искажений</h2>
+      <div className={styles.titleContainer}>
+        <h2>Список когнитивных искажений</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
       <ol>
         {cognitiveBiases.map((bias, index) => (
           <li key={index}>
-            <div 
+            <div
               className={`${styles.biasHeader} ${openBiasIndex === index ? styles.open : ''}`}
               onClick={() => handleBiasClick(index)}
             >
