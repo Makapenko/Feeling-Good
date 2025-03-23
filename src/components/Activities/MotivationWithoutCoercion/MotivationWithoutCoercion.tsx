@@ -19,7 +19,7 @@ const MotivationWithoutCoercion: React.FC = () => {
     const currentDate = getCurrentDate();
     const dayProgress = progress.dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
-      (ex: Exercise): ex is MotivationWithoutCoercionExercise => 
+      (ex: Exercise): ex is MotivationWithoutCoercionExercise =>
         ex.type === 'motivation-without-coercion' && ex.id === SHEET_ID
     );
     return exercise?.records || [];
@@ -60,7 +60,7 @@ const MotivationWithoutCoercion: React.FC = () => {
 
   const handleAddAdvantage = () => {
     if (currentAdvantage.trim() && activeRecord) {
-      const updatedRecords = records.map((record: MotivationWithoutCoercionRecord) => 
+      const updatedRecords = records.map((record: MotivationWithoutCoercionRecord) =>
         record.id === activeRecord.id
           ? { ...record, advantages: [...record.advantages, currentAdvantage] }
           : record
@@ -73,7 +73,7 @@ const MotivationWithoutCoercion: React.FC = () => {
 
   const handleAddDisadvantage = () => {
     if (currentDisadvantage.trim() && activeRecord) {
-      const updatedRecords = records.map((record: MotivationWithoutCoercionRecord) => 
+      const updatedRecords = records.map((record: MotivationWithoutCoercionRecord) =>
         record.id === activeRecord.id
           ? { ...record, disadvantages: [...record.disadvantages, currentDisadvantage] }
           : record
@@ -84,9 +84,31 @@ const MotivationWithoutCoercion: React.FC = () => {
     }
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Мотивация без принуждения</h2>
+      <div className={styles.titleContainer}>
+        <h2>Мотивация без принуждения</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
       <p className={styles.description}>
         Запишите мысль, которая вас беспокоит, и проанализируйте преимущества и недостатки
         этой ситуации, чтобы найти более сбалансированный взгляд.
@@ -100,7 +122,7 @@ const MotivationWithoutCoercion: React.FC = () => {
           placeholder="Введите беспокоящую мысль..."
           className={styles.input}
         />
-        <button 
+        <button
           onClick={handleAddThought}
           className={styles.addButton}
           disabled={!currentThought.trim()}
@@ -136,7 +158,7 @@ const MotivationWithoutCoercion: React.FC = () => {
                 placeholder="Добавить преимущество..."
                 className={styles.input}
               />
-              <button 
+              <button
                 onClick={handleAddAdvantage}
                 className={styles.addButton}
                 disabled={!currentAdvantage.trim()}
@@ -161,7 +183,7 @@ const MotivationWithoutCoercion: React.FC = () => {
                 placeholder="Добавить недостаток..."
                 className={styles.input}
               />
-              <button 
+              <button
                 onClick={handleAddDisadvantage}
                 className={styles.addButton}
                 disabled={!currentDisadvantage.trim()}
