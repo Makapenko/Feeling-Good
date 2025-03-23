@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { listOfQuestions } from './listOfQuestions';
 import { explanationOfFirstQuestion } from './explanationOfFirstQuestion';
 import styles from './TestOfCognitiveBiases.module.css';
 import { SurveyResult } from '../Survey/types';
+import { useProgress } from '../../../store/ProgressContext';
 
 interface AnswerState {
   selectedAnswers: number[];
@@ -13,7 +14,10 @@ interface TestOfCognitiveBiasesProps {
   onComplete?: (result: SurveyResult) => void;
 }
 
+const SHEET_ID = 'cognitive-biases-test';
+
 const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplete }) => {
+  const { dispatch, progress } = useProgress();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>(
     listOfQuestions.map(() => ({ selectedAnswers: [], isSubmitted: false }))
@@ -150,9 +154,31 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
     });
   };
 
+  // Получаем статус избранного из Redux
+const isFavorite = useMemo(() => {
+  return progress.favoriteActivities?.includes(SHEET_ID) || false;
+}, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+const toggleFavorite = () => {
+  dispatch({
+    type: 'TOGGLE_FAVORITE_ACTIVITY',
+    activityId: SHEET_ID
+  });
+};
+
   return (
     <div className={styles.testContainer}>
-      <h2>Тест на понимание когнитивных искажений</h2>
+     <div className={styles.titleContainer}>
+  <h2>Тест на понимание когнитивных искажений</h2>
+  <button 
+    className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+    onClick={toggleFavorite}
+    aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+  >
+    ★
+  </button>
+</div>
       
       <div className={styles.questionBlock}>
         <p className={styles.questionNumber}>Вопрос {currentQuestion + 1} из {listOfQuestions.length}</p>
