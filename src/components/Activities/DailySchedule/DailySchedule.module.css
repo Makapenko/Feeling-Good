@@ -7,8 +7,7 @@
 .titleContainer {
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: space-between;
   margin-bottom: 30px;
 }
 
@@ -16,9 +15,12 @@
   margin-bottom: 0;
 }
 
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
 .favoriteButton {
-  position: absolute;
-  right: 0;
   background: none;
   border: none;
   font-size: 28px;
@@ -35,6 +37,10 @@
 
 .favoriteButton.isFavorite {
   color: #f1c40f;
+}
+
+.chapterButton {
+  font-size: 24px;
 }
 
 .dateContainer {

@@ -3,8 +3,10 @@ import styles from './NoButsSheet.module.css';
 import { ButPair } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useProgress } from '../../../store/ProgressContext';
+import { ACTIVITY_IDS } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
-const SHEET_ID = 'no-buts';
+const SHEET_ID = ACTIVITY_IDS.NO_BUTS;
 
 const NoButsSheet = () => {
   const { progress, dispatch } = useProgress();
@@ -100,14 +102,17 @@ const NoButsSheet = () => {
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
-        <h2>Никаких "но"</h2>
-        <button
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </button>
+        <h2>Техника «Никаких но»</h2>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
       </div>
       <div className={styles.description}>
         <p>

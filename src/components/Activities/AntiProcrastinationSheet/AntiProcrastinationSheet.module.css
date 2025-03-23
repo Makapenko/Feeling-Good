@@ -10,34 +10,47 @@
 .titleContainer {
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
-  margin-bottom: 30px;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 
 .titleContainer h2 {
   margin-bottom: 0;
 }
 
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
 .favoriteButton {
-  position: absolute;
-  right: 0;
   background: none;
   border: none;
-  font-size: 28px;
+  font-size: 1.5rem;
   color: #ccc;
   cursor: pointer;
-  transition: color 0.2s ease;
-  padding: 5px;
-  line-height: 1;
+  transition: color 0.3s;
 }
 
 .favoriteButton:hover {
-  color: #f1c40f;
+  color: #ffcc00;
 }
 
 .favoriteButton.isFavorite {
-  color: #f1c40f;
+  color: #ffcc00;
+}
+
+.chapterButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #007bff;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.chapterButton:hover {
+  color: #0056b3;
 }
 
 h2 {

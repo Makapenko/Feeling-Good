@@ -1,0 +1,12 @@
+.chapterButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #007bff;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.chapterButton:hover {
+  color: #0056b3;
+} 

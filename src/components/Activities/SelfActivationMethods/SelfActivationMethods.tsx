@@ -4,6 +4,7 @@ import { selfActivationMethods } from '../../../data/selfActivationMethods';
 import { useProgress, SpecialContent } from '../../../store/ProgressContext';
 import { ProgressAction } from '../../../store/progressReducer';
 import { ACTIVITY_IDS } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
 //TODO - не работает добавление в избранное
 const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
@@ -80,13 +81,16 @@ const SelfActivationMethods: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2>Обзор методов самоактивации</h2>
-        <button
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </button>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
       </div>
       <div className={styles.table}>
         <div className={styles.header}>

@@ -4,6 +4,7 @@ import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
 import { useProgress } from '../../../store/ProgressContext';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
@@ -11,11 +12,53 @@ const SmallSteps: React.FC = () => {
   const { dispatch, progress } = useProgress();
   const [tasks, setTasks] = useState<SmallStepsTask[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [newStepText, setNewStepText] = useState('');
-  const [newStepDuration, setNewStepDuration] = useState(3);
+  const [taskInputs, setTaskInputs] = useState<Record<string, { text: string; duration: number }>>({});
   const [editingStep, setEditingStep] = useState<{ taskId: string; stepId: string } | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const initialLoadDone = useRef(false);
+
+  // Загружаем существующие задачи из прогресса только при первой загрузке
+  useEffect(() => {
+    if (!progress?.dailyProgress || initialLoadDone.current) return;
+
+    // Собираем все задачи из разных дней
+    const allTasks: SmallStepsTask[] = [];
+    
+    Object.values(progress.dailyProgress).forEach(dayProgress => {
+      const exercises = dayProgress.exercises.exercises || [];
+      exercises
+        .filter(exercise => exercise.type === ACTIVITY_IDS.SMALL_STEPS && exercise.id === SHEET_ID)
+        .forEach(exercise => {
+          if ('records' in exercise && Array.isArray(exercise.records)) {
+            allTasks.push(...exercise.records as SmallStepsTask[]);
+          }
+        });
+    });
+
+    // Дедупликация задач по ID
+    const uniqueTasks = allTasks.reduce((acc: SmallStepsTask[], task) => {
+      const existingTaskIndex = acc.findIndex(t => t.id === task.id);
+      if (existingTaskIndex === -1) {
+        acc.push(task);
+      }
+      return acc;
+    }, []);
+
+    // Если есть задачи, загружаем их
+    if (uniqueTasks.length > 0) {
+      setTasks(uniqueTasks);
+      
+      // Инициализируем состояния для ввода для каждой задачи
+      const initialInputs: Record<string, { text: string; duration: number }> = {};
+      uniqueTasks.forEach(task => {
+        initialInputs[task.id] = { text: '', duration: 3 };
+      });
+      setTaskInputs(initialInputs);
+    }
+    
+    initialLoadDone.current = true;
+  }, [progress?.dailyProgress]);
 
   const saveToProgress = (updatedTasks: SmallStepsTask[]) => {
     dispatch({
@@ -34,8 +77,9 @@ const SmallSteps: React.FC = () => {
   const addTask = () => {
     if (!newTaskTitle.trim()) return;
 
+    const newTaskId = uuidv4();
     const newTask: SmallStepsTask = {
-      id: uuidv4(),
+      id: newTaskId,
       title: newTaskTitle,
       steps: [],
       isActive: false
@@ -45,18 +89,25 @@ const SmallSteps: React.FC = () => {
     setTasks(updatedTasks);
     setNewTaskTitle('');
     saveToProgress(updatedTasks);
+    
+    // Добавляем состояние ввода для новой задачи
+    setTaskInputs(prev => ({
+      ...prev,
+      [newTaskId]: { text: '', duration: 3 }
+    }));
   };
 
   const addStep = (taskId: string) => {
-    if (!newStepText.trim()) return;
+    const taskInput = taskInputs[taskId];
+    if (!taskInput || !taskInput.text.trim()) return;
 
     const newStep: SmallStep = {
       id: uuidv4(),
-      text: newStepText,
+      text: taskInput.text,
       isCompleted: false,
-      duration: newStepDuration,
+      duration: taskInput.duration,
       isRest: false,
-      timeLeft: newStepDuration * 60,
+      timeLeft: taskInput.duration * 60,
       timerEnded: false
     };
 
@@ -81,8 +132,13 @@ const SmallSteps: React.FC = () => {
     });
 
     setTasks(updatedTasks);
-    setNewStepText('');
-    setNewStepDuration(3);
+    
+    // Сбрасываем только текст, сохраняя последнюю использованную длительность
+    setTaskInputs(prev => ({
+      ...prev,
+      [taskId]: { ...prev[taskId], text: '' }
+    }));
+    
     saveToProgress(updatedTasks);
   };
 
@@ -258,9 +314,10 @@ const SmallSteps: React.FC = () => {
   return (
     <div className={styles.container}>
       <audio ref={audioRef} src="/notification.mp3" />
-      <div className={styles.description}>
-        <div className={styles.titleContainer}>
-          <h2>Метод маленьких шагов</h2>
+      <div className={styles.titleContainer}>
+        <h2>Метод маленьких шагов</h2>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
           <button
             className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
             onClick={toggleFavorite}
@@ -269,6 +326,8 @@ const SmallSteps: React.FC = () => {
             ★
           </button>
         </div>
+      </div>
+      <div className={styles.description}>
         <p>
           Этот инструмент поможет вам разделить большую задачу на маленькие управляемые части.
           После каждого выполненного шага у вас будет минута отдыха.
@@ -357,16 +416,22 @@ const SmallSteps: React.FC = () => {
           <div className={styles.newStep}>
             <input
               type="text"
-              value={newStepText}
-              onChange={(e) => setNewStepText(e.target.value)}
+              value={taskInputs[task.id]?.text || ''}
+              onChange={(e) => setTaskInputs(prev => ({ 
+                ...prev, 
+                [task.id]: { ...prev[task.id], text: e.target.value } 
+              }))}
               placeholder="Опишите маленький шаг..."
               className={styles.input}
             />
             <div className={styles.durationWrapper}>
               <input
                 type="number"
-                value={newStepDuration}
-                onChange={(e) => setNewStepDuration(Number(e.target.value))}
+                value={taskInputs[task.id]?.duration || 3}
+                onChange={(e) => setTaskInputs(prev => ({ 
+                  ...prev, 
+                  [task.id]: { ...prev[task.id], duration: Number(e.target.value) } 
+                }))}
                 min="1"
                 className={styles.durationInput}
               />
@@ -400,7 +465,6 @@ const SmallSteps: React.FC = () => {
             </div>
           )}
         </div>
-
       ))}
     </div>
   );

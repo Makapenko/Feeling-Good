@@ -265,4 +265,13 @@
     background: #f0fff4;
     border-bottom-color: #c6f6d5;
   }
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.chapterButton {
+  font-size: 24px;
 } 

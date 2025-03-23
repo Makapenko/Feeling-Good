@@ -4,8 +4,11 @@ import { Task } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useProgress } from '../../../store/ProgressContext';
 import { AntiProcrastinationTask } from '../../../types/progress.types';
+import { ACTIVITY_IDS } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
 
-const SHEET_ID = 'anti-procrastination';
+const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
+// Идентификатор главы, связанной с методикой антипрокрастинации
 
 const RatingInput = ({
   value,
@@ -141,6 +144,7 @@ const AntiProcrastinationSheet = () => {
       activityId: SHEET_ID
     });
   };
+  
   // Получаем все записи из прогресса
   const allTasks = useMemo(() => {
     if (!progress?.dailyProgress) return [];
@@ -233,13 +237,16 @@ const AntiProcrastinationSheet = () => {
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2>Листок антипрокрастинации</h2>
-        <button
-          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-          onClick={toggleFavorite}
-          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-        >
-          ★
-        </button>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <button
+            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+            onClick={toggleFavorite}
+            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          >
+            ★
+          </button>
+        </div>
       </div>
 
       <div className={styles.description}>
