@@ -2,20 +2,21 @@ import { useProgress } from '../../store/ProgressContext';
 import styles from './Header.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faListCheck, faHome } from '@fortawesome/free-solid-svg-icons';
+import { ACTIVITY_IDS } from '../../constants/activities';
 
 const Header: React.FC = () => {
   const { dispatch } = useProgress();
 
   const handleCalendarClick = () => {
-    dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'progress-calendar' });
+    dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.PROGRESS_CALENDAR });
   };
 
-  const handleTitleClick = () => {
-    dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'welcome' });
+  const handleHomeClick = () => {
+    dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.WELCOME });
   };
 
-  const handleTodayTasksClick = () => {
-    dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'today-tasks' });
+  const handleTasksClick = () => {
+    dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.TODAY_TASKS });
   };
 
   return (
@@ -25,10 +26,10 @@ const Header: React.FC = () => {
           <FontAwesomeIcon
             icon={faHome}
             className={styles.homeIcon}
-            onClick={handleTitleClick}
+            onClick={handleHomeClick}
           />
           <h1
-            onClick={handleTitleClick}
+            onClick={handleHomeClick}
             className={styles.title}
           >
             Терапия настроения
@@ -37,7 +38,7 @@ const Header: React.FC = () => {
         <div className={styles.buttonGroup}>
           <button
             className={styles.iconButton}
-            onClick={handleTodayTasksClick}
+            onClick={handleTasksClick}
             title="Задания на сегодня"
             aria-label="Задания на сегодня"
           >

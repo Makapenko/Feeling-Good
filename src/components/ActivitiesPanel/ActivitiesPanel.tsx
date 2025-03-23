@@ -3,57 +3,58 @@ import styles from './ActivitiesPanel.module.css';
 import { useProgress } from '../../store/ProgressContext';
 import { SpecialContent } from '../../store/ProgressContext';
 import { getAvailableActivities } from '../../data/activitiesMapping';
+import { ACTIVITY_IDS } from '../../constants/activities';
 
-interface ActivityButton {
+interface ActivityItem {
   content: SpecialContent;
   label: string;
 }
 
 interface ActivitySection {
   title: string;
-  buttons: ActivityButton[];
+  activities: ActivityItem[];
 }
 
-const activitySections: ActivitySection[] = [
+const sections: ActivitySection[] = [
   {
-    title: 'Теория',
-    buttons: [
-      { content: 'burns-checklist', label: 'Опросник депрессии Бернса' },
-      { content: 'cognitive-biases', label: 'Список когнитивных искажений' },
-      { content: 'cognitive-biases-test', label: 'Тест на когнитивные искажения' },
+    title: 'Оценка состояния',
+    activities: [
+      { content: ACTIVITY_IDS.BURNS_CHECKLIST, label: 'Опросник депрессии Бернса' },
+      { content: ACTIVITY_IDS.COGNITIVE_BIASES, label: 'Список когнитивных искажений' },
+      { content: ACTIVITY_IDS.COGNITIVE_BIASES_TEST, label: 'Тест на когнитивные искажения' },
     ]
   },
   {
-    title: 'Самооценка',
-    buttons: [
-      { content: 'three-columns-method', label: 'Метод трёх колонок' },
-      { content: 'thought-diary', label: 'Дневник автоматических мыслей' },
+    title: 'Работа с мыслями',
+    activities: [
+      { content: ACTIVITY_IDS.THREE_COLUMNS_METHOD, label: 'Метод трёх колонок' },
+      { content: ACTIVITY_IDS.THOUGHT_DIARY, label: 'Дневник автоматических мыслей' },
     ]
   },
   {
-    title: 'Прокрастинация',
-    buttons: [
-      { content: 'self-activation', label: 'Методы самоактивации' },
-      { content: 'daily-schedule', label: 'Расписание дня' },
-      { content: 'anti-procrastination', label: 'Листок антипрокрастинации' },
-      { content: 'thought-diary', label: 'Дневник автоматических мыслей' },
-      { content: 'pleasure-sheet', label: 'Листок предполагаемого удовольствия' },
-      { content: 'no-buts', label: 'Техника «Никаких но»' },
-      { content: 'self-support', label: 'Самоподдержка' },
-      { content: 'hindering-helping-thoughts', label: 'Техника мешающих и помогающих мыслей' },
-      { content: 'small-steps', label: 'Метод маленьких шагов' },
-      { content: 'motivation-without-coercion', label: 'Мотивация без принуждения' },
-      { content: 'disarming-technique', label: 'Техника обезоруживания' },
-      { content: 'imagine-success', label: 'Представьте успех' },
-      { content: 'count-achievements', label: 'Считайте достижения' },
-      { content: 'check-cant-do', label: 'Проверьте свои "не могу"' },
-      { content: 'no-lose-technique', label: 'Беспроигрышная техника' },
+    title: 'Методы самоактивации',
+    activities: [
+      { content: ACTIVITY_IDS.SELF_ACTIVATION, label: 'Методы самоактивации' },
+      { content: ACTIVITY_IDS.DAILY_SCHEDULE, label: 'Расписание дня' },
+      { content: ACTIVITY_IDS.ANTI_PROCRASTINATION, label: 'Листок антипрокрастинации' },
+      { content: ACTIVITY_IDS.THOUGHT_DIARY, label: 'Дневник автоматических мыслей' },
+      { content: ACTIVITY_IDS.PLEASURE_SHEET, label: 'Листок предполагаемого удовольствия' },
+      { content: ACTIVITY_IDS.NO_BUTS, label: 'Техника «Никаких но»' },
+      { content: ACTIVITY_IDS.SELF_SUPPORT, label: 'Самоподдержка' },
+      { content: ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS, label: 'Техника мешающих и помогающих мыслей' },
+      { content: ACTIVITY_IDS.SMALL_STEPS, label: 'Метод маленьких шагов' },
+      { content: ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION, label: 'Мотивация без принуждения' },
+      { content: ACTIVITY_IDS.DISARMING_TECHNIQUE, label: 'Техника обезоруживания' },
+      { content: ACTIVITY_IDS.IMAGINE_SUCCESS, label: 'Представьте успех' },
+      { content: ACTIVITY_IDS.COUNT_ACHIEVEMENTS, label: 'Считайте достижения' },
+      { content: ACTIVITY_IDS.CHECK_CANT_DO, label: 'Проверьте свои "не могу"' },
+      { content: ACTIVITY_IDS.NO_LOSE_TECHNIQUE, label: 'Беспроигрышная техника' }
     ]
   },
   {
-    title: 'Раздражение',
-    buttons: [
-      { content: 'novaco-scale', label: 'Шкала раздражения Новако' }
+    title: 'Управление гневом',
+    activities: [
+      { content: ACTIVITY_IDS.NOVACO_SCALE, label: 'Шкала раздражения Новако' }
     ]
   }
 ];
@@ -73,9 +74,9 @@ const ActivitiesPanel: React.FC = () => {
   };
 
   // Фильтруем секции, чтобы показывать только те, в которых есть доступные активности
-  const filteredSections = activitySections.map(section => ({
+  const filteredSections = sections.map(section => ({
     ...section,
-    buttons: section.buttons.filter(button => availableActivities.has(button.content))
+    buttons: section.activities.filter(activity => availableActivities.has(activity.content))
   })).filter(section => section.buttons.length > 0);
 
   return (

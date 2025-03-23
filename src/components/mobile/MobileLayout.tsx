@@ -6,6 +6,7 @@ import ListOfChapters from '../ListOfChapters/ListOfChapters';
 import MainContent from '../MainContent/MainContent';
 import ActivitiesPanel from '../ActivitiesPanel/ActivitiesPanel';
 import styles from './MobileLayout.module.css';
+import { ACTIVITY_IDS } from '../../constants/activities';
 
 // TODO исправить - при переходе из ежедневных заданий - иконка не переключается на книгу и на активности
 
@@ -17,12 +18,13 @@ const MobileLayout: FC = () => {
 
   const handleTabChange = (tab: MobileTab) => {
     setActiveTab(tab);
+    
     if (tab === 'calendar') {
-      dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'progress-calendar' });
+      dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.PROGRESS_CALENDAR });
     } else if (tab === 'today') {
-      dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'today-tasks' });
+      dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.TODAY_TASKS });
     } else if (tab === 'about') {
-      dispatch({ type: 'SET_SPECIAL_CONTENT', content: 'welcome' });
+      dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.WELCOME });
     } else if (tab === 'chapters' || tab === 'activities') {
       dispatch({ type: 'SET_SPECIAL_CONTENT', content: null });
     }
@@ -31,8 +33,10 @@ const MobileLayout: FC = () => {
   const renderContent = () => {
     if ((progress.currentChapter && activeTab !== 'activities') || 
         (progress.specialContent && 
-         !(activeTab === 'chapters' && progress.specialContent !== 'progress-calendar' && 
-           progress.specialContent !== 'today-tasks' && progress.specialContent !== 'welcome'))) {
+         !(activeTab === 'chapters' && 
+           progress.specialContent !== ACTIVITY_IDS.PROGRESS_CALENDAR && 
+           progress.specialContent !== ACTIVITY_IDS.TODAY_TASKS && 
+           progress.specialContent !== ACTIVITY_IDS.WELCOME))) {
       return <MainContent />;
     }
 

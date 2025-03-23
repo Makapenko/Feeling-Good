@@ -26,7 +26,7 @@ export interface ThoughtDiaryRecord {
 }
 
 export interface ThoughtDiaryExercise {
-  type: 'thought-diary';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -35,7 +35,7 @@ export interface ThoughtDiaryExercise {
 }
 
 export interface ThreeColumnsExercise {
-  type: 'three-columns-method';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -58,7 +58,7 @@ export interface DailyScheduleRecord {
 }
 
 export interface DailyScheduleExercise {
-  type: 'daily-schedule';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -79,7 +79,7 @@ export interface AntiProcrastinationTask {
 }
 
 export interface AntiProcrastinationExercise {
-  type: 'anti-procrastination';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -98,7 +98,7 @@ export interface PleasureSheetActivity {
 }
 
 export interface PleasureSheetExercise {
-  type: 'pleasure-sheet';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -114,7 +114,7 @@ export interface NoButsPair {
 }
 
 export interface NoButsExercise {
-  type: 'no-buts';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -130,7 +130,7 @@ export interface SupportStatement {
 }
 
 export interface SelfSupportExercise {
-  type: 'self-support';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -158,7 +158,7 @@ export interface SmallStepsTask {
 }
 
 export interface SmallStepsExercise {
-  type: 'small-steps';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -175,7 +175,7 @@ export interface MotivationWithoutCoercionRecord {
 }
 
 export interface MotivationWithoutCoercionExercise {
-  type: 'motivation-without-coercion';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -194,7 +194,7 @@ export interface ImagineSuccessRecord {
 }
 
 export interface ImagineSuccessExercise {
-  type: 'imagine-success';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -209,7 +209,7 @@ export interface CountAchievementsRecord {
 }
 
 export interface CountAchievementsExercise {
-  type: 'count-achievements';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -226,7 +226,7 @@ export interface CheckCantDoRecord {
 }
 
 export interface CheckCantDoExercise {
-  type: 'check-cant-do';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;
@@ -243,7 +243,7 @@ export interface NoLoseTechniqueRecord {
 }
 
 export interface NoLoseTechniqueExercise {
-  type: 'no-lose-technique';
+  type: ActivityId;
   id: string;
   name: string;
   completed: boolean;

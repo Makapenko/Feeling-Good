@@ -6,7 +6,7 @@ import { getAvailableActivities } from '../../data/activitiesMapping';
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
-import { SpecialContent } from '../../types/progress.types';
+import { ActivityId, ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
 
 const typedChaptersData = chaptersData as ChaptersData;
 
@@ -26,30 +26,7 @@ const TodayTasks: React.FC = () => {
 
   // Функция для получения имени активности по ID
   function getActivityNameById(id: string): string {
-    // Здесь можно использовать маппинг для получения имени активности
-    const activityMap: {[key: string]: string} = {
-      'three-columns-method': 'Метод трёх колонок',
-      'thought-diary': 'Дневник автоматических мыслей',
-      'daily-schedule': 'Расписание дня',
-      'anti-procrastination': 'Листок антипрокрастинации',
-      'pleasure-sheet': 'Листок предполагаемого удовольствия',
-      'no-buts': 'Техника «Никаких но»',
-      'self-support': 'Самоподдержка',
-      'hindering-helping-thoughts': 'Техника мешающих и помогающих мыслей',
-      'small-steps': 'Метод маленьких шагов',
-      'motivation-without-coercion': 'Мотивация без принуждения',
-      'disarming-technique': 'Техника обезоруживания',
-      'imagine-success': 'Представьте успех',
-      'count-achievements': 'Считайте достижения',
-      'check-cant-do': 'Проверяйте свои «не могу»',
-      'no-lose-technique': 'Беспроигрышная техника',
-      'burns-checklist': 'Опросник депрессии Бернса',
-      'cognitive-biases': 'Список когнитивных искажений',
-      'cognitive-biases-test': 'Тест на когнитивные искажения',
-      'novaco-scale': 'Шкала раздражения Новако',
-    };
-    
-    return activityMap[id] || '';
+    return ACTIVITY_NAMES[id as keyof typeof ACTIVITY_NAMES] || '';
   }
 
   // Находим первую непрочитанную главу или подглаву
@@ -127,13 +104,14 @@ const TodayTasks: React.FC = () => {
   const readingGoalAchieved = totalReadingTime >= 300; // 5 минут = 300 секунд
 
   // Проверяем время работы с методами
-  const totalMethodsTime = getStoredActivityTime('three-columns-method') + getStoredActivityTime('thought-diary');
+  const totalMethodsTime = getStoredActivityTime(ACTIVITY_IDS.THREE_COLUMNS_METHOD) + 
+                          getStoredActivityTime(ACTIVITY_IDS.THOUGHT_DIARY);
   const methodsGoalAchieved = totalMethodsTime >= 900; // 15 минут = 900 секунд
 
   // Проверяем статус опросника Бернса
   const checkBurnsStatus = () => {
     const availableActivities = getAvailableActivities(progress.unlockedContent.chapters);
-    if (!availableActivities.has('burns-checklist')) return null;
+    if (!availableActivities.has(ACTIVITY_IDS.BURNS_CHECKLIST)) return null;
 
     const burnsResults = Object.values(progress.dailyProgress)
       .flatMap(day => day.exercises.testResults)
@@ -174,32 +152,38 @@ const TodayTasks: React.FC = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const handleOpenBurnsChecklist = () => {
-    dispatch({
-      type: 'SET_SPECIAL_CONTENT',
-      content: 'burns-checklist'
-    });
-  };
-
-  const handleOpenThreeColumns = () => {
-    dispatch({
-      type: 'SET_SPECIAL_CONTENT',
-      content: 'three-columns-method'
-    });
-  };
-
-  const handleOpenThoughtDiary = () => {
-    dispatch({
-      type: 'SET_SPECIAL_CONTENT',
-      content: 'thought-diary'
-    });
-  };
-
-  const handleOpenActivity = (activityId: string) => {
-    dispatch({
-      type: 'SET_SPECIAL_CONTENT',
-      content: activityId as SpecialContent
-    });
+  const handleActivityClick = (activityId: string) => {
+    switch (activityId) {
+      case 'daily-mood':
+        dispatch({
+          type: 'SET_SPECIAL_CONTENT',
+          content: ACTIVITY_IDS.BURNS_CHECKLIST
+        });
+        break;
+      case 'automatic-thoughts':
+        dispatch({
+          type: 'SET_SPECIAL_CONTENT',
+          content: ACTIVITY_IDS.THREE_COLUMNS_METHOD
+        });
+        break;
+      case 'thought-diary':
+        dispatch({
+          type: 'SET_SPECIAL_CONTENT',
+          content: ACTIVITY_IDS.THOUGHT_DIARY
+        });
+        break;
+      default:
+        // Для избранных активностей передаем идентификатор напрямую
+        // Здесь мы знаем, что activityId является валидным идентификатором активности
+        dispatch({
+          type: 'SET_SPECIAL_CONTENT',
+          content: activityId as ActivityId
+        });
+        break;
+    }
+    
+    // Прокрутка страницы вверх
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -264,13 +248,13 @@ const TodayTasks: React.FC = () => {
                 <div className={styles.methodLinks}>
                   <span 
                     className={styles.openLink} 
-                    onClick={handleOpenThreeColumns}
+                    onClick={() => handleActivityClick('automatic-thoughts')}
                   >
                     Открыть метод трёх колонок
                   </span>
                   <span 
                     className={styles.openLink} 
-                    onClick={handleOpenThoughtDiary}
+                    onClick={() => handleActivityClick('thought-diary')}
                   >
                     Открыть дневник мыслей
                   </span>
@@ -283,7 +267,7 @@ const TodayTasks: React.FC = () => {
         {burnsStatus && (
           <div 
             className={`${styles.task} ${burnsStatus.needToComplete ? styles.clickable : ''}`}
-            onClick={burnsStatus.needToComplete ? handleOpenBurnsChecklist : undefined}
+            onClick={burnsStatus.needToComplete ? () => handleActivityClick('daily-mood') : undefined}
           >
             <div className={styles.taskHeader}>
               <div className={styles.checkbox}>
@@ -323,7 +307,7 @@ const TodayTasks: React.FC = () => {
               <div 
                 key={activity.id} 
                 className={`${styles.favoriteItem} ${styles.clickable}`}
-                onClick={() => handleOpenActivity(activity.id)}
+                onClick={() => handleActivityClick(activity.id)}
               >
                 <div className={styles.favoriteIcon}>★</div>
                 <span className={styles.favoriteTitle}>{activity.name}</span>

@@ -17,6 +17,8 @@ import NoLoseTechniqueExerciseComponent from './render/NoLoseTechniqueExerciseCo
 import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseComponent';
 import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
+import { ACTIVITY_IDS } from '../../constants/activities';
+
 interface DayDetailsProps {
   date: string;
   dayProgress: CalendarDayProgress;
@@ -238,7 +240,10 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             </div>
             <div className={styles.stat}>
               <span>😎</span>
-              <strong>{formatTime(getStoredActivityTime('three-columns-method') + getStoredActivityTime('thought-diary'))}</strong>
+              <strong>{formatTime(
+                getStoredActivityTime(ACTIVITY_IDS.THREE_COLUMNS_METHOD) + 
+                getStoredActivityTime(ACTIVITY_IDS.THOUGHT_DIARY)
+              )}</strong>
             </div>
             {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
               <div className={styles.stat}>

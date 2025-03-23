@@ -12,6 +12,7 @@ import { getCurrentDate } from '../utils/dateUtils';
 import chaptersData from '../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../types/chapters.types';
 import { chapterToActivitiesMap } from '../data/activitiesMapping';
+import { ACTIVITY_IDS } from '../constants/activities';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -295,7 +296,7 @@ export function progressReducer(
 
     case 'SAVE_EXERCISE': {
       // Определяем дату для сохранения
-      const targetDate = action.exercise.type === 'daily-schedule' 
+      const targetDate = 'date' in action.exercise && action.exercise.type === ACTIVITY_IDS.DAILY_SCHEDULE
         ? action.exercise.date 
         : currentDate;
 
