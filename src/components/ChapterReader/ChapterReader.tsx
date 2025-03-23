@@ -5,6 +5,11 @@ import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData, Section } from '../../types/chapters.types';
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ImageModal from './ImageModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTasks } from '@fortawesome/free-solid-svg-icons';
+import { chapterToActivitiesMap } from '../../data/activitiesMapping';
+import { ACTIVITY_NAMES } from '../../constants/activities';
+import { SpecialContent } from '../../types/progress.types';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -18,6 +23,11 @@ interface ChapterReaderProps {
 const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapterId, onNext }) => {
   const { dispatch } = useProgress();
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+
+  // Получаем активности, связанные с текущей главой
+  const relatedActivities = useMemo(() => {
+    return chapterToActivitiesMap[chapterId] || [];
+  }, [chapterId]);
 
   // Обработчик кликов по изображениям
   useEffect(() => {
@@ -121,6 +131,14 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     onNext?.();
   }, [chapterId, dispatch, findNextChapter, onNext]);
 
+  // Обработчик перехода к активности
+  const handleGoToActivity = useCallback((activityId: string) => {
+    dispatch({
+      type: 'SET_SPECIAL_CONTENT',
+      content: activityId as SpecialContent
+    });
+  }, [dispatch]);
+
   // Очищаем HTML и разрешаем только безопасные теги и атрибуты
   const sanitizedContent = useMemo(() => {
     const config = {
@@ -140,12 +158,29 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
   return (
     <div className={styles.chapterContent}>
       {contentElement}
+      
+      {relatedActivities.length > 0 && (
+        <div className={styles.activityButtonsContainer}>
+          {relatedActivities.map(activityId => (
+            <button
+              key={activityId}
+              className={styles.activityButton}
+              onClick={() => handleGoToActivity(activityId)}
+            >
+              <FontAwesomeIcon icon={faTasks} />
+              {ACTIVITY_NAMES[activityId] || 'Перейти к заданию'}
+            </button>
+          ))}
+        </div>
+      )}
+      
       <button 
         className={styles.nextButton}
         onClick={handleComplete}
       >
         Далее
       </button>
+      
       {selectedImage && (
         <ImageModal
           src={selectedImage.src}

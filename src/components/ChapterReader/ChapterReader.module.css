@@ -47,6 +47,32 @@
   background-color: #45a049;
 }
 
+.activityButtonsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.activityButton {
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.activityButton:hover {
+  background-color: #0056b3;
+}
+
 .content img {
   max-width: 100%;
   height: auto;
@@ -143,6 +169,21 @@
     justify-content: center;
     align-items: center;
     z-index: 99;
+  }
+
+  .activityButtonsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0 70px;
+    padding: 0 16px;
+  }
+
+  .activityButton {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    justify-content: center;
   }
 
   .nextButton {
