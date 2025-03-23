@@ -67,6 +67,9 @@ const ActivitiesPanel: React.FC = () => {
       type: 'SET_SPECIAL_CONTENT',
       content: content as SpecialContent
     });
+    
+    // Прокрутка страницы вверх
+    window.scrollTo(0, 0);
   };
 
   // Фильтруем секции, чтобы показывать только те, в которых есть доступные активности

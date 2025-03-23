@@ -31,6 +31,33 @@ import WelcomePage from '../WelcomePage/WelcomePage';
 import BurnsChecklist from '../Activities/BurnsChecklist';
 import NovacoScale from '../Activities/NovacoScale';
 
+// Определяем маппинг компонентов активностей
+const ACTIVITY_COMPONENTS = {
+  'welcome': WelcomePage,
+  'burns-checklist': BurnsChecklist,
+  'today-tasks': TodayTasks,
+  'novaco-scale': NovacoScale,
+  'cognitive-biases': ListOfCognitiveBiases,
+  'cognitive-biases-test': TestOfCognitiveBiases,
+  'three-columns-method': ThreeColumnsMethod,
+  'thought-diary': ThoughtDiary,
+  'daily-schedule': DailySchedule,
+  'anti-procrastination': AntiProcrastinationSheet,
+  'pleasure-sheet': PleasureSheet,
+  'no-buts': NoButsSheet,
+  'self-support': SelfSupport,
+  'self-activation': SelfActivationMethods,
+  'hindering-helping-thoughts': HinderingHelpingThoughts,
+  'disarming-technique': DisarmingTechnique,
+  'motivation-without-coercion': MotivationWithoutCoercion,
+  'no-lose-technique': NoLoseTechnique,
+  'small-steps': SmallSteps,
+  'imagine-success': ImagineSuccess,
+  'count-achievements': CountAchievements,
+  'check-cant-do': CheckCantDo,
+  'progress-calendar': ProgressCalendar
+};
+
 const MainContent: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const { setActiveTab } = useMobile();
@@ -43,6 +70,12 @@ const MainContent: React.FC = () => {
       });
     }
   }, [progress.currentChapter?.id, dispatch]);
+
+  // Эффект для прокрутки страницы наверх при смене контента
+  useEffect(() => {
+    // Прокручиваем страницу наверх только при изменении ID главы или типа специального контента
+    window.scrollTo(0, 0);
+  }, [progress.currentChapter?.id, progress.specialContent]);
 
   const handleTestComplete = (result: SurveyResult) => {
     dispatch({
@@ -61,247 +94,77 @@ const MainContent: React.FC = () => {
     setActiveTab('activities');
   };
 
-  //TODO - переписать  case - много повторяющихся строк
-  //TODO - сделать возвращение вверх экрана при переходе между главами и техниками
-
-  const renderContent = () => {
-    switch (progress.specialContent) {
-      case 'welcome':
-        return <WelcomePage />;
-      case 'burns-checklist':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <BurnsChecklist />
-          </>
-        );
-      case 'today-tasks':
-        return <TodayTasks />;
-      case 'novaco-scale':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <NovacoScale />
-          </>
-        );
-      case 'cognitive-biases':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <ListOfCognitiveBiases />
-          </>
-        );
-      case 'cognitive-biases-test':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <TestOfCognitiveBiases onComplete={handleTestComplete} />
-          </>
-        );
-      case 'three-columns-method':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <ThreeColumnsMethod />
-          </>
-        );
-      case 'thought-diary':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <ThoughtDiary />
-          </>
-        );
-      case 'daily-schedule':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <DailySchedule />
-          </>
-        );
-      case 'anti-procrastination':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <AntiProcrastinationSheet />
-          </>
-        );
-      case 'pleasure-sheet':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <PleasureSheet />
-          </>
-        );
-      case 'no-buts':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <NoButsSheet />
-          </>
-        );
-      case 'self-support':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <SelfSupport />
-          </>
-        );
-      case 'self-activation':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <SelfActivationMethods />
-          </>
-        );
-      case 'hindering-helping-thoughts':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <HinderingHelpingThoughts />
-          </>
-        );
-      case 'disarming-technique':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <DisarmingTechnique />
-          </>
-        );
-      case 'motivation-without-coercion':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <MotivationWithoutCoercion />
-          </>
-        );
-      case 'no-lose-technique':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <NoLoseTechnique />
-          </>
-        );
-      case 'small-steps':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <SmallSteps />
-          </>
-        );
-      case 'imagine-success':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <ImagineSuccess />
-          </>
-        );
-      case 'count-achievements':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <CountAchievements />
-          </>
-        );
-      case 'check-cant-do':
-        return (
-          <>
-            <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-              <span>К списку заданий</span>
-            </div>
-            <CheckCantDo />
-          </>
-        );
-      case 'progress-calendar':
-        return <ProgressCalendar />;
-      default:
-        if (progress.currentChapter) {
-          const { id, content } = progress.currentChapter;
-          return (
-            <>
-              <div className={styles.mobileBackButton} onClick={handleBackToChapters}>
-                <FontAwesomeIcon icon={faArrowLeft} />
-                <span>К списку глав</span>
-              </div>
-              <ChapterContainer
-                content={content}
-                chapterId={id}
-              />
-            </>
-          );
-        }
-        return (
-          <div className={styles.welcome}>
-            <h2>Выберите главу для изучения</h2>
-            <p>Здесь будет текст выбранной главы или задания.</p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <>  
-      {renderContent()}
+  // Компонент обёртка для активностей с кнопкой "назад"
+  const ActivityWithBackButton = ({ children }: { children: React.ReactNode }) => (
+    <>
+      <div className={styles.mobileBackButton} onClick={handleBackToActivities}>
+        <FontAwesomeIcon icon={faArrowLeft} />
+        <span>К списку заданий</span>
+      </div>
+      {children}
     </>
   );
+
+  // Рендерим контент в зависимости от текущей активности
+  const renderContent = () => {
+    const specialContent = progress.specialContent as keyof typeof ACTIVITY_COMPONENTS;
+    
+    // Специальные случаи
+    if (specialContent === 'today-tasks') {
+      return <TodayTasks />;
+    }
+    
+    if (specialContent === 'progress-calendar') {
+      return <ProgressCalendar />;
+    }
+    
+    if (specialContent === 'cognitive-biases-test') {
+      return (
+        <ActivityWithBackButton>
+          <TestOfCognitiveBiases onComplete={handleTestComplete} />
+        </ActivityWithBackButton>
+      );
+    }
+    
+    // Основной контент из маппинга активностей
+    if (specialContent && ACTIVITY_COMPONENTS[specialContent]) {
+      const ActivityComponent = ACTIVITY_COMPONENTS[specialContent];
+      
+      if (specialContent === 'welcome') {
+        return <ActivityComponent />;
+      }
+      
+      return (
+        <ActivityWithBackButton>
+          <ActivityComponent />
+        </ActivityWithBackButton>
+      );
+    }
+    
+    // Рендеринг главы или дефолтного контента
+    if (progress.currentChapter) {
+      const { id, content } = progress.currentChapter;
+      return (
+        <>
+          <div className={styles.mobileBackButton} onClick={handleBackToChapters}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+            <span>К списку глав</span>
+          </div>
+          <ChapterContainer content={content} chapterId={id} />
+        </>
+      );
+    }
+    
+    // Дефолтное сообщение
+    return (
+      <div className={styles.welcome}>
+        <h2>Выберите главу для изучения</h2>
+        <p>Здесь будет текст выбранной главы или задания.</p>
+      </div>
+    );
+  };
+
+  return <>{renderContent()}</>;
 };
 
 export default MainContent;
