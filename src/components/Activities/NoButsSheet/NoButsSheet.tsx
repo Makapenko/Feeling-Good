@@ -15,9 +15,9 @@ const NoButsSheet = () => {
   // Получаем все записи из прогресса
   const allPairs = useMemo(() => {
     if (!progress?.dailyProgress) return [];
-    
+
     const allDayPairs: Array<ButPair & { date: string }> = [];
-    
+
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
@@ -31,7 +31,7 @@ const NoButsSheet = () => {
           }
         });
     });
-    
+
     // Сортируем по дате и времени (новые сверху)
     return allDayPairs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [progress]);
@@ -84,9 +84,31 @@ const NoButsSheet = () => {
     saveToProgress(updatedPairs);
   };
 
+  // Получаем статус избранного из Redux
+  const isFavorite = useMemo(() => {
+    return progress.favoriteActivities?.includes(SHEET_ID) || false;
+  }, [progress.favoriteActivities]);
+
+  // Добавление или удаление из избранного через Redux
+  const toggleFavorite = () => {
+    dispatch({
+      type: 'TOGGLE_FAVORITE_ACTIVITY',
+      activityId: SHEET_ID
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Никаких "но"</h2>
+      <div className={styles.titleContainer}>
+        <h2>Никаких "но"</h2>
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
+          onClick={toggleFavorite}
+          aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+        >
+          ★
+        </button>
+      </div>
       <div className={styles.description}>
         <p>
           Метод "Никаких но" поможет вам преодолеть самооправдания и отговорки, которые мешают действовать.
@@ -174,7 +196,7 @@ const NoButsSheet = () => {
                   </div>
                   <div className={styles.arrowColumn}>
                     <div className={styles.arrowHistory}>→</div>
-                    </div>
+                  </div>
                   <div className={styles.noButColumn}>
                     <p>{pair.noBut}</p>
                   </div>
