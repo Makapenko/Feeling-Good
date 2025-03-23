@@ -61,6 +61,7 @@ const MainContent: React.FC = () => {
   };
 
   //TODO - переписать  case - много повторяющихся строк
+  //TODO - сделать возвращение вверх экрана при переходе между главами и техниками
 
   const renderContent = () => {
     switch (progress.specialContent) {
