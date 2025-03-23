@@ -1,4 +1,5 @@
 import { ThoughtRecord } from '../components/Activities/ThreeColumnsBase/types';
+import { ActivityId } from '../constants/activities';
 
 export interface TestResult {
   id: string;
@@ -285,30 +286,7 @@ export interface Chapter {
   completed: boolean;
 }
 
-export type SpecialContent = 
-  | 'welcome'
-  | 'burns-checklist'
-  | 'novaco-scale'
-  | 'cognitive-biases'
-  | 'cognitive-biases-test'
-  | 'three-columns-method'
-  | 'thought-diary'
-  | 'daily-schedule'
-  | 'anti-procrastination'
-  | 'pleasure-sheet'
-  | 'no-buts'
-  | 'self-support'
-  | 'self-activation'
-  | 'hindering-helping-thoughts'
-  | 'disarming-technique'
-  | 'motivation-without-coercion'
-  | 'no-lose-technique'
-  | 'small-steps'
-  | 'imagine-success'
-  | 'count-achievements'
-  | 'check-cant-do'
-  | 'progress-calendar'
-  | 'today-tasks';
+export type SpecialContent = ActivityId;
 
 export interface UnlockedContent {
   chapters: string[];  // массив id открытых глав

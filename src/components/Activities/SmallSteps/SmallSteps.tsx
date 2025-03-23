@@ -3,8 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
 import { useProgress } from '../../../store/ProgressContext';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'small-steps';
+const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
 const SmallSteps: React.FC = () => {
   const { dispatch, progress } = useProgress();
@@ -20,9 +21,9 @@ const SmallSteps: React.FC = () => {
     dispatch({
       type: 'SAVE_EXERCISE',
       exercise: {
-        type: 'small-steps',
+        type: ACTIVITY_IDS.SMALL_STEPS,
         id: SHEET_ID,
-        name: 'Метод маленьких шагов',
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.SMALL_STEPS],
         completed: true,
         completedAt: new Date().toISOString(),
         records: updatedTasks

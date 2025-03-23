@@ -4,9 +4,9 @@ import { useProgress } from '../../../store/ProgressContext';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
 import { ThreeColumnsExercise } from '../../../types/progress.types';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'three-columns-method';
-const ACTIVITY_NAME = 'Метод трёх колонок';
+const SHEET_ID = ACTIVITY_IDS.THREE_COLUMNS_METHOD;
 
 const ThreeColumnsMethod: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -36,7 +36,7 @@ const ThreeColumnsMethod: React.FC = () => {
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: ThreeColumnsExercise = {
-      type: 'three-columns-method',
+      type: ACTIVITY_IDS.THREE_COLUMNS_METHOD,
       id: result.id,
       name: result.name,
       completed: result.completed,
@@ -52,7 +52,7 @@ const ThreeColumnsMethod: React.FC = () => {
 
   return (
     <ThreeColumnsBase
-      title={ACTIVITY_NAME}
+      title={ACTIVITY_NAMES[ACTIVITY_IDS.THREE_COLUMNS_METHOD]}
       description="Запишите свои автоматические мысли и найдите им более рациональную альтернативу"
       leftColumnTitle="Автоматическая мысль"
       leftColumnPlaceholder="Запишите вашу негативную мысль... (самокритика)"

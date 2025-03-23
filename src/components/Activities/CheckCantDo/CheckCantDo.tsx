@@ -4,9 +4,9 @@ import { useProgress } from '../../../store/ProgressContext';
 import { CheckCantDoRecord, CheckCantDoExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'check-cant-do';
-const ACTIVITY_NAME = 'Проверяйте свои «не могу»';
+const SHEET_ID = ACTIVITY_IDS.CHECK_CANT_DO;
 
 const CheckCantDo: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -39,7 +39,7 @@ const CheckCantDo: React.FC = () => {
     const dayProgress = progress.dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is CheckCantDoExercise => 
-        ex.type === 'check-cant-do' && ex.id === SHEET_ID
+        ex.type === ACTIVITY_IDS.CHECK_CANT_DO && ex.id === SHEET_ID
     );
     return exercise?.records || [];
   }, [progress.dailyProgress]);
@@ -47,9 +47,9 @@ const CheckCantDo: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: CheckCantDoRecord[]) => {
     const exercise: CheckCantDoExercise = {
-      type: 'check-cant-do',
+      type: ACTIVITY_IDS.CHECK_CANT_DO,
       id: SHEET_ID,
-      name: ACTIVITY_NAME,
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.CHECK_CANT_DO],
       completed: false,
       completedAt: '',
       records: updatedRecords

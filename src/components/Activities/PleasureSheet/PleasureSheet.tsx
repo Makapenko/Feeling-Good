@@ -1,10 +1,12 @@
-import { useState, useMemo } from 'react';
+import  { useState, useMemo } from 'react';
 import styles from './PleasureSheet.module.css';
 import { Activity } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useProgress } from '../../../store/ProgressContext';
 
-const SHEET_ID = 'pleasure-sheet';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+
+const SHEET_ID = ACTIVITY_IDS.PLEASURE_SHEET;
 
 const RatingInput = ({
   value,
@@ -100,7 +102,7 @@ const PleasureSheet = () => {
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
-        .filter(exercise => exercise.type === 'pleasure-sheet' && exercise.id === SHEET_ID)
+        .filter(exercise => exercise.type === ACTIVITY_IDS.PLEASURE_SHEET && exercise.id === SHEET_ID)
         .forEach(exercise => {
           if ('records' in exercise) {
             allDayActivities.push(...(exercise.records as Activity[]).map(record => ({
@@ -119,9 +121,9 @@ const PleasureSheet = () => {
     dispatch({
       type: 'SAVE_EXERCISE',
       exercise: {
-        type: 'pleasure-sheet',
+        type: ACTIVITY_IDS.PLEASURE_SHEET,
         id: SHEET_ID,
-        name: 'Листок предполагаемого удовольствия',
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.PLEASURE_SHEET],
         completed: true,
         completedAt: new Date().toISOString(),
         records: updatedActivities.map(activity => ({

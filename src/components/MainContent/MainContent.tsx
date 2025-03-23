@@ -30,32 +30,33 @@ import DisarmingTechnique from '../Activities/DisarmingTechnique/DisarmingTechni
 import WelcomePage from '../WelcomePage/WelcomePage';
 import BurnsChecklist from '../Activities/BurnsChecklist';
 import NovacoScale from '../Activities/NovacoScale';
+import { ACTIVITY_IDS } from '../../constants/activities';
 
 // Определяем маппинг компонентов активностей
 const ACTIVITY_COMPONENTS = {
-  'welcome': WelcomePage,
-  'burns-checklist': BurnsChecklist,
-  'today-tasks': TodayTasks,
-  'novaco-scale': NovacoScale,
-  'cognitive-biases': ListOfCognitiveBiases,
-  'cognitive-biases-test': TestOfCognitiveBiases,
-  'three-columns-method': ThreeColumnsMethod,
-  'thought-diary': ThoughtDiary,
-  'daily-schedule': DailySchedule,
-  'anti-procrastination': AntiProcrastinationSheet,
-  'pleasure-sheet': PleasureSheet,
-  'no-buts': NoButsSheet,
-  'self-support': SelfSupport,
-  'self-activation': SelfActivationMethods,
-  'hindering-helping-thoughts': HinderingHelpingThoughts,
-  'disarming-technique': DisarmingTechnique,
-  'motivation-without-coercion': MotivationWithoutCoercion,
-  'no-lose-technique': NoLoseTechnique,
-  'small-steps': SmallSteps,
-  'imagine-success': ImagineSuccess,
-  'count-achievements': CountAchievements,
-  'check-cant-do': CheckCantDo,
-  'progress-calendar': ProgressCalendar
+  [ACTIVITY_IDS.WELCOME]: WelcomePage,
+  [ACTIVITY_IDS.BURNS_CHECKLIST]: BurnsChecklist,
+  [ACTIVITY_IDS.TODAY_TASKS]: TodayTasks,
+  [ACTIVITY_IDS.NOVACO_SCALE]: NovacoScale,
+  [ACTIVITY_IDS.COGNITIVE_BIASES]: ListOfCognitiveBiases,
+  [ACTIVITY_IDS.COGNITIVE_BIASES_TEST]: TestOfCognitiveBiases,
+  [ACTIVITY_IDS.THREE_COLUMNS_METHOD]: ThreeColumnsMethod,
+  [ACTIVITY_IDS.THOUGHT_DIARY]: ThoughtDiary,
+  [ACTIVITY_IDS.DAILY_SCHEDULE]: DailySchedule,
+  [ACTIVITY_IDS.ANTI_PROCRASTINATION]: AntiProcrastinationSheet,
+  [ACTIVITY_IDS.PLEASURE_SHEET]: PleasureSheet,
+  [ACTIVITY_IDS.NO_BUTS]: NoButsSheet,
+  [ACTIVITY_IDS.SELF_SUPPORT]: SelfSupport,
+  [ACTIVITY_IDS.SELF_ACTIVATION]: SelfActivationMethods,
+  [ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS]: HinderingHelpingThoughts,
+  [ACTIVITY_IDS.DISARMING_TECHNIQUE]: DisarmingTechnique,
+  [ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION]: MotivationWithoutCoercion,
+  [ACTIVITY_IDS.NO_LOSE_TECHNIQUE]: NoLoseTechnique,
+  [ACTIVITY_IDS.SMALL_STEPS]: SmallSteps,
+  [ACTIVITY_IDS.IMAGINE_SUCCESS]: ImagineSuccess,
+  [ACTIVITY_IDS.COUNT_ACHIEVEMENTS]: CountAchievements,
+  [ACTIVITY_IDS.CHECK_CANT_DO]: CheckCantDo,
+  [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar
 };
 
 const MainContent: React.FC = () => {

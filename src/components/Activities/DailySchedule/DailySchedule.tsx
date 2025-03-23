@@ -4,8 +4,9 @@ import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
 import { useProgress } from '../../../store/ProgressContext';
 import { DailyScheduleExercise } from '../../../types/progress.types';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'daily-schedule';
+const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
 const DailySchedule = () => {
   const { progress, dispatch } = useProgress();
@@ -43,7 +44,7 @@ const DailySchedule = () => {
       return;
     }
     const schedule = dayProgress.exercises.exercises.find(
-      exercise => exercise.type === 'daily-schedule' && exercise.id === SHEET_ID
+      exercise => exercise.type === ACTIVITY_IDS.DAILY_SCHEDULE && exercise.id === SHEET_ID
     ) as DailyScheduleExercise | undefined;
 
 
@@ -75,9 +76,9 @@ const DailySchedule = () => {
   const saveSchedule = useCallback(() => {
     if (!date) return;
     const exercise: DailyScheduleExercise = {
-      type: 'daily-schedule',
+      type: ACTIVITY_IDS.DAILY_SCHEDULE,
       id: SHEET_ID,
-      name: 'Расписание дня',
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.DAILY_SCHEDULE],
       completed: true,
       completedAt: new Date().toISOString(),
       date: date, // Используем выбранную дату

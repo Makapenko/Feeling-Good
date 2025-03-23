@@ -4,8 +4,9 @@ import { useProgress } from '../../../store/ProgressContext';
 import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'imagine-success';
+const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
 // TODO нужно показывать цели и из прошлых дней, а не только за сегодня
 const ImagineSuccess: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -36,7 +37,7 @@ const ImagineSuccess: React.FC = () => {
     const dayProgress = progress.dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is ImagineSuccessExercise =>
-        ex.type === 'imagine-success' && ex.id === SHEET_ID
+        ex.type === ACTIVITY_IDS.IMAGINE_SUCCESS && ex.id === SHEET_ID
     );
     return exercise?.records || [];
   }, [progress.dailyProgress]);
@@ -44,9 +45,9 @@ const ImagineSuccess: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: ImagineSuccessRecord[]) => {
     const exercise: ImagineSuccessExercise = {
-      type: 'imagine-success',
+      type: ACTIVITY_IDS.IMAGINE_SUCCESS,
       id: SHEET_ID,
-      name: 'Метод "Представьте успех"',
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.IMAGINE_SUCCESS],
       completed: false,
       completedAt: '',
       records: updatedRecords

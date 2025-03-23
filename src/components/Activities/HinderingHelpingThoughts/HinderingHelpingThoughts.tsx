@@ -4,9 +4,9 @@ import { useProgress } from '../../../store/ProgressContext';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
 import { ThreeColumnsExercise } from '../../../types/progress.types';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'hindering-helping-thoughts';
-const ACTIVITY_NAME = 'Техника мешающих и помогающих мыслей';
+const SHEET_ID = ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS;
 
 const HinderingHelpingThoughts: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -36,7 +36,7 @@ const HinderingHelpingThoughts: React.FC = () => {
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: ThreeColumnsExercise = {
-      type: 'three-columns-method',
+      type: ACTIVITY_IDS.THREE_COLUMNS_METHOD,
       id: result.id,
       name: result.name,
       completed: result.completed,
@@ -52,7 +52,7 @@ const HinderingHelpingThoughts: React.FC = () => {
 
   return (
     <ThreeColumnsBase
-      title={ACTIVITY_NAME}
+      title={ACTIVITY_NAMES[ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS]}
       description="Замените мешающие мысли на помогающие, чтобы улучшить свою мотивацию и продуктивность"
       leftColumnTitle="Мешающая мысль"
       leftColumnPlaceholder="Запишите мысль, которая мешает вам действовать..."

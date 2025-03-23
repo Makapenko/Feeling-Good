@@ -4,8 +4,9 @@ import { useProgress } from '../../../store/ProgressContext';
 import { CountAchievementsRecord, CountAchievementsExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'count-achievements';
+const SHEET_ID = ACTIVITY_IDS.COUNT_ACHIEVEMENTS;
 
 const CountAchievements: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -46,7 +47,7 @@ const CountAchievements: React.FC = () => {
     const dayProgress = progress.dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is CountAchievementsExercise =>
-        ex.type === 'count-achievements' && ex.id === SHEET_ID
+        ex.type === ACTIVITY_IDS.COUNT_ACHIEVEMENTS && ex.id === SHEET_ID
     );
     return exercise?.records || [];
   }, [progress.dailyProgress]);
@@ -54,9 +55,9 @@ const CountAchievements: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: CountAchievementsRecord[]) => {
     const exercise: CountAchievementsExercise = {
-      type: 'count-achievements',
+      type: ACTIVITY_IDS.COUNT_ACHIEVEMENTS,
       id: SHEET_ID,
-      name: 'Считайте свои достижения',
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.COUNT_ACHIEVEMENTS],
       completed: false,
       completedAt: '',
       records: updatedRecords

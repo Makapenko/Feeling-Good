@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './SelfSupport.module.css';
 import { SupportStatement } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { useProgress } from '../../../store/ProgressContext';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'self-support';
+const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
 const SelfSupport = () => {
   const { progress, dispatch } = useProgress();
@@ -41,9 +42,9 @@ const SelfSupport = () => {
     dispatch({
       type: 'SAVE_EXERCISE',
       exercise: {
-        type: 'self-support',
+        type: ACTIVITY_IDS.SELF_SUPPORT,
         id: SHEET_ID,
-        name: 'Самоподдержка',
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.SELF_SUPPORT],
         completed: true,
         completedAt: new Date().toISOString(),
         records: updatedStatements.map(statement => ({

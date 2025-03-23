@@ -1,50 +1,33 @@
-import { SpecialContent } from '../store/ProgressContext';
+import { SpecialContent } from '../types/progress.types';
+import { ACTIVITY_IDS, ALL_ACTIVITY_IDS } from '../constants/activities';
 
 // Список всех доступных активностей
-export const allActivities: SpecialContent[] = [
-  'burns-checklist',
-  'cognitive-biases',
-  'cognitive-biases-test',
-  'three-columns-method',
-  'thought-diary',
-  'self-activation',
-  'daily-schedule',
-  'anti-procrastination',
-  'pleasure-sheet',
-  'no-buts',
-  'self-support',
-  'hindering-helping-thoughts',
-  'small-steps',
-  'motivation-without-coercion',
-  'disarming-technique',
-  'imagine-success',
-  'count-achievements',
-  'check-cant-do',
-  'no-lose-technique',
-  'novaco-scale'
-];
+export const allActivities: SpecialContent[] = ALL_ACTIVITY_IDS.filter(id => 
+  id !== ACTIVITY_IDS.WELCOME && 
+  id !== ACTIVITY_IDS.TODAY_TASKS && 
+  id !== ACTIVITY_IDS.PROGRESS_CALENDAR
+);
 
 // Маппинг подглав к активностям, которые они открывают
 export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
-  'ch2': ['burns-checklist'],
-  'ch3-1': ['cognitive-biases', 'cognitive-biases-test'],
-  'ch4-2': ['three-columns-method', 'thought-diary'],
-  'ch5-1': ['daily-schedule'],
-  'ch5-2': ['anti-procrastination'],
-  'ch5-4': ['pleasure-sheet'],
-  'ch5-5': ['no-buts'],
-  'ch5-6': ['self-support'],
-  'ch5-7': ['hindering-helping-thoughts'],
-  'ch5-8': ['small-steps'],
-  'ch5-9': ['motivation-without-coercion'],
-  'ch5-10': ['disarming-technique'],
-  'ch5-11': ['imagine-success'],
-  'ch5-12': ['count-achievements'],
-  'ch5-13': ['check-cant-do'],
-  'ch5-14': ['no-lose-technique'],
-  'ch5-15': ['self-activation',],
-  'ch7-1': ['novaco-scale'],
-
+  'ch2': [ACTIVITY_IDS.BURNS_CHECKLIST],
+  'ch3-1': [ACTIVITY_IDS.COGNITIVE_BIASES, ACTIVITY_IDS.COGNITIVE_BIASES_TEST],
+  'ch4-2': [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY],
+  'ch5-1': [ACTIVITY_IDS.DAILY_SCHEDULE],
+  'ch5-2': [ACTIVITY_IDS.ANTI_PROCRASTINATION],
+  'ch5-4': [ACTIVITY_IDS.PLEASURE_SHEET],
+  'ch5-5': [ACTIVITY_IDS.NO_BUTS],
+  'ch5-6': [ACTIVITY_IDS.SELF_SUPPORT],
+  'ch5-7': [ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS],
+  'ch5-8': [ACTIVITY_IDS.SMALL_STEPS],
+  'ch5-9': [ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION],
+  'ch5-10': [ACTIVITY_IDS.DISARMING_TECHNIQUE],
+  'ch5-11': [ACTIVITY_IDS.IMAGINE_SUCCESS],
+  'ch5-12': [ACTIVITY_IDS.COUNT_ACHIEVEMENTS],
+  'ch5-13': [ACTIVITY_IDS.CHECK_CANT_DO],
+  'ch5-14': [ACTIVITY_IDS.NO_LOSE_TECHNIQUE],
+  'ch5-15': [ACTIVITY_IDS.SELF_ACTIVATION],
+  'ch7-1': [ACTIVITY_IDS.NOVACO_SCALE],
 };
 
 // Получить все активности, доступные для данного набора глав

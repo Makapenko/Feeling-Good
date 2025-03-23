@@ -3,9 +3,11 @@ import styles from './SelfActivationMethods.module.css';
 import { selfActivationMethods } from '../../../data/selfActivationMethods';
 import { useProgress, SpecialContent } from '../../../store/ProgressContext';
 import { ProgressAction } from '../../../store/progressReducer';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 
 //TODO - не работает добавление в избранное
-const SHEET_ID = 'self-activation';
+const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
+
 
 const SelfActivationMethods: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -15,43 +17,43 @@ const SelfActivationMethods: React.FC = () => {
 
     switch (technique) {
       case 'Метод маленьких шагов':
-        content = 'small-steps';
+        content = ACTIVITY_IDS.SMALL_STEPS;
         break;
       case 'Ежедневное расписание дня':
-        content = 'daily-schedule';
+        content = ACTIVITY_IDS.DAILY_SCHEDULE;
         break;
       case 'Листок антипрокрастинации':
-        content = 'anti-procrastination';
+        content = ACTIVITY_IDS.ANTI_PROCRASTINATION;
         break;
       case 'Ежедневная запись автоматических мыслей':
-        content = 'thought-diary';
+        content = ACTIVITY_IDS.THOUGHT_DIARY;
         break;
       case 'Листок предполагаемого удовольствия':
-        content = 'pleasure-sheet';
+        content = ACTIVITY_IDS.PLEASURE_SHEET;
         break;
       case 'Никаких но':
-        content = 'no-buts';
+        content = ACTIVITY_IDS.NO_BUTS;
         break;
       case 'Техника мешающих и помогающих мыслей':
-        content = 'hindering-helping-thoughts';
+        content = ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS;
         break;
       case 'Мотивация без принуждения':
-        content = 'motivation-without-coercion';
+        content = ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION;
         break;
       case 'Представьте успех':
-        content = 'imagine-success'
+        content = ACTIVITY_IDS.IMAGINE_SUCCESS;
         break;
       case 'Считайте свои достижения':
-        content = 'count-achievements'
+        content = ACTIVITY_IDS.COUNT_ACHIEVEMENTS;
         break;
       case 'Проверьте свои «не могу»':
-        content = 'check-cant-do'
+        content = ACTIVITY_IDS.CHECK_CANT_DO;
         break;
       case 'Беспроигрышная техника':
-        content = 'no-lose-technique';
+        content = ACTIVITY_IDS.NO_LOSE_TECHNIQUE;
         break;
       case 'Техника обезоруживания':
-        content = 'disarming-technique';
+        content = ACTIVITY_IDS.DISARMING_TECHNIQUE;
         break;
     }
 

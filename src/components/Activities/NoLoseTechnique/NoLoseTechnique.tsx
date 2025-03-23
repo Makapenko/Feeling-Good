@@ -4,9 +4,9 @@ import { useProgress } from '../../../store/ProgressContext';
 import { NoLoseTechniqueExercise } from '../../../types/progress.types';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 
-const SHEET_ID = 'no-lose-technique';
-const ACTIVITY_NAME = 'Беспроигрышная техника';
+const SHEET_ID = ACTIVITY_IDS.NO_LOSE_TECHNIQUE;
 
 const NoLoseTechnique: React.FC = () => {
   const { progress, dispatch } = useProgress();
@@ -36,9 +36,9 @@ const NoLoseTechnique: React.FC = () => {
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: NoLoseTechniqueExercise = {
-      type: 'no-lose-technique',
+      type: ACTIVITY_IDS.NO_LOSE_TECHNIQUE,
       id: SHEET_ID,
-      name: ACTIVITY_NAME,
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.NO_LOSE_TECHNIQUE],
       completed: result.completed,
       completedAt: result.completedAt,
       records: result.records
@@ -52,7 +52,7 @@ const NoLoseTechnique: React.FC = () => {
 
   return (
     <ThreeColumnsBase
-      title={ACTIVITY_NAME}
+      title={ACTIVITY_NAMES[ACTIVITY_IDS.NO_LOSE_TECHNIQUE]}
       description="Составьте список негативных последствий, с которыми вы можете столкнуться, если пойдете на риск и действительно проиграете. Затем сконцентрируйтесь на искажениях, лежащих в основе ваших страхов, и покажите, как вы можете эффективно справиться с ними, даже если вас постигнет разочарование."
       leftColumnTitle="Негативные последствия"
       leftColumnPlaceholder="Запишите возможные негативные последствия, если вы рискнете и потерпите неудачу..."
