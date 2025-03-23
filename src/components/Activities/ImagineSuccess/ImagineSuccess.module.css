@@ -282,65 +282,63 @@
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
   .container {
-    padding: 15px 10px;
+    padding: 0;
   }
 
-  @media (max-width: 768px) {
-    .titleContainer {
-      margin-bottom: 20px;
-    }
-  
-    .favoriteButton {
-      font-size: 24px;
-      right: 10px;
-    }
+  .titleContainer {
+    margin-bottom: 20px;
   }
-  
+
+  .favoriteButton {
+    font-size: 24px;
+    right: 10px;
+  }
+
   .section {
     padding: 15px;
     margin-bottom: 20px;
   }
-  
+
   .section h3 {
     font-size: 1.2em;
     margin-bottom: 10px;
   }
-  
+
   .advantagesInput {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .addButton, .cancelButton {
     width: 100%;
     padding: 12px;
     font-size: 16px;
     height: 48px;
   }
-  
+
   .recordsList {
     padding: 15px;
     margin-bottom: 20px;
   }
-  
+
   .recordsHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .newRecordButton {
     width: 100%;
     padding: 12px;
     font-size: 16px;
     height: 48px;
   }
-  
+
   .goals {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .goalButton {
     width: 100%;
     border-radius: 8px;
@@ -354,66 +352,66 @@
     display: flex;
     align-items: center;
   }
-  
+
   .input {
     padding: 14px;
     font-size: 16px;
     height: 48px;
   }
-  
+
   .advantageItem {
     padding: 12px;
   }
-  
+
   .advantageNumber {
     min-width: 30px;
     font-size: 16px;
   }
-  
+
   .advantageText {
     font-size: 16px;
   }
-  
+
   .removeButton {
     font-size: 24px;
     padding: 0 10px;
     margin-left: 5px;
   }
-  
+
   .relaxationStep,
   .visualizationStep {
     padding: 15px;
   }
-  
+
   .relaxationStep ol,
   .visualizationStep ol {
     padding-left: 15px;
   }
-  
+
   .relaxationStep li,
   .visualizationStep li {
     margin-bottom: 15px;
   }
-  
+
   .example {
     margin-left: 10px;
     padding: 12px;
     margin-top: 15px;
   }
-  
+
   .example p {
     font-size: 16px;
     line-height: 1.4;
   }
-  
+
   /* Улучшаем прикосновение и видимую область */
   .description {
     font-size: 16px;
     line-height: 1.5;
   }
-  
+
   .buttonGroup {
     flex-direction: column;
     gap: 8px;
   }
-} 
+}

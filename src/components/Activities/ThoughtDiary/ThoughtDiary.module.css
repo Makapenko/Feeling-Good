@@ -139,7 +139,7 @@ select option {
 
 @media (max-width: 768px) {
   .container {
-    padding: 16px;
+    padding: 0;
     margin-top: 60px;
   }
 
