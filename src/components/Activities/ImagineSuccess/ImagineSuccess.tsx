@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
+import FavoriteButton from '../../shared/FavoriteButton';
 
 // TODO нужно показывать цели и из прошлых дней, а не только за сегодня
 
@@ -59,19 +60,6 @@ const ImagineSuccess: React.FC = () => {
     dispatch({
       type: 'SAVE_EXERCISE',
       exercise
-    });
-  };
-
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
     });
   };
 
@@ -163,13 +151,7 @@ const ImagineSuccess: React.FC = () => {
         <h2>Представьте успех</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
 

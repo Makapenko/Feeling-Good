@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Survey.module.css";
 import { SurveyConfig, SurveyState, SurveyResult } from "./types";
-import { useProgress } from "../../../store/ProgressContext";
+import FavoriteButton from "../../../components/shared/FavoriteButton";
+import { ActivityId } from "../../../constants/activities";
 
 interface SurveyProps {
   config: SurveyConfig;
@@ -11,26 +12,12 @@ interface SurveyProps {
  // TODO - добавить предупреждение, если очки по суициду выше нуля
 
  const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
-  const { progress, dispatch } = useProgress();
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // Используем ID опроса из конфигурации или генерируем на основе названия
-  const SURVEY_ID = config.id || `survey-${config.title.toLowerCase().replace(/\s+/g, '-')}`;
-
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SURVEY_ID) || false;
-  }, [progress.favoriteActivities, SURVEY_ID]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SURVEY_ID
-    });
-  };
+  const SURVEY_ID = config.id as ActivityId || (`survey-${config.title.toLowerCase().replace(/\s+/g, '-')}` as ActivityId);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -134,13 +121,7 @@ interface SurveyProps {
         {actionButtons ? (
           actionButtons
         ) : (
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SURVEY_ID} />
         )}
       </div>
       <table className={styles.table}>

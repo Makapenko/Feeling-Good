@@ -6,6 +6,7 @@ import { useProgress } from '../../../store/ProgressContext';
 import { AntiProcrastinationTask } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
+import FavoriteButton from '../../shared/FavoriteButton';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
@@ -134,19 +135,6 @@ const AntiProcrastinationSheet = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState('');
 
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
-    });
-  };
-  
   // Получаем все записи из прогресса
   const allTasks = useMemo(() => {
     if (!progress?.dailyProgress) return [];
@@ -180,7 +168,7 @@ const AntiProcrastinationSheet = () => {
     dispatch({
       type: 'SAVE_EXERCISE',
       exercise: {
-        type: 'anti-procrastination',
+        type: SHEET_ID,
         id: SHEET_ID,
         name: 'Листок антипрокрастинации',
         completed: true,
@@ -241,13 +229,7 @@ const AntiProcrastinationSheet = () => {
         <h2>Листок антипрокрастинации</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
 

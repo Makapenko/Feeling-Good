@@ -1,24 +1,12 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styles from './DisarmingTechnique.module.css';
-import { useProgress } from '../../../store/ProgressContext';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
+import FavoriteButton from '../../shared/FavoriteButton';
+import { ACTIVITY_IDS } from '../../../constants/activities';
+
+const SHEET_ID = ACTIVITY_IDS.DISARMING_TECHNIQUE;
 
 const DisarmingTechnique: React.FC = () => {
-
-  const SHEET_ID = 'disarming-technique';
-  const { progress, dispatch } = useProgress();
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
-    });
-  };
-
 
   return (
     <div className={styles.container}>
@@ -26,13 +14,7 @@ const DisarmingTechnique: React.FC = () => {
         <h2>Техника обезоруживания</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
 

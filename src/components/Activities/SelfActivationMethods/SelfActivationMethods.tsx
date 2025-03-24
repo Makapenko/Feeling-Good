@@ -1,16 +1,17 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styles from './SelfActivationMethods.module.css';
 import { selfActivationMethods } from '../../../data/selfActivationMethods';
 import { useProgress, SpecialContent } from '../../../store/ProgressContext';
 import { ProgressAction } from '../../../store/progressReducer';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
+import FavoriteButton from '../../shared/FavoriteButton';
 
 const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
 
 
 const SelfActivationMethods: React.FC = () => {
-  const { progress, dispatch } = useProgress();
+  const { dispatch } = useProgress();
 
   const handleTechniqueClick = (technique: string) => {
     let content: SpecialContent | undefined = undefined;
@@ -63,32 +64,13 @@ const SelfActivationMethods: React.FC = () => {
     } as ProgressAction);
   };
 
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
-    });
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2>Обзор методов самоактивации</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
       <div className={styles.table}>

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useProgress } from '../../../store/ProgressContext';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
+import FavoriteButton from '../../shared/FavoriteButton';
 
 const SHEET_ID = ACTIVITY_IDS.PLEASURE_SHEET;
 
@@ -182,32 +183,13 @@ const PleasureSheet = () => {
     saveToProgress(updatedActivities);
   };
 
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
-    });
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2>Листок предполагаемого удовольствия</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
       <div className={styles.description}>

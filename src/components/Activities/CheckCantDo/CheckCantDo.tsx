@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
-
+import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.CHECK_CANT_DO;
 
 const CheckCantDo: React.FC = () => {
@@ -14,11 +14,6 @@ const CheckCantDo: React.FC = () => {
   const [newTask, setNewTask] = useState('');
   const [minimumDescription, setMinimumDescription] = useState('');
   const [isMobile, setIsMobile] = useState(false);
-
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
 
   // Детектор мобильного устройства
   useEffect(() => {
@@ -105,13 +100,6 @@ const CheckCantDo: React.FC = () => {
     );
   }, [records]);
 
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
-    });
-  };
 
   return (
     <div className={styles.container}>
@@ -119,13 +107,7 @@ const CheckCantDo: React.FC = () => {
         <h2>Проверяйте свои «не могу»</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
 

@@ -10,8 +10,9 @@ import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progres
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
-
+import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
+
 // TODO валидация перед сохранением, стили, сохранение 
 
 const ThoughtDiary: React.FC = () => {
@@ -245,19 +246,6 @@ const ThoughtDiary: React.FC = () => {
     }));
   };
 
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
-    });
-  };
-
   return (
     <div className={styles.container}>
       <ActivityTimer activityId={SHEET_ID} />
@@ -265,13 +253,7 @@ const ThoughtDiary: React.FC = () => {
         <h2>Дневник автоматических мыслей</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
 

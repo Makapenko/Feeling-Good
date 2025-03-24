@@ -1,12 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { listOfQuestions } from './listOfQuestions';
 import { explanationOfFirstQuestion } from './explanationOfFirstQuestion';
 import styles from './TestOfCognitiveBiases.module.css';
 import { SurveyResult } from '../Survey/types';
-import { useProgress } from '../../../store/ProgressContext';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
-
+import FavoriteButton from '../../shared/FavoriteButton';
 interface AnswerState {
   selectedAnswers: number[];
   isSubmitted: boolean;
@@ -19,7 +18,6 @@ interface TestOfCognitiveBiasesProps {
 const SHEET_ID = ACTIVITY_IDS.COGNITIVE_BIASES_TEST;
 
 const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplete }) => {
-  const { dispatch, progress } = useProgress();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>(
     listOfQuestions.map(() => ({ selectedAnswers: [], isSubmitted: false }))
@@ -156,32 +154,13 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
     });
   };
 
-  // Получаем статус избранного из Redux
-  const isFavorite = useMemo(() => {
-    return progress.favoriteActivities?.includes(SHEET_ID) || false;
-  }, [progress.favoriteActivities]);
-
-  // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId: SHEET_ID
-    });
-  };
-
   return (
     <div className={styles.testContainer}>
       <div className={styles.titleContainer}>
         <h2>Тест на понимание когнитивных искажений</h2>
         <div className={styles.actionButtons}>
           <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
-          <button
-            className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''}`}
-            onClick={toggleFavorite}
-            aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
-          >
-            ★
-          </button>
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
 
