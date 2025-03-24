@@ -304,7 +304,7 @@ const SmallSteps: React.FC = () => {
       <div className={styles.titleContainer}>
         <h2>Метод маленьких шагов</h2>
         <div className={styles.actionButtons}>
-          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <ChapterLinkButton activityId={SHEET_ID} />
           <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>

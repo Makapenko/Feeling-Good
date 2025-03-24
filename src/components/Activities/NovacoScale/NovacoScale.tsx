@@ -22,7 +22,7 @@ const NovacoScale: React.FC = () => {
   // Создаем компонент с кнопками действий
   const ActionButtons = (
     <div className={styles.actionButtons}>
-      <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+      <ChapterLinkButton activityId={SHEET_ID} />
       <FavoriteButton activityId={SHEET_ID} />
     </div>
   );

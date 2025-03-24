@@ -38,7 +38,7 @@ const MobileLayout: FC = () => {
 
   const handleTabChange = (tab: MobileTab) => {
     setActiveTab(tab);
-    
+
     if (tab === 'calendar') {
       dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.PROGRESS_CALENDAR });
     } else if (tab === 'today') {
@@ -55,7 +55,7 @@ const MobileLayout: FC = () => {
     if (progress.currentChapter || progress.specialContent) {
       return <MainContent />;
     }
-    
+
     // Если нет главы и нет специального контента, показываем списки в зависимости от активной вкладки
     switch (activeTab) {
       case 'chapters':
@@ -72,9 +72,9 @@ const MobileLayout: FC = () => {
       <div className={styles.content}>
         {renderContent()}
       </div>
-      <MobileNavBar 
-        activeTab={activeTab} 
-        onTabChange={handleTabChange} 
+      <MobileNavBar
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
       />
     </div>
   );

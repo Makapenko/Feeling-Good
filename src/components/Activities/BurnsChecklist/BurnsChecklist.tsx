@@ -7,9 +7,6 @@ import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import styles from '../Survey/Survey.module.css';
 import FavoriteButton from '../../shared/FavoriteButton';
 
-// TODO - перепроверить добавление в избранное в других браузерах
-// TODO - добавить кнопку с октрытием главы
-
 const SHEET_ID = ACTIVITY_IDS.BURNS_CHECKLIST;
 
 const BurnsChecklist: React.FC = () => {
@@ -25,7 +22,7 @@ const BurnsChecklist: React.FC = () => {
   // Создаем компонент с кнопками действий
   const ActionButtons = (
     <div className={styles.actionButtons}>
-      <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+      <ChapterLinkButton activityId={SHEET_ID} />
       <FavoriteButton activityId={SHEET_ID} />
     </div>
   );

@@ -47,29 +47,6 @@
   gap: 10px;
 }
 
-.favoriteButton {
-  background: none;
-  border: none;
-  font-size: 28px;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  padding: 5px;
-  line-height: 1;
-}
-
-.favoriteButton:hover {
-  color: #f1c40f;
-}
-
-.favoriteButton.isFavorite {
-  color: #f1c40f;
-}
-
-.chapterButton {
-  font-size: 24px;
-}
-
 .description p {
   color: #4a5568;
   line-height: 1.7;
@@ -418,11 +395,6 @@
 
   .titleContainer {
     margin-bottom: 20px;
-  }
-
-  .favoriteButton {
-    font-size: 24px;
-    right: 10px;
   }
 
   .description {

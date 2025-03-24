@@ -228,7 +228,7 @@ const AntiProcrastinationSheet = () => {
       <div className={styles.titleContainer}>
         <h2>Листок антипрокрастинации</h2>
         <div className={styles.actionButtons}>
-          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <ChapterLinkButton activityId={SHEET_ID} />
           <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>

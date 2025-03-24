@@ -23,41 +23,8 @@
   gap: 10px;
   }
   
-  .chapterButton {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    color: #007bff;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  
-  .chapterButton:hover {
-    color: #0056b3;
-  }
-  
-
 .titleContainer h2 {
   margin-bottom: 0;
-}
-
-.favoriteButton {
-  background: none;
-  border: none;
-  font-size: 28px;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  padding: 5px;
-  line-height: 1;
-}
-
-.favoriteButton:hover {
-  color: #f1c40f;
-}
-
-.favoriteButton.isFavorite {
-  color: #f1c40f;
 }
 
 .description {

@@ -159,7 +159,7 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
       <div className={styles.titleContainer}>
         <h2>Тест на понимание когнитивных искажений</h2>
         <div className={styles.actionButtons}>
-          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <ChapterLinkButton activityId={SHEET_ID} />
           <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>

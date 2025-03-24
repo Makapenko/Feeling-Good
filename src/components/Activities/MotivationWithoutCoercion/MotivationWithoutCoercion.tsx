@@ -25,7 +25,7 @@ const MotivationWithoutCoercion: React.FC = () => {
     const dayProgress = progress.dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is MotivationWithoutCoercionExercise =>
-        ex.type === 'motivation-without-coercion' && ex.id === SHEET_ID
+        ex.type === SHEET_ID && ex.id === SHEET_ID
     );
     return exercise?.records || [];
   }, [progress.dailyProgress]);
@@ -94,7 +94,7 @@ const MotivationWithoutCoercion: React.FC = () => {
       <div className={styles.titleContainer}>
         <h2>Мотивация без принуждения</h2>
         <div className={styles.actionButtons}>
-          <ChapterLinkButton activityId={SHEET_ID} className={styles.chapterButton} />
+          <ChapterLinkButton activityId={SHEET_ID} />
           <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>

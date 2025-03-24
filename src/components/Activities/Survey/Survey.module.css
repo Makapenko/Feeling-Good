@@ -9,57 +9,17 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
-  }
-  
-  .actionButtons {
-  display: flex;
-  gap: 10px;
-  }
-  
-  .chapterButton {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    color: #007bff;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  
-  .chapterButton:hover {
-    color: #0056b3;
-  }
-
-.favoriteButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.2s;
-  padding: 0;
-  line-height: 1;
-  display: inline-flex;
-  vertical-align: middle;
-}
-
-.favoriteButton:hover {
-  color: #f8c51c;
-}
-
-.favoriteButton.isFavorite {
-  color: #f8c51c;
 }
 
 .actionButtons {
   display: flex;
   gap: 10px;
-  align-items: center;
 }
 
 .chapterButton {
-  font-size: 22px;
   background: none;
   border: none;
+  font-size: 1.2rem;
   color: #007bff;
   cursor: pointer;
   transition: color 0.3s;
@@ -67,6 +27,12 @@
 
 .chapterButton:hover {
   color: #0056b3;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .table {
@@ -194,10 +160,6 @@
     margin-bottom: 1rem;
   }
 
-  .favoriteButton {
-    font-size: 22px;
-  }
-
   .table {
     display: block;
     border: none;
@@ -296,7 +258,7 @@
   }
 
   /* Группа радио-кнопок */
-  .table td > div {
+  .table td>div {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -338,4 +300,4 @@
     border-radius: 8px;
     margin-bottom: 60px;
   }
-} 
+}

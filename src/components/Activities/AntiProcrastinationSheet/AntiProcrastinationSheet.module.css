@@ -23,36 +23,6 @@
   gap: 10px;
 }
 
-.favoriteButton {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.favoriteButton:hover {
-  color: #ffcc00;
-}
-
-.favoriteButton.isFavorite {
-  color: #ffcc00;
-}
-
-.chapterButton {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: #007bff;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.chapterButton:hover {
-  color: #0056b3;
-}
-
 h2 {
   color: #2c3e50;
   margin-bottom: 1.5rem;
