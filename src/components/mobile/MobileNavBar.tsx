@@ -15,28 +15,34 @@ type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
 interface NavItem {
   id: MobileTab;
   icon: IconDefinition;
+  label: string;
 }
 
 const navItems: NavItem[] = [
   {
     id: 'today',
-    icon: faCalendarDay
+    icon: faCalendarDay,
+    label: 'Сегодня'
   },
   {
     id: 'chapters',
-    icon: faBookOpen
+    icon: faBookOpen,
+    label: 'Книга'
   },
   {
     id: 'activities',
-    icon: faTasks
+    icon: faTasks,
+    label: 'Задания'
   },
   {
     id: 'calendar',
-    icon: faCalendarAlt
+    icon: faCalendarAlt,
+    label: 'Календарь'
   },
   {
     id: 'about',
-    icon: faCircleInfo
+    icon: faCircleInfo,
+    label: 'О проекте'
   }
 ];
 
@@ -55,6 +61,7 @@ const MobileNavBar: FC<MobileNavBarProps> = ({ activeTab, onTabChange }) => {
           onClick={() => onTabChange(item.id)}
         >
           <FontAwesomeIcon icon={item.icon} className={styles.icon} />
+          <span className={styles.label}>{item.label}</span>
         </button>
       ))}
     </nav>
