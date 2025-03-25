@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import styles from './AntiProcrastinationSheet.module.css';
 import { Task } from './types';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,7 +10,6 @@ import FavoriteButton from '../../shared/FavoriteButton';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
-//TODO нет кнопки "выполнил" чтобы ввести реальные оценки 
 //TODO Поправить вёрстку заголовков в таблице
 
 const RatingInput = ({
@@ -159,6 +158,36 @@ const AntiProcrastinationSheet = () => {
     return allDayTasks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [progress]);
 
+  // Загружаем текущие задачи при монтировании компонента
+  useEffect(() => {
+    if (progress?.dailyProgress) {
+      const today = new Date().toISOString().split('T')[0];
+      const todayProgress = progress.dailyProgress[today];
+      
+      console.log('Загружаем задачи антипрокрастинации на сегодня:', today);
+      
+      if (todayProgress?.exercises?.exercises) {
+        const antiProcrastinationExercise = todayProgress.exercises.exercises.find(
+          exercise => exercise.type === 'anti-procrastination' && exercise.id === SHEET_ID
+        );
+        
+        console.log('Найдено упражнение антипрокрастинации:', antiProcrastinationExercise);
+        
+        if (antiProcrastinationExercise && 'records' in antiProcrastinationExercise) {
+          const latestTasks = antiProcrastinationExercise.records as AntiProcrastinationTask[];
+          console.log('Загружено задач:', latestTasks.length);
+          setTasks(latestTasks);
+        } else {
+          console.log('Записи не найдены или упражнение не содержит records');
+        }
+      } else {
+        console.log('Не найдены упражнения на сегодня');
+      }
+    } else {
+      console.log('Данные прогресса отсутствуют');
+    }
+  }, [progress]);
+
   const saveToProgress = (updatedTasks: Task[]) => {
     const records: AntiProcrastinationTask[] = updatedTasks.map(task => ({
       ...task,
@@ -210,6 +239,7 @@ const AntiProcrastinationSheet = () => {
   };
 
   const handleCompleteTask = (taskId: string) => {
+    console.log('Отмечаем задачу как выполненную:', taskId);
     const updatedTasks = tasks.map(task =>
       task.id === taskId ? { ...task, completed: true } : task
     );
@@ -299,12 +329,14 @@ const AntiProcrastinationSheet = () => {
                     isActual
                     compareValue={task.expectedDifficulty}
                     isReversed={true}
+                    placeholder="Реальная трудность"
                   />
                   <RatingInput
                     value={task.actualPleasure}
                     onChange={(value) => handleRatingChange(task.id, 'actualPleasure', value)}
                     isActual
                     compareValue={task.expectedPleasure}
+                    placeholder="Реальное удовольствие"
                   />
                 </>
               )}
