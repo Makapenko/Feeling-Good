@@ -19,6 +19,8 @@ import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent'
 import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
 import { ACTIVITY_IDS } from '../../constants/activities';
 
+// TODO Сделать ссылки на главы и упражнения
+
 interface DayDetailsProps {
   date: string;
   dayProgress: CalendarDayProgress;

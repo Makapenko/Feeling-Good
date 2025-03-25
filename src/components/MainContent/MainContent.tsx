@@ -144,14 +144,14 @@ const MainContent: React.FC = () => {
     
     // Рендеринг главы или дефолтного контента
     if (progress.currentChapter) {
-      const { id, content } = progress.currentChapter;
+      const { id } = progress.currentChapter;
       return (
         <>
           <div className={styles.mobileBackButton} onClick={handleBackToChapters}>
             <FontAwesomeIcon icon={faArrowLeft} />
             <span>К списку глав</span>
           </div>
-          <ChapterContainer content={content} chapterId={id} />
+          <ChapterContainer chapterId={id} />
         </>
       );
     }

@@ -63,23 +63,15 @@ function ListOfChapters() {
 
   const handleChapterClick = async (path: string | undefined, chapterId: string, title: string) => {
     if (path) {
-      try {
-        const response = await fetch(path);
-        const content = await response.text();
-        
-        dispatch({
-          type: 'SET_CURRENT_CHAPTER',
-          chapter: {
-            id: chapterId,
-            title: title,
-            content,
-            timeSpent: 0,
-            completed: false
-          }
-        });
-      } catch (error) {
-        console.error(`Error loading chapter: ${error}`);
-      }
+      dispatch({
+        type: 'SET_CURRENT_CHAPTER',
+        chapter: {
+          id: chapterId,
+          title: title,
+          timeSpent: 0,
+          completed: false
+        }
+      });
     }
   };
 

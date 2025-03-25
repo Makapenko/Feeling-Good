@@ -281,7 +281,6 @@ export interface DailyProgress {
 export interface Chapter {
   id: string;
   title: string;
-  content: string;
   timeSpent: number;
   completed: boolean;
 }

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { SpecialContent } from '../../types/progress.types';
 import { useProgress } from '../../store/ProgressContext';
-import { getRelatedChapter, getChapterTitle, getChapterPath } from '../../data/chaptersMapping';
+import { getRelatedChapter, getChapterTitle } from '../../data/chaptersMapping';
 import styles from './ChapterLinkButton.module.css';
 
 interface ChapterLinkButtonProps {
@@ -30,22 +30,11 @@ const ChapterLinkButton: React.FC<ChapterLinkButtonProps> = ({
   
   const openRelatedChapter = async () => {
     try {
-      // Получаем путь к файлу с содержимым главы
-      const chapterPath = getChapterPath(chapterId);
-      if (!chapterPath) {
-        console.error(`Path not found for chapter ${chapterId}`);
-        return;
-      }
-      
-      const response = await fetch(chapterPath);
-      const content = await response.text();
-      
       dispatch({
         type: 'SET_CURRENT_CHAPTER',
         chapter: {
           id: chapterId,
           title: getChapterTitle(chapterId),
-          content,
           timeSpent: 0,
           completed: false
         }

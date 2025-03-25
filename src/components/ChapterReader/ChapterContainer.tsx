@@ -4,7 +4,7 @@ import Timer from './Timer';
 import styles from './ChapterReader.module.css';
 
 interface ChapterContainerProps {
-  content: string;
+  content?: string;
   chapterId: string;
   onNext?: () => void;
 }
@@ -30,7 +30,7 @@ const ChapterContainer: React.FC<ChapterContainerProps> = ({ content, chapterId,
         chapterId={chapterId}
       />
       <ChapterReader 
-        content={content} 
+        content={content}
         chapterId={chapterId}
         onNext={onNext}
       />

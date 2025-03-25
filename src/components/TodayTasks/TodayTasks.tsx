@@ -10,6 +10,8 @@ import { ActivityId, ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activi
 
 const typedChaptersData = chaptersData as ChaptersData;
 
+// TODO Добавить график прогресса, который показывает количество проведённого времени и количество балоов в опроснике Бернса
+
 const TodayTasks: React.FC = () => {
   const { progress, dispatch } = useProgress();
   const currentDate = getCurrentDate();
@@ -72,15 +74,11 @@ const TodayTasks: React.FC = () => {
     const firstUnreadChapter = findFirstUnreadChapter();
     if (firstUnreadChapter && firstUnreadChapter.path) {
       try {
-        const response = await fetch(firstUnreadChapter.path);
-        const content = await response.text();
-        
         dispatch({
           type: 'SET_CURRENT_CHAPTER',
           chapter: {
             id: firstUnreadChapter.id,
             title: firstUnreadChapter.title,
-            content,
             timeSpent: 0,
             completed: false
           }

@@ -10,19 +10,51 @@ import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import { chapterToActivitiesMap } from '../../data/activitiesMapping';
 import { ACTIVITY_NAMES } from '../../constants/activities';
 import { SpecialContent } from '../../types/progress.types';
+import { getChapterPath } from '../../data/chaptersMapping';
+
+// TODO Не работают примечания
+// TODO Сравнить два таймера и объединить в один, который работает во всех активностях
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 
 interface ChapterReaderProps {
-  content: string;
+  content?: string;
   chapterId: string;
   onNext?: () => void;
 }
 
-const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapterId, onNext }) => {
+const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content: initialContent, chapterId, onNext }) => {
   const { dispatch } = useProgress();
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [content, setContent] = useState<string>(initialContent || '');
+  const [isLoading, setIsLoading] = useState<boolean>(!initialContent);
+
+  // Загружаем содержимое главы, если оно не передано в пропсах
+  useEffect(() => {
+    if (!initialContent) {
+      const loadChapterContent = async () => {
+        setIsLoading(true);
+        try {
+          const chapterPath = getChapterPath(chapterId);
+          if (!chapterPath) {
+            console.error(`Path not found for chapter ${chapterId}`);
+            return;
+          }
+          
+          const response = await fetch(chapterPath);
+          const chapterContent = await response.text();
+          setContent(chapterContent);
+        } catch (error) {
+          console.error('Error loading chapter content:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      loadChapterContent();
+    }
+  }, [chapterId, initialContent]);
 
   // Получаем активности, связанные с текущей главой
   const relatedActivities = useMemo(() => {
@@ -124,9 +156,6 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     const nextChapter = findNextChapter();
     if (nextChapter && nextChapter.path) {
       try {
-        const response = await fetch(nextChapter.path);
-        const content = await response.text();
-        
         // Небольшая задержка для анимации
         setTimeout(() => {
           dispatch({
@@ -134,7 +163,6 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
             chapter: {
               id: nextChapter.id,
               title: nextChapter.title,
-              content,
               timeSpent: 0,
               completed: false
             }
@@ -158,6 +186,8 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
 
   // Очищаем HTML, адаптируем пути к изображениям и разрешаем только безопасные теги и атрибуты
   const sanitizedContent = useMemo(() => {
+    if (!content) return '';
+    
     const config = {
       ALLOWED_TAGS: ['p', 'br', 'img', 'i', 'b', 'sup', 'sub', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'center'],
       ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'border', 'id', 'name', 'href'],
@@ -167,12 +197,18 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     return adaptImagePaths(sanitized);
   }, [content, adaptImagePaths]);
 
-  const contentElement = useMemo(() => (
-    <div 
-      className={styles.content}
-      dangerouslySetInnerHTML={{ __html: sanitizedContent }} 
-    />
-  ), [sanitizedContent]);
+  const contentElement = useMemo(() => {
+    if (isLoading) {
+      return <div className={styles.loading}>Загрузка содержимого...</div>;
+    }
+    
+    return (
+      <div 
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }} 
+      />
+    );
+  }, [sanitizedContent, isLoading]);
 
   return (
     <div className={styles.chapterContent}>
