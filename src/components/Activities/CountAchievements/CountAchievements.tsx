@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './CountAchievements.module.css';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { CountAchievementsRecord, CountAchievementsExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
@@ -11,7 +12,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.COUNT_ACHIEVEMENTS;
 
 const CountAchievements: React.FC = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [newAchievement, setNewAchievement] = useState('');
   const [isMobile, setIsMobile] = useState(false);
   const today = new Date().toISOString().split('T')[0];
@@ -47,15 +49,12 @@ const CountAchievements: React.FC = () => {
       type: ACTIVITY_IDS.COUNT_ACHIEVEMENTS,
       id: SHEET_ID,
       name: ACTIVITY_NAMES[ACTIVITY_IDS.COUNT_ACHIEVEMENTS],
-      completed: false,
-      completedAt: '',
+      completed: true,
+      completedAt: new Date().toISOString(),
       records: updatedRecords
     };
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise
-    });
+    dispatch(saveExercise(exercise));
   };
 
   const addAchievement = () => {

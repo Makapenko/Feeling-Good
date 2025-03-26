@@ -1,7 +1,8 @@
 import React from 'react';
 import { SpecialContent } from '../../types/progress.types';
-import { useProgress } from '../../store/ProgressContext';
 import styles from './FavoriteButton.module.css';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { toggleFavoriteActivity } from '../../redux/slices/progressSlice';
 
 interface FavoriteButtonProps {
   activityId: SpecialContent;
@@ -17,23 +18,21 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   activityId,
   className = ''
 }) => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const favoriteActivities = useAppSelector(state => state.progress.favoriteActivities);
   
   // Получаем статус избранного
-  const isFavorite = progress.favoriteActivities?.includes(activityId) || false;
+  const isFavorite = favoriteActivities?.includes(activityId) || false;
   
   // Добавление или удаление из избранного через Redux
-  const toggleFavorite = () => {
-    dispatch({
-      type: 'TOGGLE_FAVORITE_ACTIVITY',
-      activityId
-    });
+  const handleToggleFavorite = () => {
+    dispatch(toggleFavoriteActivity(activityId));
   };
   
   return (
     <button
       className={`${styles.favoriteButton} ${isFavorite ? styles.isFavorite : ''} ${className}`}
-      onClick={toggleFavorite}
+      onClick={handleToggleFavorite}
       aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
       title={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
     >

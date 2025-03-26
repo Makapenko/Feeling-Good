@@ -1,13 +1,15 @@
-import { useProgress } from '../../store/ProgressContext';
 import styles from './WelcomePage.module.css';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { unlockAllContent } from '../../redux/slices/progressSlice';
 
 const WelcomePage: React.FC = () => {
-  const { progress, dispatch } = useProgress();
-  const isAllContentUnlocked = progress.unlockedContent?.chapters?.includes('all');
+  const dispatch = useAppDispatch();
+  const unlockedContent = useAppSelector(state => state.progress.unlockedContent);
+  const isAllContentUnlocked = unlockedContent?.chapters?.includes('all');
 
   const handleUnlockContent = () => {
     if (!isAllContentUnlocked) {
-      dispatch({ type: 'UNLOCK_ALL_CONTENT' });
+      dispatch(unlockAllContent());
     }
   };
 

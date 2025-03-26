@@ -2,9 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { SpecialContent } from '../../types/progress.types';
-import { useProgress } from '../../store/ProgressContext';
-import { getRelatedChapter, getChapterTitle } from '../../data/chaptersMapping';
+import { getRelatedChapter, getChapterTitle, getChapterPath } from '../../data/chaptersMapping';
 import styles from './ChapterLinkButton.module.css';
+import { useAppDispatch } from '../../redux/hooks';
+import { setCurrentChapter } from '../../redux/slices/progressSlice';
 
 interface ChapterLinkButtonProps {
   activityId: SpecialContent;
@@ -20,7 +21,7 @@ const ChapterLinkButton: React.FC<ChapterLinkButtonProps> = ({
   activityId,
   className = ''
 }) => {
-  const { dispatch } = useProgress();
+  const dispatch = useAppDispatch();
   
   // Получаем ID главы, связанной с активностью
   const chapterId = getRelatedChapter(activityId);
@@ -30,15 +31,23 @@ const ChapterLinkButton: React.FC<ChapterLinkButtonProps> = ({
   
   const openRelatedChapter = async () => {
     try {
-      dispatch({
-        type: 'SET_CURRENT_CHAPTER',
-        chapter: {
-          id: chapterId,
-          title: getChapterTitle(chapterId),
-          timeSpent: 0,
-          completed: false
-        }
-      });
+      // Получаем путь к файлу с содержимым главы
+      const chapterPath = getChapterPath(chapterId);
+      if (!chapterPath) {
+        console.error(`Path not found for chapter ${chapterId}`);
+        return;
+      }
+      
+      const response = await fetch(chapterPath);
+      const content = await response.text();
+      
+      dispatch(setCurrentChapter({
+        id: chapterId,
+        title: getChapterTitle(chapterId),
+        content,
+        timeSpent: 0,
+        completed: false
+      }));
     } catch (error) {
       console.error('Error loading chapter:', error);
     }

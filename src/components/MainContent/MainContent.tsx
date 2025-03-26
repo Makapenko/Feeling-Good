@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import styles from './MainContent.module.css';
-import { useProgress } from '../../store/ProgressContext';
-import { useMobile } from '../../store/MobileContext';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import ChapterContainer from '../ChapterReader/ChapterContainer';
@@ -31,6 +30,8 @@ import WelcomePage from '../WelcomePage/WelcomePage';
 import BurnsChecklist from '../Activities/BurnsChecklist';
 import NovacoScale from '../Activities/NovacoScale';
 import { ACTIVITY_IDS } from '../../constants/activities';
+import { saveTestResult, setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
+import { setActiveTab } from '../../redux/slices/mobileSlice';
 
 // Определяем маппинг компонентов активностей
 const ACTIVITY_COMPONENTS = {
@@ -60,15 +61,12 @@ const ACTIVITY_COMPONENTS = {
 };
 
 const MainContent: React.FC = () => {
-  const { progress, dispatch } = useProgress();
-  const { setActiveTab } = useMobile();
-
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
+  
   useEffect(() => {
     if (progress.currentChapter?.id) {
-      dispatch({ 
-        type: 'START_CHAPTER_READING', 
-        chapterId: progress.currentChapter.id 
-      });
+      dispatch(startChapterReading(progress.currentChapter.id));
     }
   }, [progress.currentChapter?.id, dispatch]);
 
@@ -79,20 +77,17 @@ const MainContent: React.FC = () => {
   }, [progress.currentChapter?.id, progress.specialContent]);
 
   const handleTestComplete = (result: SurveyResult) => {
-    dispatch({
-      type: 'SAVE_TEST_RESULT',
-      result
-    });
+    dispatch(saveTestResult(result));
   };
 
   const handleBackToChapters = () => {
-    dispatch({ type: 'SET_CURRENT_CHAPTER', chapter: null });
-    setActiveTab('chapters');
+    dispatch(setCurrentChapter(null));
+    dispatch(setActiveTab('chapters'));
   };
 
   const handleBackToActivities = () => {
-    dispatch({ type: 'SET_SPECIAL_CONTENT', content: null });
-    setActiveTab('activities');
+    dispatch(setSpecialContent(null));
+    dispatch(setActiveTab('activities'));
   };
 
   // Компонент обёртка для активностей с кнопкой "назад"
@@ -144,14 +139,14 @@ const MainContent: React.FC = () => {
     
     // Рендеринг главы или дефолтного контента
     if (progress.currentChapter) {
-      const { id } = progress.currentChapter;
+      const { id, content } = progress.currentChapter;
       return (
         <>
           <div className={styles.mobileBackButton} onClick={handleBackToChapters}>
             <FontAwesomeIcon icon={faArrowLeft} />
             <span>К списку глав</span>
           </div>
-          <ChapterContainer chapterId={id} />
+          <ChapterContainer content={content} chapterId={id} />
         </>
       );
     }

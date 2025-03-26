@@ -1,25 +1,23 @@
-import { useProgress } from '../../store/ProgressContext';
 import ChapterReader from './ChapterReader';
 import Timer from './Timer';
 import styles from './ChapterReader.module.css';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { updateChapterProgress } from '../../redux/slices/progressSlice';
 
 interface ChapterContainerProps {
-  content?: string;
+  content: string;
   chapterId: string;
   onNext?: () => void;
 }
 
 const ChapterContainer: React.FC<ChapterContainerProps> = ({ content, chapterId, onNext }) => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const currentDate = new Date().toISOString().split('T')[0];
   const initialTime = progress.dailyProgress[currentDate]?.chapters[chapterId]?.timeSpent || 0;
 
   const handleTimeUpdate = (timeSpent: number) => {
-    dispatch({ 
-      type: 'UPDATE_CHAPTER_PROGRESS', 
-      chapterId, 
-      timeSpent 
-    });
+    dispatch(updateChapterProgress({ chapterId, timeSpent })); 
   };
 
   return (
@@ -30,7 +28,7 @@ const ChapterContainer: React.FC<ChapterContainerProps> = ({ content, chapterId,
         chapterId={chapterId}
       />
       <ChapterReader 
-        content={content}
+        content={content} 
         chapterId={chapterId}
         onNext={onNext}
       />

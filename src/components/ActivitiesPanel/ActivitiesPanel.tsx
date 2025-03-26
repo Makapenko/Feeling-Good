@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './ActivitiesPanel.module.css';
-import { useProgress } from '../../store/ProgressContext';
-import { SpecialContent } from '../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setSpecialContent } from '../../redux/slices/progressSlice';
+import { SpecialContent } from '../../types/progress.types';
 import { getAvailableActivities } from '../../data/activitiesMapping';
 import { ACTIVITY_IDS } from '../../constants/activities';
 
@@ -60,14 +61,12 @@ const sections: ActivitySection[] = [
 ];
 
 const ActivitiesPanel: React.FC = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const availableActivities = getAvailableActivities(progress.unlockedContent?.chapters || []);
 
   const handleActivityClick = (content: SpecialContent) => {
-    dispatch({
-      type: 'SET_SPECIAL_CONTENT',
-      content: content as SpecialContent
-    });
+    dispatch(setSpecialContent(content));
     
     // Прокрутка страницы вверх
     window.scrollTo(0, 0);

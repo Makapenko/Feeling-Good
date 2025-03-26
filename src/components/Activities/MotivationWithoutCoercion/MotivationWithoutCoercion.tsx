@@ -1,19 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import styles from './MotivationWithoutCoercion.module.css';
-import { useProgress } from '../../../store/ProgressContext';
-import { MotivationWithoutCoercionRecord, MotivationWithoutCoercionExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentDate } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { MotivationWithoutCoercionRecord, MotivationWithoutCoercionExercise, Exercise } from '../../../types/progress.types';
+import { getCurrentDate } from '../../../utils/dateUtils';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 
 const SHEET_ID = ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION;
 
 // TODO добавить отображение в ежедневных задачах
 
 const MotivationWithoutCoercion: React.FC = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [currentThought, setCurrentThought] = useState('');
   const [currentAdvantage, setCurrentAdvantage] = useState('');
   const [currentDisadvantage, setCurrentDisadvantage] = useState('');
@@ -41,10 +43,7 @@ const MotivationWithoutCoercion: React.FC = () => {
       records: updatedRecords
     };
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise
-    });
+    dispatch(saveExercise(exercise));
   };
 
   const handleAddThought = () => {

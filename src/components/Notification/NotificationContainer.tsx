@@ -1,10 +1,12 @@
 import React from 'react';
-import { useNotification } from '../../store/NotificationContext';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { removeNotification } from '../../redux/slices/notificationSlice';
 import NotificationToast from './NotificationToast';
 import styles from './NotificationContainer.module.css';
 
 const NotificationContainer: React.FC = () => {
-  const { notifications, removeNotification } = useNotification();
+  const notifications = useAppSelector(state => state.notification.notifications);
+  const dispatch = useAppDispatch();
 
   if (notifications.length === 0) {
     return null;
@@ -16,7 +18,7 @@ const NotificationContainer: React.FC = () => {
         <NotificationToast
           key={notification.id}
           notification={notification}
-          onClose={removeNotification}
+          onClose={(id) => dispatch(removeNotification(id))}
         />
       ))}
     </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
-import { useProgress } from '../../../store/ProgressContext';
-import { NoLoseTechniqueExercise } from '../../../types/progress.types';
+import { useAppDispatch } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
+import { NoLoseTechniqueExercise } from '../../../types/progress.types';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
@@ -11,7 +12,7 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.NO_LOSE_TECHNIQUE;
 
 const NoLoseTechnique: React.FC = () => {
-  const { dispatch } = useProgress();
+  const dispatch = useAppDispatch();
 
   const favoriteButton = (
     <div className={styles.actionButtons}>
@@ -23,17 +24,14 @@ const NoLoseTechnique: React.FC = () => {
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: NoLoseTechniqueExercise = {
       type: SHEET_ID,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.NO_LOSE_TECHNIQUE],
+      id: result.id,
+      name: result.name,
       completed: result.completed,
       completedAt: result.completedAt,
       records: result.records
     };
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise
-    });
+    dispatch(saveExercise(exercise));
   };
 
   return (

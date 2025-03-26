@@ -5,7 +5,8 @@ import { AutomaticThought } from './types';
 import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
@@ -16,7 +17,8 @@ const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 // TODO валидация перед сохранением, стили, сохранение 
 
 const ThoughtDiary: React.FC = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtDiaryRecord, 'timestamp'>>({
     situation: '',
     emotions: [],
@@ -184,18 +186,15 @@ const ThoughtDiary: React.FC = () => {
       // Объединяем с новой записью
       const updatedRecords: ThoughtDiaryRecord[] = [...existingRecords, newRecord];
 
-      // Сохраняем в редюсер
-      dispatch({
-        type: 'SAVE_EXERCISE',
-        exercise: {
-          type: ACTIVITY_IDS.THOUGHT_DIARY,
-          id: SHEET_ID,
-          name: ACTIVITY_NAMES[ACTIVITY_IDS.THOUGHT_DIARY],
-          completed: true,
-          completedAt: new Date().toISOString(),
-          records: updatedRecords
-        } as ThoughtDiaryExercise
-      });
+      // Сохраняем в Redux
+      dispatch(saveExercise({
+        type: ACTIVITY_IDS.THOUGHT_DIARY,
+        id: SHEET_ID,
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.THOUGHT_DIARY],
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records: updatedRecords
+      } as ThoughtDiaryExercise));
 
       // Очищаем форму
       setCurrentRecord({

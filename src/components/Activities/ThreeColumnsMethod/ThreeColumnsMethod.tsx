@@ -1,6 +1,7 @@
 import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
 import { ThreeColumnsExercise } from '../../../types/progress.types';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
@@ -10,8 +11,7 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.THREE_COLUMNS_METHOD;
 
 const ThreeColumnsMethod: React.FC = () => {
-  const { dispatch } = useProgress();
-
+  const dispatch = useAppDispatch();
 
   const favoriteButton = (
     <div className={styles.actionButtons}>
@@ -30,10 +30,7 @@ const ThreeColumnsMethod: React.FC = () => {
       records: result.records
     };
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise
-    });
+    dispatch(saveExercise(exercise));
   };
 
   return (

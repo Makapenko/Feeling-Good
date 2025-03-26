@@ -1,6 +1,7 @@
 import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
 import { ThreeColumnsExercise } from '../../../types/progress.types';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
@@ -11,7 +12,7 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS;
 
 const HinderingHelpingThoughts: React.FC = () => {
-  const { dispatch } = useProgress();
+  const dispatch = useAppDispatch();
 
   const favoriteButton = (
     <div className={styles.actionButtons}>
@@ -22,7 +23,7 @@ const HinderingHelpingThoughts: React.FC = () => {
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: ThreeColumnsExercise = {
-      type: ACTIVITY_IDS.THREE_COLUMNS_METHOD,
+      type: SHEET_ID,
       id: result.id,
       name: result.name,
       completed: result.completed,
@@ -30,21 +31,18 @@ const HinderingHelpingThoughts: React.FC = () => {
       records: result.records
     };
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise
-    });
+    dispatch(saveExercise(exercise));
   };
 
   return (
-    <ThreeColumnsBase
+    <ThreeColumnsBase 
       title={ACTIVITY_NAMES[ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS]}
-      description="Замените мешающие мысли на помогающие, чтобы улучшить свою мотивацию и продуктивность"
+      description="Запишите свои мешающие мысли и найдите им более конструктивную помогающую альтернативу"
       leftColumnTitle="Мешающая мысль"
       leftColumnPlaceholder="Запишите мысль, которая мешает вам действовать..."
       rightColumnTitle="Помогающая мысль"
-      rightColumnPlaceholder="Замените её на более конструктивную мысль..."
-      showCognitiveDistortions={true}
+      rightColumnPlaceholder="Запишите более конструктивную альтернативу..."
+      showCognitiveDistortions={false}
       methodId={SHEET_ID}
       onSave={handleSave}
       favoriteButton={favoriteButton}

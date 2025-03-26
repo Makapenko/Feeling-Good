@@ -1,81 +1,56 @@
-import { FC, useEffect, useCallback } from 'react';
-import { useMobile } from '../../store/MobileContext';
-import { useProgress } from '../../store/ProgressContext';
+import { FC, useCallback } from 'react';
+import { useAppSelector } from '../../redux/hooks';
 import MobileNavBar from './MobileNavBar';
 import ListOfChapters from '../ListOfChapters/ListOfChapters';
 import MainContent from '../MainContent/MainContent';
 import ActivitiesPanel from '../ActivitiesPanel/ActivitiesPanel';
 import styles from './MobileLayout.module.css';
 import { ACTIVITY_IDS } from '../../constants/activities';
+import { useAppDispatch } from '../../redux/hooks';
+import { setSpecialContent } from '../../redux/slices/progressSlice';
 
 type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
 
 const MobileLayout: FC = () => {
-  const { activeTab, setActiveTab } = useMobile();
-  const { progress, dispatch } = useProgress();
+  const activeTab = useAppSelector(state => state.mobile.activeTab);
+  const dispatch = useAppDispatch();
+  const currentChapter = useAppSelector(state => state.progress.currentChapter);
+  const specialContent = useAppSelector(state => state.progress.specialContent);
 
-  // Функция для определения активного таба на основе текущего контента
-  const updateActiveTabBasedOnContent = useCallback(() => {
-    if (progress.currentChapter) {
-      setActiveTab('chapters');
-    } else if (progress.specialContent) {
-      if (progress.specialContent === ACTIVITY_IDS.PROGRESS_CALENDAR) {
-        setActiveTab('calendar');
-      } else if (progress.specialContent === ACTIVITY_IDS.TODAY_TASKS) {
-        setActiveTab('today');
-      } else if (progress.specialContent === ACTIVITY_IDS.WELCOME) {
-        setActiveTab('about');
-      } else {
-        setActiveTab('activities');
-      }
-    }
-  }, [progress.currentChapter, progress.specialContent, setActiveTab]);
-
-  // Эффект для автоматической установки активного таба в зависимости от текущего контента
-  useEffect(() => {
-    updateActiveTabBasedOnContent();
-  }, [updateActiveTabBasedOnContent]);
-
-  const handleTabChange = (tab: MobileTab) => {
-    setActiveTab(tab);
-
-    if (tab === 'calendar') {
-      dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.PROGRESS_CALENDAR });
-    } else if (tab === 'today') {
-      dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.TODAY_TASKS });
-    } else if (tab === 'about') {
-      dispatch({ type: 'SET_SPECIAL_CONTENT', content: ACTIVITY_IDS.WELCOME });
-    } else if (tab === 'chapters' || tab === 'activities') {
-      dispatch({ type: 'SET_SPECIAL_CONTENT', content: null });
-    }
-  };
-
-  const renderContent = () => {
-    // Если есть глава или специальный контент, то показываем MainContent
-    if (progress.currentChapter || progress.specialContent) {
+  // Получаем нужную панель в зависимости от текущей активной вкладки
+  const getCurrentView = useCallback((tab: MobileTab) => {
+    // Если у нас есть открытая глава или специальный контент, 
+    // показываем основной контент независимо от текущей вкладки
+    if (currentChapter || specialContent) {
       return <MainContent />;
     }
 
-    // Если нет главы и нет специального контента, показываем списки в зависимости от активной вкладки
-    switch (activeTab) {
+    switch (tab) {
+      case 'today':
+        // Показываем компонент задач на сегодня
+        dispatch(setSpecialContent(ACTIVITY_IDS.TODAY_TASKS));
+        return <MainContent />;
       case 'chapters':
         return <ListOfChapters />;
       case 'activities':
         return <ActivitiesPanel />;
-      default:
+      case 'calendar':
+        dispatch(setSpecialContent(ACTIVITY_IDS.PROGRESS_CALENDAR));
         return <MainContent />;
+      case 'about':
+        dispatch(setSpecialContent(ACTIVITY_IDS.WELCOME));
+        return <MainContent />;
+      default:
+        return <ListOfChapters />;
     }
-  };
+  }, [currentChapter, specialContent, dispatch]);
 
   return (
     <div className={styles.mobileLayout}>
-      <div className={styles.content}>
-        {renderContent()}
+      <div className={styles.contentWrapper}>
+        {getCurrentView(activeTab)}
       </div>
-      <MobileNavBar
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-      />
+      <MobileNavBar />
     </div>
   );
 };

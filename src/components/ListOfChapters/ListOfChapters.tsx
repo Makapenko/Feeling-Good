@@ -1,14 +1,16 @@
-import { useProgress } from '../../store/ProgressContext';
 import styles from './ListOfChapters.module.css';
 import chaptersData from './chapters.json';
 import { useState } from 'react';
 import type { Chapter, ChaptersData, Section } from '../../types/chapters.types';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setCurrentChapter } from '../../redux/slices/progressSlice';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 
 function ListOfChapters() {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
 
   const toggleChapter = (chapterId: string) => {
@@ -63,15 +65,20 @@ function ListOfChapters() {
 
   const handleChapterClick = async (path: string | undefined, chapterId: string, title: string) => {
     if (path) {
-      dispatch({
-        type: 'SET_CURRENT_CHAPTER',
-        chapter: {
+      try {
+        const response = await fetch(path);
+        const content = await response.text();
+        
+        dispatch(setCurrentChapter({
           id: chapterId,
           title: title,
+          content,
           timeSpent: 0,
           completed: false
-        }
-      });
+        }));
+      } catch (error) {
+        console.error(`Error loading chapter: ${error}`);
+      }
     }
   };
 

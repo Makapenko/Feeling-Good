@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect } from 'react';
 import styles from './AntiProcrastinationSheet.module.css';
 import { Task } from './types';
 import { v4 as uuidv4 } from 'uuid';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { AntiProcrastinationTask } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
@@ -130,7 +131,8 @@ const TaskAnalysis = ({ tasks, title = "Анализ выполненных за
 };
 
 const AntiProcrastinationSheet = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState('');
 
@@ -194,17 +196,14 @@ const AntiProcrastinationSheet = () => {
       timestamp: new Date().toISOString()
     }));
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise: {
-        type: SHEET_ID,
-        id: SHEET_ID,
-        name: 'Листок антипрокрастинации',
-        completed: true,
-        completedAt: new Date().toISOString(),
-        records
-      }
-    });
+    dispatch(saveExercise({
+      type: SHEET_ID,
+      id: SHEET_ID,
+      name: 'Листок антипрокрастинации',
+      completed: true,
+      completedAt: new Date().toISOString(),
+      records
+    }));
   };
 
   const handleAddTask = () => {

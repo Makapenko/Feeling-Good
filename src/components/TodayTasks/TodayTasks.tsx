@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import styles from './TodayTasks.module.css';
-import { useProgress } from '../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setCurrentChapter, setSpecialContent } from '../../redux/slices/progressSlice';
 import { getCurrentDate } from '../../utils/dateUtils';
 import { getAvailableActivities } from '../../data/activitiesMapping';
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
@@ -13,7 +14,8 @@ const typedChaptersData = chaptersData as ChaptersData;
 // TODO Добавить график прогресса, который показывает количество проведённого времени и количество балоов в опроснике Бернса
 
 const TodayTasks: React.FC = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const currentDate = getCurrentDate();
   const todayProgress = progress.dailyProgress[currentDate];
 
@@ -74,15 +76,16 @@ const TodayTasks: React.FC = () => {
     const firstUnreadChapter = findFirstUnreadChapter();
     if (firstUnreadChapter && firstUnreadChapter.path) {
       try {
-        dispatch({
-          type: 'SET_CURRENT_CHAPTER',
-          chapter: {
-            id: firstUnreadChapter.id,
-            title: firstUnreadChapter.title,
-            timeSpent: 0,
-            completed: false
-          }
-        });
+        const response = await fetch(firstUnreadChapter.path);
+        const content = await response.text();
+        
+        dispatch(setCurrentChapter({
+          id: firstUnreadChapter.id,
+          title: firstUnreadChapter.title,
+          content,
+          timeSpent: 0,
+          completed: false
+        }));
       } catch (error) {
         console.error('Error loading chapter:', error);
       }
@@ -157,30 +160,18 @@ const TodayTasks: React.FC = () => {
   const handleActivityClick = (activityId: string) => {
     switch (activityId) {
       case DAILY_MOOD_ID:
-        dispatch({
-          type: 'SET_SPECIAL_CONTENT',
-          content: ACTIVITY_IDS.BURNS_CHECKLIST
-        });
+        dispatch(setSpecialContent(ACTIVITY_IDS.BURNS_CHECKLIST));
         break;
       case AUTOMATIC_THOUGHTS_ID:
-        dispatch({
-          type: 'SET_SPECIAL_CONTENT',
-          content: ACTIVITY_IDS.THREE_COLUMNS_METHOD
-        });
+        dispatch(setSpecialContent(ACTIVITY_IDS.THREE_COLUMNS_METHOD));
         break;
       case ACTIVITY_IDS.THOUGHT_DIARY:
-        dispatch({
-          type: 'SET_SPECIAL_CONTENT',
-          content: ACTIVITY_IDS.THOUGHT_DIARY
-        });
+        dispatch(setSpecialContent(ACTIVITY_IDS.THOUGHT_DIARY));
         break;
       default:
         // Для избранных активностей передаем идентификатор напрямую
         // Здесь мы знаем, что activityId является валидным идентификатором активности
-        dispatch({
-          type: 'SET_SPECIAL_CONTENT',
-          content: activityId as ActivityId
-        });
+        dispatch(setSpecialContent(activityId as ActivityId));
         break;
     }
     

@@ -2,14 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
 const SmallSteps: React.FC = () => {
-  const { dispatch, progress } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [tasks, setTasks] = useState<SmallStepsTask[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [taskInputs, setTaskInputs] = useState<Record<string, { text: string; duration: number }>>({});
@@ -61,17 +63,14 @@ const SmallSteps: React.FC = () => {
   }, [progress?.dailyProgress]);
 
   const saveToProgress = (updatedTasks: SmallStepsTask[]) => {
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise: {
-        type: ACTIVITY_IDS.SMALL_STEPS,
-        id: SHEET_ID,
-        name: ACTIVITY_NAMES[ACTIVITY_IDS.SMALL_STEPS],
-        completed: true,
-        completedAt: new Date().toISOString(),
-        records: updatedTasks
-      }
-    });
+    dispatch(saveExercise({
+      type: ACTIVITY_IDS.SMALL_STEPS,
+      id: SHEET_ID,
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.SMALL_STEPS],
+      completed: true,
+      completedAt: new Date().toISOString(),
+      records: updatedTasks
+    }));
   };
 
   const addTask = () => {

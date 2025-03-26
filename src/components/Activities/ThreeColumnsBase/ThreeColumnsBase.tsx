@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import styles from './ThreeColumnsBase.module.css';
 import { CognitiveDistortions } from '../ThoughtDiary/CognitiveDistortions/CognitiveDistortions';
 import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppSelector } from '../../../redux/hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { ThreeColumnsExercise, NoLoseTechniqueExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
@@ -41,8 +41,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
     rightColumn: '',
   });
 
-  // Получаем все записи из прогресса
-  const { progress } = useProgress();
+  // Получаем все записи из прогресса через Redux
+  const progress = useAppSelector(state => state.progress);
   
   // Собираем все записи метода
   const allRecords = useMemo(() => {

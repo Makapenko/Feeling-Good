@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './NotificationToast.module.css';
-import { Notification } from '../../store/NotificationContext';
+import { Notification } from '../../redux/slices/notificationSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faCheckCircle, faInfoCircle, faExclamationTriangle, faBookOpen } from '@fortawesome/free-solid-svg-icons';
 

@@ -1,9 +1,10 @@
 import React from 'react';
 import styles from './SelfActivationMethods.module.css';
 import { selfActivationMethods } from '../../../data/selfActivationMethods';
-import { useProgress, SpecialContent } from '../../../store/ProgressContext';
-import { ProgressAction } from '../../../store/progressReducer';
+import { useAppDispatch } from '../../../redux/hooks';
+import { setSpecialContent } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS } from '../../../constants/activities';
+import { SpecialContent } from '../../../types/progress.types';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 
@@ -11,10 +12,10 @@ const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
 
 
 const SelfActivationMethods: React.FC = () => {
-  const { dispatch } = useProgress();
+  const dispatch = useAppDispatch();
 
   const handleTechniqueClick = (technique: string) => {
-    let content: SpecialContent | undefined = undefined;
+    let content: SpecialContent | null = null;
 
     switch (technique) {
       case 'Метод маленьких шагов':
@@ -58,10 +59,7 @@ const SelfActivationMethods: React.FC = () => {
         break;
     }
 
-    dispatch({
-      type: 'SET_SPECIAL_CONTENT',
-      content
-    } as ProgressAction);
+    dispatch(setSpecialContent(content));
   };
 
   return (

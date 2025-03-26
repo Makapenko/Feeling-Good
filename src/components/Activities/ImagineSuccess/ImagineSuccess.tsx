@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './ImagineSuccess.module.css';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
@@ -13,7 +14,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
 
 const ImagineSuccess: React.FC = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [goal, setGoal] = useState('');
   const [advantages, setAdvantages] = useState<Array<{ id: string; text: string }>>([]);
   const [newAdvantage, setNewAdvantage] = useState('');
@@ -57,10 +59,7 @@ const ImagineSuccess: React.FC = () => {
       records: updatedRecords
     };
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise
-    });
+    dispatch(saveExercise(exercise));
   };
 
   const addAdvantage = () => {

@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import styles from './PleasureSheet.module.css';
 import { Activity } from './types';
 import { v4 as uuidv4 } from 'uuid';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -85,7 +86,8 @@ const HistoricalRating = ({
 };
 
 const PleasureSheet = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [newActivity, setNewActivity] = useState({
     date: '',
@@ -119,20 +121,17 @@ const PleasureSheet = () => {
   }, [progress]);
 
   const saveToProgress = (updatedActivities: Activity[]) => {
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise: {
-        type: ACTIVITY_IDS.PLEASURE_SHEET,
-        id: SHEET_ID,
-        name: ACTIVITY_NAMES[ACTIVITY_IDS.PLEASURE_SHEET],
-        completed: true,
-        completedAt: new Date().toISOString(),
-        records: updatedActivities.map(activity => ({
-          ...activity,
-          timestamp: new Date().toISOString()
-        }))
-      }
-    });
+    dispatch(saveExercise({
+      type: ACTIVITY_IDS.PLEASURE_SHEET,
+      id: SHEET_ID,
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.PLEASURE_SHEET],
+      completed: true,
+      completedAt: new Date().toISOString(),
+      records: updatedActivities.map(activity => ({
+        ...activity,
+        timestamp: new Date().toISOString()
+      }))
+    }));
   };
 
   const handleAddActivity = () => {

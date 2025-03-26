@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import styles from './NoButsSheet.module.css';
 import { ButPair } from './types';
 import { v4 as uuidv4 } from 'uuid';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -10,7 +11,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.NO_BUTS;
 
 const NoButsSheet = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [pairs, setPairs] = useState<ButPair[]>([]);
   const [newBut, setNewBut] = useState('');
   const [newNoBut, setNewNoBut] = useState('');
@@ -40,20 +42,17 @@ const NoButsSheet = () => {
   }, [progress]);
 
   const saveToProgress = (updatedPairs: ButPair[]) => {
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise: {
-        type: 'no-buts',
-        id: SHEET_ID,
-        name: 'Никаких "но"',
-        completed: true,
-        completedAt: new Date().toISOString(),
-        records: updatedPairs.map(pair => ({
-          ...pair,
-          timestamp: new Date().toISOString()
-        }))
-      }
-    });
+    dispatch(saveExercise({
+      type: 'no-buts',
+      id: SHEET_ID,
+      name: 'Никаких "но"',
+      completed: true,
+      completedAt: new Date().toISOString(),
+      records: updatedPairs.map(pair => ({
+        ...pair,
+        timestamp: new Date().toISOString()
+      }))
+    }));
   };
 
   const handleAddPair = () => {

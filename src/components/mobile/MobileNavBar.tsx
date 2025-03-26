@@ -9,6 +9,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import styles from './MobileNavBar.module.css';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setSpecialContent } from '../../redux/slices/progressSlice';
+import { setActiveTab } from '../../redux/slices/mobileSlice';
+import { ACTIVITY_IDS } from '../../constants/activities';
 
 type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
 
@@ -46,19 +50,32 @@ const navItems: NavItem[] = [
   }
 ];
 
-interface MobileNavBarProps {
-  activeTab: MobileTab;
-  onTabChange: (tabId: MobileTab) => void;
-}
+const MobileNavBar: FC = () => {
+  const activeTab = useAppSelector(state => state.mobile.activeTab);
+  const dispatch = useAppDispatch();
+  
+  const handleTabChange = (tab: MobileTab) => {
+    dispatch(setActiveTab(tab));
 
-const MobileNavBar: FC<MobileNavBarProps> = ({ activeTab, onTabChange }) => {
+    // В зависимости от выбранной вкладки устанавливаем специальный контент
+    if (tab === 'calendar') {
+      dispatch(setSpecialContent(ACTIVITY_IDS.PROGRESS_CALENDAR));
+    } else if (tab === 'today') {
+      dispatch(setSpecialContent(ACTIVITY_IDS.TODAY_TASKS));
+    } else if (tab === 'about') {
+      dispatch(setSpecialContent(ACTIVITY_IDS.WELCOME));
+    } else if (tab === 'chapters' || tab === 'activities') {
+      dispatch(setSpecialContent(null));
+    }
+  };
+
   return (
     <nav className={styles.navbar}>
       {navItems.map((item) => (
         <button
           key={item.id}
           className={`${styles.navItem} ${activeTab === item.id ? styles.active : ''}`}
-          onClick={() => onTabChange(item.id)}
+          onClick={() => handleTabChange(item.id)}
         >
           <FontAwesomeIcon icon={item.icon} className={styles.icon} />
           <span className={styles.label}>{item.label}</span>

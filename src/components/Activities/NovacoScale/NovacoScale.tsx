@@ -1,4 +1,5 @@
-import { useProgress } from "../../../store/ProgressContext";
+import { useAppDispatch } from "../../../redux/hooks";
+import { saveTestResult } from "../../../redux/slices/progressSlice";
 import Survey from "../Survey";
 import { novacoConfig } from "../Survey/configs";
 import { SurveyResult } from "../Survey/types";
@@ -10,13 +11,10 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.NOVACO_SCALE;
 
 const NovacoScale: React.FC = () => {
-  const { dispatch } = useProgress();
+  const dispatch = useAppDispatch();
 
   const handleTestComplete = (result: SurveyResult) => {
-    dispatch({
-      type: 'SAVE_TEST_RESULT',
-      result
-    });
+    dispatch(saveTestResult(result));
   };
 
   // Создаем компонент с кнопками действий

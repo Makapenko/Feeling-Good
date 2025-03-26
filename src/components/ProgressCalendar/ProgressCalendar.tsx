@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useProgress } from '../../store/ProgressContext';
+import { useAppSelector } from '../../redux/hooks';
 import styles from './ProgressCalendar.module.css';
 import chaptersData from '../ListOfChapters/chapters.json';
 import { DayDetails } from './DayDetails';
@@ -8,7 +8,7 @@ import { ChapterMap, CalendarDayProgress } from './types';
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 const ProgressCalendar: React.FC = () => {
-  const { progress } = useProgress();
+  const progress = useAppSelector(state => state.progress);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(() => {
     const today = new Date();

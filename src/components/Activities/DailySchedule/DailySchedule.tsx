@@ -2,7 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import styles from './DailySchedule.module.css';
 import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { DailyScheduleExercise } from '../../../types/progress.types';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
@@ -10,7 +11,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
 const DailySchedule = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
     { time: '8:00-9:00', planned: null, actual: null },
@@ -73,10 +75,7 @@ const DailySchedule = () => {
       timeSlots
     };
 
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise
-    });
+    dispatch(saveExercise(exercise));
   }, [dispatch, date, timeSlots]);
 
   // Автоматическое сохранение при изменении timeSlots

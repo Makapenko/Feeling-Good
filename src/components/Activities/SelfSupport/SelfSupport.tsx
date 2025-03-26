@@ -2,14 +2,16 @@ import { useState, useMemo } from 'react';
 import styles from './SelfSupport.module.css';
 import { SupportStatement } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { useProgress } from '../../../store/ProgressContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
 const SelfSupport = () => {
-  const { progress, dispatch } = useProgress();
+  const dispatch = useAppDispatch();
+  const progress = useAppSelector(state => state.progress);
   const [statements, setStatements] = useState<SupportStatement[]>([]);
   const [newDevaluing, setNewDevaluing] = useState('');
   const [newSupporting, setNewSupporting] = useState('');
@@ -40,20 +42,17 @@ const SelfSupport = () => {
   }, [progress]);
 
   const saveToProgress = (updatedStatements: SupportStatement[]) => {
-    dispatch({
-      type: 'SAVE_EXERCISE',
-      exercise: {
-        type: SHEET_ID,
-        id: SHEET_ID,
-        name: ACTIVITY_NAMES[ACTIVITY_IDS.SELF_SUPPORT],
-        completed: true,
-        completedAt: new Date().toISOString(),
-        records: updatedStatements.map(statement => ({
-          ...statement,
-          timestamp: new Date().toISOString()
-        }))
-      }
-    });
+    dispatch(saveExercise({
+      type: SHEET_ID,
+      id: SHEET_ID,
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.SELF_SUPPORT],
+      completed: true,
+      completedAt: new Date().toISOString(),
+      records: updatedStatements.map(statement => ({
+        ...statement,
+        timestamp: new Date().toISOString()
+      }))
+    }));
   };
 
   const handleAddStatement = () => {

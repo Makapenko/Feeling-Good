@@ -285,6 +285,10 @@ export interface Chapter {
   completed: boolean;
 }
 
+export interface ChapterWithContent extends Chapter {
+  content: string;
+}
+
 export type SpecialContent = ActivityId;
 
 export interface UnlockedContent {
@@ -293,7 +297,7 @@ export interface UnlockedContent {
 }
 
 export interface UserProgress {
-  currentChapter: Chapter | null;
+  currentChapter: ChapterWithContent | null;
   specialContent: SpecialContent | null;
   dailyProgress: { [key: string]: DayProgress };
   chapters: Chapter[];
@@ -305,4 +309,5 @@ export interface UserProgress {
   favoriteActivities: string[]; // Список избранных активностей (их ID)
   lastUnlockedChapter: string | null; // ID последней разблокированной главы
   lastUnlockedActivities: SpecialContent[]; // Список активностей, разблокированных последней главой
+  reduxMigrationCompleted?: boolean; // Флаг, указывающий, что миграция в Redux успешно выполнена
 }
