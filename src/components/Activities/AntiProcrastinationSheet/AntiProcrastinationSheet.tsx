@@ -42,7 +42,7 @@ const RatingInput = ({
 
   return (
     <div className={styles.ratingInputContainer}>
-      <div className={styles.ratingValue}>{value ?? '-'}%</div>
+      <div className={styles.ratingValue}>{value ?? 0}%</div>
       <input
         type="range"
         min="0"
@@ -133,8 +133,35 @@ const TaskAnalysis = ({ tasks, title = "Анализ выполненных за
 const AntiProcrastinationSheet = () => {
   const dispatch = useAppDispatch();
   const progress = useAppSelector(state => state.progress);
-  const [tasks, setTasks] = useState<Task[]>([]);
+  
+  // Получаем начальные задачи из Redux
+  const todayTasks = useMemo(() => {
+    if (!progress?.dailyProgress) return [];
+    
+    const today = new Date().toISOString().split('T')[0];
+    const todayProgress = progress.dailyProgress[today];
+    
+    if (!todayProgress?.exercises?.exercises) return [];
+    
+    const antiProcrastinationExercise = todayProgress.exercises.exercises.find(
+      exercise => exercise.type === 'anti-procrastination' && exercise.id === SHEET_ID
+    );
+    
+    if (antiProcrastinationExercise && 'records' in antiProcrastinationExercise) {
+      return antiProcrastinationExercise.records as AntiProcrastinationTask[];
+    }
+    
+    return [];
+  }, [progress]);
+  const [tasks, setTasks] = useState<Task[]>(todayTasks);
   const [newTask, setNewTask] = useState('');
+  
+  // Обновляем tasks при изменении данных в Redux
+  useEffect(() => {
+    if (todayTasks.length > 0) {
+      setTasks(todayTasks);
+    }
+  }, [todayTasks]);
 
   // Получаем все записи из прогресса
   const allTasks = useMemo(() => {
@@ -160,42 +187,16 @@ const AntiProcrastinationSheet = () => {
     return allDayTasks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [progress]);
 
-  // Загружаем текущие задачи при монтировании компонента
-  useEffect(() => {
-    if (progress?.dailyProgress) {
-      const today = new Date().toISOString().split('T')[0];
-      const todayProgress = progress.dailyProgress[today];
-      
-      console.log('Загружаем задачи антипрокрастинации на сегодня:', today);
-      
-      if (todayProgress?.exercises?.exercises) {
-        const antiProcrastinationExercise = todayProgress.exercises.exercises.find(
-          exercise => exercise.type === 'anti-procrastination' && exercise.id === SHEET_ID
-        );
-        
-        console.log('Найдено упражнение антипрокрастинации:', antiProcrastinationExercise);
-        
-        if (antiProcrastinationExercise && 'records' in antiProcrastinationExercise) {
-          const latestTasks = antiProcrastinationExercise.records as AntiProcrastinationTask[];
-          console.log('Загружено задач:', latestTasks.length);
-          setTasks(latestTasks);
-        } else {
-          console.log('Записи не найдены или упражнение не содержит records');
-        }
-      } else {
-        console.log('Не найдены упражнения на сегодня');
-      }
-    } else {
-      console.log('Данные прогресса отсутствуют');
-    }
-  }, [progress]);
-
   const saveToProgress = (updatedTasks: Task[]) => {
     const records: AntiProcrastinationTask[] = updatedTasks.map(task => ({
       ...task,
       timestamp: new Date().toISOString()
     }));
 
+    // Сразу обновляем локальный state перед отправкой в Redux
+    setTasks(updatedTasks);
+    
+    // Диспатчим действие в Redux
     dispatch(addExercise({
       exercise: {
         type: SHEET_ID,
@@ -223,7 +224,6 @@ const AntiProcrastinationSheet = () => {
     };
 
     const updatedTasks = [...tasks, task];
-    setTasks(updatedTasks);
     setNewTask('');
     saveToProgress(updatedTasks);
   };
@@ -236,22 +236,18 @@ const AntiProcrastinationSheet = () => {
     const updatedTasks = tasks.map(task =>
       task.id === taskId ? { ...task, [field]: value } : task
     );
-    setTasks(updatedTasks);
     saveToProgress(updatedTasks);
   };
 
   const handleCompleteTask = (taskId: string) => {
-    console.log('Отмечаем задачу как выполненную:', taskId);
     const updatedTasks = tasks.map(task =>
       task.id === taskId ? { ...task, completed: true } : task
     );
-    setTasks(updatedTasks);
     saveToProgress(updatedTasks);
   };
 
   const handleDeleteTask = (taskId: string) => {
     const updatedTasks = tasks.filter(task => task.id !== taskId);
-    setTasks(updatedTasks);
     saveToProgress(updatedTasks);
   };
 
