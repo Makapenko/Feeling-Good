@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ActivitiesPanel.module.css';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useUnlockedContent, useSpecialContent } from '../../redux/hooks';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import { SpecialContent } from '../../types/progress.types';
 import { getAvailableActivities } from '../../data/activitiesMapping';
@@ -62,8 +62,9 @@ const sections: ActivitySection[] = [
 
 const ActivitiesPanel: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
-  const availableActivities = getAvailableActivities(progress.unlockedContent?.chapters || []);
+  const unlockedContent = useUnlockedContent();
+  const specialContent = useSpecialContent();
+  const availableActivities = getAvailableActivities(unlockedContent?.chapters || []);
 
   const handleActivityClick = (content: SpecialContent) => {
     dispatch(setSpecialContent(content));
@@ -91,7 +92,7 @@ const ActivitiesPanel: React.FC = () => {
                 <button
                   key={button.content}
                   onClick={() => handleActivityClick(button.content)}
-                  className={progress.specialContent === button.content ? styles.active : ''}
+                  className={specialContent === button.content ? styles.active : ''}
                 >
                   {button.label}
                 </button>

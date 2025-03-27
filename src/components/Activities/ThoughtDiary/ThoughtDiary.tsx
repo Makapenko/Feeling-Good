@@ -5,13 +5,14 @@ import { AutomaticThought } from './types';
 import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
+import { ThoughtDiaryRecord, ThoughtDiaryExercise, Exercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
+import { getCurrentDate, getCurrentISOTimestamp, compareDatesDesc } from '../../../utils/dateUtils';
 
 const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 
@@ -19,7 +20,7 @@ const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 
 const ThoughtDiary: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtDiaryRecord, 'timestamp'>>({
     situation: '',
     emotions: [],
@@ -35,38 +36,42 @@ const ThoughtDiary: React.FC = () => {
 
   // Получаем все записи из прогресса
   const allRecords = useMemo(() => {
-    if (!progress?.dailyProgress) return [];
+    if (!dailyProgress) return [];
 
     const allDayRecords: Array<ThoughtDiaryRecord & { date: string }> = [];
 
-    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
-      const exercises = dayProgress.exercises.exercises || [];
-      exercises
-        .filter(exercise => exercise.type === ACTIVITY_IDS.THOUGHT_DIARY && exercise.id === SHEET_ID)
-        .forEach(exercise => {
-          if ('records' in exercise && exercise.type === ACTIVITY_IDS.THOUGHT_DIARY) {
-            // Проверяем тип записей перед добавлением
-            const thoughtDiaryExercise = exercise as ThoughtDiaryExercise;
-            // Сначала преобразуем в unknown, затем фильтруем
-            const records = thoughtDiaryExercise.records as unknown as Record<string, unknown>[];
-            const validRecords = records.filter(record =>
-              'situation' in record &&
-              'emotions' in record &&
-              'automaticThoughts' in record &&
-              'result' in record
-            ) as unknown as ThoughtDiaryRecord[];
+    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
+      if (dayProgress && dayProgress.exercises) {
+        const exercises = dayProgress.exercises.exercises || [];
+        exercises
+          .filter((exercise: Exercise) => 
+            exercise.type === ACTIVITY_IDS.THOUGHT_DIARY && exercise.id === SHEET_ID
+          )
+          .forEach((exercise: Exercise) => {
+            if ('records' in exercise && exercise.type === ACTIVITY_IDS.THOUGHT_DIARY) {
+              // Проверяем тип записей перед добавлением
+              const thoughtDiaryExercise = exercise as ThoughtDiaryExercise;
+              // Сначала преобразуем в unknown, затем фильтруем
+              const records = thoughtDiaryExercise.records as unknown as Record<string, unknown>[];
+              const validRecords = records.filter(record =>
+                'situation' in record &&
+                'emotions' in record &&
+                'automaticThoughts' in record &&
+                'result' in record
+              ) as unknown as ThoughtDiaryRecord[];
 
-            allDayRecords.push(...validRecords.map(record => ({
-              ...record,
-              date
-            })));
-          }
-        });
+              allDayRecords.push(...validRecords.map(record => ({
+                ...record,
+                date
+              })));
+            }
+          });
+      }
     });
 
     // Сортируем по дате и времени (новые сверху)
-    return allDayRecords.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  }, [progress]);
+    return allDayRecords.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+  }, [dailyProgress]);
 
   const [newEmotion, setNewEmotion] = useState({ name: '', intensity: 0 });
   const [resultEmotion, setResultEmotion] = useState({ name: '', intensity: 0 });
@@ -160,14 +165,14 @@ const ThoughtDiary: React.FC = () => {
     ) {
       const newRecord: ThoughtDiaryRecord = {
         ...currentRecord,
-        timestamp: new Date().toISOString()
+        timestamp: getCurrentISOTimestamp()
       };
 
       // Получаем текущую дату
-      const today = new Date().toISOString().split('T')[0];
+      const today = getCurrentDate();
 
       // Получаем существующие записи за сегодня
-      const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
+      const todayExercise = dailyProgress[today]?.exercises.exercises?.find(
         exercise => exercise.type === ACTIVITY_IDS.THOUGHT_DIARY && exercise.id === SHEET_ID
       );
 
@@ -193,7 +198,7 @@ const ThoughtDiary: React.FC = () => {
         id: SHEET_ID,
         name: ACTIVITY_NAMES[ACTIVITY_IDS.THOUGHT_DIARY],
         completed: true,
-        completedAt: new Date().toISOString(),
+        completedAt: getCurrentISOTimestamp(),
         records: updatedRecords
       };
 

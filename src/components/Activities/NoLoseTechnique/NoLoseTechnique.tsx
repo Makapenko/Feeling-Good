@@ -14,7 +14,7 @@ const SHEET_ID = ACTIVITY_IDS.NO_LOSE_TECHNIQUE;
 const NoLoseTechnique: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const favoriteButton = (
+  const actionButtons = (
     <div className={styles.actionButtons}>
       <ChapterLinkButton activityId={SHEET_ID} />
       <FavoriteButton activityId={SHEET_ID} />
@@ -48,7 +48,7 @@ const NoLoseTechnique: React.FC = () => {
       showCognitiveDistortions={true}
       methodId={SHEET_ID}
       onSave={handleSave}
-      favoriteButton={favoriteButton}
+      actionButtons={actionButtons}
     />
   );
 };

@@ -2,56 +2,61 @@ import { useState, useMemo } from 'react';
 import styles from './NoButsSheet.module.css';
 import { ButPair } from './types';
 import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { ACTIVITY_IDS } from '../../../constants/activities';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { NoButsExercise } from '../../../types/progress.types';
+import { NoButsExercise, Exercise } from '../../../types/progress.types';
+import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
 
 const SHEET_ID = ACTIVITY_IDS.NO_BUTS;
 
 const NoButsSheet = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   const [pairs, setPairs] = useState<ButPair[]>([]);
   const [newBut, setNewBut] = useState('');
   const [newNoBut, setNewNoBut] = useState('');
 
   // Получаем все записи из прогресса
   const allPairs = useMemo(() => {
-    if (!progress?.dailyProgress) return [];
+    if (!dailyProgress) return [];
 
     const allDayPairs: Array<ButPair & { date: string }> = [];
 
-    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
-      const exercises = dayProgress.exercises.exercises || [];
-      exercises
-        .filter(exercise => exercise.type === 'no-buts' && exercise.id === SHEET_ID)
-        .forEach(exercise => {
-          if ('records' in exercise) {
-            allDayPairs.push(...(exercise.records as ButPair[]).map(record => ({
-              ...record,
-              date
-            })));
-          }
-        });
+    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
+      if (dayProgress && dayProgress.exercises) {
+        const exercises = dayProgress.exercises.exercises || [];
+        exercises
+          .filter((exercise: Exercise) => 
+            exercise.type === ACTIVITY_IDS.NO_BUTS && exercise.id === SHEET_ID
+          )
+          .forEach((exercise: Exercise) => {
+            if ('records' in exercise) {
+              allDayPairs.push(...(exercise.records as ButPair[]).map(record => ({
+                ...record,
+                date
+              })));
+            }
+          });
+      }
     });
 
     // Сортируем по дате и времени (новые сверху)
     return allDayPairs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  }, [progress]);
+  }, [dailyProgress]);
 
   const saveToProgress = (updatedPairs: ButPair[]) => {
     const exercise: NoButsExercise = {
-      type: 'no-buts',
+      type: SHEET_ID,
       id: SHEET_ID,
-      name: 'Никаких "но"',
+      name: ACTIVITY_NAMES[ACTIVITY_IDS.NO_BUTS],
       completed: true,
-      completedAt: new Date().toISOString(),
+      completedAt: getCurrentISOTimestamp(),
       records: updatedPairs.map(pair => ({
         ...pair,
-        timestamp: new Date().toISOString()
+        timestamp: getCurrentISOTimestamp()
       }))
     };
     
@@ -68,7 +73,7 @@ const NoButsSheet = () => {
       id: uuidv4(),
       but: newBut,
       noBut: newNoBut,
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
 
     const updatedPairs = [...pairs, pair];
@@ -181,7 +186,7 @@ const NoButsSheet = () => {
               {allPairs.map((pair) => (
                 <div key={pair.id} className={styles.tableRow}>
                   <div className={styles.dateColumn}>
-                    {new Date(pair.timestamp).toLocaleDateString('ru-RU')}
+                    {formatDate(pair.timestamp)}
                   </div>
                   <div className={styles.butColumn}>
                     <p>{pair.but}</p>

@@ -2,18 +2,19 @@ import { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { SmallStepsExercise } from '../../../types/progress.types';
+import { SmallStepsExercise, Exercise } from '../../../types/progress.types';
+import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
 const SmallSteps: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   const [tasks, setTasks] = useState<SmallStepsTask[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [taskInputs, setTaskInputs] = useState<Record<string, { text: string; duration: number }>>({});
@@ -24,20 +25,24 @@ const SmallSteps: React.FC = () => {
 
   // Загружаем существующие задачи из прогресса только при первой загрузке
   useEffect(() => {
-    if (!progress?.dailyProgress || initialLoadDone.current) return;
+    if (!dailyProgress || initialLoadDone.current) return;
 
     // Собираем все задачи из разных дней
     const allTasks: SmallStepsTask[] = [];
     
-    Object.values(progress.dailyProgress).forEach(dayProgress => {
-      const exercises = dayProgress.exercises.exercises || [];
-      exercises
-        .filter(exercise => exercise.type === ACTIVITY_IDS.SMALL_STEPS && exercise.id === SHEET_ID)
-        .forEach(exercise => {
-          if ('records' in exercise && Array.isArray(exercise.records)) {
-            allTasks.push(...exercise.records as SmallStepsTask[]);
-          }
-        });
+    Object.values(dailyProgress).forEach(dayProgress => {
+      if (dayProgress && dayProgress.exercises) {
+        const exercises = dayProgress.exercises.exercises || [];
+        exercises
+          .filter((exercise: Exercise) => 
+            exercise.type === ACTIVITY_IDS.SMALL_STEPS && exercise.id === SHEET_ID
+          )
+          .forEach((exercise: Exercise) => {
+            if ('records' in exercise && Array.isArray(exercise.records)) {
+              allTasks.push(...exercise.records as SmallStepsTask[]);
+            }
+          });
+      }
     });
 
     // Дедупликация задач по ID
@@ -62,7 +67,7 @@ const SmallSteps: React.FC = () => {
     }
     
     initialLoadDone.current = true;
-  }, [progress?.dailyProgress]);
+  }, [dailyProgress]);
 
   const saveToProgress = (updatedTasks: SmallStepsTask[]) => {
     const exercise: SmallStepsExercise = {
@@ -70,7 +75,7 @@ const SmallSteps: React.FC = () => {
       id: SHEET_ID,
       name: ACTIVITY_NAMES[ACTIVITY_IDS.SMALL_STEPS],
       completed: true,
-      completedAt: new Date().toISOString(),
+      completedAt: getCurrentISOTimestamp(),
       records: updatedTasks
     };
     

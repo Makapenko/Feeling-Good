@@ -1,52 +1,40 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './ImagineSuccess.module.css';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentDate } from '../../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
+import { useIsMobile } from '../../../utils/deviceUtils';
 
 // TODO нужно показывать цели и из прошлых дней, а не только за сегодня
+// TODO После ввода новой цели, нужно сразу показывать её шаги
 
 const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
 
 const ImagineSuccess: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   const [goal, setGoal] = useState('');
   const [advantages, setAdvantages] = useState<Array<{ id: string; text: string }>>([]);
   const [newAdvantage, setNewAdvantage] = useState('');
   const [currentRecordId, setCurrentRecordId] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [isAddingNewGoal, setIsAddingNewGoal] = useState(false);
-
-  // Детектор мобильного устройства
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-
-    return () => {
-      window.removeEventListener('resize', checkIfMobile);
-    };
-  }, []);
 
   // Получаем все записи из прогресса
   const records = useMemo(() => {
     const currentDate = getCurrentDate();
-    const dayProgress = progress.dailyProgress[currentDate];
+    const dayProgress = dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is ImagineSuccessExercise =>
         ex.type === ACTIVITY_IDS.IMAGINE_SUCCESS && ex.id === SHEET_ID
     );
     return exercise?.records || [];
-  }, [progress.dailyProgress]);
+  }, [dailyProgress]);
 
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: ImagineSuccessRecord[]) => {
@@ -83,7 +71,7 @@ const ImagineSuccess: React.FC = () => {
       id: currentRecordId || uuidv4(),
       goal,
       advantages: updatedAdvantages,
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
     setCurrentRecordId(newRecord.id);
     saveToProgress([...updatedRecords, newRecord]);
@@ -99,7 +87,7 @@ const ImagineSuccess: React.FC = () => {
       id: currentRecordId || uuidv4(),
       goal,
       advantages: updatedAdvantages,
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
     saveToProgress([...updatedRecords, newRecord]);
   };
@@ -118,7 +106,7 @@ const ImagineSuccess: React.FC = () => {
       id: uuidv4(),
       goal,
       advantages: [],
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
 
     saveToProgress([...records, newRecord]);

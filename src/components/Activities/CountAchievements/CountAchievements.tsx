@@ -1,47 +1,33 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './CountAchievements.module.css';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
 import { CountAchievementsRecord, CountAchievementsExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentDate } from '../../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp, formatDateWithOptions, formatTime, compareDatesDesc } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { useIsMobile } from '../../../utils/deviceUtils';
 
 const SHEET_ID = ACTIVITY_IDS.COUNT_ACHIEVEMENTS;
 
 const CountAchievements: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   const [newAchievement, setNewAchievement] = useState('');
-  const [isMobile, setIsMobile] = useState(false);
-  const today = new Date().toISOString().split('T')[0];
-
-  // Детектор мобильного устройства
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-
-    return () => {
-      window.removeEventListener('resize', checkIfMobile);
-    };
-  }, []);
+  const isMobile = useIsMobile();
 
   // Получаем все записи из прогресса
   const records = useMemo(() => {
     const currentDate = getCurrentDate();
-    const dayProgress = progress.dailyProgress[currentDate];
+    const dayProgress = dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is CountAchievementsExercise =>
         ex.type === ACTIVITY_IDS.COUNT_ACHIEVEMENTS && ex.id === SHEET_ID
     );
     return exercise?.records || [];
-  }, [progress.dailyProgress]);
+  }, [dailyProgress]);
 
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: CountAchievementsRecord[]) => {
@@ -50,7 +36,7 @@ const CountAchievements: React.FC = () => {
       id: SHEET_ID,
       name: ACTIVITY_NAMES[ACTIVITY_IDS.COUNT_ACHIEVEMENTS],
       completed: true,
-      completedAt: new Date().toISOString(),
+      completedAt: getCurrentISOTimestamp(),
       records: updatedRecords
     };
 
@@ -66,7 +52,7 @@ const CountAchievements: React.FC = () => {
     const newRecord: CountAchievementsRecord = {
       id: uuidv4(),
       text: newAchievement.trim(),
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
 
     saveToProgress([...records, newRecord]);
@@ -85,14 +71,16 @@ const CountAchievements: React.FC = () => {
   };
 
   const getTodayAchievements = () => {
-    return records.filter(record => record.timestamp.split('T')[0] === today);
+    const currentDate = getCurrentDate();
+    return records.filter(record => record.timestamp.split('T')[0] === currentDate);
   };
 
   const getPastAchievements = () => {
     // Группируем достижения по датам
+    const currentDate = getCurrentDate();
     const pastRecords = records
-      .filter(record => record.timestamp.split('T')[0] !== today)
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      .filter(record => record.timestamp.split('T')[0] !== currentDate)
+      .sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
 
     const groupedByDate = pastRecords.reduce((groups: { [key: string]: CountAchievementsRecord[] }, record) => {
       const date = record.timestamp.split('T')[0];
@@ -104,11 +92,11 @@ const CountAchievements: React.FC = () => {
     }, {});
 
     return Object.entries(groupedByDate)
-      .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime());
+      .sort(([dateA], [dateB]) => compareDatesDesc(dateA, dateB));
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ru-RU', {
+    return formatDateWithOptions(dateString, {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
@@ -199,10 +187,7 @@ const CountAchievements: React.FC = () => {
                       <span className={styles.achievementNumber}>{index + 1}.</span>
                       <span className={styles.achievementText}>{achievement.text}</span>
                       <span className={styles.achievementTime}>
-                        {new Date(achievement.timestamp).toLocaleTimeString('ru-RU', {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+                        {formatTime(achievement.timestamp)}
                       </span>
                       <button
                         onClick={() => removeAchievement(achievement.id)}

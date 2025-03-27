@@ -14,7 +14,7 @@ const SHEET_ID = ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS;
 const HinderingHelpingThoughts: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const favoriteButton = (
+  const actionButtons = (
     <div className={styles.actionButtons}>
       <ChapterLinkButton activityId={SHEET_ID} />
       <FavoriteButton activityId={SHEET_ID} />
@@ -48,7 +48,7 @@ const HinderingHelpingThoughts: React.FC = () => {
       showCognitiveDistortions={false}
       methodId={SHEET_ID}
       onSave={handleSave}
-      favoriteButton={favoriteButton}
+      actionButtons={actionButtons}
     />
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './RecordsList.module.css';
 import { ThoughtDiaryRecord } from '../../../../types/progress.types';
+import { formatDateWithOptions, formatTime } from '../../../../utils/dateUtils';
 
 interface RecordsListProps {
   records: Array<ThoughtDiaryRecord & { date: string }>;
@@ -18,15 +19,9 @@ export const RecordsList: React.FC<RecordsListProps> = ({ records }) => {
         <div key={index} className={styles.record}>
           <div className={styles.header}>
             <span className={styles.date}>
-              {new Date(record.date).toLocaleDateString('ru-RU', {
-                day: 'numeric',
-                month: 'long'
-              })}
+              {formatDateWithOptions(record.date)}
               {' '}
-              {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+              {formatTime(record.timestamp)}
             </span>
           </div>
 

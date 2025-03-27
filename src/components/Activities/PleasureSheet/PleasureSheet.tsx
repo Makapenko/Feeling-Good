@@ -7,6 +7,8 @@ import { addExercise } from '../../../redux/actions';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { getCurrentISOTimestamp, formatDate, compareDatesDesc } from '../../../utils/dateUtils';
+import { Exercise } from '../../../types/progress.types';
 
 const SHEET_ID = ACTIVITY_IDS.PLEASURE_SHEET;
 
@@ -103,21 +105,25 @@ const PleasureSheet = () => {
     const allDayActivities: Array<Activity & { date: string }> = [];
 
     Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
-      const exercises = dayProgress.exercises.exercises || [];
-      exercises
-        .filter(exercise => exercise.type === ACTIVITY_IDS.PLEASURE_SHEET && exercise.id === SHEET_ID)
-        .forEach(exercise => {
-          if ('records' in exercise) {
-            allDayActivities.push(...(exercise.records as Activity[]).map(record => ({
-              ...record,
-              date
-            })));
-          }
-        });
+      if (dayProgress && dayProgress.exercises) {
+        const exercises = dayProgress.exercises.exercises || [];
+        exercises
+          .filter((exercise: Exercise) => 
+            exercise.type === ACTIVITY_IDS.PLEASURE_SHEET && exercise.id === SHEET_ID
+          )
+          .forEach((exercise: Exercise) => {
+            if ('records' in exercise) {
+              allDayActivities.push(...(exercise.records as Activity[]).map(record => ({
+                ...record,
+                date
+              })));
+            }
+          });
+        }
     });
 
     // Сортируем по дате и времени (новые сверху)
-    return allDayActivities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return allDayActivities.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
   }, [progress]);
 
   const saveToProgress = (updatedActivities: Activity[]) => {
@@ -127,10 +133,10 @@ const PleasureSheet = () => {
         id: SHEET_ID,
         name: ACTIVITY_NAMES[ACTIVITY_IDS.PLEASURE_SHEET],
         completed: true,
-        completedAt: new Date().toISOString(),
+        completedAt: getCurrentISOTimestamp(),
         records: updatedActivities.map(activity => ({
           ...activity,
-          timestamp: new Date().toISOString()
+          timestamp: getCurrentISOTimestamp()
         }))
       },
       showNotification: false
@@ -145,7 +151,7 @@ const PleasureSheet = () => {
       ...newActivity,
       actualPleasure: null,
       completed: false,
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
 
     const updatedActivities = [...activities, activity];
@@ -258,7 +264,7 @@ const PleasureSheet = () => {
 
         {activities.map(activity => (
           <div key={activity.id} className={styles.activityRow}>
-            <div data-label="Дата">{new Date(activity.date).toLocaleDateString()}</div>
+            <div data-label="Дата">{formatDate(activity.date)}</div>
             <div data-label="Занятие">{activity.text}</div>
             <div data-label="С кем">{activity.participants}</div>
             <div className={styles.ratingCell}>
@@ -312,7 +318,7 @@ const PleasureSheet = () => {
 
             {allActivities.map(activity => (
               <div key={activity.id} className={styles.activityRow}>
-                <div data-label="Дата">{new Date(activity.timestamp).toLocaleDateString('ru-RU')}</div>
+                <div data-label="Дата">{formatDate(activity.timestamp)}</div>
                 <div data-label="Занятие">{activity.text}</div>
                 <div data-label="С кем">{activity.participants}</div>
                 <div className={styles.ratingCell}>

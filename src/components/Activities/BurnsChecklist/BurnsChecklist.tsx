@@ -10,6 +10,8 @@ import { saveTestResultWithNotification } from "../../../redux/actions";
 
 const SHEET_ID = ACTIVITY_IDS.BURNS_CHECKLIST;
 
+// TODO Удалить уведомления из saveTestResultWithNotification
+
 const BurnsChecklist: React.FC = () => {
   const dispatch = useAppDispatch();
 

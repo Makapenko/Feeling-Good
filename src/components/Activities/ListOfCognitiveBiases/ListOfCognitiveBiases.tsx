@@ -4,6 +4,7 @@ import { cognitiveBiases } from './cognitiveBiases';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import FavoriteButton from '../../shared/FavoriteButton';
+
 const SHEET_ID = ACTIVITY_IDS.COGNITIVE_BIASES;
 
 const ListOfCognitiveBiases: React.FC = () => {

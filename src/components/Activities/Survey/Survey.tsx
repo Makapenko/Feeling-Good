@@ -1,34 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./Survey.module.css";
 import { SurveyConfig, SurveyState, SurveyResult } from "./types";
 import FavoriteButton from "../../../components/shared/FavoriteButton";
 import { ActivityId } from "../../../constants/activities";
+import { useIsMobile } from "../../../utils/deviceUtils";
+import { getCurrentISOTimestamp, generateTimeBasedId } from "../../../utils/dateUtils";
 
 interface SurveyProps {
   config: SurveyConfig;
   onComplete?: (result: SurveyResult) => void;
   actionButtons?: React.ReactNode;
-}
- // TODO - добавить предупреждение, если очки по суициду выше нуля
+};
 
- const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
+// TODO - добавить предупреждение, если очки по суициду выше нуля
+
+const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
 
   // Используем ID опроса из конфигурации или генерируем на основе названия
   const SURVEY_ID = config.id as ActivityId || (`survey-${config.title.toLowerCase().replace(/\s+/g, '-')}` as ActivityId);
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  // Вычисляем максимально возможный балл
+  const calculateMaxScore = () => {
+    return config.parts.reduce((sum, part) => {
+      return sum + part.questions.length * Math.max(...config.answers.map(a => a.value));
+    }, 0);
+  };
 
   const handleRadioChange = (questionIndex: number, value: string) => {
     setState((prevState) => {
@@ -70,18 +69,13 @@ interface SurveyProps {
 
     setIsCompleted(true);
 
-    // Вычисляем максимально возможный балл
-    const maxScore = config.parts.reduce((sum, part) => {
-      return sum + part.questions.length * Math.max(...config.answers.map(a => a.value));
-    }, 0);
-
     // Создаем объект результата
     const result: SurveyResult = {
-      id: config.id ?? `survey-${new Date().getTime()}`,
+      id: config.id ?? generateTimeBasedId('survey'),
       name: config.title,
       score: state.score,
-      maxScore,
-      completedAt: new Date().toISOString(),
+      maxScore: calculateMaxScore(),
+      completedAt: getCurrentISOTimestamp(),
       completed: true
     };
 
@@ -187,9 +181,7 @@ interface SurveyProps {
       {isCompleted && (
         <div className={styles.result}>
           <div className={styles.score}>
-            Общий счет: {state.score} из {config.parts.reduce((sum, part) => 
-              sum + part.questions.length * Math.max(...config.answers.map(a => a.value))
-            , 0)}
+            Общий счет: {state.score} из {calculateMaxScore()}
           </div>
           <div className={styles.evaluation}>
             <b>Ваша оценка:</b>

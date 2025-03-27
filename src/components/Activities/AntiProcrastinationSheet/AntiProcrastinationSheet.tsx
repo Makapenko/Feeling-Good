@@ -8,6 +8,7 @@ import { AntiProcrastinationTask } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { getCurrentDate, getCurrentISOTimestamp, compareDatesDesc } from '../../../utils/dateUtils';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
@@ -138,7 +139,7 @@ const AntiProcrastinationSheet = () => {
   const todayTasks = useMemo(() => {
     if (!dailyProgress) return [];
     
-    const today = new Date().toISOString().split('T')[0];
+    const today = getCurrentDate();
     const todayProgress = dailyProgress[today];
     
     if (!todayProgress?.exercises?.exercises) return [];
@@ -184,13 +185,13 @@ const AntiProcrastinationSheet = () => {
     });
 
     // Сортируем по дате и времени (новые сверху)
-    return allDayTasks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return allDayTasks.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
   }, [dailyProgress]);
 
   const saveToProgress = (updatedTasks: Task[]) => {
     const records: AntiProcrastinationTask[] = updatedTasks.map(task => ({
       ...task,
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     }));
 
     // Сразу обновляем локальный state перед отправкой в Redux
@@ -203,7 +204,7 @@ const AntiProcrastinationSheet = () => {
         id: SHEET_ID,
         name: 'Листок антипрокрастинации',
         completed: true,
-        completedAt: new Date().toISOString(),
+        completedAt: getCurrentISOTimestamp(),
         records
       },
       showNotification: false

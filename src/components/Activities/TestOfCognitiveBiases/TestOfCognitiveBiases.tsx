@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { listOfQuestions } from './listOfQuestions';
 import { explanationOfFirstQuestion } from './explanationOfFirstQuestion';
 import styles from './TestOfCognitiveBiases.module.css';
@@ -6,6 +6,7 @@ import { SurveyResult } from '../Survey/types';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 interface AnswerState {
   selectedAnswers: number[];
   isSubmitted: boolean;
@@ -17,7 +18,7 @@ interface TestOfCognitiveBiasesProps {
 
 const SHEET_ID = ACTIVITY_IDS.COGNITIVE_BIASES_TEST;
 
-const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplete }) => {
+const TestOfCognitiveBiases = ({ onComplete }: TestOfCognitiveBiasesProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>(
     listOfQuestions.map(() => ({ selectedAnswers: [], isSubmitted: false }))
@@ -73,7 +74,7 @@ const TestOfCognitiveBiases: React.FC<TestOfCognitiveBiasesProps> = ({ onComplet
         score,
         maxScore: 100,
         completed: true,
-        completedAt: new Date().toISOString()
+        completedAt: getCurrentISOTimestamp()
       };
 
       onComplete?.(result);

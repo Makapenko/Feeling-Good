@@ -1,46 +1,38 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './CheckCantDo.module.css';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
 import { CheckCantDoRecord, CheckCantDoExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentDate } from '../../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp, formatDateWithOptions } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { useIsMobile } from '../../../utils/deviceUtils';
+import { compareDatesDesc } from '../../../utils/dateUtils';
+
+// TODO Галочка в чегбоксе - кривая
+
 const SHEET_ID = ACTIVITY_IDS.CHECK_CANT_DO;
 
 const CheckCantDo: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
+
   const [newTask, setNewTask] = useState('');
   const [minimumDescription, setMinimumDescription] = useState('');
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Детектор мобильного устройства
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    
-    return () => {
-      window.removeEventListener('resize', checkIfMobile);
-    };
-  }, []);
+  const isMobile = useIsMobile();
 
   // Получаем все записи из прогресса
   const records = useMemo(() => {
     const currentDate = getCurrentDate();
-    const dayProgress = progress.dailyProgress[currentDate];
+    const dayProgress = dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
-      (ex: Exercise): ex is CheckCantDoExercise => 
+      (ex: Exercise): ex is CheckCantDoExercise =>
         ex.type === ACTIVITY_IDS.CHECK_CANT_DO && ex.id === SHEET_ID
     );
     return exercise?.records || [];
-  }, [progress.dailyProgress]);
+  }, [dailyProgress]);
 
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: CheckCantDoRecord[]) => {
@@ -49,7 +41,7 @@ const CheckCantDo: React.FC = () => {
       id: SHEET_ID,
       name: ACTIVITY_NAMES[ACTIVITY_IDS.CHECK_CANT_DO],
       completed: true,
-      completedAt: new Date().toISOString(),
+      completedAt: getCurrentISOTimestamp(),
       records: updatedRecords
     };
 
@@ -61,15 +53,15 @@ const CheckCantDo: React.FC = () => {
 
   const addTask = () => {
     if (!newTask.trim() || !minimumDescription.trim()) return;
-    
+
     const newRecord: CheckCantDoRecord = {
       id: uuidv4(),
       text: newTask.trim(),
       minimumDone: false,
       minimumDescription: minimumDescription.trim(),
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
-    
+
     saveToProgress([...records, newRecord]);
     setNewTask('');
     setMinimumDescription('');
@@ -81,8 +73,8 @@ const CheckCantDo: React.FC = () => {
   };
 
   const toggleMinimumDone = (id: string) => {
-    const updatedRecords = records.map(record => 
-      record.id === id 
+    const updatedRecords = records.map(record =>
+      record.id === id
         ? { ...record, minimumDone: !record.minimumDone }
         : record
     );
@@ -97,9 +89,7 @@ const CheckCantDo: React.FC = () => {
 
   // Сортируем записи по времени создания (новые сверху)
   const sortedRecords = useMemo(() => {
-    return [...records].sort((a, b) => 
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    );
+    return [...records].sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
   }, [records]);
 
 
@@ -116,13 +106,13 @@ const CheckCantDo: React.FC = () => {
       <div className={styles.description}>
         <h3>О методе</h3>
         <p>
-          Этот метод помогает преодолеть негативное мышление, связанное с убеждением "я не могу". 
+          Этот метод помогает преодолеть негативное мышление, связанное с убеждением "я не могу".
           Вместо того чтобы принимать эти мысли как факт, мы проверяем их с помощью простых экспериментов.
         </p>
         <div className={styles.example}>
           <h4>Пример:</h4>
           <p>
-            Если вы думаете "Я не могу читать, потому что не могу сосредоточиться" — 
+            Если вы думаете "Я не могу читать, потому что не могу сосредоточиться" —
             попробуйте прочитать всего одно предложение и пересказать его смысл.
           </p>
         </div>
@@ -155,8 +145,8 @@ const CheckCantDo: React.FC = () => {
               aria-label="Минимальный шаг для проверки"
             />
           </div>
-          <button 
-            onClick={addTask} 
+          <button
+            onClick={addTask}
             className={styles.addButton}
             disabled={!newTask.trim() || !minimumDescription.trim()}
           >
@@ -178,7 +168,7 @@ const CheckCantDo: React.FC = () => {
                     <span className={styles.minimumText}>{task.minimumDescription}</span>
                   </div>
                   <div className={styles.taskTime}>
-                    {new Date(task.timestamp).toLocaleString('ru-RU', {
+                    {formatDateWithOptions(task.timestamp, {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric',
@@ -219,8 +209,8 @@ const CheckCantDo: React.FC = () => {
 
       <div className={styles.motivation}>
         <p>
-          Помните: часто наши "не могу" — это всего лишь предположения, 
-          которые можно и нужно проверять. Начните с самого малого, 
+          Помните: часто наши "не могу" — это всего лишь предположения,
+          которые можно и нужно проверять. Начните с самого малого,
           и вы увидите, что способны на гораздо большее!
         </p>
       </div>

@@ -2,10 +2,11 @@ import React, { useState, useMemo } from 'react';
 import styles from './ThreeColumnsBase.module.css';
 import { CognitiveDistortions } from '../ThoughtDiary/CognitiveDistortions/CognitiveDistortions';
 import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
-import { useAppSelector } from '../../../redux/hooks';
+import { useDailyProgress } from '../../../redux/hooks';
 import { v4 as uuidv4 } from 'uuid';
-import { ThreeColumnsExercise, NoLoseTechniqueExercise } from '../../../types/progress.types';
+import { ThreeColumnsExercise, NoLoseTechniqueExercise, Exercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
+import { getCurrentDate, getCurrentISOTimestamp, compareDatesDesc } from '../../../utils/dateUtils';
 // TODO - поправить верхний и нижний паддинги в таблице старых записей в мобильной версии
 
 type ExerciseWithRecords = ThreeColumnsExercise | NoLoseTechniqueExercise;
@@ -20,7 +21,7 @@ interface ThreeColumnsBaseProps {
   showCognitiveDistortions?: boolean;
   methodId: string;
   onSave?: (result: ThreeColumnsMethodResult) => void;
-  favoriteButton?: React.ReactNode;
+  actionButtons?: React.ReactNode;
 }
 
 export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
@@ -33,7 +34,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   showCognitiveDistortions = true,
   methodId,
   onSave,
-  favoriteButton
+  actionButtons
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp' | 'id'>>({
     leftColumn: '',
@@ -41,48 +42,50 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
     rightColumn: '',
   });
 
-  // Получаем все записи из прогресса через Redux
-  const progress = useAppSelector(state => state.progress);
+  // Используем специализированный хук для получения прогресса
+  const dailyProgress = useDailyProgress();
   
   // Собираем все записи метода
   const allRecords = useMemo(() => {
-    if (!progress?.dailyProgress) return [];
+    if (!dailyProgress) return [];
     
     const allDayRecords: Array<ThoughtRecord & { date: string }> = [];
-    
-    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
-      const exercises = dayProgress.exercises.exercises || [];
-      exercises
-        .filter((exercise): exercise is ExerciseWithRecords => 
-          (exercise.type === 'three-columns-method' || exercise.type === 'no-lose-technique') && 
-          exercise.id === methodId
-        )
-        .forEach(exercise => {
-          allDayRecords.push(...exercise.records.map(record => ({
-            ...record,
-            date
-          })));
-        });
+    // TODO выделить в отдельную утилиту
+    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
+      if (dayProgress && dayProgress.exercises) {
+        const exercises = dayProgress.exercises.exercises || [];
+        exercises
+          .filter((exercise: Exercise): exercise is ExerciseWithRecords => 
+            (exercise.type === 'three-columns-method' || exercise.type === 'no-lose-technique') && 
+            exercise.id === methodId
+          )
+          .forEach((exercise: ExerciseWithRecords) => {
+            allDayRecords.push(...exercise.records.map(record => ({
+              ...record,
+              date
+            })));
+          });
+      }
     });
     
     // Сортируем по дате и времени (новые сверху)
-    return allDayRecords.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  }, [progress, methodId]);
+    return allDayRecords.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+  }, [dailyProgress, methodId]);
 
   const handleAddRecord = () => {
     if (currentRecord.leftColumn && currentRecord.rightColumn) {
       const newRecord: ThoughtRecord = {
         ...currentRecord,
         id: uuidv4(),
-        timestamp: new Date().toISOString(),
+        timestamp: getCurrentISOTimestamp(),
       };
 
       // Получаем текущую дату
-      const today = new Date().toISOString().split('T')[0];
+      const today = getCurrentDate();
       
       // Получаем существующие записи за сегодня
-      const todayExercise = progress?.dailyProgress[today]?.exercises.exercises?.find(
-        (exercise): exercise is ExerciseWithRecords => 
+      const todayExercise = dailyProgress[today]?.exercises.exercises?.find(
+        (exercise: Exercise): exercise is ExerciseWithRecords => 
           (exercise.type === 'three-columns-method' || exercise.type === 'no-lose-technique') && 
           exercise.id === methodId
       );
@@ -96,7 +99,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
           id: methodId,
           name: title,
           completed: true,
-          completedAt: new Date().toISOString(),
+          completedAt: getCurrentISOTimestamp(),
           records: updatedRecords
         };
         onSave(result);
@@ -116,7 +119,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
       <ActivityTimer activityId={methodId} />
       <div className={styles.titleContainer}>
         <h2>{title}</h2>
-        {favoriteButton}
+        {actionButtons}
       </div>
       <p className={styles.description}>{description}</p>
 

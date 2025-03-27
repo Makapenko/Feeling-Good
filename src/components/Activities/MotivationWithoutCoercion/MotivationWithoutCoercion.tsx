@@ -3,19 +3,20 @@ import styles from './MotivationWithoutCoercion.module.css';
 import { v4 as uuidv4 } from 'uuid';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import { MotivationWithoutCoercionRecord, MotivationWithoutCoercionExercise, Exercise } from '../../../types/progress.types';
-import { getCurrentDate } from '../../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
 
 const SHEET_ID = ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION;
 
 // TODO добавить отображение в ежедневных задачах
+// TODO Активировать мысль сразу после ее добавления
 
 const MotivationWithoutCoercion: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   const [currentThought, setCurrentThought] = useState('');
   const [currentAdvantage, setCurrentAdvantage] = useState('');
   const [currentDisadvantage, setCurrentDisadvantage] = useState('');
@@ -24,13 +25,13 @@ const MotivationWithoutCoercion: React.FC = () => {
   // Получаем все записи из прогресса
   const records = useMemo(() => {
     const currentDate = getCurrentDate();
-    const dayProgress = progress.dailyProgress[currentDate];
+    const dayProgress = dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is MotivationWithoutCoercionExercise =>
         ex.type === SHEET_ID && ex.id === SHEET_ID
     );
     return exercise?.records || [];
-  }, [progress.dailyProgress]);
+  }, [dailyProgress]);
 
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: MotivationWithoutCoercionRecord[]) => {
@@ -56,7 +57,7 @@ const MotivationWithoutCoercion: React.FC = () => {
         thought: currentThought,
         advantages: [],
         disadvantages: [],
-        timestamp: new Date().toISOString()
+        timestamp: getCurrentISOTimestamp()
       };
       const updatedRecords = [...records, newRecord];
       saveToProgress(updatedRecords);

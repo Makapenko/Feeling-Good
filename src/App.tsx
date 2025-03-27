@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './App.module.css';
 import Header from './components/Header/Header';
 import ListOfChapters from './components/ListOfChapters/ListOfChapters';
@@ -10,25 +10,14 @@ import UnlockNotifier from './components/Notification/UnlockNotifier';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { migrateDataToRedux } from './redux/migrateLegacyData';
+import { useIsMobile } from './utils/deviceUtils';
 
 function App() {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Проверка на мобильное устройство
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     // Запускаем миграцию данных
     migrateDataToRedux();
-
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
   }, []);
 
   return (

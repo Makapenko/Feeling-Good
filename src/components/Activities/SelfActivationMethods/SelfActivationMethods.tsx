@@ -13,9 +13,9 @@ const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
 
 const SelfActivationMethods: React.FC = () => {
   const dispatch = useAppDispatch();
-
+ // TODO: техника самоподдержки не открывается
   const handleTechniqueClick = (technique: string) => {
-    let content: SpecialContent | null = null;
+    let content: SpecialContent = ACTIVITY_IDS.SELF_ACTIVATION; // Инициализируем default значением
 
     switch (technique) {
       case 'Метод маленьких шагов':
@@ -61,9 +61,8 @@ const SelfActivationMethods: React.FC = () => {
 
     // Используем thunk с уведомлением
     dispatch(setSpecialContent({ 
-      content, 
-      showNotification: true, 
-      notificationMessage: content ? 'Активность открыта' : 'Активность не найдена'
+      content,
+      showNotification: false
     }));
   };
 

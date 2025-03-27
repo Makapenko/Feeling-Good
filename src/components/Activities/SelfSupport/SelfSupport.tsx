@@ -1,57 +1,62 @@
 import { useState, useMemo } from 'react';
 import styles from './SelfSupport.module.css';
-import { SupportStatement } from '../../../types/progress.types';
+import { SupportStatement, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { getCurrentISOTimestamp, compareDatesDesc, formatDate } from '../../../utils/dateUtils';
+
 const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
 const SelfSupport = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   const [statements, setStatements] = useState<SupportStatement[]>([]);
   const [newDevaluing, setNewDevaluing] = useState('');
   const [newSupporting, setNewSupporting] = useState('');
-  // TODO - добавить дату в таблицу старых записей
 
   // Получаем все записи из прогресса
   const allStatements = useMemo(() => {
-    if (!progress?.dailyProgress) return [];
+    if (!dailyProgress) return [];
 
     const allDayStatements: Array<SupportStatement & { date: string }> = [];
 
-    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
-      const exercises = dayProgress.exercises.exercises || [];
-      exercises
-        .filter(exercise => exercise.type === 'self-support' && exercise.id === SHEET_ID)
-        .forEach(exercise => {
-          if ('records' in exercise) {
-            allDayStatements.push(...(exercise.records as SupportStatement[]).map(record => ({
-              ...record,
-              date
-            })));
-          }
-        });
+    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
+      if (dayProgress && dayProgress.exercises) {
+        const exercises = dayProgress.exercises.exercises || [];
+        exercises
+          .filter((exercise: Exercise) => 
+            exercise.type === ACTIVITY_IDS.SELF_SUPPORT && exercise.id === SHEET_ID
+          )
+          .forEach((exercise: Exercise) => {
+            if ('records' in exercise) {
+              allDayStatements.push(...(exercise.records as SupportStatement[]).map(record => ({
+                ...record,
+                date
+              })));
+            }
+          });
+      }
     });
 
     // Сортируем по дате и времени (новые сверху)
-    return allDayStatements.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  }, [progress]);
+    return allDayStatements.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+  }, [dailyProgress]);
 
   const saveToProgress = (updatedStatements: SupportStatement[]) => {
     dispatch(addExercise({
       exercise: {
-        type: SHEET_ID,
+        type: ACTIVITY_IDS.SELF_SUPPORT,
         id: SHEET_ID,
         name: ACTIVITY_NAMES[ACTIVITY_IDS.SELF_SUPPORT],
         completed: true,
-        completedAt: new Date().toISOString(),
+        completedAt: getCurrentISOTimestamp(),
         records: updatedStatements.map(statement => ({
           ...statement,
-          timestamp: new Date().toISOString()
+          timestamp: getCurrentISOTimestamp()
         }))
       },
       showNotification: false
@@ -65,7 +70,7 @@ const SelfSupport = () => {
       id: uuidv4(),
       devaluing: newDevaluing,
       supporting: newSupporting,
-      timestamp: new Date().toISOString()
+      timestamp: getCurrentISOTimestamp()
     };
 
     const updatedStatements = [...statements, statement];
@@ -169,6 +174,7 @@ const SelfSupport = () => {
           <h3>История записей</h3>
           <div className={styles.statementsTable}>
             <div className={styles.tableHeader}>
+              <div className={styles.dateColumn}>Дата</div>
               <div className={styles.devaluingColumn}>Обесценивающее утверждение</div>
               <div className={styles.arrowColumn}></div>
               <div className={styles.supportingColumn}>Поддерживающее утверждение</div>
@@ -176,6 +182,9 @@ const SelfSupport = () => {
             <div className={styles.tableBody}>
               {allStatements.map((statement) => (
                 <div key={statement.id} className={styles.tableRow}>
+                  <div className={styles.dateColumn}>
+                    {formatDate(statement.timestamp)}
+                  </div>
                   <div className={styles.devaluingColumn}>
                     <p>{statement.devaluing}</p>
                   </div>

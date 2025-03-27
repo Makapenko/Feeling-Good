@@ -2,19 +2,20 @@ import { useState, useCallback, useEffect } from 'react';
 import styles from './DailySchedule.module.css';
 import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { DailyScheduleExercise } from '../../../types/progress.types';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
+import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
 const DailySchedule = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
-  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const dailyProgress = useDailyProgress();
+  const [date, setDate] = useState<string>(getCurrentDate());
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
     { time: '8:00-9:00', planned: null, actual: null },
     { time: '9:00-10:00', planned: null, actual: null },
@@ -35,9 +36,9 @@ const DailySchedule = () => {
 
   // Загрузка расписания при изменении даты
   useEffect(() => {
-    if (!date || !progress?.dailyProgress) return;
+    if (!date || !dailyProgress) return;
 
-    const dayProgress = progress.dailyProgress[date];
+    const dayProgress = dailyProgress[date];
     if (!dayProgress?.exercises.exercises) {
       // Сброс к пустому расписанию
       setTimeSlots(prevSlots => prevSlots.map(slot => ({
@@ -61,7 +62,7 @@ const DailySchedule = () => {
         actual: null
       })));
     }
-  }, [date, progress?.dailyProgress]);
+  }, [date, dailyProgress]);
 
   // Сохранение расписания при изменении
   const saveSchedule = useCallback(() => {
@@ -71,7 +72,7 @@ const DailySchedule = () => {
       id: SHEET_ID,
       name: ACTIVITY_NAMES[ACTIVITY_IDS.DAILY_SCHEDULE],
       completed: true,
-      completedAt: new Date().toISOString(),
+      completedAt: getCurrentISOTimestamp(),
       date: date, // Используем выбранную дату
       timeSlots
     };

@@ -1,12 +1,12 @@
+import styles from '../Survey/Survey.module.css';
 import { useAppDispatch } from "../../../redux/hooks";
+import { saveTestResultWithNotification } from "../../../redux/actions";
 import Survey from "../Survey";
 import { novacoConfig } from "../Survey/configs";
 import { SurveyResult } from "../Survey/types";
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
-import styles from '../Survey/Survey.module.css';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { saveTestResultWithNotification } from "../../../redux/actions";
 
 const SHEET_ID = ACTIVITY_IDS.NOVACO_SCALE;
 
