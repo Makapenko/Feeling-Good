@@ -3,10 +3,11 @@ import styles from './NoButsSheet.module.css';
 import { ButPair } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { addExercise } from '../../../redux/actions';
+import { NoButsExercise } from '../../../types/progress.types';
 
 const SHEET_ID = ACTIVITY_IDS.NO_BUTS;
 
@@ -42,7 +43,7 @@ const NoButsSheet = () => {
   }, [progress]);
 
   const saveToProgress = (updatedPairs: ButPair[]) => {
-    dispatch(saveExercise({
+    const exercise: NoButsExercise = {
       type: 'no-buts',
       id: SHEET_ID,
       name: 'Никаких "но"',
@@ -52,6 +53,11 @@ const NoButsSheet = () => {
         ...pair,
         timestamp: new Date().toISOString()
       }))
+    };
+    
+    dispatch(addExercise({
+      exercise,
+      showNotification: false
     }));
   };
 

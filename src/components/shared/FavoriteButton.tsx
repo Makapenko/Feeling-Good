@@ -1,8 +1,8 @@
 import React from 'react';
 import { SpecialContent } from '../../types/progress.types';
 import styles from './FavoriteButton.module.css';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { toggleFavoriteActivity } from '../../redux/slices/progressSlice';
+import { useAppDispatch, useIsFavoriteActivity } from '../../redux/hooks';
+import { toggleFavoriteActivity } from '../../redux/actions';
 
 interface FavoriteButtonProps {
   activityId: SpecialContent;
@@ -19,14 +19,14 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   className = ''
 }) => {
   const dispatch = useAppDispatch();
-  const favoriteActivities = useAppSelector(state => state.progress.favoriteActivities);
+  const isFavorite = useIsFavoriteActivity(activityId);
   
-  // Получаем статус избранного
-  const isFavorite = favoriteActivities?.includes(activityId) || false;
-  
-  // Добавление или удаление из избранного через Redux
+  // Добавление или удаление из избранного через Redux без уведомления
   const handleToggleFavorite = () => {
-    dispatch(toggleFavoriteActivity(activityId));
+    dispatch(toggleFavoriteActivity({
+      activityId,
+      showNotification: false
+    }));
   };
   
   return (

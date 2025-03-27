@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './CheckCantDo.module.css';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
+import { addExercise } from '../../../redux/actions';
 import { CheckCantDoRecord, CheckCantDoExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
@@ -53,7 +53,10 @@ const CheckCantDo: React.FC = () => {
       records: updatedRecords
     };
 
-    dispatch(saveExercise(exercise));
+    dispatch(addExercise({
+      exercise,
+      showNotification: false
+    }));
   };
 
   const addTask = () => {

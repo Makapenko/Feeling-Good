@@ -3,21 +3,30 @@ import styles from './Header.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faListCheck, faHome } from '@fortawesome/free-solid-svg-icons';
 import { ACTIVITY_IDS } from '../../constants/activities';
-import { setSpecialContent } from '../../redux/slices/progressSlice';
+import { setSpecialContent } from '../../redux/actions';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleCalendarClick = () => {
-    dispatch(setSpecialContent(ACTIVITY_IDS.PROGRESS_CALENDAR));
+    dispatch(setSpecialContent({ 
+      content: ACTIVITY_IDS.PROGRESS_CALENDAR,
+      showNotification: false
+    }));
   };
 
   const handleHomeClick = () => {
-    dispatch(setSpecialContent(ACTIVITY_IDS.WELCOME));
+    dispatch(setSpecialContent({ 
+      content: ACTIVITY_IDS.WELCOME,
+      showNotification: false
+    }));
   };
 
   const handleTasksClick = () => {
-    dispatch(setSpecialContent(ACTIVITY_IDS.TODAY_TASKS));
+    dispatch(setSpecialContent({ 
+      content: ACTIVITY_IDS.TODAY_TASKS,
+      showNotification: false
+    }));
   };
 
   return (

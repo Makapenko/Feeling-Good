@@ -6,12 +6,13 @@ import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { addExercise } from '../../../redux/actions';
+
 const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 
 // TODO валидация перед сохранением, стили, сохранение 
@@ -186,15 +187,21 @@ const ThoughtDiary: React.FC = () => {
       // Объединяем с новой записью
       const updatedRecords: ThoughtDiaryRecord[] = [...existingRecords, newRecord];
 
-      // Сохраняем в Redux
-      dispatch(saveExercise({
+      // Создаем объект упражнения
+      const exercise: ThoughtDiaryExercise = {
         type: ACTIVITY_IDS.THOUGHT_DIARY,
         id: SHEET_ID,
         name: ACTIVITY_NAMES[ACTIVITY_IDS.THOUGHT_DIARY],
         completed: true,
         completedAt: new Date().toISOString(),
         records: updatedRecords
-      } as ThoughtDiaryExercise));
+      };
+
+      // Сохраняем в Redux
+      dispatch(addExercise({ 
+        exercise, 
+        showNotification: false 
+      }));
 
       // Очищаем форму
       setCurrentRecord({

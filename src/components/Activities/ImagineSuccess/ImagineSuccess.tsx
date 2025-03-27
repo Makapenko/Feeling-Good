@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './ImagineSuccess.module.css';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { addExercise } from '../../../redux/actions';
 
 // TODO нужно показывать цели и из прошлых дней, а не только за сегодня
 
@@ -59,7 +59,10 @@ const ImagineSuccess: React.FC = () => {
       records: updatedRecords
     };
 
-    dispatch(saveExercise(exercise));
+    dispatch(addExercise({ 
+      exercise,
+      showNotification: false
+    }));
   };
 
   const addAdvantage = () => {

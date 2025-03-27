@@ -2,11 +2,11 @@ import React from 'react';
 import styles from './SelfActivationMethods.module.css';
 import { selfActivationMethods } from '../../../data/selfActivationMethods';
 import { useAppDispatch } from '../../../redux/hooks';
-import { setSpecialContent } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import { SpecialContent } from '../../../types/progress.types';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { setSpecialContent } from '../../../redux/actions';
 
 const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
 
@@ -59,7 +59,12 @@ const SelfActivationMethods: React.FC = () => {
         break;
     }
 
-    dispatch(setSpecialContent(content));
+    // Используем thunk с уведомлением
+    dispatch(setSpecialContent({ 
+      content, 
+      showNotification: true, 
+      notificationMessage: content ? 'Активность открыта' : 'Активность не найдена'
+    }));
   };
 
   return (

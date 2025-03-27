@@ -2,10 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { SpecialContent } from '../../types/progress.types';
-import { getRelatedChapter, getChapterTitle, getChapterPath } from '../../data/chaptersMapping';
+import { getRelatedChapter } from '../../data/chaptersMapping';
 import styles from './ChapterLinkButton.module.css';
 import { useAppDispatch } from '../../redux/hooks';
-import { setCurrentChapter } from '../../redux/slices/progressSlice';
+import { loadChapter } from '../../redux/actions';
 
 interface ChapterLinkButtonProps {
   activityId: SpecialContent;
@@ -29,28 +29,9 @@ const ChapterLinkButton: React.FC<ChapterLinkButtonProps> = ({
   // Если нет связанной главы, не отображаем кнопку
   if (!chapterId) return null;
   
-  const openRelatedChapter = async () => {
-    try {
-      // Получаем путь к файлу с содержимым главы
-      const chapterPath = getChapterPath(chapterId);
-      if (!chapterPath) {
-        console.error(`Path not found for chapter ${chapterId}`);
-        return;
-      }
-      
-      const response = await fetch(chapterPath);
-      const content = await response.text();
-      
-      dispatch(setCurrentChapter({
-        id: chapterId,
-        title: getChapterTitle(chapterId),
-        content,
-        timeSpent: 0,
-        completed: false
-      }));
-    } catch (error) {
-      console.error('Error loading chapter:', error);
-    }
+  const openRelatedChapter = () => {
+    // Используем action для загрузки главы
+    dispatch(loadChapter(chapterId));
   };
   
   return (

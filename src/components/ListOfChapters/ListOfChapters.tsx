@@ -5,6 +5,8 @@ import type { Chapter, ChaptersData, Section } from '../../types/chapters.types'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setCurrentChapter } from '../../redux/slices/progressSlice';
 
+//TODO Удалить галочку при прочтении главы, вместо этого закрашивать зелёным стрелочку
+
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 

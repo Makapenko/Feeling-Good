@@ -7,7 +7,7 @@ import { getCurrentDate } from '../../../utils/dateUtils';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
+import { addExercise } from '../../../redux/actions';
 
 const SHEET_ID = ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION;
 
@@ -43,7 +43,10 @@ const MotivationWithoutCoercion: React.FC = () => {
       records: updatedRecords
     };
 
-    dispatch(saveExercise(exercise));
+    dispatch(addExercise({
+      exercise,
+      showNotification: false
+    }));
   };
 
   const handleAddThought = () => {

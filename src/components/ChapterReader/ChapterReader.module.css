@@ -113,6 +113,25 @@
   border-radius: 4px;
 }
 
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin: 40px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.loadingContainer p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+}
+
 .modalClose {
   position: absolute;
   top: -40px;

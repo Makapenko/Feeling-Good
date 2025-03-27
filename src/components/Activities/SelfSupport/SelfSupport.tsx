@@ -3,7 +3,7 @@ import styles from './SelfSupport.module.css';
 import { SupportStatement } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
+import { addExercise } from '../../../redux/actions';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -42,16 +42,19 @@ const SelfSupport = () => {
   }, [progress]);
 
   const saveToProgress = (updatedStatements: SupportStatement[]) => {
-    dispatch(saveExercise({
-      type: SHEET_ID,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.SELF_SUPPORT],
-      completed: true,
-      completedAt: new Date().toISOString(),
-      records: updatedStatements.map(statement => ({
-        ...statement,
-        timestamp: new Date().toISOString()
-      }))
+    dispatch(addExercise({
+      exercise: {
+        type: SHEET_ID,
+        id: SHEET_ID,
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.SELF_SUPPORT],
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records: updatedStatements.map(statement => ({
+          ...statement,
+          timestamp: new Date().toISOString()
+        }))
+      },
+      showNotification: false
     }));
   };
 

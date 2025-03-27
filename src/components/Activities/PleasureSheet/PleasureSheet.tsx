@@ -3,7 +3,7 @@ import styles from './PleasureSheet.module.css';
 import { Activity } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
+import { addExercise } from '../../../redux/actions';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -121,16 +121,19 @@ const PleasureSheet = () => {
   }, [progress]);
 
   const saveToProgress = (updatedActivities: Activity[]) => {
-    dispatch(saveExercise({
-      type: ACTIVITY_IDS.PLEASURE_SHEET,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.PLEASURE_SHEET],
-      completed: true,
-      completedAt: new Date().toISOString(),
-      records: updatedActivities.map(activity => ({
-        ...activity,
-        timestamp: new Date().toISOString()
-      }))
+    dispatch(addExercise({
+      exercise: {
+        type: ACTIVITY_IDS.PLEASURE_SHEET,
+        id: SHEET_ID,
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.PLEASURE_SHEET],
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records: updatedActivities.map(activity => ({
+          ...activity,
+          timestamp: new Date().toISOString()
+        }))
+      },
+      showNotification: false
     }));
   };
 

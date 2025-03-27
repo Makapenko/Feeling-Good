@@ -10,7 +10,8 @@ import { chapterToActivitiesMap } from '../../data/activitiesMapping';
 import { ACTIVITY_NAMES } from '../../constants/activities';
 import { SpecialContent } from '../../types/progress.types';
 import { useAppDispatch } from '../../redux/hooks';
-import { completeChapter, setCurrentChapter, setSpecialContent } from '../../redux/slices/progressSlice';
+import { completeChapter, loadChapter } from '../../redux/actions';
+import { setSpecialContent } from '../../redux/slices/progressSlice';
 
 // TODO Не работают примечания
 // TODO Сравнить два таймера и объединить в один, который работает во всех активностях
@@ -57,19 +58,17 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
 
   // Функция для адаптации путей к изображениям в зависимости от окружения
   const adaptImagePaths = useCallback((htmlContent: string): string => {
-    // Получаем базовый путь из окружения или из URL
-    const isGitHubPages = window.location.hostname.includes('github.io');
+    // Получаем базовый путь из окружения
     const basePath = import.meta.env.BASE_URL || '/';
     
-    // Если мы на GitHub Pages или basePath не равен '/', оставляем путь как есть
-    // Если мы в локальной среде, удаляем префикс '/Feeling-Good'
-    if (!isGitHubPages && basePath === '/') {
-      return htmlContent
-        .replace(/src="\/Feeling-Good\/content\/images\//g, 'src="/content/images/')
-        .replace(/src="\/content\/images\//g, 'src="/content/images/');
+    // Если базовый путь уже содержится в URL изображений, не меняем ничего
+    if (basePath === '/') {
+      return htmlContent;
     }
     
-    return htmlContent;
+    // Если базовый путь не '/', но он не содержится в путях - добавляем его
+    return htmlContent
+      .replace(/src="\/content\/images\//g, `src="${basePath}content/images/`);
   }, []);
 
   const findNextChapter = useCallback(() => {
@@ -121,29 +120,16 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
   }, [chapterId]);
 
   const handleComplete = useCallback(async () => {
-    // Отмечаем текущую главу как завершенную
+    // Отмечаем текущую главу как завершенную - используем action
     dispatch(completeChapter(chapterId));
 
     // Находим следующую главу или подглаву
     const nextChapter = findNextChapter();
-    if (nextChapter && nextChapter.path) {
-      try {
-        const response = await fetch(nextChapter.path);
-        const content = await response.text();
-        
-        // Небольшая задержка для анимации
-        setTimeout(() => {
-          dispatch(setCurrentChapter({
-            id: nextChapter.id,
-            title: nextChapter.title,
-            content,
-            timeSpent: 0,
-            completed: false
-          }));
-        }, 300);
-      } catch (error) {
-        console.error('Error loading next chapter:', error);
-      }
+    if (nextChapter && nextChapter.id) {
+      // Загружаем следующую главу с небольшой задержкой для анимации
+      setTimeout(() => {
+        dispatch(loadChapter(nextChapter.id));
+      }, 300);
     }
 
     onNext?.();

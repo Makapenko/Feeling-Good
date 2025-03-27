@@ -1,36 +1,37 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useLastUnlockedChapter, useLastUnlockedActivities } from '../../redux/hooks';
 import { resetNewlyUnlocked } from '../../redux/slices/progressSlice';
 import { addNotification } from '../../redux/slices/notificationSlice';
 import { ACTIVITY_NAMES } from '../../constants/activities';
 
 // Компонент-наблюдатель, который отслеживает изменения в прогрессе
-// и показывает уведомления, когда открываются новые активности
+// и показывает уведомления о разблокировке новых глав и заданий
 const UnlockNotifier = () => {
   const dispatch = useAppDispatch();
-  const { lastUnlockedChapter, lastUnlockedActivities } = useAppSelector(state => state.progress);
+  const lastUnlockedChapter = useLastUnlockedChapter();
+  const lastUnlockedActivities = useLastUnlockedActivities();
 
   useEffect(() => {
     if (lastUnlockedChapter || (lastUnlockedActivities && lastUnlockedActivities.length > 0)) {
-      // Задержка для отображения уведомлений после загрузки
+      // Задержка для отображения уведомлений после завершения операций
       setTimeout(() => {
-        if (lastUnlockedChapter) {
-          dispatch(addNotification({
-            type: 'success',
-            message: `Открыта новая глава: ${lastUnlockedChapter}`,
-            duration: 6000 // 6 секунд
-          }));
+        // Одно объединенное уведомление для всех разблокированных заданий
+        if (lastUnlockedActivities && lastUnlockedActivities.length > 0) {
+          if (lastUnlockedActivities.length === 1) {
+            const activityName = ACTIVITY_NAMES[lastUnlockedActivities[0]] || lastUnlockedActivities[0];
+            dispatch(addNotification({
+              type: 'success',
+              message: `Открыто новое задание: ${activityName}`,
+              duration: 6000
+            }));
+          } else {
+            dispatch(addNotification({
+              type: 'success',
+              message: `Открыты новые задания: ${lastUnlockedActivities.length} шт.`,
+              duration: 6000
+            }));
+          }
         }
-
-        // Если есть новые активности
-        lastUnlockedActivities.forEach(activityId => {
-          const activityName = ACTIVITY_NAMES[activityId] || activityId;
-          dispatch(addNotification({
-            type: 'success',
-            message: `Открыто новое задание: ${activityName}`,
-            duration: 6000 // 6 секунд
-          }));
-        });
         
         // Сбрасываем флаги разблокировки
         dispatch(resetNewlyUnlocked());

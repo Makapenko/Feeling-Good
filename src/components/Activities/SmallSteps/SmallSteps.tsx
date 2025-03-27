@@ -3,10 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { addExercise } from '../../../redux/actions';
+import { SmallStepsExercise } from '../../../types/progress.types';
+
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
 const SmallSteps: React.FC = () => {
@@ -63,13 +65,18 @@ const SmallSteps: React.FC = () => {
   }, [progress?.dailyProgress]);
 
   const saveToProgress = (updatedTasks: SmallStepsTask[]) => {
-    dispatch(saveExercise({
+    const exercise: SmallStepsExercise = {
       type: ACTIVITY_IDS.SMALL_STEPS,
       id: SHEET_ID,
       name: ACTIVITY_NAMES[ACTIVITY_IDS.SMALL_STEPS],
       completed: true,
       completedAt: new Date().toISOString(),
       records: updatedTasks
+    };
+    
+    dispatch(addExercise({ 
+      exercise, 
+      showNotification: false 
     }));
   };
 

@@ -41,6 +41,33 @@ export const testMigration = () => {
     } else {
       console.log('❌ Ошибка миграции: Отсутствуют поля:', missingFields.join(', '));
     }
+
+    // Проверяем actions из redux/actions
+    console.log('🔍 Проверка наличия actions для уведомлений:');
+    import('../redux/actions')
+      .then(actions => {
+        const requiredActions = [
+          'addExercise',
+          'toggleFavoriteActivity',
+          'saveTestResultWithNotification',
+          'setSpecialContent',
+          'unlockAll',
+          'unlockContentAfterChapter',
+          'completeChapter',
+          'loadChapter'
+        ];
+        
+        const missingActions = requiredActions.filter(action => !(action in actions));
+        
+        if (missingActions.length === 0) {
+          console.log('✅ Миграция успешна: Все необходимые actions присутствуют');
+        } else {
+          console.log('❌ Ошибка миграции: Отсутствуют actions:', missingActions.join(', '));
+        }
+      })
+      .catch(error => {
+        console.error('❌ Ошибка при проверке actions:', error);
+      });
     
     return true;
   } catch (error) {

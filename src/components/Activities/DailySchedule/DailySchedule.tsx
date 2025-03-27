@@ -3,11 +3,12 @@ import styles from './DailySchedule.module.css';
 import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
 import { DailyScheduleExercise } from '../../../types/progress.types';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
+import { addExercise } from '../../../redux/actions';
+
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
 const DailySchedule = () => {
@@ -75,7 +76,10 @@ const DailySchedule = () => {
       timeSlots
     };
 
-    dispatch(saveExercise(exercise));
+    dispatch(addExercise({ 
+      exercise, 
+      showNotification: false 
+    }));
   }, [dispatch, date, timeSlots]);
 
   // Автоматическое сохранение при изменении timeSlots

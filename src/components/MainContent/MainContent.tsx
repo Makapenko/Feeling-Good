@@ -30,8 +30,9 @@ import WelcomePage from '../WelcomePage/WelcomePage';
 import BurnsChecklist from '../Activities/BurnsChecklist';
 import NovacoScale from '../Activities/NovacoScale';
 import { ACTIVITY_IDS } from '../../constants/activities';
-import { saveTestResult, setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
+import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
+import { saveTestResultWithNotification } from '../../redux/actions';
 
 // Определяем маппинг компонентов активностей
 const ACTIVITY_COMPONENTS = {
@@ -77,7 +78,10 @@ const MainContent: React.FC = () => {
   }, [progress.currentChapter?.id, progress.specialContent]);
 
   const handleTestComplete = (result: SurveyResult) => {
-    dispatch(saveTestResult(result));
+    dispatch(saveTestResultWithNotification({
+      testResult: result,
+      showNotification: false 
+    }));
   };
 
   const handleBackToChapters = () => {

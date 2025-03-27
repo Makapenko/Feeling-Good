@@ -3,7 +3,7 @@ import styles from './AntiProcrastinationSheet.module.css';
 import { Task } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { saveExercise } from '../../../redux/slices/progressSlice';
+import { addExercise } from '../../../redux/actions';
 import { AntiProcrastinationTask } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
@@ -196,13 +196,16 @@ const AntiProcrastinationSheet = () => {
       timestamp: new Date().toISOString()
     }));
 
-    dispatch(saveExercise({
-      type: SHEET_ID,
-      id: SHEET_ID,
-      name: 'Листок антипрокрастинации',
-      completed: true,
-      completedAt: new Date().toISOString(),
-      records
+    dispatch(addExercise({
+      exercise: {
+        type: SHEET_ID,
+        id: SHEET_ID,
+        name: 'Листок антипрокрастинации',
+        completed: true,
+        completedAt: new Date().toISOString(),
+        records
+      },
+      showNotification: false
     }));
   };
 
