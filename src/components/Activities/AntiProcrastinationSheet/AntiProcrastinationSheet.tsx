@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import styles from './AntiProcrastinationSheet.module.css';
 import { Task } from './types';
 import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
 import { AntiProcrastinationTask } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
@@ -11,7 +11,7 @@ import FavoriteButton from '../../shared/FavoriteButton';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
-//TODO Поправить вёрстку заголовков в таблице
+//TODO Поправить вёрстку заголовков в таблице (на средних разрешениях)
 
 const RatingInput = ({
   value,
@@ -132,14 +132,14 @@ const TaskAnalysis = ({ tasks, title = "Анализ выполненных за
 
 const AntiProcrastinationSheet = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgress = useDailyProgress();
   
   // Получаем начальные задачи из Redux
   const todayTasks = useMemo(() => {
-    if (!progress?.dailyProgress) return [];
+    if (!dailyProgress) return [];
     
     const today = new Date().toISOString().split('T')[0];
-    const todayProgress = progress.dailyProgress[today];
+    const todayProgress = dailyProgress[today];
     
     if (!todayProgress?.exercises?.exercises) return [];
     
@@ -152,7 +152,7 @@ const AntiProcrastinationSheet = () => {
     }
     
     return [];
-  }, [progress]);
+  }, [dailyProgress]);
   const [tasks, setTasks] = useState<Task[]>(todayTasks);
   const [newTask, setNewTask] = useState('');
   
@@ -165,11 +165,11 @@ const AntiProcrastinationSheet = () => {
 
   // Получаем все записи из прогресса
   const allTasks = useMemo(() => {
-    if (!progress?.dailyProgress) return [];
+    if (!dailyProgress) return [];
 
     const allDayTasks: Array<AntiProcrastinationTask & { date: string }> = [];
 
-    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
+    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
       const exercises = dayProgress.exercises.exercises || [];
       exercises
         .filter(exercise => exercise.type === 'anti-procrastination' && exercise.id === SHEET_ID)
@@ -185,7 +185,7 @@ const AntiProcrastinationSheet = () => {
 
     // Сортируем по дате и времени (новые сверху)
     return allDayTasks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  }, [progress]);
+  }, [dailyProgress]);
 
   const saveToProgress = (updatedTasks: Task[]) => {
     const records: AntiProcrastinationTask[] = updatedTasks.map(task => ({
@@ -311,14 +311,17 @@ const AntiProcrastinationSheet = () => {
                 disabled={task.completed}
               />
               {!task.completed ? (
-                <div className={styles.completeButtonContainer}>
-                  <button
-                    onClick={() => handleCompleteTask(task.id)}
-                    className={styles.completeButton}
-                  >
-                    Выполнил
-                  </button>
-                </div>
+                <>
+                  <div className={styles.completeButtonContainer}>
+                    <button
+                      onClick={() => handleCompleteTask(task.id)}
+                      className={styles.completeButton}
+                    >
+                      Выполнил
+                    </button>
+                  </div>
+                  <div></div>
+                </>
               ) : (
                 <>
                   <RatingInput
@@ -375,6 +378,7 @@ const AntiProcrastinationSheet = () => {
                     compareValue={task.expectedPleasure}
                   />
                 </div>
+                <div></div>
               </div>
             ))}
           </div>

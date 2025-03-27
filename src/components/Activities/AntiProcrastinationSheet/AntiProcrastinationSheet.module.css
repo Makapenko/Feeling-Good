@@ -113,7 +113,7 @@ h2 {
 
 .headers {
   display: grid;
-  grid-template-columns: 2fr 4fr 50px;
+  grid-template-columns: minmax(200px, 2fr) 4fr 50px;
   background-color: #f8fafc;
   border-bottom: 2px solid #e2e8f0;
   font-weight: 600;
@@ -135,7 +135,8 @@ h2 {
 }
 
 .taskRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(200px, 2fr) 4fr 50px;
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid #eee;
@@ -147,13 +148,13 @@ h2 {
 }
 
 .taskText {
-  flex: 1;
-  margin-right: 20px;
+  padding-right: 15px;
 }
 
 .ratings {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
   align-items: center;
 }
 
@@ -163,6 +164,7 @@ h2 {
   align-items: center;
   gap: 8px;
   position: relative;
+  width: 100%;
 }
 
 .ratingValue {
@@ -380,17 +382,30 @@ h2 {
   }
 
   .taskRow {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
     padding: 12px;
     gap: 12px;
     position: relative;
   }
 
+  .historicalTasks .taskRow {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
   .taskText {
-    margin-right: 0;
-    margin-bottom: 8px;
+    grid-row: 1;
     padding-right: 30px;
     font-size: 0.95rem;
+  }
+
+  .taskDate {
+    grid-row: 1;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    display: block;
   }
 
   .deleteButton {
@@ -401,6 +416,7 @@ h2 {
   }
 
   .ratings {
+    grid-row: 2;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
@@ -463,12 +479,6 @@ h2 {
   .historicalTasks h3 {
     font-size: 1.1rem;
     margin-bottom: 16px;
-  }
-
-  .taskDate {
-    font-size: 0.85rem;
-    margin-bottom: 8px;
-    display: block;
   }
 
   .historicalRating {
@@ -571,18 +581,21 @@ h2 {
   color: #333;
 }
 
+.historicalTasks .taskRow {
+  grid-template-columns: minmax(100px, 0.5fr) minmax(200px, 1.5fr) 4fr 50px;
+}
+
 .taskDate {
   font-size: 0.9em;
   color: #666;
-  margin-right: 20px;
-  min-width: 100px;
+  padding-right: 10px;
 }
 
 .historicalRating {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  width: 100%;
   font-weight: 500;
 }
 
