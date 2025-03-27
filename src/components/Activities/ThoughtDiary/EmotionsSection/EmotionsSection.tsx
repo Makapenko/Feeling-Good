@@ -25,7 +25,7 @@ export const EmotionsSection: React.FC<EmotionsSectionProps> = ({
 }) => {
   return (
     <div className={styles.column}>
-      <h3 title={titleTooltip}>{title}</h3>
+      <h3 className={styles.h3} title={titleTooltip}>{title}</h3>
       <EmotionInput
         emotion={emotion}
         onEmotionChange={onEmotionChange}
