@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
@@ -9,6 +9,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { SmallStepsExercise, Exercise } from '../../../types/progress.types';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { formatTimeFromSeconds } from '../../../utils/dateUtils';
+import { useIsMobile } from '../../../utils/deviceUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
@@ -17,6 +19,7 @@ const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 const SmallSteps: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
+  const isMobile = useIsMobile();
   const [tasks, setTasks] = useState<SmallStepsTask[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [taskInputs, setTaskInputs] = useState<Record<string, { text: string; duration: number }>>({});
@@ -25,53 +28,57 @@ const SmallSteps: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const initialLoadDone = useRef(false);
 
-  // Загружаем существующие задачи из прогресса только при первой загрузке
-  useEffect(() => {
-    if (!dailyProgress || initialLoadDone.current) return;
-
-    // Собираем все задачи из разных дней
-    const allTasks: SmallStepsTask[] = [];
+  // Получаем все задачи из прогресса
+  const allTasks = useMemo(() => {
+    if (!dailyProgress) return [];
     
-
-  // TODO использовать новую утилиту
+    // Используем оптимизированный сбор задач
+    // (не можем использовать getAllRecordsFromProgress, так как SmallStepsTask не имеет поля timestamp)
+    const tasksFromExercises: SmallStepsTask[] = [];
+    
     Object.values(dailyProgress).forEach(dayProgress => {
-      if (dayProgress && dayProgress.exercises) {
-        const exercises = dayProgress.exercises.exercises || [];
-        exercises
-          .filter((exercise: Exercise) => 
-            exercise.type === ACTIVITY_IDS.SMALL_STEPS && exercise.id === SHEET_ID
-          )
-          .forEach((exercise: Exercise) => {
-            if ('records' in exercise && Array.isArray(exercise.records)) {
-              allTasks.push(...exercise.records as SmallStepsTask[]);
-            }
-          });
+      const smallStepsExercises = dayProgress?.exercises.exercises.filter(
+        (ex: Exercise): ex is SmallStepsExercise =>
+          ex.type === ACTIVITY_IDS.SMALL_STEPS && ex.id === SHEET_ID
+      );
+      
+      if (smallStepsExercises?.length) {
+        smallStepsExercises.forEach(exercise => {
+          if (exercise.records?.length) {
+            tasksFromExercises.push(...exercise.records);
+          }
+        });
       }
     });
 
     // Дедупликация задач по ID
-    const uniqueTasks = allTasks.reduce((acc: SmallStepsTask[], task) => {
+    return tasksFromExercises.reduce((acc: SmallStepsTask[], task) => {
       const existingTaskIndex = acc.findIndex(t => t.id === task.id);
       if (existingTaskIndex === -1) {
         acc.push(task);
       }
       return acc;
     }, []);
+  }, [dailyProgress]);
+
+  // Загружаем существующие задачи из прогресса только при первой загрузке
+  useEffect(() => {
+    if (!dailyProgress || initialLoadDone.current) return;
 
     // Если есть задачи, загружаем их
-    if (uniqueTasks.length > 0) {
-      setTasks(uniqueTasks);
+    if (allTasks.length > 0) {
+      setTasks(allTasks);
       
       // Инициализируем состояния для ввода для каждой задачи
       const initialInputs: Record<string, { text: string; duration: number }> = {};
-      uniqueTasks.forEach(task => {
+      allTasks.forEach(task => {
         initialInputs[task.id] = { text: '', duration: 3 };
       });
       setTaskInputs(initialInputs);
     }
     
     initialLoadDone.current = true;
-  }, [dailyProgress]);
+  }, [dailyProgress, allTasks]);
 
   const saveToProgress = (updatedTasks: SmallStepsTask[]) => {
     const exercise: SmallStepsExercise = {
@@ -302,12 +309,15 @@ const SmallSteps: React.FC = () => {
     return () => clearInterval(interval);
   }, [isPaused]);
 
+  // Используем утилиту formatTimeFromSeconds для форматирования времени
   const formatTime = (seconds?: number) => {
     if (!seconds) return '00:00';
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return formatTimeFromSeconds(seconds);
   };
+
+  // Разделяем задачи на активные и завершенные
+  const activeTasks = tasks.filter(task => !task.isCompleted);
+  const completedTasks = tasks.filter(task => task.isCompleted);
 
   return (
     <div className={styles.container}>
@@ -338,15 +348,15 @@ const SmallSteps: React.FC = () => {
           type="text"
           value={newTaskTitle}
           onChange={(e) => setNewTaskTitle(e.target.value)}
-          placeholder="Введите название большой задачи..."
+          placeholder={isMobile ? "Название задачи..." : "Введите название большой задачи..."}
           className={styles.input}
         />
         <button onClick={addTask} className={styles.button}>
-          Создать задачу
+          {isMobile ? "Создать" : "Создать задачу"}
         </button>
       </div>
 
-      {tasks.map(task => (
+      {activeTasks.map(task => (
         <div key={task.id} className={styles.task}>
           <h3>{task.title}</h3>
 
@@ -413,7 +423,7 @@ const SmallSteps: React.FC = () => {
                 ...prev, 
                 [task.id]: { ...prev[task.id], text: e.target.value } 
               }))}
-              placeholder="Опишите маленький шаг..."
+              placeholder={isMobile ? "Новый шаг..." : "Опишите маленький шаг..."}
               className={styles.input}
             />
             <div className={styles.durationWrapper}>
@@ -430,7 +440,7 @@ const SmallSteps: React.FC = () => {
               <span className={styles.durationLabel}>мин</span>
             </div>
             <button onClick={() => addStep(task.id)} className={styles.button}>
-              Добавить шаг
+              {isMobile ? "+" : "Добавить шаг"}
             </button>
           </div>
 
@@ -448,16 +458,28 @@ const SmallSteps: React.FC = () => {
               onClick={() => startTask(task.id)}
               className={styles.startButton}
             >
-              Начать выполнение
+              {isMobile ? "Начать" : "Начать выполнение"}
             </button>
-          )}
-          {task.isCompleted && (
-            <div className={styles.completionMessage}>
-              Поздравляем! Задача успешно выполнена! 🎉
-            </div>
           )}
         </div>
       ))}
+      
+      {/* Отображаем завершенные задачи в таблице */}
+      {completedTasks.length > 0 && (
+        <div className={styles.completedTasksSection}>
+          <h3>Завершенные задачи</h3>
+          <div className={styles.completedTasksList}>
+            {completedTasks.map(task => (
+              <div key={task.id} className={styles.completedTask}>
+                <div className={styles.completedTaskTitle}>{task.title}</div>
+                <div className={styles.completionMessage}>
+                  Выполнено! 🎉
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
