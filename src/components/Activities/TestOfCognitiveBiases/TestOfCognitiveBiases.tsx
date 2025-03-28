@@ -3,10 +3,11 @@ import { listOfQuestions } from './listOfQuestions';
 import { explanationOfFirstQuestion } from './explanationOfFirstQuestion';
 import styles from './TestOfCognitiveBiases.module.css';
 import { SurveyResult } from '../Survey/types';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
+
 interface AnswerState {
   selectedAnswers: number[];
   isSubmitted: boolean;
@@ -69,12 +70,9 @@ const TestOfCognitiveBiases = ({ onComplete }: TestOfCognitiveBiasesProps) => {
       // Сохраняем результат теста
       const score = calculateTotalScore();
       const result: SurveyResult = {
-        id: ACTIVITY_IDS.COGNITIVE_BIASES_TEST,
-        name: ACTIVITY_NAMES[ACTIVITY_IDS.COGNITIVE_BIASES_TEST],
+        ...createBaseExercise(SHEET_ID),
         score,
-        maxScore: 100,
-        completed: true,
-        completedAt: getCurrentISOTimestamp()
+        maxScore: 100
       };
 
       onComplete?.(result);

@@ -4,7 +4,7 @@ import { SurveyConfig, SurveyState, SurveyResult } from "./types";
 import FavoriteButton from "../../../components/shared/FavoriteButton";
 import { ActivityId } from "../../../constants/activities";
 import { useIsMobile } from "../../../utils/deviceUtils";
-import { getCurrentISOTimestamp, generateTimeBasedId } from "../../../utils/dateUtils";
+import { createBaseExercise } from "../../../utils/exerciseUtils";
 
 interface SurveyProps {
   config: SurveyConfig;
@@ -20,7 +20,7 @@ const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
   const isMobile = useIsMobile();
 
   // Используем ID опроса из конфигурации или генерируем на основе названия
-  const SURVEY_ID = config.id as ActivityId || (`survey-${config.title.toLowerCase().replace(/\s+/g, '-')}` as ActivityId);
+  const SURVEY_ID = (config.id || `survey-${config.title.toLowerCase().replace(/\s+/g, '-')}`) as ActivityId;
 
   // Вычисляем максимально возможный балл
   const calculateMaxScore = () => {
@@ -71,12 +71,9 @@ const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
 
     // Создаем объект результата
     const result: SurveyResult = {
-      id: config.id ?? generateTimeBasedId('survey'),
-      name: config.title,
+      ...createBaseExercise(SURVEY_ID),
       score: state.score,
-      maxScore: calculateMaxScore(),
-      completedAt: getCurrentISOTimestamp(),
-      completed: true
+      maxScore: calculateMaxScore()
     };
 
     // Вызываем колбэк с результатом

@@ -4,13 +4,16 @@ import { Activity } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { getCurrentISOTimestamp, formatDate, compareDatesDesc } from '../../../utils/dateUtils';
-import { Exercise } from '../../../types/progress.types';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.PLEASURE_SHEET;
+
+// TODO Сравнить с другими компонентами используещие range
 
 const RatingInput = ({
   value,
@@ -102,38 +105,17 @@ const PleasureSheet = () => {
   const allActivities = useMemo(() => {
     if (!progress?.dailyProgress) return [];
 
-    const allDayActivities: Array<Activity & { date: string }> = [];
-
-    Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
-      if (dayProgress && dayProgress.exercises) {
-        const exercises = dayProgress.exercises.exercises || [];
-        exercises
-          .filter((exercise: Exercise) => 
-            exercise.type === ACTIVITY_IDS.PLEASURE_SHEET && exercise.id === SHEET_ID
-          )
-          .forEach((exercise: Exercise) => {
-            if ('records' in exercise) {
-              allDayActivities.push(...(exercise.records as Activity[]).map(record => ({
-                ...record,
-                date
-              })));
-            }
-          });
-        }
-    });
-
-    // Сортируем по дате и времени (новые сверху)
-    return allDayActivities.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+    return getAllRecordsFromProgress<Activity & { date: string }>(
+      progress.dailyProgress,
+      ACTIVITY_IDS.PLEASURE_SHEET,
+      SHEET_ID
+    ).sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
   }, [progress]);
 
   const saveToProgress = (updatedActivities: Activity[]) => {
     dispatch(addExercise({
       exercise: {
-        type: ACTIVITY_IDS.PLEASURE_SHEET,
-        id: SHEET_ID,
-        name: ACTIVITY_NAMES[ACTIVITY_IDS.PLEASURE_SHEET],
-        completed: true,
-        completedAt: getCurrentISOTimestamp(),
+        ...createBaseExercise(SHEET_ID),
         records: updatedActivities.map(activity => ({
           ...activity,
           timestamp: getCurrentISOTimestamp()

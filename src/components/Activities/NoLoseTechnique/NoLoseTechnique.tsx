@@ -25,9 +25,6 @@ const NoLoseTechnique: React.FC = () => {
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: NoLoseTechniqueExercise = {
       ...createBaseExercise(SHEET_ID, result.id),
-      name: result.name,
-      completed: result.completed,
-      completedAt: result.completedAt,
       records: result.records
     };
 

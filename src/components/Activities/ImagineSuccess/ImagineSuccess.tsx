@@ -4,15 +4,15 @@ import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { useIsMobile } from '../../../utils/deviceUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 // TODO нужно показывать цели и из прошлых дней, а не только за сегодня
-// TODO После ввода новой цели, нужно сразу показывать её шаги
-
+// TODO Послле загрузки страницы активировать последнюю цель, чтобы ее было видно
 const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
 
 const ImagineSuccess: React.FC = () => {
@@ -39,11 +39,7 @@ const ImagineSuccess: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: ImagineSuccessRecord[]) => {
     const exercise: ImagineSuccessExercise = {
-      type: ACTIVITY_IDS.IMAGINE_SUCCESS,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.IMAGINE_SUCCESS],
-      completed: false,
-      completedAt: '',
+      ...createBaseExercise(SHEET_ID),
       records: updatedRecords
     };
 

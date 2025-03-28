@@ -3,14 +3,16 @@ import { v4 as uuidv4 } from 'uuid';
 import styles from './SmallSteps.module.css';
 import { SmallStep, SmallStepsTask } from './types';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { SmallStepsExercise, Exercise } from '../../../types/progress.types';
-import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
+
+// TODO завершенные задачи отображать в виде таблицы внизу. Новые записи добавлять в верх списка
 
 const SmallSteps: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +32,8 @@ const SmallSteps: React.FC = () => {
     // Собираем все задачи из разных дней
     const allTasks: SmallStepsTask[] = [];
     
+
+  // TODO использовать новую утилиту
     Object.values(dailyProgress).forEach(dayProgress => {
       if (dayProgress && dayProgress.exercises) {
         const exercises = dayProgress.exercises.exercises || [];
@@ -71,11 +75,7 @@ const SmallSteps: React.FC = () => {
 
   const saveToProgress = (updatedTasks: SmallStepsTask[]) => {
     const exercise: SmallStepsExercise = {
-      type: ACTIVITY_IDS.SMALL_STEPS,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.SMALL_STEPS],
-      completed: true,
-      completedAt: getCurrentISOTimestamp(),
+      ...createBaseExercise(SHEET_ID),
       records: updatedTasks
     };
     

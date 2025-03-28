@@ -8,12 +8,13 @@ import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 
@@ -176,11 +177,7 @@ const ThoughtDiary: React.FC = () => {
 
       // Создаем объект упражнения
       const exercise: ThoughtDiaryExercise = {
-        type: ACTIVITY_IDS.THOUGHT_DIARY,
-        id: SHEET_ID,
-        name: ACTIVITY_NAMES[ACTIVITY_IDS.THOUGHT_DIARY],
-        completed: true,
-        completedAt: getCurrentISOTimestamp(),
+        ...createBaseExercise(SHEET_ID),
         records: updatedRecords
       };
 

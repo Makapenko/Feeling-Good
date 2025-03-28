@@ -25,9 +25,6 @@ const ThreeColumnsMethod: React.FC = () => {
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: ThreeColumnsExercise = {
       ...createBaseExercise(SHEET_ID, result.id),
-      name: result.name,
-      completed: result.completed,
-      completedAt: result.completedAt,
       records: result.records
     };
 

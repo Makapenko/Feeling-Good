@@ -1,18 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import styles from './MotivationWithoutCoercion.module.css';
 import { v4 as uuidv4 } from 'uuid';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import { MotivationWithoutCoercionRecord, MotivationWithoutCoercionExercise, Exercise } from '../../../types/progress.types';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION;
 
 // TODO добавить отображение в ежедневных задачах
-// TODO Активировать мысль сразу после ее добавления
+// TODO отображать записи за прошлые дни
+// TODO Активировать мысль сразу после обновления страницы
 
 const MotivationWithoutCoercion: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,11 +38,7 @@ const MotivationWithoutCoercion: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: MotivationWithoutCoercionRecord[]) => {
     const exercise: MotivationWithoutCoercionExercise = {
-      type: SHEET_ID,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[SHEET_ID],
-      completed: false,
-      completedAt: '',
+      ...createBaseExercise(SHEET_ID),
       records: updatedRecords
     };
 
