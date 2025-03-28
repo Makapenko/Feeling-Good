@@ -11,6 +11,8 @@ import { addExercise } from '../../../redux/actions';
 import { useIsMobile } from '../../../utils/deviceUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
+// TODO добавить отображение в ежедневных задачах
+
 const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
 
 const ImagineSuccess: React.FC = () => {

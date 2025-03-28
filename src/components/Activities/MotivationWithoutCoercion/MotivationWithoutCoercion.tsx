@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styles from './MotivationWithoutCoercion.module.css';
 import { v4 as uuidv4 } from 'uuid';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import { MotivationWithoutCoercionRecord, MotivationWithoutCoercionExercise, Exercise } from '../../../types/progress.types';
-import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
@@ -12,9 +12,6 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION;
 
-// TODO добавить отображение в ежедневных задачах
-// TODO отображать записи за прошлые дни
-// TODO Активировать мысль сразу после обновления страницы
 
 const MotivationWithoutCoercion: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,16 +21,36 @@ const MotivationWithoutCoercion: React.FC = () => {
   const [currentDisadvantage, setCurrentDisadvantage] = useState('');
   const [activeRecord, setActiveRecord] = useState<MotivationWithoutCoercionRecord | null>(null);
 
-  // Получаем все записи из прогресса
+  // Получаем все записи из прогресса, включая записи из прошлых дней
   const records = useMemo(() => {
-    const currentDate = getCurrentDate();
-    const dayProgress = dailyProgress[currentDate];
-    const exercise = dayProgress?.exercises.exercises.find(
-      (ex: Exercise): ex is MotivationWithoutCoercionExercise =>
-        ex.type === SHEET_ID && ex.id === SHEET_ID
+    // Собираем все записи из всех дней
+    let allRecords: MotivationWithoutCoercionRecord[] = [];
+    
+    // Проходим по всем дням в прогрессе
+    Object.values(dailyProgress).forEach(dayProgress => {
+      const exercise = dayProgress?.exercises.exercises.find(
+        (ex: Exercise): ex is MotivationWithoutCoercionExercise =>
+          ex.type === SHEET_ID && ex.id === SHEET_ID
+      );
+      
+      if (exercise?.records?.length) {
+        allRecords = [...allRecords, ...exercise.records];
+      }
+    });
+    
+    // Сортируем по времени создания (от новых к старым)
+    return allRecords.sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
-    return exercise?.records || [];
   }, [dailyProgress]);
+
+  // Активируем последнюю мысль после загрузки страницы
+  useEffect(() => {
+    if (records.length > 0 && !activeRecord) {
+      // Выбираем самую последнюю запись
+      setActiveRecord(records[0]);
+    }
+  }, [records]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: MotivationWithoutCoercionRecord[]) => {
