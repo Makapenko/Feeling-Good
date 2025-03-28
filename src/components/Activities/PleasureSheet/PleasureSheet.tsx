@@ -12,6 +12,9 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.PLEASURE_SHEET;
+const SAME = 'same'
+const BETTER = 'better'
+const WORSE = 'worse'
 
 // TODO Сравнить с другими компонентами используещие range
 
@@ -35,11 +38,11 @@ const RatingInput = ({
   const getComparisonClass = () => {
     if (!isActual || value === null || compareValue === null) return '';
 
-    if (value === compareValue) return 'same';
+    if (value === compareValue) return SAME;
     if (isReversed) {
-      return value < compareValue ? 'better' : 'worse';
+      return value < compareValue ? BETTER : WORSE;
     }
-    return value > compareValue ? 'better' : 'worse';
+    return value > compareValue ? BETTER : WORSE;
   };
 
   return (
@@ -74,11 +77,11 @@ const HistoricalRating = ({
   const getComparisonClass = () => {
     if (value === null || compareValue === null) return '';
 
-    if (value === compareValue) return 'same';
+    if (value === compareValue) return SAME;
     if (isReversed) {
-      return value < compareValue ? 'better' : 'worse';
+      return value < compareValue ? BETTER : WORSE;
     }
-    return value > compareValue ? 'better' : 'worse';
+    return value > compareValue ? BETTER : WORSE;
   };
 
   return (
@@ -90,7 +93,7 @@ const HistoricalRating = ({
   );
 };
 
-const PleasureSheet = () => {
+const PleasureSheet: React.FC = () => {
   const dispatch = useAppDispatch();
   const progress = useAppSelector(state => state.progress);
   const [activities, setActivities] = useState<Activity[]>([]);

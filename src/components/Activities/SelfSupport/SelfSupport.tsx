@@ -12,7 +12,7 @@ import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
-const SelfSupport = () => {
+const SelfSupport: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
   const [statements, setStatements] = useState<SupportStatement[]>([]);

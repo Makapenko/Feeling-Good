@@ -190,20 +190,23 @@
   height: 20px;
   border: 2px solid #4CAF50;
   border-radius: 4px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
   position: relative;
 }
 
+.checkmark svg {
+  font-size: 14px;
+}
+
+.checkbox input:checked + .checkmark {
+  color: #4CAF50;
+}
+
 .checkbox input:checked + .checkmark:after {
-  content: '';
-  position: absolute;
-  left: 6px;
-  top: 2px;
-  width: 5px;
-  height: 10px;
-  border: solid #4CAF50;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  content: none;
 }
 
 .checkboxLabel {
@@ -348,9 +351,8 @@
   }
 
   .checkmark {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
   }
 
   .checkbox input:checked + .checkmark:after {

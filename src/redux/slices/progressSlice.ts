@@ -370,7 +370,7 @@ const progressSlice = createSlice({
     },
 
     // Загрузка состояния из localStorage (используется в middleware)
-    loadStateFromStorage: (state, action: PayloadAction<UserProgress>) => {
+    loadStateFromStorage: (_state, action: PayloadAction<UserProgress>) => {
       return action.payload;
     }
   }

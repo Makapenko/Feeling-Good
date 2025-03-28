@@ -11,8 +11,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 import { useIsMobile } from '../../../utils/deviceUtils';
 import { compareDatesDesc } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
-
-// TODO Галочка в чегбоксе - кривая
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 const SHEET_ID = ACTIVITY_IDS.CHECK_CANT_DO;
 
@@ -181,7 +181,9 @@ const CheckCantDo: React.FC = () => {
                       checked={task.minimumDone}
                       onChange={() => toggleMinimumDone(task.id)}
                     />
-                    <span className={styles.checkmark}></span>
+                    <span className={styles.checkmark}>
+                      <FontAwesomeIcon icon={faCheck} />
+                    </span>
                     <span className={styles.checkboxLabel}>
                       {task.minimumDone ? 'Минимум выполнен!' : 'Минимум не проверен'}
                     </span>

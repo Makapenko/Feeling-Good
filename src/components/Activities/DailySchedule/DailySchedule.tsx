@@ -31,7 +31,7 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
-const DailySchedule = () => {
+const DailySchedule: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
   const [date, setDate] = useState<string>(getCurrentDate());

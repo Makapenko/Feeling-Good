@@ -7,19 +7,18 @@ import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { useAppDispatch } from '../../../redux/hooks';
+import { saveTestResultWithNotification } from '../../../redux/actions';
 
 interface AnswerState {
   selectedAnswers: number[];
   isSubmitted: boolean;
 }
 
-interface TestOfCognitiveBiasesProps {
-  onComplete?: (result: SurveyResult) => void;
-}
-
 const SHEET_ID = ACTIVITY_IDS.COGNITIVE_BIASES_TEST;
 
-const TestOfCognitiveBiases = ({ onComplete }: TestOfCognitiveBiasesProps) => {
+const TestOfCognitiveBiases: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>(
     listOfQuestions.map(() => ({ selectedAnswers: [], isSubmitted: false }))
@@ -75,7 +74,10 @@ const TestOfCognitiveBiases = ({ onComplete }: TestOfCognitiveBiasesProps) => {
         maxScore: 100
       };
 
-      onComplete?.(result);
+      dispatch(saveTestResultWithNotification({
+        testResult: result,
+        showNotification: false 
+      }));
     }
   };
 

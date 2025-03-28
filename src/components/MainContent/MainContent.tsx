@@ -7,7 +7,6 @@ import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
 import TodayTasks from '../TodayTasks/TodayTasks';
 
-import { SurveyResult } from '../Activities/Survey/types';
 import ListOfCognitiveBiases from '../Activities/ListOfCognitiveBiases/ListOfCognitiveBiases';
 import TestOfCognitiveBiases from '../Activities/TestOfCognitiveBiases/TestOfCognitiveBiases';
 import ThreeColumnsMethod  from '../Activities/ThreeColumnsMethod/ThreeColumnsMethod';
@@ -32,7 +31,6 @@ import NovacoScale from '../Activities/NovacoScale';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
-import { saveTestResultWithNotification } from '../../redux/actions';
 
 // Определяем маппинг компонентов активностей
 const ACTIVITY_COMPONENTS = {
@@ -78,13 +76,6 @@ const MainContent: React.FC = () => {
     window.scrollTo(0, 0);
   }, [currentChapter?.id, specialContent]);
 
-  const handleTestComplete = (result: SurveyResult) => {
-    dispatch(saveTestResultWithNotification({
-      testResult: result,
-      showNotification: false 
-    }));
-  };
-
   const handleBackToChapters = () => {
     dispatch(setCurrentChapter(null));
     dispatch(setActiveTab('chapters'));
@@ -111,27 +102,19 @@ const MainContent: React.FC = () => {
     const specialContentType = specialContent as keyof typeof ACTIVITY_COMPONENTS;
     
     // Специальные случаи
-    if (specialContentType === 'today-tasks') {
+    if (specialContentType === ACTIVITY_IDS.TODAY_TASKS) {
       return <TodayTasks />;
     }
     
-    if (specialContentType === 'progress-calendar') {
+    if (specialContentType === ACTIVITY_IDS.PROGRESS_CALENDAR) {
       return <ProgressCalendar />;
-    }
-    
-    if (specialContentType === 'cognitive-biases-test') {
-      return (
-        <ActivityWithBackButton>
-          <TestOfCognitiveBiases onComplete={handleTestComplete} />
-        </ActivityWithBackButton>
-      );
     }
     
     // Основной контент из маппинга активностей
     if (specialContentType && ACTIVITY_COMPONENTS[specialContentType]) {
       const ActivityComponent = ACTIVITY_COMPONENTS[specialContentType];
       
-      if (specialContentType === 'welcome') {
+      if (specialContentType === ACTIVITY_IDS.WELCOME) {
         return <ActivityComponent />;
       }
       

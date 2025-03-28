@@ -16,6 +16,10 @@ const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
 //TODO Поправить вёрстку заголовков в таблице (на средних разрешениях)
 
+const SAME = 'same'
+const BETTER = 'better'
+const WORSE = 'worse'
+
 const RatingInput = ({
   value,
   onChange,
@@ -36,11 +40,11 @@ const RatingInput = ({
   const getComparisonClass = () => {
     if (!isActual || value === null || compareValue === null) return '';
 
-    if (value === compareValue) return 'same';
+    if (value === compareValue) return SAME;
     if (isReversed) {
-      return value < compareValue ? 'better' : 'worse';
+      return value < compareValue ? BETTER : WORSE;
     }
-    return value > compareValue ? 'better' : 'worse';
+    return value > compareValue ? BETTER : WORSE;
   };
 
   return (
@@ -75,11 +79,11 @@ const HistoricalRating = ({
   const getComparisonClass = () => {
     if (value === null || compareValue === null) return '';
 
-    if (value === compareValue) return 'same';
+    if (value === compareValue) return SAME;
     if (isReversed) {
-      return value < compareValue ? 'better' : 'worse';
+      return value < compareValue ? BETTER : WORSE;
     }
-    return value > compareValue ? 'better' : 'worse';
+    return value > compareValue ? BETTER : WORSE;
   };
 
   return (
@@ -103,11 +107,11 @@ const TaskAnalysis = ({ tasks, title = "Анализ выполненных за
     tasks.filter(t => t.actualPleasure !== null).length || 0);
 
   const getDiffClass = (diff: number, isReversed = false) => {
-    if (diff === 0) return 'same';
+    if (diff === 0) return SAME;
     if (isReversed) {
-      return diff < 0 ? 'better' : 'worse';
+      return diff < 0 ? BETTER : WORSE;
     }
-    return diff > 0 ? 'better' : 'worse';
+    return diff > 0 ? BETTER : WORSE;
   };
 
   if (tasks.length === 0) return null;
@@ -133,7 +137,7 @@ const TaskAnalysis = ({ tasks, title = "Анализ выполненных за
   );
 };
 
-function AntiProcrastinationSheet() {
+const AntiProcrastinationSheet: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
   

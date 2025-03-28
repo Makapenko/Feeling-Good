@@ -14,7 +14,7 @@ import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.NO_BUTS;
 
-const NoButsSheet = () => {
+const NoButsSheet: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
   const [pairs, setPairs] = useState<ButPair[]>([]);
