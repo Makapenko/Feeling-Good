@@ -21,14 +21,14 @@
 }
 
 .dateContainer {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .dateInput {
   margin-left: 10px;
-  padding: 5px;
-  border: 1px solid #ddd;
+  padding: 6px 10px;
   border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
 .legend {
@@ -186,6 +186,38 @@
   height: 18px !important;
   line-height: 18px !important;
   font-size: 0.85rem !important;
+}
+
+/* Стили для списка сохраненных расписаний */
+.savedDatesContainer {
+  margin-bottom: 20px;
+}
+
+.savedDates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.dateButton {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.dateButton:hover {
+  background-color: #e9e9e9;
+}
+
+.dateButton.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #0069d9;
 }
 
 @media (max-width: 768px) {

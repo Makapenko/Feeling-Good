@@ -1,21 +1,23 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import styles from './DailySchedule.module.css';
 import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
-import { DailyScheduleExercise } from '../../../types/progress.types';
+import { DailyScheduleExercise, Exercise } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { getCurrentDate } from '../../../utils/dateUtils';
+import { getCurrentDate, formatDateWithOptions, compareDatesDesc } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { useIsMobile } from '../../../utils/deviceUtils';
 
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
 const DailySchedule: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
+  const isMobile = useIsMobile();
   const [date, setDate] = useState<string>(getCurrentDate());
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
     { time: '8:00-9:00', planned: null, actual: null },
@@ -34,6 +36,31 @@ const DailySchedule: React.FC = () => {
     { time: '21:00-22:00', planned: null, actual: null },
     { time: '22:00-23:00', planned: null, actual: null },
   ]);
+
+  // Получаем все даты, на которые были созданы расписания
+  const savedDates = useMemo(() => {
+    // Извлекаем уникальные даты и проверяем наличие активностей
+    return Object.entries(dailyProgress)
+      .filter(([, dayProgress]) => {
+        const exercise = dayProgress?.exercises.exercises.find(
+          (ex: Exercise): ex is DailyScheduleExercise =>
+            ex.type === ACTIVITY_IDS.DAILY_SCHEDULE && ex.id === SHEET_ID
+        );
+        
+        if (!exercise?.timeSlots) return false;
+        
+        // Проверяем, есть ли хотя бы одна запись в расписании
+        return exercise.timeSlots.some(
+          slot => slot.planned?.text || slot.actual?.text
+        );
+      })
+      .map(([dateKey]) => ({
+        date: dateKey,
+        hasActivities: true
+      }))
+      // Используем compareDatesDesc для сортировки дат
+      .sort((a, b) => compareDatesDesc(a.date, b.date));
+  }, [dailyProgress]);
 
   // Загрузка расписания при изменении даты
   useEffect(() => {
@@ -167,6 +194,15 @@ const DailySchedule: React.FC = () => {
     });
   }, []);
 
+  // Форматирование даты для отображения с использованием dateUtils
+  const formatDateLabel = (dateString: string) => {
+    return formatDateWithOptions(dateString, {
+      day: 'numeric',
+      month: 'long', 
+      year: 'numeric'
+    });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
@@ -176,6 +212,7 @@ const DailySchedule: React.FC = () => {
           <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
+      
       <div className={styles.dateContainer}>
         <label>
           Дата:
@@ -187,6 +224,25 @@ const DailySchedule: React.FC = () => {
           />
         </label>
       </div>
+      
+      {/* Список сохраненных расписаний */}
+      {savedDates.length > 0 && (
+        <div className={styles.savedDatesContainer}>
+          <h3>Сохраненные расписания:</h3>
+          <div className={styles.savedDates}>
+            {savedDates.map((item) => (
+              <button
+                key={item.date}
+                className={`${styles.dateButton} ${date === item.date ? styles.active : ''}`}
+                onClick={() => setDate(item.date)}
+              >
+                {formatDateLabel(item.date)}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      
       <div className={styles.legend}>
         <p>Отметьте каждое занятие:</p>
         <ul>
@@ -208,14 +264,14 @@ const DailySchedule: React.FC = () => {
               onActivityChange={(text) => handleActivityChange(index, text, 'planned')}
               onTypeToggle={(type) => toggleActivityType(index, type, 'planned')}
               onRatingChange={(type, value) => handleRatingChange(index, type, 'planned', value)}
-              placeholder="Планируемое занятие"
+              placeholder={isMobile ? "План" : "Планируемое занятие"}
             />
             <ActivityColumn
               activity={slot.actual}
               onActivityChange={(text) => handleActivityChange(index, text, 'actual')}
               onTypeToggle={(type) => toggleActivityType(index, type, 'actual')}
               onRatingChange={(type, value) => handleRatingChange(index, type, 'actual', value)}
-              placeholder="Фактическое занятие"
+              placeholder={isMobile ? "Факт" : "Фактическое занятие"}
             />
           </div>
         ))}
