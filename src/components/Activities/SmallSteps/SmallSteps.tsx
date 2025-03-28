@@ -14,8 +14,6 @@ import { useIsMobile } from '../../../utils/deviceUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
-// TODO завершенные задачи отображать в виде таблицы внизу. Новые записи добавлять в верх списка
-
 const SmallSteps: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
@@ -103,7 +101,8 @@ const SmallSteps: React.FC = () => {
       isActive: false
     };
 
-    const updatedTasks = [...tasks, newTask];
+    // Добавляем новую задачу в начало списка
+    const updatedTasks = [newTask, ...tasks];
     setTasks(updatedTasks);
     setNewTaskTitle('');
     saveToProgress(updatedTasks);
@@ -468,15 +467,27 @@ const SmallSteps: React.FC = () => {
       {completedTasks.length > 0 && (
         <div className={styles.completedTasksSection}>
           <h3>Завершенные задачи</h3>
-          <div className={styles.completedTasksList}>
-            {completedTasks.map(task => (
-              <div key={task.id} className={styles.completedTask}>
-                <div className={styles.completedTaskTitle}>{task.title}</div>
-                <div className={styles.completionMessage}>
-                  Выполнено! 🎉
-                </div>
-              </div>
-            ))}
+          <div className={styles.completedTasksTable}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Задача</th>
+                  <th>Шаги</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody>
+                {completedTasks.map(task => (
+                  <tr key={task.id} className={styles.completedTaskRow}>
+                    <td className={styles.completedTaskTitle}>{task.title}</td>
+                    <td className={styles.completedTaskSteps}>{task.steps.filter(step => !step.isRest).length}</td>
+                    <td className={styles.completedTaskStatus}>
+                      <span className={styles.completionMessage}>Выполнено ✅</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
