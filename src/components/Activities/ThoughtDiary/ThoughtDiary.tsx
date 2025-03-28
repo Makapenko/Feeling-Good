@@ -6,13 +6,14 @@ import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
-import { ThoughtDiaryRecord, ThoughtDiaryExercise, Exercise } from '../../../types/progress.types';
+import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { getCurrentDate, getCurrentISOTimestamp, compareDatesDesc } from '../../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 
@@ -34,43 +35,24 @@ const ThoughtDiary: React.FC = () => {
     }
   });
 
-  // Получаем все записи из прогресса
+  // Получаем все записи из прогресса, используя новую утилиту
   const allRecords = useMemo(() => {
-    if (!dailyProgress) return [];
-
-    const allDayRecords: Array<ThoughtDiaryRecord & { date: string }> = [];
-
-    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
-      if (dayProgress && dayProgress.exercises) {
-        const exercises = dayProgress.exercises.exercises || [];
-        exercises
-          .filter((exercise: Exercise) => 
-            exercise.type === ACTIVITY_IDS.THOUGHT_DIARY && exercise.id === SHEET_ID
-          )
-          .forEach((exercise: Exercise) => {
-            if ('records' in exercise && exercise.type === ACTIVITY_IDS.THOUGHT_DIARY) {
-              // Проверяем тип записей перед добавлением
-              const thoughtDiaryExercise = exercise as ThoughtDiaryExercise;
-              // Сначала преобразуем в unknown, затем фильтруем
-              const records = thoughtDiaryExercise.records as unknown as Record<string, unknown>[];
-              const validRecords = records.filter(record =>
-                'situation' in record &&
-                'emotions' in record &&
-                'automaticThoughts' in record &&
-                'result' in record
-              ) as unknown as ThoughtDiaryRecord[];
-
-              allDayRecords.push(...validRecords.map(record => ({
-                ...record,
-                date
-              })));
-            }
-          });
-      }
-    });
-
-    // Сортируем по дате и времени (новые сверху)
-    return allDayRecords.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+    // Фильтр для проверки правильного формата записей
+    const filterValidRecord = (record: unknown): record is ThoughtDiaryRecord => {
+      return typeof record === 'object' && 
+        record !== null && 
+        'situation' in record &&
+        'emotions' in record &&
+        'automaticThoughts' in record &&
+        'result' in record;
+    };
+    
+    return getAllRecordsFromProgress<ThoughtDiaryRecord>(
+      dailyProgress,
+      ACTIVITY_IDS.THOUGHT_DIARY,
+      SHEET_ID,
+      filterValidRecord
+    );
   }, [dailyProgress]);
 
   const [newEmotion, setNewEmotion] = useState({ name: '', intensity: 0 });

@@ -8,8 +8,9 @@ import { AntiProcrastinationTask } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { getCurrentDate, getCurrentISOTimestamp, compareDatesDesc } from '../../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
@@ -165,28 +166,13 @@ function AntiProcrastinationSheet() {
     }
   }, [todayTasks]);
 
-  // Получаем все записи из прогресса
+  // Получаем все записи из прогресса, используя новую утилиту
   const allTasks = useMemo(() => {
-    if (!dailyProgress) return [];
-
-    const allDayTasks: Array<AntiProcrastinationTask & { date: string }> = [];
-
-    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
-      const exercises = dayProgress.exercises.exercises || [];
-      exercises
-        .filter(exercise => exercise.type === 'anti-procrastination' && exercise.id === SHEET_ID)
-        .forEach(exercise => {
-          if ('records' in exercise) {
-            allDayTasks.push(...(exercise.records as AntiProcrastinationTask[]).map(record => ({
-              ...record,
-              date
-            })));
-          }
-        });
-    });
-
-    // Сортируем по дате и времени (новые сверху)
-    return allDayTasks.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+    return getAllRecordsFromProgress<AntiProcrastinationTask>(
+      dailyProgress,
+      SHEET_ID,
+      SHEET_ID
+    );
   }, [dailyProgress]);
 
   const saveToProgress = (updatedTasks: Task[]) => {

@@ -7,9 +7,10 @@ import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { NoButsExercise, Exercise } from '../../../types/progress.types';
+import { NoButsExercise } from '../../../types/progress.types';
 import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.NO_BUTS;
 
@@ -20,32 +21,13 @@ const NoButsSheet = () => {
   const [newBut, setNewBut] = useState('');
   const [newNoBut, setNewNoBut] = useState('');
 
-  // Получаем все записи из прогресса
+  // Получаем все записи из прогресса с использованием новой утилиты
   const allPairs = useMemo(() => {
-    if (!dailyProgress) return [];
-
-    const allDayPairs: Array<ButPair & { date: string }> = [];
-
-    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
-      if (dayProgress && dayProgress.exercises) {
-        const exercises = dayProgress.exercises.exercises || [];
-        exercises
-          .filter((exercise: Exercise) => 
-            exercise.type === ACTIVITY_IDS.NO_BUTS && exercise.id === SHEET_ID
-          )
-          .forEach((exercise: Exercise) => {
-            if ('records' in exercise) {
-              allDayPairs.push(...(exercise.records as ButPair[]).map(record => ({
-                ...record,
-                date
-              })));
-            }
-          });
-      }
-    });
-
-    // Сортируем по дате и времени (новые сверху)
-    return allDayPairs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return getAllRecordsFromProgress<ButPair>(
+      dailyProgress,
+      ACTIVITY_IDS.NO_BUTS,
+      SHEET_ID
+    ).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [dailyProgress]);
 
   const saveToProgress = (updatedPairs: ButPair[]) => {

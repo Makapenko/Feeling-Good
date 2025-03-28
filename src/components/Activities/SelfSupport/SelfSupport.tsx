@@ -1,13 +1,14 @@
 import { useState, useMemo } from 'react';
 import styles from './SelfSupport.module.css';
-import { SupportStatement, Exercise } from '../../../types/progress.types';
+import { SupportStatement } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { getCurrentISOTimestamp, compareDatesDesc, formatDate } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
+import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
@@ -18,32 +19,13 @@ const SelfSupport = () => {
   const [newDevaluing, setNewDevaluing] = useState('');
   const [newSupporting, setNewSupporting] = useState('');
 
-  // Получаем все записи из прогресса
+  // Получаем все записи из прогресса, используя новую утилиту
   const allStatements = useMemo(() => {
-    if (!dailyProgress) return [];
-
-    const allDayStatements: Array<SupportStatement & { date: string }> = [];
-
-    Object.entries(dailyProgress).forEach(([date, dayProgress]) => {
-      if (dayProgress && dayProgress.exercises) {
-        const exercises = dayProgress.exercises.exercises || [];
-        exercises
-          .filter((exercise: Exercise) => 
-            exercise.type === ACTIVITY_IDS.SELF_SUPPORT && exercise.id === SHEET_ID
-          )
-          .forEach((exercise: Exercise) => {
-            if ('records' in exercise) {
-              allDayStatements.push(...(exercise.records as SupportStatement[]).map(record => ({
-                ...record,
-                date
-              })));
-            }
-          });
-      }
-    });
-
-    // Сортируем по дате и времени (новые сверху)
-    return allDayStatements.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+    return getAllRecordsFromProgress<SupportStatement>(
+      dailyProgress,
+      ACTIVITY_IDS.SELF_SUPPORT,
+      SHEET_ID
+    );
   }, [dailyProgress]);
 
   const saveToProgress = (updatedStatements: SupportStatement[]) => {
