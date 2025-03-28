@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SelfActivationMethods.module.css';
-import { selfActivationMethods } from '../../../data/selfActivationMethods';
+import { selfActivationMethods } from './selfActivationMethods';
 import { useAppDispatch } from '../../../redux/hooks';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import { SpecialContent } from '../../../types/progress.types';
@@ -13,12 +13,14 @@ const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
 
 const SelfActivationMethods: React.FC = () => {
   const dispatch = useAppDispatch();
- // TODO: техника самоподдержки не открывается
   const handleTechniqueClick = (technique: string) => {
     let content: SpecialContent = ACTIVITY_IDS.SELF_ACTIVATION; // Инициализируем default значением
 
     switch (technique) {
       case 'Метод маленьких шагов':
+        content = ACTIVITY_IDS.SMALL_STEPS;
+        break;
+      case 'Маленькими шагами к большой цели':
         content = ACTIVITY_IDS.SMALL_STEPS;
         break;
       case 'Ежедневное расписание дня':
@@ -35,6 +37,9 @@ const SelfActivationMethods: React.FC = () => {
         break;
       case 'Никаких но':
         content = ACTIVITY_IDS.NO_BUTS;
+        break;
+      case 'Техника самоподдержки':
+        content = ACTIVITY_IDS.SELF_SUPPORT;
         break;
       case 'Техника мешающих и помогающих мыслей':
         content = ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS;
