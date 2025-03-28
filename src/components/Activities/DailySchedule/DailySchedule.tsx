@@ -11,23 +11,7 @@ import { addExercise } from '../../../redux/actions';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
-// TODO При добавлении во второй инпут - DailySchedule.tsx:100 Uncaught TypeError: Cannot assign to read only property 'planned' of object '#<Object>'
-//     at DailySchedule.tsx:100:33
-//     at DailySchedule (DailySchedule.tsx:20:37)
-
-// hook.js:608 An error occurred in the <DailySchedule> component.
-
-// Consider adding an error boundary to your tree to customize error handling behavior.
-// Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
-//  Error Component Stack
-//     at DailySchedule (DailySchedule.tsx:17:20)
-//     at ActivityWithBackButton (MainContent.tsx:99:37)
-//     at MainContent (MainContent.tsx:65:20)
-//     at main (<anonymous>)
-//     at div (<anonymous>)
-//     at App (App.tsx:16:20)
-
-
+// TODO: Ошибка была исправлена. Проблема заключалась в неправильном обновлении состояния timeSlots
 
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
@@ -111,30 +95,38 @@ const DailySchedule: React.FC = () => {
   }, [timeSlots, saveSchedule, date]);
 
   const handleActivityChange = useCallback((index: number, text: string, type: 'planned' | 'actual') => {
-
     setTimeSlots(prevSlots => {
       const newTimeSlots = [...prevSlots];
-      if (!newTimeSlots[index][type]) {
-        newTimeSlots[index][type] = {
+      const currentSlot = {...newTimeSlots[index]};
+      
+      if (!currentSlot[type]) {
+        currentSlot[type] = {
           text,
           type: { isTask: false, isPleasure: false },
           ratings: { task: null, pleasure: null }
         };
       } else {
-        newTimeSlots[index][type].text = text;
+        // Создаем новый объект активности, а не изменяем существующий
+        currentSlot[type] = {
+          ...currentSlot[type],
+          text
+        };
       }
+      
+      newTimeSlots[index] = currentSlot;
       return newTimeSlots;
     });
   }, []);
 
   const toggleActivityType = useCallback((index: number, activityType: 'task' | 'pleasure', columnType: 'planned' | 'actual') => {
     setTimeSlots(prevSlots => {
-      const newTimeSlots = prevSlots.map((slot, i) => {
+      return prevSlots.map((slot, i) => {
         if (i !== index) return slot;
 
         const activity = slot[columnType];
         if (!activity) return slot;
 
+        // Создаем новую копию объекта слота
         return {
           ...slot,
           [columnType]: {
@@ -146,7 +138,6 @@ const DailySchedule: React.FC = () => {
           }
         };
       });
-      return newTimeSlots;
     });
   }, []);
 
@@ -157,12 +148,13 @@ const DailySchedule: React.FC = () => {
     value: number
   ) => {
     setTimeSlots(prevSlots => {
-      const newTimeSlots = prevSlots.map((slot, i) => {
+      return prevSlots.map((slot, i) => {
         if (i !== index) return slot;
 
         const activity = slot[columnType];
         if (!activity) return slot;
 
+        // Создаем новую копию объекта слота и всех вложенных объектов
         return {
           ...slot,
           [columnType]: {
@@ -174,7 +166,6 @@ const DailySchedule: React.FC = () => {
           }
         };
       });
-      return newTimeSlots;
     });
   }, []);
 
