@@ -12,8 +12,6 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS;
 
-// TODO Не сохраняет. Возможно проблема что теперь мы используем createBaseExercise а этот компонент переиспользует ThreeColumnsBase и там что то не совпадает (но в NoLoseTechnique и ThreeColumnsMethod все работает, хотя и там тоже переиспользуется)
-
 const HinderingHelpingThoughts: React.FC = () => {
   const dispatch = useAppDispatch();
 

@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 // TODO - поправить верхний и нижний паддинги в таблице старых записей в мобильной версии
 
 interface ThreeColumnsBaseProps {
@@ -42,12 +43,13 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
 
   // Используем специализированный хук для получения прогресса
   const dailyProgress = useDailyProgress();
-  
+
   // Собираем все записи метода, используя новую утилиту
   const allRecords = useMemo(() => {
     return getAllRecordsFromProgress<ThoughtRecord>(
       dailyProgress,
-      ['three-columns-method', 'no-lose-technique'],
+      [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.
+        NO_LOSE_TECHNIQUE, ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS],
       methodId
     );
   }, [dailyProgress, methodId]);
@@ -62,22 +64,24 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
 
       // Получаем текущую дату
       const today = getCurrentDate();
-      
+
       // Получаем существующие записи за сегодня
       const todayProgress = dailyProgress[today];
       let existingRecords: ThoughtRecord[] = [];
-      
+
       if (todayProgress?.exercises?.exercises) {
         const exercise = todayProgress.exercises.exercises.find(
-          ex => (ex.type === 'three-columns-method' || ex.type === 'no-lose-technique') && 
-                ex.id === methodId
+          ex => (ex.type === ACTIVITY_IDS.THREE_COLUMNS_METHOD 
+            || ex.type === ACTIVITY_IDS.NO_LOSE_TECHNIQUE 
+            || ex.type === ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS) 
+            && ex.id === methodId
         );
-        
+
         if (exercise && 'records' in exercise) {
           existingRecords = exercise.records as ThoughtRecord[];
         }
       }
-      
+
       // Объединяем существующие записи с новой
       const updatedRecords = [...existingRecords, newRecord];
 
@@ -147,7 +151,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
         </div>
       </div>
 
-      <button 
+      <button
         className={styles.addButton}
         onClick={handleAddRecord}
         disabled={!currentRecord.leftColumn || !currentRecord.rightColumn}
