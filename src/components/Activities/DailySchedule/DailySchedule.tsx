@@ -11,8 +11,6 @@ import { addExercise } from '../../../redux/actions';
 import { getCurrentDate } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
-// TODO: Ошибка была исправлена. Проблема заключалась в неправильном обновлении состояния timeSlots
-
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
 const DailySchedule: React.FC = () => {

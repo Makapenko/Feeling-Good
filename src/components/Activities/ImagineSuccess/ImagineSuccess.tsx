@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styles from './ImagineSuccess.module.css';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -11,8 +11,6 @@ import { addExercise } from '../../../redux/actions';
 import { useIsMobile } from '../../../utils/deviceUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
-// TODO нужно показывать цели и из прошлых дней, а не только за сегодня
-// TODO Послле загрузки страницы активировать последнюю цель, чтобы ее было видно
 const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
 
 const ImagineSuccess: React.FC = () => {
@@ -25,16 +23,37 @@ const ImagineSuccess: React.FC = () => {
   const isMobile = useIsMobile();
   const [isAddingNewGoal, setIsAddingNewGoal] = useState(false);
 
-  // Получаем все записи из прогресса
+  // Получаем все записи из прогресса, включая записи из прошлых дней
   const records = useMemo(() => {
-    const currentDate = getCurrentDate();
-    const dayProgress = dailyProgress[currentDate];
-    const exercise = dayProgress?.exercises.exercises.find(
-      (ex: Exercise): ex is ImagineSuccessExercise =>
-        ex.type === ACTIVITY_IDS.IMAGINE_SUCCESS && ex.id === SHEET_ID
+    // Собираем все записи из всех дней
+    let allRecords: ImagineSuccessRecord[] = [];
+    
+    // Проходим по всем дням в прогрессе
+    Object.values(dailyProgress).forEach(dayProgress => {
+      const exercise = dayProgress?.exercises.exercises.find(
+        (ex: Exercise): ex is ImagineSuccessExercise =>
+          ex.type === ACTIVITY_IDS.IMAGINE_SUCCESS && ex.id === SHEET_ID
+      );
+      
+      if (exercise?.records?.length) {
+        allRecords = [...allRecords, ...exercise.records];
+      }
+    });
+    
+    // Сортируем по времени создания (от новых к старым)
+    return allRecords.sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
-    return exercise?.records || [];
   }, [dailyProgress]);
+
+  // Активируем последнюю цель после загрузки страницы
+  useEffect(() => {
+    if (records.length > 0 && !currentRecordId) {
+      // Выбираем самую последнюю запись
+      const latestRecord = records[0];
+      selectRecord(latestRecord);
+    }
+  }, [records]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: ImagineSuccessRecord[]) => {
