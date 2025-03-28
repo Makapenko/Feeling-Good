@@ -9,6 +9,7 @@ import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { getCurrentDate, getCurrentISOTimestamp, compareDatesDesc } from '../../../utils/dateUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
@@ -131,7 +132,7 @@ const TaskAnalysis = ({ tasks, title = "Анализ выполненных за
   );
 };
 
-const AntiProcrastinationSheet = () => {
+function AntiProcrastinationSheet() {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
   
@@ -200,11 +201,7 @@ const AntiProcrastinationSheet = () => {
     // Диспатчим действие в Redux
     dispatch(addExercise({
       exercise: {
-        type: SHEET_ID,
-        id: SHEET_ID,
-        name: 'Листок антипрокрастинации',
-        completed: true,
-        completedAt: getCurrentISOTimestamp(),
+        ...createBaseExercise(SHEET_ID),
         records
       },
       showNotification: false
@@ -388,6 +385,7 @@ const AntiProcrastinationSheet = () => {
       )}
     </div>
   );
-};
+}
 
-export default AntiProcrastinationSheet; 
+// Экспортируем компонент явно
+export default AntiProcrastinationSheet;

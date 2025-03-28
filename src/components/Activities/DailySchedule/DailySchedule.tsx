@@ -4,11 +4,30 @@ import { TimeSlot } from './types';
 import ActivityColumn from './ActivityColumn';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { DailyScheduleExercise } from '../../../types/progress.types';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getCurrentDate } from '../../../utils/dateUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
+
+// TODO При добавлении во второй инпут - DailySchedule.tsx:100 Uncaught TypeError: Cannot assign to read only property 'planned' of object '#<Object>'
+//     at DailySchedule.tsx:100:33
+//     at DailySchedule (DailySchedule.tsx:20:37)
+
+// hook.js:608 An error occurred in the <DailySchedule> component.
+
+// Consider adding an error boundary to your tree to customize error handling behavior.
+// Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+//  Error Component Stack
+//     at DailySchedule (DailySchedule.tsx:17:20)
+//     at ActivityWithBackButton (MainContent.tsx:99:37)
+//     at MainContent (MainContent.tsx:65:20)
+//     at main (<anonymous>)
+//     at div (<anonymous>)
+//     at App (App.tsx:16:20)
+
+
 
 const SHEET_ID = ACTIVITY_IDS.DAILY_SCHEDULE;
 
@@ -68,11 +87,7 @@ const DailySchedule = () => {
   const saveSchedule = useCallback(() => {
     if (!date) return;
     const exercise: DailyScheduleExercise = {
-      type: ACTIVITY_IDS.DAILY_SCHEDULE,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.DAILY_SCHEDULE],
-      completed: true,
-      completedAt: getCurrentISOTimestamp(),
+      ...createBaseExercise(SHEET_ID),
       date: date, // Используем выбранную дату
       timeSlots
     };

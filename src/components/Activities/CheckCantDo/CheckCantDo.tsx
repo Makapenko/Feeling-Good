@@ -5,11 +5,12 @@ import { addExercise } from '../../../redux/actions';
 import { CheckCantDoRecord, CheckCantDoExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate, getCurrentISOTimestamp, formatDateWithOptions } from '../../../utils/dateUtils';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { useIsMobile } from '../../../utils/deviceUtils';
 import { compareDatesDesc } from '../../../utils/dateUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 // TODO Галочка в чегбоксе - кривая
 
@@ -37,11 +38,7 @@ const CheckCantDo: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: CheckCantDoRecord[]) => {
     const exercise: CheckCantDoExercise = {
-      type: ACTIVITY_IDS.CHECK_CANT_DO,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.CHECK_CANT_DO],
-      completed: true,
-      completedAt: getCurrentISOTimestamp(),
+      ...createBaseExercise(SHEET_ID),
       records: updatedRecords
     };
 

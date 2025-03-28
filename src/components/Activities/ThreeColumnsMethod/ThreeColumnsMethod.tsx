@@ -8,6 +8,7 @@ import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.THREE_COLUMNS_METHOD;
 
@@ -23,8 +24,7 @@ const ThreeColumnsMethod: React.FC = () => {
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: ThreeColumnsExercise = {
-      type: ACTIVITY_IDS.THREE_COLUMNS_METHOD,
-      id: result.id,
+      ...createBaseExercise(SHEET_ID, result.id),
       name: result.name,
       completed: result.completed,
       completedAt: result.completedAt,

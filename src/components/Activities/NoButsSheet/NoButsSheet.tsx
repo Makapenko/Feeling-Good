@@ -3,12 +3,13 @@ import styles from './NoButsSheet.module.css';
 import { ButPair } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { NoButsExercise, Exercise } from '../../../types/progress.types';
 import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.NO_BUTS;
 
@@ -49,11 +50,7 @@ const NoButsSheet = () => {
 
   const saveToProgress = (updatedPairs: ButPair[]) => {
     const exercise: NoButsExercise = {
-      type: SHEET_ID,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.NO_BUTS],
-      completed: true,
-      completedAt: getCurrentISOTimestamp(),
+      ...createBaseExercise(SHEET_ID),
       records: updatedPairs.map(pair => ({
         ...pair,
         timestamp: getCurrentISOTimestamp()
@@ -207,4 +204,4 @@ const NoButsSheet = () => {
   );
 };
 
-export default NoButsSheet; 
+export default NoButsSheet;

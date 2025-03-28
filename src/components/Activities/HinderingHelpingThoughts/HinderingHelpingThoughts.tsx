@@ -8,8 +8,11 @@ import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS;
+
+// TODO Не сохраняет. Возможно проблема что теперь мы используем createBaseExercise а этот компонент переиспользует ThreeColumnsBase и там что то не совпадает (но в NoLoseTechnique и ThreeColumnsMethod все работает, хотя и там тоже переиспользуется)
 
 const HinderingHelpingThoughts: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,8 +26,7 @@ const HinderingHelpingThoughts: React.FC = () => {
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
     const exercise: ThreeColumnsExercise = {
-      type: SHEET_ID,
-      id: result.id,
+      ...createBaseExercise(SHEET_ID, result.id),
       name: result.name,
       completed: result.completed,
       completedAt: result.completedAt,

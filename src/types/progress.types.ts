@@ -1,6 +1,18 @@
 import { ThoughtRecord } from '../components/Activities/ThreeColumnsBase/types';
 import { ActivityId } from '../constants/activities';
 
+/**
+ * Базовый интерфейс для всех упражнений.
+ * Содержит общие поля, присутствующие во всех типах упражнений.
+ */
+export interface BaseExercise {
+  type: ActivityId;  // ID типа активности (упражнения)
+  id: string;        // Уникальный идентификатор конкретного экземпляра упражнения
+  name: string;      // Имя упражнения, вычисляемое из type через ACTIVITY_NAMES
+  completed: boolean;
+  completedAt: string;
+}
+
 export interface TestResult {
   id: string;
   name: string;
@@ -26,21 +38,11 @@ export interface ThoughtDiaryRecord {
   timeSpent?: number;
 }
 
-export interface ThoughtDiaryExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface ThoughtDiaryExercise extends BaseExercise {
   records: ThoughtDiaryRecord[];
 }
 
-export interface ThreeColumnsExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface ThreeColumnsExercise extends BaseExercise {
   records: ThoughtRecord[];
 }
 
@@ -58,12 +60,7 @@ export interface DailyScheduleRecord {
   } | null;
 }
 
-export interface DailyScheduleExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface DailyScheduleExercise extends BaseExercise {
   date: string;
   timeSlots: DailyScheduleRecord[];
 }
@@ -79,12 +76,7 @@ export interface AntiProcrastinationTask {
   timestamp: string;
 }
 
-export interface AntiProcrastinationExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface AntiProcrastinationExercise extends BaseExercise {
   records: AntiProcrastinationTask[];
 }
 
@@ -98,12 +90,7 @@ export interface PleasureSheetActivity {
   date: string;
 }
 
-export interface PleasureSheetExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface PleasureSheetExercise extends BaseExercise {
   records: PleasureSheetActivity[];
 }
 
@@ -114,12 +101,7 @@ export interface NoButsPair {
   timestamp: string;
 }
 
-export interface NoButsExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface NoButsExercise extends BaseExercise {
   records: NoButsPair[];
 }
 
@@ -130,12 +112,7 @@ export interface SupportStatement {
   timestamp: string;
 }
 
-export interface SelfSupportExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface SelfSupportExercise extends BaseExercise {
   records: SupportStatement[];
 }
 
@@ -158,12 +135,7 @@ export interface SmallStepsTask {
   currentStepId?: string;
 }
 
-export interface SmallStepsExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface SmallStepsExercise extends BaseExercise {
   records: SmallStepsTask[];
 }
 
@@ -175,12 +147,7 @@ export interface MotivationWithoutCoercionRecord {
   timestamp: string;
 }
 
-export interface MotivationWithoutCoercionExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface MotivationWithoutCoercionExercise extends BaseExercise {
   records: MotivationWithoutCoercionRecord[];
 }
 
@@ -194,12 +161,7 @@ export interface ImagineSuccessRecord {
   timestamp: string;
 }
 
-export interface ImagineSuccessExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface ImagineSuccessExercise extends BaseExercise {
   records: ImagineSuccessRecord[];
 }
 
@@ -209,12 +171,7 @@ export interface CountAchievementsRecord {
   timestamp: string;
 }
 
-export interface CountAchievementsExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface CountAchievementsExercise extends BaseExercise {
   records: CountAchievementsRecord[];
 }
 
@@ -226,12 +183,7 @@ export interface CheckCantDoRecord {
   timestamp: string;
 }
 
-export interface CheckCantDoExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface CheckCantDoExercise extends BaseExercise {
   records: CheckCantDoRecord[];
 }
 
@@ -243,12 +195,7 @@ export interface NoLoseTechniqueRecord {
   timestamp: string;
 }
 
-export interface NoLoseTechniqueExercise {
-  type: ActivityId;
-  id: string;
-  name: string;
-  completed: boolean;
-  completedAt: string;
+export interface NoLoseTechniqueExercise extends BaseExercise {
   records: NoLoseTechniqueRecord[];
 }
 

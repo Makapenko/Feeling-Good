@@ -5,10 +5,11 @@ import { addExercise } from '../../../redux/actions';
 import { CountAchievementsRecord, CountAchievementsExercise, Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate, getCurrentISOTimestamp, formatDateWithOptions, formatTime, compareDatesDesc } from '../../../utils/dateUtils';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { useIsMobile } from '../../../utils/deviceUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.COUNT_ACHIEVEMENTS;
 
@@ -32,11 +33,7 @@ const CountAchievements: React.FC = () => {
   // Сохраняем обновленные записи в прогресс
   const saveToProgress = (updatedRecords: CountAchievementsRecord[]) => {
     const exercise: CountAchievementsExercise = {
-      type: ACTIVITY_IDS.COUNT_ACHIEVEMENTS,
-      id: SHEET_ID,
-      name: ACTIVITY_NAMES[ACTIVITY_IDS.COUNT_ACHIEVEMENTS],
-      completed: true,
-      completedAt: getCurrentISOTimestamp(),
+      ...createBaseExercise(SHEET_ID),
       records: updatedRecords
     };
 
