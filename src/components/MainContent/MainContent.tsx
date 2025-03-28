@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styles from './MainContent.module.css';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useCurrentChapter, useSpecialContent } from '../../redux/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import ChapterContainer from '../ChapterReader/ChapterContainer';
@@ -63,19 +63,20 @@ const ACTIVITY_COMPONENTS = {
 
 const MainContent: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const currentChapter = useCurrentChapter();
+  const specialContent = useSpecialContent();
   
   useEffect(() => {
-    if (progress.currentChapter?.id) {
-      dispatch(startChapterReading(progress.currentChapter.id));
+    if (currentChapter?.id) {
+      dispatch(startChapterReading(currentChapter.id));
     }
-  }, [progress.currentChapter?.id, dispatch]);
+  }, [currentChapter?.id, dispatch]);
 
   // Эффект для прокрутки страницы наверх при смене контента
   useEffect(() => {
     // Прокручиваем страницу наверх только при изменении ID главы или типа специального контента
     window.scrollTo(0, 0);
-  }, [progress.currentChapter?.id, progress.specialContent]);
+  }, [currentChapter?.id, specialContent]);
 
   const handleTestComplete = (result: SurveyResult) => {
     dispatch(saveTestResultWithNotification({
@@ -107,18 +108,18 @@ const MainContent: React.FC = () => {
 
   // Рендерим контент в зависимости от текущей активности
   const renderContent = () => {
-    const specialContent = progress.specialContent as keyof typeof ACTIVITY_COMPONENTS;
+    const specialContentType = specialContent as keyof typeof ACTIVITY_COMPONENTS;
     
     // Специальные случаи
-    if (specialContent === 'today-tasks') {
+    if (specialContentType === 'today-tasks') {
       return <TodayTasks />;
     }
     
-    if (specialContent === 'progress-calendar') {
+    if (specialContentType === 'progress-calendar') {
       return <ProgressCalendar />;
     }
     
-    if (specialContent === 'cognitive-biases-test') {
+    if (specialContentType === 'cognitive-biases-test') {
       return (
         <ActivityWithBackButton>
           <TestOfCognitiveBiases onComplete={handleTestComplete} />
@@ -127,10 +128,10 @@ const MainContent: React.FC = () => {
     }
     
     // Основной контент из маппинга активностей
-    if (specialContent && ACTIVITY_COMPONENTS[specialContent]) {
-      const ActivityComponent = ACTIVITY_COMPONENTS[specialContent];
+    if (specialContentType && ACTIVITY_COMPONENTS[specialContentType]) {
+      const ActivityComponent = ACTIVITY_COMPONENTS[specialContentType];
       
-      if (specialContent === 'welcome') {
+      if (specialContentType === 'welcome') {
         return <ActivityComponent />;
       }
       
@@ -142,8 +143,8 @@ const MainContent: React.FC = () => {
     }
     
     // Рендеринг главы или дефолтного контента
-    if (progress.currentChapter) {
-      const { id, content } = progress.currentChapter;
+    if (currentChapter) {
+      const { id, content } = currentChapter;
       return (
         <>
           <div className={styles.mobileBackButton} onClick={handleBackToChapters}>

@@ -1,4 +1,4 @@
-import { Exercise } from '../../types/progress.types';
+import { Exercise, SpecialContent } from '../../types/progress.types';
 
 export interface ChapterMap {
   [key: string]: {
@@ -29,6 +29,7 @@ export interface CalendarDayProgress {
       score?: number;
       maxScore?: number;
       completedAt: string;
+      content?: SpecialContent;
     }[];
     exercises?: Exercise[];
   };

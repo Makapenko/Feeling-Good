@@ -7,18 +7,21 @@ interface ThreeColumnsExerciseProps {
   exercise: ThreeColumnsExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const ThreeColumnsExerciseComponent: React.FC<ThreeColumnsExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise,
+  onClose 
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.recordsList}>
         {exercise.records.map((record, index) => (

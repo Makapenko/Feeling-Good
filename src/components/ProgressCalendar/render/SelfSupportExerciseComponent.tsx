@@ -7,18 +7,21 @@ interface SelfSupportExerciseProps {
   exercise: SelfSupportExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const SelfSupportExerciseComponent: React.FC<SelfSupportExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise ,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.statementsTable}>
         <div className={styles.tableHeader}>

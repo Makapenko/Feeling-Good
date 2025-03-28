@@ -7,12 +7,14 @@ interface PleasureSheetExerciseProps {
   exercise: PleasureSheetExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const PleasureSheetExerciseComponent: React.FC<PleasureSheetExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise ,
+  onClose
 }) => {
   const getComparisonClass = (actual: number | null, expected: number) => {
     if (actual === null) return '';
@@ -25,6 +27,7 @@ const PleasureSheetExerciseComponent: React.FC<PleasureSheetExerciseProps> = ({
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.activityList}>
         {exercise.records.map((activity, index) => (

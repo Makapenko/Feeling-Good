@@ -7,18 +7,21 @@ interface AntiProcrastinationExerciseProps {
   exercise: AntiProcrastinationExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const AntiProcrastinationExerciseComponent: React.FC<AntiProcrastinationExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.tasksList}>
         {exercise.records.map((task, index) => (

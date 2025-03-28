@@ -146,6 +146,37 @@
   justify-content: space-between;
   padding: 8px;
   border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.chapterInfo {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chapterActions {
+  margin-left: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.chapterButton {
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.chapterButton:hover {
+  background-color: #3182ce;
 }
 
 .chapterGroup {
@@ -155,6 +186,12 @@
 .parentChapter {
   font-weight: bold;
   margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: #f8fafc;
+  border-radius: 4px;
 }
 
 .subChapter {
@@ -162,6 +199,7 @@
   justify-content: space-between;
   padding: 8px 8px 8px 20px;
   border-bottom: 1px solid #eee;
+  align-items: center;
 }
 
 .exerciseSection {
@@ -189,6 +227,12 @@
 .exerciseHeader h4 {
   margin: 0;
   color: #333;
+}
+
+.exerciseActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .exerciseContent {
@@ -834,15 +878,30 @@
   }
 
   .chapter, .test {
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    align-items: center;
     padding: 10px;
   }
 
-  .subChapter {
+  .chapterInfo {
+    flex: 1;
     flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
+  }
+
+  .subChapter {
+    flex-direction: row;
+    align-items: center;
     padding: 10px 10px 10px 16px;
+  }
+
+  .parentChapter {
+    padding: 10px;
+  }
+
+  .parentChapter .chapterInfo {
+    flex-direction: row;
   }
 
   .tableHeader,
@@ -870,5 +929,17 @@
   .timeHeader, .columnHeader, .timeCell, .activityCell {
     padding: 8px;
     font-size: 0.875rem;
+  }
+
+  .exerciseHeader {
+    padding: 12px;
+  }
+
+  .exerciseHeader h4 {
+    font-size: 0.95rem;
+  }
+
+  .exerciseActions {
+    gap: 8px;
   }
 } 

@@ -4,6 +4,10 @@ import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
 import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise } from '../../types/progress.types';
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
+import { formatDateWithOptions, formatTimeFromSeconds } from '../../utils/dateUtils';
+import { useAppDispatch } from '../../redux/hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
 import ThreeColumnsExerciseComponent from './render/ThreeColumnsExerciseComponent';
 import ThoughtDiaryExerciseComponent from './render/ThoughtDiaryExerciseComponent';
 import DailyScheduleExerciseComponent from './render/DailyScheduleExerciseComponent';
@@ -18,8 +22,7 @@ import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseCompon
 import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
 import { ACTIVITY_IDS } from '../../constants/activities';
-
-// TODO Сделать ссылки на главы и упражнения
+import { loadChapter } from '../../redux/actions/chapterActions';
 
 interface DayDetailsProps {
   date: string;
@@ -29,6 +32,30 @@ interface DayDetailsProps {
 }
 
 type ActiveTab = 'chapters' | 'tests' | 'exercises';
+
+/**
+ * Кнопка для перехода к главе
+ */
+const ChapterButton: React.FC<{ chapterId: string, onClose: () => void }> = ({ chapterId, onClose }) => {
+  const dispatch = useAppDispatch();
+  
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Предотвращаем всплытие события
+    dispatch(loadChapter(chapterId));
+    onClose(); // Закрываем модальное окно после перехода
+  };
+  
+  return (
+    <button
+      className={styles.chapterButton}
+      onClick={handleClick}
+      aria-label="Открыть главу"
+      title="Перейти к чтению главы"
+    >
+      <FontAwesomeIcon icon={faBook} />
+    </button>
+  );
+};
 
 export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, onClose }) => {
   const [expandedExercises, setExpandedExercises] = useState<string[]>([]);
@@ -40,12 +67,6 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
         ? prev.filter(id => id !== exerciseId)
         : [...prev, exerciseId]
     );
-  };
-
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   const groupChaptersByParent = (chapters: NonNullable<typeof dayProgress.chapters>) => {
@@ -76,6 +97,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as ThreeColumnsExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.THOUGHT_DIARY:
           return <ThoughtDiaryExerciseComponent
@@ -83,6 +105,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as ThoughtDiaryExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.DAILY_SCHEDULE:
           return <DailyScheduleExerciseComponent
@@ -90,6 +113,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as DailyScheduleExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.ANTI_PROCRASTINATION:
           return <AntiProcrastinationExerciseComponent
@@ -97,6 +121,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as AntiProcrastinationExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.PLEASURE_SHEET:
           return <PleasureSheetExerciseComponent
@@ -104,6 +129,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as PleasureSheetExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.NO_BUTS:
           return <NoButsExerciseComponent
@@ -111,6 +137,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as NoButsExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.SELF_SUPPORT:
           return <SelfSupportExerciseComponent
@@ -118,6 +145,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as SelfSupportExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.SMALL_STEPS:
           return <SmallStepsExerciseComponent
@@ -125,6 +153,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as SmallStepsExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION:
           return <MotivationWithoutCoercionExerciseComponent
@@ -132,6 +161,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as MotivationWithoutCoercionExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.IMAGINE_SUCCESS:
           return <ImagineSuccessExerciseComponent
@@ -139,20 +169,23 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as ImagineSuccessExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.COUNT_ACHIEVEMENTS:
           return <CountAchievementsExerciseComponent
-          key={exercise.id}
-          exercise={exercise as CountAchievementsExercise}
-          expandedExercises={expandedExercises}
-          toggleExercise={toggleExercise}
-        />;
+            key={exercise.id}
+            exercise={exercise as CountAchievementsExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+          />;
         case ACTIVITY_IDS.CHECK_CANT_DO:
           return <CheckCantDoExerciseComponent
             key={exercise.id}
             exercise={exercise as CheckCantDoExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         case ACTIVITY_IDS.NO_LOSE_TECHNIQUE:
           return <NoLoseTechniqueExerciseComponent
@@ -160,6 +193,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             exercise={exercise as NoLoseTechniqueExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
+            onClose={onClose}
           />;
         default:
           return null;
@@ -177,19 +211,31 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
       <>
         {standalone.map(chapter => (
           <div key={chapter.id} className={styles.chapter}>
-            <span>{chapter.title}</span>
-            <span>{formatTime(chapter.timeSpent)}</span>
+            <div className={styles.chapterInfo}>
+              <span>{chapter.title}</span>
+              <span>{formatTimeFromSeconds(chapter.timeSpent)}</span>
+            </div>
+            <div className={styles.chapterActions}>
+              <ChapterButton chapterId={chapter.id} onClose={onClose} />
+            </div>
           </div>
         ))}
         {Object.entries(grouped).map(([parentId, subChapters]) => (
           <div key={parentId} className={styles.chapterGroup}>
             <div className={styles.parentChapter}>
-              {chapterMap[parentId]?.title}
+              <div className={styles.chapterInfo}>
+                {chapterMap[parentId]?.title}
+              </div>
             </div>
             {subChapters.map(chapter => (
               <div key={chapter.id} className={styles.subChapter}>
-                <span>{chapter.title}</span>
-                <span>{formatTime(chapter.timeSpent)}</span>
+                <div className={styles.chapterInfo}>
+                  <span>{chapter.title}</span>
+                  <span>{formatTimeFromSeconds(chapter.timeSpent)}</span>
+                </div>
+                <div className={styles.chapterActions}>
+                  <ChapterButton chapterId={chapter.id} onClose={onClose} />
+                </div>
               </div>
             ))}
           </div>
@@ -226,7 +272,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <div className={styles.header}>
-          <h2>{new Date(date).toLocaleDateString('ru-RU', {
+          <h2>{formatDateWithOptions(date, {
             day: 'numeric',
             month: 'long',
             year: 'numeric'
@@ -238,12 +284,12 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
           <div className={styles.summary}>
             <div className={styles.stat}>
               <span>📖</span>
-              <strong>{dayProgress.chapters && formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</strong>
+              <strong>{dayProgress.chapters && formatTimeFromSeconds(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</strong>
             </div>
             <div className={styles.stat}>
               <span>😎</span>
-              <strong>{formatTime(
-                getStoredActivityTime(ACTIVITY_IDS.THREE_COLUMNS_METHOD) + 
+              <strong>{formatTimeFromSeconds(
+                getStoredActivityTime(ACTIVITY_IDS.THREE_COLUMNS_METHOD) +
                 getStoredActivityTime(ACTIVITY_IDS.THOUGHT_DIARY)
               )}</strong>
             </div>
@@ -262,19 +308,19 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
           </div>
 
           <div className={styles.tabsContainer}>
-            <button 
+            <button
               className={`${styles.tabButton} ${activeTab === 'chapters' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('chapters')}
             >
               Главы
             </button>
-            <button 
+            <button
               className={`${styles.tabButton} ${activeTab === 'tests' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('tests')}
             >
               Тесты
             </button>
-            <button 
+            <button
               className={`${styles.tabButton} ${activeTab === 'exercises' ? styles.activeTab : ''}`}
               onClick={() => setActiveTab('exercises')}
             >

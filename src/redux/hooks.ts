@@ -20,7 +20,8 @@ import {
   selectIsChapterAvailable,
   selectIsActivityAvailable,
   selectIsFavoriteActivity,
-  selectTimeSpentByChapter
+  selectTimeSpentByChapter,
+  selectNotifications
 } from './selectors';
 import { SpecialContent } from '../types/progress.types';
 
@@ -39,6 +40,10 @@ export const useCompletedChapters = () => useAppSelector(selectCompletedChapters
 export const useFavoriteActivities = () => useAppSelector(selectFavoriteActivities);
 export const useLastUnlockedChapter = () => useAppSelector(selectLastUnlockedChapter);
 export const useLastUnlockedActivities = () => useAppSelector(selectLastUnlockedActivities);
+export const useNotifications = () => useAppSelector(selectNotifications);
+
+// Хук для получения активной вкладки мобильного интерфейса
+export const useActiveTab = () => useAppSelector(state => state.mobile.activeTab);
 
 // Мемоизированные селекторы с параметрами
 export const useTodayProgress = () => useAppSelector(selectTodayProgress);

@@ -2,17 +2,17 @@ import styles from './ListOfChapters.module.css';
 import chaptersData from './chapters.json';
 import { useState } from 'react';
 import type { Chapter, ChaptersData, Section } from '../../types/chapters.types';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useUnlockedContent, useCompletedChapters, useCurrentChapter } from '../../redux/hooks';
 import { setCurrentChapter } from '../../redux/slices/progressSlice';
-
-//TODO Удалить галочку при прочтении главы, вместо этого закрашивать зелёным стрелочку
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 
 function ListOfChapters() {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
+  const unlockedContent = useUnlockedContent();
+  const completedChapters = useCompletedChapters();
+  const currentChapter = useCurrentChapter();
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
 
   const toggleChapter = (chapterId: string) => {
@@ -29,22 +29,22 @@ function ListOfChapters() {
 
   // Проверяет, завершена ли конкретная подглава
   const isSubchapterCompleted = (subchapterId: string): boolean => {
-    return progress.completedChapters.includes(subchapterId);
+    return completedChapters.includes(subchapterId);
   };
 
   // Проверяет доступность главы
   const isChapterAvailable = (chapterId: string): boolean => {
     // Если есть маркер 'all', все доступно
-    if (progress.unlockedContent?.chapters?.includes('all')) {
+    if (unlockedContent?.chapters?.includes('all')) {
       return true;
     }
-    return progress.unlockedContent?.chapters?.includes(chapterId) ?? false;
+    return unlockedContent?.chapters?.includes(chapterId) ?? false;
   };
 
   // Проверяет доступность подглавы
   const isSubchapterAvailable = (chapter: Chapter, sectionId: string): boolean => {
     // Если есть маркер 'all', все подглавы доступны
-    if (progress.unlockedContent?.chapters?.includes('all')) {
+    if (unlockedContent?.chapters?.includes('all')) {
       return true;
     }
 
@@ -54,7 +54,7 @@ function ListOfChapters() {
     }
 
     // Проверяем, разблокирована ли конкретная подглава
-    return progress.unlockedContent?.chapters?.includes(sectionId);
+    return unlockedContent?.chapters?.includes(sectionId);
   };
 
   // Проверяет, завершены ли все подглавы главы
@@ -109,11 +109,13 @@ function ListOfChapters() {
                         className={`${styles.chapterTitle} ${styles.accordion} 
                           ${isExpanded ? styles.expanded : ''} 
                           ${isChapterCompleted ? styles.completed : ''}
-                          ${progress.currentChapter?.id === chapterId ? styles.active : ''}`}
+                          ${currentChapter?.id === chapterId ? styles.active : ''}`}
                         onClick={() => toggleChapter(chapterId)}
                       >
                         <span>{chapter.title}</span>
-                        <span className={styles.arrow}>{isExpanded ? '▼' : '▶'}</span>
+                        <span className={`${styles.arrow} ${isChapterCompleted ? styles.completedArrow : ''}`}>
+                          {isExpanded ? '▼' : '▶'}
+                        </span>
                       </div>
                       {isExpanded && (
                         <ul className={styles.subSections}>
@@ -128,7 +130,7 @@ function ListOfChapters() {
                                 ${styles.sectionItem} 
                                 ${!isSubchapterAvailable(chapter, section.id) ? styles.disabled : ''}
                                 ${isSubchapterCompleted(section.id) ? styles.completed : ''}
-                                ${progress.currentChapter?.id === section.id ? styles.active : ''}
+                                ${currentChapter?.id === section.id ? styles.active : ''}
                               `}
                             >
                               {section.title}
@@ -144,10 +146,10 @@ function ListOfChapters() {
                         ${styles.chapterItem} 
                         ${!isAvailable ? styles.disabled : ''}
                         ${isChapterCompleted ? styles.completed : ''}
-                        ${progress.currentChapter?.id === chapter.id ? styles.active : ''}
+                        ${currentChapter?.id === chapter.id ? styles.active : ''}
                       `}
-                  >
-                    {chapter.title}
+                    >
+                      {chapter.title}
                     </div>
                   )}
                   </li>

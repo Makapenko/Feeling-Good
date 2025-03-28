@@ -7,18 +7,21 @@ interface ThoughtDiaryExerciseProps {
   exercise: ThoughtDiaryExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const ThoughtDiaryExerciseComponent: React.FC<ThoughtDiaryExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.recordsList}>
         {exercise.records.map((record, index) => (

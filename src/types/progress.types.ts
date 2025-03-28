@@ -8,6 +8,7 @@ export interface TestResult {
   score?: number;
   maxScore?: number;
   completedAt: string; // ISO date string
+  content?: SpecialContent; // ID типа активности, связанной с тестом
 }
 
 export interface ThoughtDiaryRecord {

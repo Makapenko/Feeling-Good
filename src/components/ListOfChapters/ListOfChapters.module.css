@@ -82,6 +82,11 @@
   color: #718096;
 }
 
+.completedArrow {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
 .expanded .arrow {
   transform: rotate(0deg);
 }
@@ -98,14 +103,6 @@
 .completed {
   position: relative;
   color: #4CAF50;
-}
-
-.completed::after {
-  content: '✓';
-  position: absolute;
-  right: 8px;
-  color: #4CAF50;
-  font-weight: 600;
 }
 
 .subSections {
@@ -232,6 +229,11 @@
     color: #a0aec0;
   }
 
+  .completedArrow {
+    color: #4CAF50;
+    font-weight: bold;
+  }
+
   .subSections {
     margin-left: 12px;
     margin-top: 4px;
@@ -279,8 +281,7 @@
   }
 
   .completed::after {
-    right: 12px;
-    font-size: 1.1rem;
+    content: '';
   }
 
   .disabled {

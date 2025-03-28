@@ -7,18 +7,21 @@ interface NoLoseTechniqueExerciseProps {
   exercise: NoLoseTechniqueExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const NoLoseTechniqueExerciseComponent: React.FC<NoLoseTechniqueExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise ,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.recordsList}>
         {exercise.records.map((record) => (

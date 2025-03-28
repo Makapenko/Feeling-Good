@@ -31,6 +31,15 @@ export const formatTime = (
   });
 };
 
+/**
+ * Форматирует секунды в читаемый формат времени (минуты:секунды)
+ */
+export const formatTimeFromSeconds = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
 export const compareDatesDesc = (dateA: string, dateB: string): number => {
   return new Date(dateB).getTime() - new Date(dateA).getTime();
 };

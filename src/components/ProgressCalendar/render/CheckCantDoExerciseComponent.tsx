@@ -7,22 +7,22 @@ interface  CheckCantDoExerciseProps {
   exercise: CheckCantDoExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const CheckCantDoExerciseComponent:React.FC<CheckCantDoExerciseProps> = ({
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
-      <div className={styles.exerciseSection}>
-        <h3>{exercise.name}</h3>
-        <div className={styles.cantDoList}>
           {exercise.records.map((record) => (
             <div key={record.id} className={styles.cantDoItem}>
               <div className={styles.cantDoHeader}>
@@ -42,8 +42,6 @@ const CheckCantDoExerciseComponent:React.FC<CheckCantDoExerciseProps> = ({
               </div>
             </div>
           ))}
-        </div>
-      </div>
     </ExerciseWrapper>
   );
 };

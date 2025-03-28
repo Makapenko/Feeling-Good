@@ -7,18 +7,21 @@ interface DailyScheduleExerciseProps {
   exercise: DailyScheduleExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const DailyScheduleExerciseComponent: React.FC<DailyScheduleExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.scheduleTable}>
         <div className={styles.scheduleHeaders}>

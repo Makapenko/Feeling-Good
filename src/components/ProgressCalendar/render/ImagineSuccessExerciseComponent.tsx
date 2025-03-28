@@ -7,21 +7,22 @@ interface ImagineSuccessExerciseProps {
   exercise: ImagineSuccessExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const ImagineSuccessExerciseComponent: React.FC<ImagineSuccessExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise ,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
-      <div className={styles.exerciseSection}>
-        <h3>{exercise.name}</h3>
         {exercise.records.map((record: ImagineSuccessRecord) => (
           <div key={record.id} className={styles.record}>
             <div className={styles.timestamp}>
@@ -42,7 +43,6 @@ const ImagineSuccessExerciseComponent: React.FC<ImagineSuccessExerciseProps> = (
             </div>
           </div>
         ))}
-      </div>
     </ExerciseWrapper>
   );
 };

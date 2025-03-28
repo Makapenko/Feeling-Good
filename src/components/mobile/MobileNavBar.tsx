@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import styles from './MobileNavBar.module.css';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useActiveTab } from '../../redux/hooks';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
 import { ACTIVITY_IDS } from '../../constants/activities';
@@ -51,7 +51,7 @@ const navItems: NavItem[] = [
 ];
 
 const MobileNavBar: FC = () => {
-  const activeTab = useAppSelector(state => state.mobile.activeTab);
+  const activeTab = useActiveTab();
   const dispatch = useAppDispatch();
   
   const handleTabChange = (tab: MobileTab) => {

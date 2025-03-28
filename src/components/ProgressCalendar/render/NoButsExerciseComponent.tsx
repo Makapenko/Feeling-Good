@@ -7,19 +7,22 @@ interface NoButsExerciseProps {
   exercise: NoButsExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 
 const NoButsExerciseComponent: React.FC<NoButsExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise ,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
       <div className={styles.pairsTable}>
         <div className={styles.tableHeader}>

@@ -1,12 +1,11 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useNotifications } from '../../redux/hooks';
 import { removeNotification } from '../../redux/slices/notificationSlice';
 import NotificationToast from './NotificationToast';
 import styles from './NotificationContainer.module.css';
-import { selectNotifications } from '../../redux/selectors';
 
 const NotificationContainer: React.FC = () => {
-  const notifications = useAppSelector(selectNotifications);
+  const notifications = useNotifications();
   const dispatch = useAppDispatch();
 
   if (notifications.length === 0) {

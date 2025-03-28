@@ -13,8 +13,9 @@ import { useAppDispatch } from '../../redux/hooks';
 import { completeChapter, loadChapter } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 
-// TODO Не работают примечания
 // TODO Сравнить два таймера и объединить в один, который работает во всех активностях
+
+// TODO Примечание на телефонах не работают
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -34,7 +35,7 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     return chapterToActivitiesMap[chapterId] || [];
   }, [chapterId]);
 
-  // Обработчик кликов по изображениям
+  // Обработчик кликов только по изображениям
   useEffect(() => {
     const handleImageClick = (e: Event) => {
       const target = e.target as HTMLElement;

@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { useAppSelector } from '../../redux/hooks';
+import { useDailyProgress } from '../../redux/hooks';
 import styles from './ProgressCalendar.module.css';
 import chaptersData from '../ListOfChapters/chapters.json';
 import { DayDetails } from './DayDetails';
 import { ChapterMap, CalendarDayProgress } from './types';
+import { formatTimeFromSeconds, formatDateWithOptions, getCurrentDate } from '../../utils/dateUtils';
 
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 const ProgressCalendar: React.FC = () => {
-  const progress = useAppSelector(state => state.progress);
+  const dailyProgressData = useDailyProgress();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(() => {
     const today = new Date();
@@ -42,13 +43,13 @@ const ProgressCalendar: React.FC = () => {
 
   // Группируем прогресс по датам
   const getDailyProgress = (): { [key: string]: CalendarDayProgress } => {
-    const dailyProgress: { [key: string]: CalendarDayProgress } = {};
+    const processedDailyProgress: { [key: string]: CalendarDayProgress } = {};
 
     // Обрабатываем прогресс чтения
-    if (progress?.dailyProgress) {
-      Object.entries(progress.dailyProgress).forEach(([date, dayProgress]) => {
+    if (dailyProgressData) {
+      Object.entries(dailyProgressData).forEach(([date, dayProgress]) => {
         // Инициализируем структуру для текущей даты
-        dailyProgress[date] = {
+        processedDailyProgress[date] = {
           date,
           chapters: [],
           exercises: {
@@ -69,7 +70,7 @@ const ProgressCalendar: React.FC = () => {
               chapterTitle = chapterMap[chapterId]?.title || chapterId;
             }
 
-            dailyProgress[date].chapters?.push({
+            processedDailyProgress[date].chapters?.push({
               id: chapterId,
               title: chapterTitle,
               timeSpent: chapterProgress.timeSpent,
@@ -78,8 +79,8 @@ const ProgressCalendar: React.FC = () => {
           });
 
           // Сортируем главы по порядку в книге
-          if (dailyProgress[date].chapters) {
-            dailyProgress[date].chapters.sort((a, b) => {
+          if (processedDailyProgress[date].chapters) {
+            processedDailyProgress[date].chapters.sort((a, b) => {
               const aOrder = a.parentChapter?.order || chapterMap[a.id]?.order || 0;
               const bOrder = b.parentChapter?.order || chapterMap[b.id]?.order || 0;
               if (aOrder !== bOrder) return aOrder - bOrder;
@@ -97,7 +98,7 @@ const ProgressCalendar: React.FC = () => {
 
         // Обработка тестов
         if (dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0) {
-          dailyProgress[date].exercises.testResults = dayProgress.exercises.testResults.map(test => ({
+          processedDailyProgress[date].exercises.testResults = dayProgress.exercises.testResults.map(test => ({
             id: test.id,
             name: test.name,
             completed: test.completed,
@@ -109,17 +110,11 @@ const ProgressCalendar: React.FC = () => {
 
         // Обработка упражнений
         if (dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0) {
-          dailyProgress[date].exercises.exercises = dayProgress.exercises.exercises;
+          processedDailyProgress[date].exercises.exercises = dayProgress.exercises.exercises;
         }
       });
     }
-    return dailyProgress;
-  };
-
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return processedDailyProgress;
   };
 
   const getMonthDays = () => {
@@ -159,10 +154,13 @@ const ProgressCalendar: React.FC = () => {
 
   const formatMonthTitle = () => {
     const [year, month] = currentMonth.split('-').map(Number);
-    return new Date(year, month - 1).toLocaleString('ru-RU', { month: 'long', year: 'numeric' });
+    return formatDateWithOptions(`${year}-${String(month).padStart(2, '0')}-01`, {
+      month: 'long',
+      year: 'numeric'
+    });
   };
 
-  if (!progress) {
+  if (!dailyProgressData) {
     return (
       <div className={styles.calendar}>
         <h2>Календарь прогресса</h2>
@@ -192,17 +190,18 @@ const ProgressCalendar: React.FC = () => {
           }
 
           const dayProgress = dailyProgress[date];
+          const isCurrentDay = date === getCurrentDate();
 
           return (
             <div
               key={date}
-              className={`${styles.day} ${dayProgress ? styles.hasContent : ''}`}
+              className={`${styles.day} ${dayProgress ? styles.hasContent : ''} ${isCurrentDay ? styles.currentDay : ''}`}
               onClick={() => dayProgress && setSelectedDate(date)}
             >
               <div className={styles.dayHeader}>
                 <h3>{new Date(date).getDate()}</h3>
                 {dayProgress && dayProgress.chapters && (
-                  <span>{formatTime(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</span>
+                  <span>{formatTimeFromSeconds(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</span>
                 )}
               </div>
 

@@ -7,20 +7,22 @@ interface MotivationWithoutCoercionExerciseProps {
   exercise: MotivationWithoutCoercionExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
+  onClose?: () => void;
 }
 
 const MotivationWithoutCoercionExerciseComponent: React.FC<MotivationWithoutCoercionExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
-  toggleExercise 
+  toggleExercise ,
+  onClose
 }) => {
   return (
     <ExerciseWrapper
       exercise={exercise}
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
+      onClose={onClose}
     >
-      <div className={styles.recordsList}>
         {exercise.records.map((record, index) => (
           <div key={index} className={styles.record}>
             <div className={styles.recordTime}>
@@ -55,7 +57,6 @@ const MotivationWithoutCoercionExerciseComponent: React.FC<MotivationWithoutCoer
             </div>
           </div>
         ))}
-      </div>
     </ExerciseWrapper>
   );
 };
