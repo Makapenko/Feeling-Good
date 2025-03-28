@@ -1,8 +1,14 @@
 import React, { useMemo } from 'react';
 import styles from './TodayTasks.module.css';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { 
+  useAppDispatch, 
+  useUnlockedContent, 
+  useCompletedChapters, 
+  useFavoriteActivities, 
+  useTodayProgress,
+  useTestsByType
+} from '../../redux/hooks';
 import { setCurrentChapter, setSpecialContent } from '../../redux/slices/progressSlice';
-import { getCurrentDate } from '../../utils/dateUtils';
 import { getAvailableActivities } from '../../data/activitiesMapping';
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import chaptersData from '../ListOfChapters/chapters.json';
@@ -15,18 +21,20 @@ const typedChaptersData = chaptersData as ChaptersData;
 
 const TodayTasks: React.FC = () => {
   const dispatch = useAppDispatch();
-  const progress = useAppSelector(state => state.progress);
-  const currentDate = getCurrentDate();
-  const todayProgress = progress.dailyProgress[currentDate];
+  const unlockedContent = useUnlockedContent();
+  const completedChapters = useCompletedChapters();
+  const favoriteActivitiesIds = useFavoriteActivities();
+  const todayProgress = useTodayProgress();
+  const burnsTestResults = useTestsByType('burns-checklist');
 
   // Получаем избранные активности напрямую из Redux
   const favoriteActivities = useMemo(() => {
-    const favoriteIds = progress.favoriteActivities || [];
+    const favoriteIds = favoriteActivitiesIds || [];
     return favoriteIds.map(id => ({
       id,
       name: getActivityNameById(id)
     })).filter(activity => activity.name); // Фильтруем по наличию имени
-  }, [progress.favoriteActivities]);
+  }, [favoriteActivitiesIds]);
 
   // Функция для получения имени активности по ID
   function getActivityNameById(id: string): string {
@@ -40,7 +48,7 @@ const TodayTasks: React.FC = () => {
     
     for (const chapter of mainChapters) {
       // Проверяем доступность главы
-      if (!progress.unlockedContent.chapters.includes(chapter.id)) {
+      if (!unlockedContent.chapters.includes(chapter.id)) {
         continue;
       }
 
@@ -48,8 +56,8 @@ const TodayTasks: React.FC = () => {
       if (chapter.sections && chapter.sections.length > 0) {
         for (const section of chapter.sections) {
           if (
-            progress.unlockedContent.chapters.includes(section.id) && 
-            !progress.completedChapters.includes(section.id)
+            unlockedContent.chapters.includes(section.id) && 
+            !completedChapters.includes(section.id)
           ) {
             return {
               id: section.id,
@@ -58,7 +66,7 @@ const TodayTasks: React.FC = () => {
             };
           }
         }
-      } else if (!progress.completedChapters.includes(chapter.id)) {
+      } else if (!completedChapters.includes(chapter.id)) {
         // Если это глава без подглав
         return {
           id: chapter.id,
@@ -111,29 +119,24 @@ const TodayTasks: React.FC = () => {
 
   // Проверяем статус опросника Бернса
   const checkBurnsStatus = () => {
-    const availableActivities = getAvailableActivities(progress.unlockedContent.chapters);
+    const availableActivities = getAvailableActivities(unlockedContent.chapters);
     if (!availableActivities.has(ACTIVITY_IDS.BURNS_CHECKLIST)) return null;
 
-    const burnsResults = Object.values(progress.dailyProgress)
-      .flatMap(day => day.exercises.testResults)
-      .filter(test => test?.id === 'burns-checklist')
-      .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
-
-    if (burnsResults.length === 0) {
+    if (burnsTestResults.length === 0) {
       return {
         needToComplete: true,
         message: 'Пройдите опросник депрессии Бернса'
       };
     }
 
-    const lastCompletionDate = new Date(burnsResults[0].completedAt);
+    const lastCompletionDate = new Date(burnsTestResults[0].completedAt);
     const today = new Date();
     const daysSinceLastCompletion = Math.floor((today.getTime() - lastCompletionDate.getTime()) / (1000 * 60 * 60 * 24));
     
     if (daysSinceLastCompletion >= 7) {
       return {
         needToComplete: true,
-        message: burnsResults.length === 1 
+        message: burnsTestResults.length === 1 
           ? 'Пройдите опросник Бернса повторно (второй раз)'
           : 'Пройдите опросник Бернса повторно'
       };
