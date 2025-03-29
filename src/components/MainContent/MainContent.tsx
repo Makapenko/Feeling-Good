@@ -28,6 +28,7 @@ import DisarmingTechnique from '../Activities/DisarmingTechnique/DisarmingTechni
 import WelcomePage from '../WelcomePage/WelcomePage';
 import BurnsChecklist from '../Activities/BurnsChecklist';
 import NovacoScale from '../Activities/NovacoScale';
+import HotCoolThoughts from '../Activities/HotCoolThoughts/HotCoolThoughts';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
@@ -56,6 +57,7 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.IMAGINE_SUCCESS]: ImagineSuccess,
   [ACTIVITY_IDS.COUNT_ACHIEVEMENTS]: CountAchievements,
   [ACTIVITY_IDS.CHECK_CANT_DO]: CheckCantDo,
+  [ACTIVITY_IDS.HOT_COOL_THOUGHTS]: HotCoolThoughts,
   [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar
 };
 

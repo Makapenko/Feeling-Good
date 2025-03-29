@@ -27,6 +27,7 @@ export const ACTIVITY_IDS = {
   CHECK_CANT_DO: 'check-cant-do',
   NO_LOSE_TECHNIQUE: 'no-lose-technique',
   SELF_ACTIVATION: 'self-activation',
+  HOT_COOL_THOUGHTS: 'hot-cool-thoughts',
   
   // Тесты и опросники
   BURNS_CHECKLIST: 'burns-checklist',
@@ -60,6 +61,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.CHECK_CANT_DO]: 'Проверяйте свои «не могу»',
   [ACTIVITY_IDS.NO_LOSE_TECHNIQUE]: 'Беспроигрышная техника',
   [ACTIVITY_IDS.SELF_ACTIVATION]: 'Методы самоактивации',
+  [ACTIVITY_IDS.HOT_COOL_THOUGHTS]: 'Остудите «горячие» мысли',
   
   [ACTIVITY_IDS.BURNS_CHECKLIST]: 'Опросник депрессии Бернса',
   [ACTIVITY_IDS.COGNITIVE_BIASES]: 'Список когнитивных искажений',

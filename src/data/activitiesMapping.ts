@@ -28,6 +28,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch5-14': [ACTIVITY_IDS.NO_LOSE_TECHNIQUE],
   'ch5-15': [ACTIVITY_IDS.SELF_ACTIVATION],
   'ch7-1': [ACTIVITY_IDS.NOVACO_SCALE],
+  'ch7-4': [ACTIVITY_IDS.HOT_COOL_THOUGHTS],
 };
 
 // Получить все активности, доступные для данного набора глав

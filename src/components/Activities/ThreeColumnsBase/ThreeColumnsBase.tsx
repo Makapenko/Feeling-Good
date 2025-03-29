@@ -48,8 +48,10 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   const allRecords = useMemo(() => {
     return getAllRecordsFromProgress<ThoughtRecord>(
       dailyProgress,
-      [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.
-        NO_LOSE_TECHNIQUE, ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS],
+      [ACTIVITY_IDS.THREE_COLUMNS_METHOD, 
+       ACTIVITY_IDS.NO_LOSE_TECHNIQUE, 
+       ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS,
+       ACTIVITY_IDS.HOT_COOL_THOUGHTS],
       methodId
     );
   }, [dailyProgress, methodId]);
@@ -73,7 +75,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
         const exercise = todayProgress.exercises.exercises.find(
           ex => (ex.type === ACTIVITY_IDS.THREE_COLUMNS_METHOD 
             || ex.type === ACTIVITY_IDS.NO_LOSE_TECHNIQUE 
-            || ex.type === ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS) 
+            || ex.type === ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS
+            || ex.type === ACTIVITY_IDS.HOT_COOL_THOUGHTS) 
             && ex.id === methodId
         );
 

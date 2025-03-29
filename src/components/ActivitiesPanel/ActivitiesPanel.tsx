@@ -55,7 +55,8 @@ const sections: ActivitySection[] = [
   {
     title: 'Управление гневом',
     activities: [
-      { content: ACTIVITY_IDS.NOVACO_SCALE, label: 'Шкала раздражения Новако' }
+      { content: ACTIVITY_IDS.NOVACO_SCALE, label: 'Шкала раздражения Новако' },
+      { content: ACTIVITY_IDS.HOT_COOL_THOUGHTS, label: 'Остудите «горячие» мысли' }
     ]
   }
 ];
