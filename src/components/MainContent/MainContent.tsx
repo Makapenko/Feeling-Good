@@ -30,6 +30,7 @@ import BurnsChecklist from '../Activities/BurnsChecklist';
 import NovacoScale from '../Activities/NovacoScale';
 import HotCoolThoughts from '../Activities/HotCoolThoughts/HotCoolThoughts';
 import RewriteShouldRules from '../Activities/RewriteShouldRules/RewriteShouldRules';
+import RationalResponses from '../Activities/RationalResponses/RationalResponses';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
@@ -60,6 +61,7 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.CHECK_CANT_DO]: CheckCantDo,
   [ACTIVITY_IDS.HOT_COOL_THOUGHTS]: HotCoolThoughts,
   [ACTIVITY_IDS.REWRITE_SHOULD_RULES]: RewriteShouldRules,
+  [ACTIVITY_IDS.RATIONAL_RESPONSES]: RationalResponses,
   [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar
 };
 
