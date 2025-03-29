@@ -19,6 +19,7 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 const SHEET_ID = ACTIVITY_IDS.THOUGHT_DIARY;
 
 // TODO валидация перед сохранением, стили, сохранение 
+// TODO 7.5 - добавить копию этого компонента с другим описанием полей
 
 const ThoughtDiary: React.FC = () => {
   const dispatch = useAppDispatch();

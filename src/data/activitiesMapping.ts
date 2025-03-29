@@ -29,6 +29,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch5-15': [ACTIVITY_IDS.SELF_ACTIVATION],
   'ch7-1': [ACTIVITY_IDS.NOVACO_SCALE],
   'ch7-4': [ACTIVITY_IDS.HOT_COOL_THOUGHTS],
+  'ch7-6': [ACTIVITY_IDS.REWRITE_SHOULD_RULES],
 };
 
 // Получить все активности, доступные для данного набора глав
