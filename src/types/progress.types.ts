@@ -199,10 +199,14 @@ export interface NoLoseTechniqueExercise extends BaseExercise {
   records: NoLoseTechniqueRecord[];
 }
 
+export interface DownwardArrowExercise extends BaseExercise {
+  chains: import('../components/Activities/DownwardArrow/DownwardArrowTypes').DownwardArrowChain[];
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
   SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |
-  CheckCantDoExercise | NoLoseTechniqueExercise;
+  CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

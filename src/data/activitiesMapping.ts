@@ -31,6 +31,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch7-4': [ACTIVITY_IDS.HOT_COOL_THOUGHTS],
   'ch7-6': [ACTIVITY_IDS.REWRITE_SHOULD_RULES],
   'ch9-3': [ACTIVITY_IDS.RATIONAL_RESPONSES],
+  'ch10-0': [ACTIVITY_IDS.DOWNWARD_ARROW],
 };
 
 // Получить все активности, доступные для данного набора глав

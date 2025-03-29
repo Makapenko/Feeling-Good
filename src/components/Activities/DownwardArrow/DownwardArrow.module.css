@@ -1,0 +1,322 @@
+.container {
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: #333;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.instructions {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid #4a90e2;
+}
+
+.instructions h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.instructions ol {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.instructions li {
+  margin-bottom: 5px;
+}
+
+.hideInstructionsButton, .showInstructionsButton {
+  background-color: #f1f1f1;
+  color: #555;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.hideInstructionsButton:hover, .showInstructionsButton:hover {
+  background-color: #e5e5e5;
+}
+
+.showInstructionsButton {
+  margin-bottom: 20px;
+}
+
+/* Таблица */
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.downwardArrowTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.downwardArrowTable th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 2px solid #ddd;
+}
+
+.downwardArrowTable td {
+  vertical-align: top;
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+.thoughtsColumn, .responsesColumn {
+  width: 50%;
+}
+
+/* Стили для области автоматических мыслей */
+.initialThought {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.thoughtNumber {
+  font-weight: bold;
+  margin-right: 10px;
+  min-width: 20px;
+}
+
+.thoughtTextarea, .responseTextarea, .hiddenBeliefsTextarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  font-size: 0.95rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.thoughtTextarea:focus, .responseTextarea:focus, .hiddenBeliefsTextarea:focus, .questionTextarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.responseTextarea {
+  min-height: 80px;
+}
+
+.hiddenBeliefsTextarea {
+  min-height: 120px;
+}
+
+.chainItem {
+  margin-bottom: 10px;
+}
+
+.arrowContainer {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.arrow {
+  font-size: 24px;
+  color: #555;
+}
+
+.thoughtContent {
+  padding-left: 20px;
+}
+
+.thoughtQuestion {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.questionTextarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+  font-style: italic;
+  color: #555;
+  background-color: #f9f9f9;
+}
+
+.thoughtInputContainer {
+  display: flex;
+  position: relative;
+}
+
+.removeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.addThoughtButton {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.addThoughtButton:hover {
+  background-color: #3a7bc8;
+}
+
+/* Секция скрытых убеждений */
+.hiddenBeliefsSection {
+  margin-top: 20px;
+  margin-bottom: 30px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px;
+  background-color: #f9f9f9;
+}
+
+.hiddenBeliefsSection h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.beliefsDescription {
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* Пагинация и кнопки */
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.paginationButton {
+  background-color: #f1f1f1;
+  color: #333;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationInfo {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.newChainButton {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.newChainButton:hover {
+  background-color: #43a047;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actionButtons {
+    margin-top: 10px;
+  }
+
+  .paginationContainer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .newChainButton {
+    margin-left: 0;
+  }
+  
+  .downwardArrowTable th, .downwardArrowTable td {
+    padding: 10px;
+  }
+
+  .downwardArrowTable {
+    font-size: 0.9rem;
+  }
+
+  .thoughtTextarea, .responseTextarea, .questionTextarea {
+    font-size: 0.9rem;
+    min-height: 60px;
+  }
+} 
+

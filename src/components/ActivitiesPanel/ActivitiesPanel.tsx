@@ -63,7 +63,8 @@ const sections: ActivitySection[] = [
   {
     title: 'Преодоление депрессии',
     activities: [
-      { content: ACTIVITY_IDS.RATIONAL_RESPONSES, label: 'Рациональные ответы на самокритику' }
+      { content: ACTIVITY_IDS.RATIONAL_RESPONSES, label: 'Рациональные ответы на самокритику' },
+      { content: ACTIVITY_IDS.DOWNWARD_ARROW, label: 'Техника падающей стрелы' }
     ]
   }
 ];

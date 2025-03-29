@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise, DownwardArrowExercise } from '../../types/progress.types';
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import { formatDateWithOptions, formatTimeFromSeconds } from '../../utils/dateUtils';
 import { useAppDispatch } from '../../redux/hooks';
@@ -21,6 +21,7 @@ import NoLoseTechniqueExerciseComponent from './render/NoLoseTechniqueExerciseCo
 import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseComponent';
 import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
+import DownwardArrowExerciseComponent from './render/DownwardArrow/DownwardArrowExerciseComponent';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { loadChapter } from '../../redux/actions/chapterActions';
 
@@ -191,6 +192,14 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
           return <NoLoseTechniqueExerciseComponent
             key={exercise.id}
             exercise={exercise as NoLoseTechniqueExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+          />;
+        case ACTIVITY_IDS.DOWNWARD_ARROW:
+          return <DownwardArrowExerciseComponent
+            key={exercise.id}
+            exercise={exercise as DownwardArrowExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
             onClose={onClose}
