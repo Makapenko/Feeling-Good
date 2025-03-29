@@ -12,7 +12,6 @@ interface SurveyProps {
   actionButtons?: React.ReactNode;
 };
 
-// TODO - добавить предупреждение, если очки по суициду выше нуля
 
 const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });

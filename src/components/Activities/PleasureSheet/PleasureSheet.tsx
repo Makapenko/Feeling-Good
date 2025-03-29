@@ -18,6 +18,39 @@ const WORSE = 'worse'
 
 // TODO Сравнить с другими компонентами используещие range
 
+// TODO Поправить заголовки таблицы
+
+// TODO Если на записи не нажата кнопка Выполнено, то не добавлять в истрию занятий а держать в основной части
+
+/**
+ * Рассчитывает среднюю разницу между фактическим и ожидаемым удовольствием
+ */
+const calculateAveragePleasureDifference = (activities: Activity[]): number => {
+  const completedActivities = activities.filter(a => a.actualPleasure !== null);
+  if (completedActivities.length === 0) return 0;
+  
+  return Math.round(
+    completedActivities.reduce((acc, a) => acc + (a.actualPleasure! - a.expectedPleasure), 0) / 
+    completedActivities.length
+  );
+};
+
+/**
+ * Рассчитывает среднее фактическое удовольствие от всех занятий
+ */
+const calculateAveragePleasure = (activities: Activity[]): number => {
+  const completedActivities = activities.filter(a => a.actualPleasure !== null);
+  if (completedActivities.length === 0) return 0;
+  
+  return Math.round(
+    completedActivities.reduce((acc, a) => acc + a.actualPleasure!, 0) / 
+    completedActivities.length
+  );
+};
+
+/**
+ * Компонент для отображения или ввода рейтинга
+ */
 const RatingInput = ({
   value,
   onChange,
@@ -65,6 +98,9 @@ const RatingInput = ({
   );
 };
 
+/**
+ * Компонент для отображения исторического рейтинга
+ */
 const HistoricalRating = ({
   value,
   compareValue = null,
@@ -89,6 +125,200 @@ const HistoricalRating = ({
       <span className={styles[getComparisonClass()]}>
         {value ?? '-'}%
       </span>
+    </div>
+  );
+};
+
+/**
+ * Компонент для отображения анализа активностей
+ */
+const ActivityAnalysis: React.FC<{ activities: Activity[] }> = ({ activities }) => {
+  const averageDifference = calculateAveragePleasureDifference(activities);
+  const averagePleasure = calculateAveragePleasure(activities);
+  
+  return (
+    <div className={styles.analysis}>
+      <h3>Анализ всех занятий</h3>
+      <div className={styles.stats}>
+        <div>
+          <strong>Средняя разница в удовольствии: </strong>
+          {averageDifference}%
+        </div>
+        <div>
+          <strong>Среднее удовольствие: </strong>
+          {averagePleasure}%
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Компонент для отображения истории активностей
+ */
+const HistoricalActivitiesList: React.FC<{ activities: Activity[] }> = ({ activities }) => {
+  if (activities.length === 0) return null;
+  
+  return (
+    <div className={styles.historicalActivities}>
+      <h3>История занятий</h3>
+      <div className={styles.activityList}>
+        <div className={styles.headers}>
+          <div>Дата</div>
+          <div>Занятие</div>
+          <div>С кем</div>
+          <div>Предполагаемый уровень</div>
+          <div>Реальный уровень</div>
+        </div>
+
+        {activities.map(activity => (
+          <div key={activity.id} className={styles.activityRow}>
+            <div data-label="Дата">{formatDate(activity.timestamp)}</div>
+            <div data-label="Занятие">{activity.text}</div>
+            <div data-label="С кем">{activity.participants}</div>
+            <div className={styles.ratingCell}>
+              <HistoricalRating value={activity.expectedPleasure} />
+            </div>
+            <div className={styles.ratingCell}>
+              <HistoricalRating
+                value={activity.actualPleasure}
+                compareValue={activity.expectedPleasure}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <ActivityAnalysis activities={activities} />
+    </div>
+  );
+};
+
+/**
+ * Компонент формы добавления новой активности
+ */
+const AddActivityForm: React.FC<{
+  newActivity: {
+    date: string;
+    text: string;
+    participants: string;
+    expectedPleasure: number;
+  };
+  setNewActivity: React.Dispatch<React.SetStateAction<{
+    date: string;
+    text: string;
+    participants: string;
+    expectedPleasure: number;
+  }>>;
+  onAddActivity: () => void;
+}> = ({ newActivity, setNewActivity, onAddActivity }) => {
+  return (
+    <div className={styles.addActivity}>
+      <div className={styles.inputGroup}>
+        <label>
+          Дата:
+          <input
+            type="date"
+            value={newActivity.date}
+            onChange={(e) => setNewActivity({ ...newActivity, date: e.target.value })}
+            className={styles.dateInput}
+          />
+        </label>
+      </div>
+      <div className={styles.inputGroup}>
+        <input
+          type="text"
+          value={newActivity.text}
+          onChange={(e) => setNewActivity({ ...newActivity, text: e.target.value })}
+          placeholder="Занятие..."
+          className={styles.textInput}
+        />
+      </div>
+      <div className={styles.inputGroup}>
+        <input
+          type="text"
+          value={newActivity.participants}
+          onChange={(e) => setNewActivity({ ...newActivity, participants: e.target.value })}
+          placeholder="С кем? (если в одиночку, укажите «Я»)"
+          className={styles.textInput}
+        />
+      </div>
+      <div className={styles.inputGroup}>
+        <label className={styles.ratingLabel}>
+          Предполагаемый уровень:
+          <RatingInput
+            value={newActivity.expectedPleasure}
+            onChange={(value) => setNewActivity({ ...newActivity, expectedPleasure: value })}
+          />
+        </label>
+      </div>
+      <button onClick={onAddActivity} className={styles.addButton}>
+        Добавить
+      </button>
+    </div>
+  );
+};
+
+/**
+ * Компонент для отображения списка текущих активностей
+ */
+const ActivityList: React.FC<{
+  activities: Activity[];
+  onActivityChange: (activityId: string, field: 'actualPleasure', value: number) => void;
+  onCompleteActivity: (activityId: string) => void;
+  onDeleteActivity: (activityId: string) => void;
+}> = ({ activities, onActivityChange, onCompleteActivity, onDeleteActivity }) => {
+  return (
+    <div className={styles.activityList}>
+      <div className={styles.headers}>
+        <div>Дата</div>
+        <div>Занятие</div>
+        <div>С кем</div>
+        <div>Предполагаемый уровень</div>
+        <div>Реальный уровень</div>
+        <div></div>
+      </div>
+
+      {activities.map(activity => (
+        <div key={activity.id} className={styles.activityRow}>
+          <div data-label="Дата">{formatDate(activity.date)}</div>
+          <div data-label="Занятие">{activity.text}</div>
+          <div data-label="С кем">{activity.participants}</div>
+          <div className={styles.ratingCell}>
+            <RatingInput
+              value={activity.expectedPleasure}
+              onChange={() => { }}
+              disabled={activity.completed}
+            />
+          </div>
+          <div className={styles.ratingCell}>
+            {!activity.completed ? (
+              <div className={styles.completeButtonContainer}>
+                <button
+                  onClick={() => onCompleteActivity(activity.id)}
+                  className={styles.completeButton}
+                >
+                  Выполнено
+                </button>
+              </div>
+            ) : (
+              <RatingInput
+                value={activity.actualPleasure}
+                onChange={(value) => onActivityChange(activity.id, 'actualPleasure', value)}
+                isActual
+                compareValue={activity.expectedPleasure}
+              />
+            )}
+          </div>
+          <button
+            onClick={() => onDeleteActivity(activity.id)}
+            className={styles.deleteButton}
+            aria-label="Удалить занятие"
+          >
+            ✕
+          </button>
+        </div>
+      ))}
     </div>
   );
 };
@@ -193,153 +423,20 @@ const PleasureSheet: React.FC = () => {
         </p>
       </div>
 
-      <div className={styles.addActivity}>
-        <div className={styles.inputGroup}>
-          <label>
-            Дата:
-            <input
-              type="date"
-              value={newActivity.date}
-              onChange={(e) => setNewActivity({ ...newActivity, date: e.target.value })}
-              className={styles.dateInput}
-            />
-          </label>
-        </div>
-        <div className={styles.inputGroup}>
-          <input
-            type="text"
-            value={newActivity.text}
-            onChange={(e) => setNewActivity({ ...newActivity, text: e.target.value })}
-            placeholder="Занятие..."
-            className={styles.textInput}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <input
-            type="text"
-            value={newActivity.participants}
-            onChange={(e) => setNewActivity({ ...newActivity, participants: e.target.value })}
-            placeholder="С кем? (если в одиночку, укажите «Я»)"
-            className={styles.textInput}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label className={styles.ratingLabel}>
-            Предполагаемый уровень:
-            <RatingInput
-              value={newActivity.expectedPleasure}
-              onChange={(value) => setNewActivity({ ...newActivity, expectedPleasure: value })}
-            />
-          </label>
-        </div>
-        <button onClick={handleAddActivity} className={styles.addButton}>
-          Добавить
-        </button>
-      </div>
+      <AddActivityForm
+        newActivity={newActivity}
+        setNewActivity={setNewActivity}
+        onAddActivity={handleAddActivity}
+      />
 
-      <div className={styles.activityList}>
-        <div className={styles.headers}>
-          <div>Дата</div>
-          <div>Занятие</div>
-          <div>С кем</div>
-          <div>Предполагаемый уровень</div>
-          <div>Реальный уровень</div>
-          <div></div>
-        </div>
+      <ActivityList
+        activities={activities}
+        onActivityChange={handleActivityChange}
+        onCompleteActivity={handleCompleteActivity}
+        onDeleteActivity={handleDeleteActivity}
+      />
 
-        {activities.map(activity => (
-          <div key={activity.id} className={styles.activityRow}>
-            <div data-label="Дата">{formatDate(activity.date)}</div>
-            <div data-label="Занятие">{activity.text}</div>
-            <div data-label="С кем">{activity.participants}</div>
-            <div className={styles.ratingCell}>
-              <RatingInput
-                value={activity.expectedPleasure}
-                onChange={() => { }}
-                disabled={activity.completed}
-              />
-            </div>
-            <div className={styles.ratingCell}>
-              {!activity.completed ? (
-                <div className={styles.completeButtonContainer}>
-                  <button
-                    onClick={() => handleCompleteActivity(activity.id)}
-                    className={styles.completeButton}
-                  >
-                    Выполнено
-                  </button>
-                </div>
-              ) : (
-                <RatingInput
-                  value={activity.actualPleasure}
-                  onChange={(value) => handleActivityChange(activity.id, 'actualPleasure', value)}
-                  isActual
-                  compareValue={activity.expectedPleasure}
-                />
-              )}
-            </div>
-            <button
-              onClick={() => handleDeleteActivity(activity.id)}
-              className={styles.deleteButton}
-              aria-label="Удалить занятие"
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {allActivities.length > 0 && (
-        <div className={styles.historicalActivities}>
-          <h3>История занятий</h3>
-          <div className={styles.activityList}>
-            <div className={styles.headers}>
-              <div>Дата</div>
-              <div>Занятие</div>
-              <div>С кем</div>
-              <div>Предполагаемый уровень</div>
-              <div>Реальный уровень</div>
-            </div>
-
-            {allActivities.map(activity => (
-              <div key={activity.id} className={styles.activityRow}>
-                <div data-label="Дата">{formatDate(activity.timestamp)}</div>
-                <div data-label="Занятие">{activity.text}</div>
-                <div data-label="С кем">{activity.participants}</div>
-                <div className={styles.ratingCell}>
-                  <HistoricalRating value={activity.expectedPleasure} />
-                </div>
-                <div className={styles.ratingCell}>
-                  <HistoricalRating
-                    value={activity.actualPleasure}
-                    compareValue={activity.expectedPleasure}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.analysis}>
-            <h3>Анализ всех занятий</h3>
-            <div className={styles.stats}>
-              <div>
-                <strong>Средняя разница в удовольствии: </strong>
-                {Math.round(allActivities
-                  .filter(a => a.actualPleasure !== null)
-                  .reduce((acc, a) => acc + (a.actualPleasure! - a.expectedPleasure), 0) /
-                  allActivities.filter(a => a.actualPleasure !== null).length || 0)}%
-              </div>
-              <div>
-                <strong>Среднее удовольствие: </strong>
-                {Math.round(allActivities
-                  .filter(a => a.actualPleasure !== null)
-                  .reduce((acc, a) => acc + a.actualPleasure!, 0) /
-                  allActivities.filter(a => a.actualPleasure !== null).length || 0)}%
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <HistoricalActivitiesList activities={allActivities} />
     </div>
   );
 };
