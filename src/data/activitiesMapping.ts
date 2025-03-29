@@ -32,6 +32,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch7-6': [ACTIVITY_IDS.REWRITE_SHOULD_RULES],
   'ch9-3': [ACTIVITY_IDS.RATIONAL_RESPONSES],
   'ch10-0': [ACTIVITY_IDS.DOWNWARD_ARROW],
+  'ch10-1': [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
 };
 
 // Получить все активности, доступные для данного набора глав

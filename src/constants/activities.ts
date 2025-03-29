@@ -37,6 +37,7 @@ export const ACTIVITY_IDS = {
   COGNITIVE_BIASES: 'cognitive-biases',
   COGNITIVE_BIASES_TEST: 'cognitive-biases-test',
   NOVACO_SCALE: 'novaco-scale',
+  DYSFUNCTIONAL_ATTITUDE_SCALE: 'dysfunctional-attitude-scale',
 } as const;
 
 // Типизированный объединенный тип из всех идентификаторов
@@ -73,6 +74,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.COGNITIVE_BIASES]: 'Список когнитивных искажений',
   [ACTIVITY_IDS.COGNITIVE_BIASES_TEST]: 'Тест на когнитивные искажения',
   [ACTIVITY_IDS.NOVACO_SCALE]: 'Шкала раздражения Новако',
+  [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE]: 'Шкала дисфункциональных убеждений',
 };
 
 /**

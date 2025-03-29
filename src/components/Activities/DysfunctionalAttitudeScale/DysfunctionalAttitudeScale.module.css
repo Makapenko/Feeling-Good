@@ -1,0 +1,352 @@
+.container {
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: #333;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.description {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid #4a90e2;
+}
+
+.instructions {
+  margin-bottom: 30px;
+}
+
+.instructions h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.instructions p {
+  margin-bottom: 10px;
+}
+
+.instructions img {
+  max-width: 100%;
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.startButton, .submitButton, .restartButton {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.startButton:hover, .submitButton:hover, .restartButton:hover {
+  background-color: #3a7bc8;
+}
+
+.restartButton {
+  background-color: #4caf50;
+}
+
+.restartButton:hover {
+  background-color: #3e9142;
+}
+
+/* Таблица опросника */
+.surveyTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.surveyTable th,
+.surveyTable td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.surveyTable th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+  color: #333;
+}
+
+.surveyTable tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.surveyTable tr:hover {
+  background-color: #f0f0f0;
+}
+
+.statementText {
+  padding-right: 15px;
+}
+
+.answerRadio {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.answerRadio input[type="radio"] {
+  margin: 0;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.answerLabels {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+/* Мобильные стили для опросника */
+.mobileStatement {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.mobileStatement p {
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.mobileAnswers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobileAnswers label {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.mobileAnswers label:hover {
+  background-color: #f0f0f0;
+}
+
+.mobileAnswers input[type="radio"] {
+  margin-right: 10px;
+}
+
+/* Результаты */
+.results {
+  margin-top: 30px;
+}
+
+.results h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.scoreExplanation {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid #4a90e2;
+}
+
+/* График результатов */
+.chartContainer {
+  width: 100%;
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.chartTitle {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.chart {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.chartAxisY {
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 2px;
+  height: 100%;
+  background-color: #333;
+}
+
+.chartAxisX {
+  position: absolute;
+  bottom: 50px;
+  left: 30px;
+  width: calc(100% - 60px);
+  height: 2px;
+  background-color: #333;
+}
+
+.chartAxisLabel {
+  position: absolute;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.chartBar {
+  position: absolute;
+  bottom: 52px;
+  width: 30px;
+  background-color: #4a90e2;
+  transition: height 0.5s ease;
+  border-radius: 3px 3px 0 0;
+}
+
+.chartBar.negative {
+  bottom: auto;
+  top: 200px;
+  background-color: #e57373;
+  border-radius: 0 0 3px 3px;
+}
+
+.barLabel {
+  position: absolute;
+  bottom: 15px;
+  /* left: 10px; */
+  width: 70px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #333;
+  transform: rotate(-90deg);
+  transform-origin: left top;
+  white-space: nowrap;
+}
+
+.categoryResults {
+  margin-top: 30px;
+}
+
+.categoryResult {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.categoryResult.strength {
+  border-left: 4px solid #4caf50;
+}
+
+.categoryResult.weakness {
+  border-left: 4px solid #e57373;
+}
+
+.categoryTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.categoryTitle h4 {
+  margin: 0;
+  color: #333;
+}
+
+.categoryScore {
+  font-weight: 600;
+}
+
+.categoryScore.positive {
+  color: #4caf50;
+}
+
+.categoryScore.negative {
+  color: #e57373;
+}
+
+.categoryDescription {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Мобильные стили */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actionButtons {
+    margin-top: 10px;
+  }
+
+  .surveyTable {
+    font-size: 0.85rem;
+  }
+
+  .surveyTable th,
+  .surveyTable td {
+    padding: 8px 5px;
+  }
+
+  .chart {
+    height: 300px;
+  }
+
+  .barLabel {
+    font-size: 0.7rem;
+  }
+} 

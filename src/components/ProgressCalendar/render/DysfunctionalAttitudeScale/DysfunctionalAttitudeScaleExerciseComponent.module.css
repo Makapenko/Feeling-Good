@@ -1,0 +1,68 @@
+.container {
+  margin: 10px 0;
+  padding: 5px;
+}
+
+.summary {
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.resultsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.categoryResult {
+  flex: 1 1 calc(50% - 10px);
+  min-width: 200px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+
+.categoryResult.strength {
+  border-left: 4px solid #4caf50;
+}
+
+.categoryResult.weakness {
+  border-left: 4px solid #e57373;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.score {
+  font-weight: bold;
+}
+
+.strength .score {
+  color: #4caf50;
+}
+
+.weakness .score {
+  color: #e57373;
+}
+
+.categoryDescription {
+  font-size: 0.85rem;
+  margin: 5px 0 0;
+  color: #555;
+  line-height: 1.4;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+@media (max-width: 600px) {
+  .categoryResult {
+    flex: 1 1 100%;
+  }
+} 

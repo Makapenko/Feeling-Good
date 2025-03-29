@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise, DownwardArrowExercise } from '../../types/progress.types';
+import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise, DownwardArrowExercise, DysfunctionalAttitudeScaleExercise } from '../../types/progress.types';
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import { formatDateWithOptions, formatTimeFromSeconds } from '../../utils/dateUtils';
 import { useAppDispatch } from '../../redux/hooks';
@@ -22,6 +22,7 @@ import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseCompon
 import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
 import DownwardArrowExerciseComponent from './render/DownwardArrow/DownwardArrowExerciseComponent';
+import DysfunctionalAttitudeScaleExerciseComponent from './render/DysfunctionalAttitudeScale/DysfunctionalAttitudeScaleExerciseComponent';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { loadChapter } from '../../redux/actions/chapterActions';
 
@@ -203,6 +204,13 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
             onClose={onClose}
+          />;
+        case ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE:
+          return <DysfunctionalAttitudeScaleExerciseComponent
+            key={exercise.id}
+            exercise={exercise as DysfunctionalAttitudeScaleExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
           />;
         default:
           return null;

@@ -203,10 +203,20 @@ export interface DownwardArrowExercise extends BaseExercise {
   chains: import('../components/Activities/DownwardArrow/DownwardArrowTypes').DownwardArrowChain[];
 }
 
+export interface DysfunctionalAttitudeScaleExercise extends BaseExercise {
+  answers: Record<number, number>;
+  categoryResults: {
+    category: string;
+    score: number;
+    isStrength: boolean;
+  }[];
+  timestamp: string;
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
   SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |
-  CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise;
+  CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise | DysfunctionalAttitudeScaleExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')

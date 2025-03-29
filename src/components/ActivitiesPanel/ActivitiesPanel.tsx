@@ -23,6 +23,8 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.BURNS_CHECKLIST, label: 'Опросник депрессии Бернса' },
       { content: ACTIVITY_IDS.COGNITIVE_BIASES, label: 'Список когнитивных искажений' },
       { content: ACTIVITY_IDS.COGNITIVE_BIASES_TEST, label: 'Тест на когнитивные искажения' },
+      { content: ACTIVITY_IDS.NOVACO_SCALE, label: 'Шкала раздражения Новако' },
+      { content: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE, label: 'Шкала дисфункциональных убеждений' },
     ]
   },
   {
