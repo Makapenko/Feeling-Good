@@ -31,6 +31,7 @@ export const ACTIVITY_IDS = {
   REWRITE_SHOULD_RULES: 'rewrite-should-rules',
   RATIONAL_RESPONSES: 'rational-responses',
   DOWNWARD_ARROW: 'downward-arrow',
+  ADVANTAGES_DISADVANTAGES: 'advantages-disadvantages',
   
   // Тесты и опросники
   BURNS_CHECKLIST: 'burns-checklist',
@@ -69,6 +70,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.REWRITE_SHOULD_RULES]: 'Пересмотр правил со словом «должен»',
   [ACTIVITY_IDS.RATIONAL_RESPONSES]: 'Рациональные ответы на самокритику',
   [ACTIVITY_IDS.DOWNWARD_ARROW]: 'Техника падающей стрелы',
+  [ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES]: 'Анализ преимуществ и недостатков убеждений',
   
   [ACTIVITY_IDS.BURNS_CHECKLIST]: 'Опросник депрессии Бернса',
   [ACTIVITY_IDS.COGNITIVE_BIASES]: 'Список когнитивных искажений',

@@ -32,6 +32,11 @@ const sections: ActivitySection[] = [
     activities: [
       { content: ACTIVITY_IDS.THREE_COLUMNS_METHOD, label: 'Метод трёх колонок' },
       { content: ACTIVITY_IDS.THOUGHT_DIARY, label: 'Дневник автоматических мыслей' },
+      { content: ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS, label: 'Мешающие и помогающие мысли' },
+      { content: ACTIVITY_IDS.HOT_COOL_THOUGHTS, label: 'Остудите «горячие» мысли' },
+      { content: ACTIVITY_IDS.RATIONAL_RESPONSES, label: 'Рациональные ответы на самокритику' },
+      { content: ACTIVITY_IDS.DOWNWARD_ARROW, label: 'Техника падающей стрелы' },
+      { content: ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES, label: 'Анализ преимуществ и недостатков убеждений' },
     ]
   },
   {

@@ -53,7 +53,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
        ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS,
        ACTIVITY_IDS.HOT_COOL_THOUGHTS,
        ACTIVITY_IDS.REWRITE_SHOULD_RULES,
-       ACTIVITY_IDS.RATIONAL_RESPONSES],
+       ACTIVITY_IDS.RATIONAL_RESPONSES,
+       ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES],
       methodId
     );
   }, [dailyProgress, methodId]);
@@ -80,7 +81,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
             || ex.type === ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS
             || ex.type === ACTIVITY_IDS.HOT_COOL_THOUGHTS
             || ex.type === ACTIVITY_IDS.REWRITE_SHOULD_RULES
-            || ex.type === ACTIVITY_IDS.RATIONAL_RESPONSES) 
+            || ex.type === ACTIVITY_IDS.RATIONAL_RESPONSES
+            || ex.type === ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES) 
             && ex.id === methodId
         );
 

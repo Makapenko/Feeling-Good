@@ -36,6 +36,7 @@ import { ACTIVITY_IDS } from '../../constants/activities';
 import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
 import DysfunctionalAttitudeScale from '../Activities/DysfunctionalAttitudeScale/DysfunctionalAttitudeScale';
+import AdvantagesDisadvantages from '../Activities/AdvantagesDisadvantages/AdvantagesDisadvantages';
 
 // Определяем маппинг компонентов активностей
 const ACTIVITY_COMPONENTS = {
@@ -65,6 +66,7 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.REWRITE_SHOULD_RULES]: RewriteShouldRules,
   [ACTIVITY_IDS.RATIONAL_RESPONSES]: RationalResponses,
   [ACTIVITY_IDS.DOWNWARD_ARROW]: DownwardArrow,
+  [ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES]: AdvantagesDisadvantages,
   [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE]: DysfunctionalAttitudeScale,
   [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar
 };
