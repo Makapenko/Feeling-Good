@@ -184,7 +184,8 @@
 
   .testContainer h2 {
     font-size: 1.25rem;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+    margin-top: 0;
   }
 
   .titleContainer {

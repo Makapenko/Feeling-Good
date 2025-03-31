@@ -10,6 +10,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
+// TODO: В мобильной версии дата перекрывает текст в истории
+
 const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
 const SelfSupport: React.FC = () => {

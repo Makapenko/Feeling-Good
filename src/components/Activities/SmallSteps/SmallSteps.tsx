@@ -12,6 +12,8 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { formatTimeFromSeconds } from '../../../utils/dateUtils';
 import { useIsMobile } from '../../../utils/deviceUtils';
 
+//TODO: В мобильной версии кнопка закончено внизу экрана - кривая
+
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 
 const SmallSteps: React.FC = () => {

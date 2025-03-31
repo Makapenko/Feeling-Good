@@ -12,6 +12,9 @@ import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils
 import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import styles from './DownwardArrow.module.css';
 
+// TODO: В инпуты можно писать только после перезагрузки страницы
+// TODO: Не оптимизированы кнопки для мобил
+
 const SHEET_ID: SpecialContent = ACTIVITY_IDS.DOWNWARD_ARROW;
 
 // Варианты вопросов для техники падающей стрелы

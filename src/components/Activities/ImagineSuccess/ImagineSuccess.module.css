@@ -265,7 +265,7 @@
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
   .container {
-    padding: 0;
+    padding: 60px 0 0;
   }
 
   .titleContainer {
