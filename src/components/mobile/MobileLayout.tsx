@@ -1,21 +1,20 @@
 import { FC, useCallback } from 'react';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useActiveTab, useCurrentChapter, useSpecialContent } from '../../redux/hooks';
 import MobileNavBar from './MobileNavBar';
 import ListOfChapters from '../ListOfChapters/ListOfChapters';
 import MainContent from '../MainContent/MainContent';
 import ActivitiesPanel from '../ActivitiesPanel/ActivitiesPanel';
 import styles from './MobileLayout.module.css';
 import { ACTIVITY_IDS } from '../../constants/activities';
-import { useAppDispatch } from '../../redux/hooks';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 
 type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
 
 const MobileLayout: FC = () => {
-  const activeTab = useAppSelector(state => state.mobile.activeTab);
+  const activeTab = useActiveTab();
   const dispatch = useAppDispatch();
-  const currentChapter = useAppSelector(state => state.progress.currentChapter);
-  const specialContent = useAppSelector(state => state.progress.specialContent);
+  const currentChapter = useCurrentChapter();
+  const specialContent = useSpecialContent();
 
   // Получаем нужную панель в зависимости от текущей активной вкладки
   const getCurrentView = useCallback((tab: MobileTab) => {
@@ -27,17 +26,21 @@ const MobileLayout: FC = () => {
 
     switch (tab) {
       case 'today':
-        // Показываем компонент задач на сегодня
+        // Показываем компонент задач на сегодня через MainContent
         dispatch(setSpecialContent(ACTIVITY_IDS.TODAY_TASKS));
         return <MainContent />;
       case 'chapters':
+        // Списки глав показываем напрямую, так как они имеют свою механику скроллинга
         return <ListOfChapters />;
       case 'activities':
+        // Списки активностей показываем напрямую, так как они имеют свою механику скроллинга
         return <ActivitiesPanel />;
       case 'calendar':
+        // Для календаря используем MainContent
         dispatch(setSpecialContent(ACTIVITY_IDS.PROGRESS_CALENDAR));
         return <MainContent />;
       case 'about':
+        // Для страницы "О приложении" используем MainContent
         dispatch(setSpecialContent(ACTIVITY_IDS.WELCOME));
         return <MainContent />;
       default:
