@@ -258,18 +258,26 @@ export interface UnlockedContent {
   activities: string[]; // массив id открытых заданий
 }
 
+// Тип для избранных глав
+export interface FavoriteChapter {
+  id: string;
+  title: string;
+}
+
+// Обновляем интерфейс UserProgress, добавляя поле для избранных глав
 export interface UserProgress {
   currentChapter: ChapterWithContent | null;
   specialContent: SpecialContent | null;
-  dailyProgress: { [key: string]: DayProgress };
+  dailyProgress: Record<string, DayProgress>;
   chapters: Chapter[];
   unlockedContent: {
     chapters: string[];
     activities: string[];
   };
   completedChapters: string[];
-  favoriteActivities: string[]; // Список избранных активностей (их ID)
-  lastUnlockedChapter: string | null; // ID последней разблокированной главы
-  lastUnlockedActivities: SpecialContent[]; // Список активностей, разблокированных последней главой
+  favoriteActivities: string[];
+  lastUnlockedChapter: string | null;
+  lastUnlockedActivities: SpecialContent[];
+  favoriteChapters: FavoriteChapter[]; // Добавляем поле для избранных глав
   reduxMigrationCompleted?: boolean; // Флаг, указывающий, что миграция в Redux успешно выполнена
 }

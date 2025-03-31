@@ -21,7 +21,8 @@ import {
   selectIsActivityAvailable,
   selectIsFavoriteActivity,
   selectTimeSpentByChapter,
-  selectNotifications
+  selectNotifications,
+  selectFavoriteChapters
 } from './selectors';
 import { SpecialContent } from '../types/progress.types';
 
@@ -75,4 +76,13 @@ export const useIsFavoriteActivity = (activityId: SpecialContent) => {
   return useAppSelector(selector);
 };
 
-export const useTimeSpentByChapter = () => useAppSelector(selectTimeSpentByChapter); 
+export const useTimeSpentByChapter = () => useAppSelector(selectTimeSpentByChapter);
+
+// Хук для получения избранных глав
+export const useFavoriteChapters = () => useAppSelector(selectFavoriteChapters);
+
+// Хук для проверки, находится ли глава в избранном
+export const useIsFavoriteChapter = (chapterId: string) => {
+  const favoriteChapters = useAppSelector(selectFavoriteChapters);
+  return favoriteChapters.some(chapter => chapter.id === chapterId);
+}; 

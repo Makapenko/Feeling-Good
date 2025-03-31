@@ -20,8 +20,11 @@ const typedChaptersData = chaptersData as ChaptersData;
 
 const today = new Date().toISOString().split('T')[0];
 
-// Начальное состояние
-const initialState: UserProgress = {
+// Используем тот же тип для состояния (для простоты)
+type ProgressState = UserProgress;
+
+// Обновляем initialState, добавляя initialState.favoriteChapters
+const initialState: ProgressState = {
   currentChapter: null,
   specialContent: null,
   dailyProgress: {
@@ -41,7 +44,9 @@ const initialState: UserProgress = {
   completedChapters: [],
   favoriteActivities: [],
   lastUnlockedChapter: null,
-  lastUnlockedActivities: []
+  lastUnlockedActivities: [],
+  favoriteChapters: [], // Инициализируем пустым массивом
+  reduxMigrationCompleted: true
 };
 
 // Функция для определения вновь разблокированных активностей
@@ -372,7 +377,28 @@ const progressSlice = createSlice({
     // Загрузка состояния из localStorage (используется в middleware)
     loadStateFromStorage: (_state, action: PayloadAction<UserProgress>) => {
       return action.payload;
-    }
+    },
+
+    // Добавление/удаление главы из избранного
+    toggleFavoriteChapter: (state, action: PayloadAction<{ chapterId: string; chapterTitle: string }>) => {
+      const { chapterId, chapterTitle } = action.payload;
+      
+      // Убедимся, что массив избранных глав существует
+      if (!state.favoriteChapters) {
+        state.favoriteChapters = [];
+      }
+      
+      // Проверяем, есть ли глава в избранном
+      const existingIndex = state.favoriteChapters.findIndex(chapter => chapter.id === chapterId);
+      
+      if (existingIndex >= 0) {
+        // Если глава уже в избранном, удаляем её
+        state.favoriteChapters = state.favoriteChapters.filter(chapter => chapter.id !== chapterId);
+      } else {
+        // Если главы нет в избранном, добавляем её
+        state.favoriteChapters.push({ id: chapterId, title: chapterTitle });
+      }
+    },
   }
 });
 
@@ -389,7 +415,8 @@ export const {
   unlockContent,
   toggleFavoriteActivity,
   resetNewlyUnlocked,
-  loadStateFromStorage
+  loadStateFromStorage,
+  toggleFavoriteChapter
 } = progressSlice.actions;
 
 // Селекторы
@@ -403,5 +430,6 @@ export const selectCompletedChapters = (state: RootState) => state.progress.comp
 export const selectFavoriteActivities = (state: RootState) => state.progress.favoriteActivities;
 export const selectLastUnlockedChapter = (state: RootState) => state.progress.lastUnlockedChapter;
 export const selectLastUnlockedActivities = (state: RootState) => state.progress.lastUnlockedActivities;
+export const selectFavoriteChapters = (state: RootState) => state.progress.favoriteChapters;
 
 export default progressSlice.reducer; 

@@ -21,6 +21,9 @@ export const selectMobileActiveTab = (state: RootState) => state.mobile.activeTa
 // Селекторы для уведомлений
 export const selectNotifications = (state: RootState) => state.notification.notifications;
 
+// Селектор для избранных глав
+export const selectFavoriteChapters = (state: RootState) => state.progress.favoriteChapters || [];
+
 // Мемоизированные селекторы для оптимизации
 export const selectTodayProgress = createSelector(
   [selectDailyProgress],

@@ -12,6 +12,7 @@ import { SpecialContent } from '../../types/progress.types';
 import { useAppDispatch } from '../../redux/hooks';
 import { completeChapter, loadChapter } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
+import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
 // TODO Сравнить два таймера и объединить в один, который работает во всех активностях
 
@@ -161,6 +162,16 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
 
   return (
     <div className={styles.chapterContent}>
+      <div className={styles.chapterActions}>
+        <ChapterFavoriteButton 
+          chapterId={chapterId} 
+          chapterTitle={typedChaptersData.chapters.find(ch => 
+            ch.id === chapterId || ch.sections?.some(s => s.id === chapterId)
+          )?.title || 'Глава'}
+          className={styles.chapterFavorite}
+        />
+      </div>
+      
       {contentElement}
       
       {relatedActivities.length > 0 && (

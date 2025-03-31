@@ -5,6 +5,7 @@ import {
   useUnlockedContent, 
   useCompletedChapters, 
   useFavoriteActivities, 
+  useFavoriteChapters,
   useTodayProgress,
   useTestsByType
 } from '../../redux/hooks';
@@ -24,6 +25,7 @@ const TodayTasks: React.FC = () => {
   const unlockedContent = useUnlockedContent();
   const completedChapters = useCompletedChapters();
   const favoriteActivitiesIds = useFavoriteActivities();
+  const favoriteChapters = useFavoriteChapters();
   const todayProgress = useTodayProgress();
   const burnsTestResults = useTestsByType('burns-checklist');
 
@@ -182,6 +184,50 @@ const TodayTasks: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
+  // Функция для перехода к чтению избранной главы
+  const handleFavoriteChapterClick = async (chapterId: string) => {
+    try {
+      // Пытаемся найти главу в данных глав
+      const chapter = typedChaptersData.chapters.find(ch => ch.id === chapterId);
+      let path = '';
+      
+      // Проверяем, это глава или подглава
+      if (chapter) {
+        // Это основная глава
+        path = chapter.path;
+      } else {
+        // Ищем подглаву
+        for (const mainChapter of typedChaptersData.chapters) {
+          if (mainChapter.sections) {
+            const section = mainChapter.sections.find(s => s.id === chapterId);
+            if (section) {
+              path = section.path || '';
+              break;
+            }
+          }
+        }
+      }
+      
+      if (path) {
+        const response = await fetch(path);
+        const content = await response.text();
+        
+        // Находим заголовок главы
+        const title = favoriteChapters.find(ch => ch.id === chapterId)?.title || 'Глава';
+        
+        dispatch(setCurrentChapter({
+          id: chapterId,
+          title,
+          content,
+          timeSpent: 0,
+          completed: false
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading chapter:', error);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h2>Задания на сегодня</h2>
@@ -297,7 +343,7 @@ const TodayTasks: React.FC = () => {
 
       {favoriteActivities.length > 0 && (
         <>
-          <h2 className={styles.favoritesTitle}>Избранное</h2>
+          <h2 className={styles.favoritesTitle}>Избранные задания</h2>
           <div className={styles.favoritesList}>
             {favoriteActivities.map(activity => (
               <div 
@@ -307,6 +353,24 @@ const TodayTasks: React.FC = () => {
               >
                 <div className={styles.favoriteIcon}>★</div>
                 <span className={styles.favoriteTitle}>{activity.name}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      
+      {favoriteChapters.length > 0 && (
+        <>
+          <h2 className={styles.favoritesTitle}>Избранные главы</h2>
+          <div className={styles.favoritesList}>
+            {favoriteChapters.map(chapter => (
+              <div 
+                key={chapter.id} 
+                className={`${styles.favoriteItem} ${styles.clickable}`}
+                onClick={() => handleFavoriteChapterClick(chapter.id)}
+              >
+                <div className={styles.favoriteIcon}>★</div>
+                <span className={styles.favoriteTitle}>{chapter.title}</span>
               </div>
             ))}
           </div>
