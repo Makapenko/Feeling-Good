@@ -264,4 +264,27 @@
   .favoriteTitle {
     font-size: 14px;
   }
+}
+
+.chartsSection {
+  margin: 20px 0;
+}
+
+.chartTitle {
+  color: #2d3748;
+  font-size: 1.15rem;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+  .chartsSection {
+    margin: 15px 0;
+  }
+  
+  .chartTitle {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
 } 

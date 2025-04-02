@@ -15,11 +15,15 @@ import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { ActivityId, ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
-import { formatTimeFromSeconds, getDaysDifference } from '../../utils/dateUtils';
+import { 
+  formatTimeFromSeconds, 
+  getDaysDifference, 
+  getCurrentDate
+} from '../../utils/dateUtils';
+import { SmartProgressChart } from '../ProgressChart';
 
+// Типизируем импортированные JSON-данные
 const typedChaptersData = chaptersData as ChaptersData;
-
-// TODO Добавить график прогресса, который показывает количество проведённого времени и количество балоов в опроснике Бернса
 
 const TodayTasks: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -133,7 +137,7 @@ const TodayTasks: React.FC = () => {
     }
 
     const lastCompletionDate = new Date(burnsTestResults[0].completedAt);
-    const today = new Date();
+    const today = new Date(getCurrentDate());
     const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
     
     if (daysSinceLastCompletion >= 7) {
@@ -339,6 +343,12 @@ const TodayTasks: React.FC = () => {
         )}
       </div>
 
+      {/* График прогресса пользователя */}
+      <div className={styles.chartsSection}>
+        <h3 className={styles.chartTitle}>Ваш прогресс</h3>
+        <SmartProgressChart useRealData={true} autoAdjust={true} />
+      </div>
+      
       {favoriteActivities.length > 0 && (
         <>
           <h2 className={styles.favoritesTitle}>Избранные задания</h2>
@@ -378,4 +388,4 @@ const TodayTasks: React.FC = () => {
   );
 };
 
-export default TodayTasks; 
+export default TodayTasks;

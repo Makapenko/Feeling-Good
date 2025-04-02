@@ -1,0 +1,58 @@
+{
+  "chartTitle": "Начало работы с приложением",
+  "chartDescription": "Пример нового пользователя, который только начал работу с приложением. Пройден первый опросник Бернса, следующий будет через неделю.",
+  "data": [
+    {
+      "date": "2025-04-01",
+      "formattedDate": "1 апр",
+      "depressionScore": 28,
+      "depressionPercentage": 70,
+      "hasDepressionTest": true,
+      "readingTime": 5,
+      "exerciseTime": 10,
+      "totalActivityTime": 15
+    },
+    {
+      "date": "2025-04-02",
+      "formattedDate": "2 апр",
+      "readingTime": 15,
+      "exerciseTime": 20,
+      "totalActivityTime": 35
+    },
+    {
+      "date": "2025-04-03",
+      "formattedDate": "3 апр",
+      "readingTime": 20,
+      "exerciseTime": 25,
+      "totalActivityTime": 45
+    },
+    {
+      "date": "2025-04-04",
+      "formattedDate": "4 апр",
+      "readingTime": 25,
+      "exerciseTime": 30,
+      "totalActivityTime": 55
+    },
+    {
+      "date": "2025-04-05",
+      "formattedDate": "5 апр",
+      "readingTime": 30,
+      "exerciseTime": 35,
+      "totalActivityTime": 65
+    },
+    {
+      "date": "2025-04-06",
+      "formattedDate": "6 апр",
+      "readingTime": 35,
+      "exerciseTime": 40,
+      "totalActivityTime": 75
+    },
+    {
+      "date": "2025-04-07",
+      "formattedDate": "7 апр",
+      "readingTime": 40,
+      "exerciseTime": 45,
+      "totalActivityTime": 85
+    }
+  ]
+} 

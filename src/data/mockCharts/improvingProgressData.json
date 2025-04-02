@@ -1,0 +1,173 @@
+{
+  "chartTitle": "Положительная динамика за 2 месяца",
+  "chartDescription": "Пример пользователя, у которого активное использование приложения в течение 2 месяцев приводит к снижению уровня депрессии по шкале Бернса. Опросник проходится еженедельно.",
+  "data": [
+    {
+      "date": "2025-01-01",
+      "formattedDate": "1 янв",
+      "depressionScore": 35,
+      "depressionPercentage": 87,
+      "hasDepressionTest": true,
+      "readingTime": 12,
+      "exerciseTime": 5,
+      "totalActivityTime": 17
+    },
+    {
+      "date": "2025-01-02",
+      "formattedDate": "2 янв",
+      "readingTime": 15,
+      "exerciseTime": 8,
+      "totalActivityTime": 23
+    },
+    {
+      "date": "2025-01-03",
+      "formattedDate": "3 янв",
+      "readingTime": 18,
+      "exerciseTime": 10,
+      "totalActivityTime": 28
+    },
+    {
+      "date": "2025-01-05",
+      "formattedDate": "5 янв",
+      "readingTime": 25,
+      "exerciseTime": 15,
+      "totalActivityTime": 40
+    },
+    {
+      "date": "2025-01-08",
+      "formattedDate": "8 янв",
+      "depressionScore": 32,
+      "depressionPercentage": 80,
+      "hasDepressionTest": true,
+      "readingTime": 30,
+      "exerciseTime": 25,
+      "totalActivityTime": 55
+    },
+    {
+      "date": "2025-01-10",
+      "formattedDate": "10 янв",
+      "readingTime": 22,
+      "exerciseTime": 18,
+      "totalActivityTime": 40
+    },
+    {
+      "date": "2025-01-12",
+      "formattedDate": "12 янв",
+      "readingTime": 28,
+      "exerciseTime": 22,
+      "totalActivityTime": 50
+    },
+    {
+      "date": "2025-01-15",
+      "formattedDate": "15 янв",
+      "depressionScore": 30,
+      "depressionPercentage": 75,
+      "hasDepressionTest": true,
+      "readingTime": 35,
+      "exerciseTime": 30,
+      "totalActivityTime": 65
+    },
+    {
+      "date": "2025-01-18",
+      "formattedDate": "18 янв",
+      "readingTime": 40,
+      "exerciseTime": 35,
+      "totalActivityTime": 75
+    },
+    {
+      "date": "2025-01-22",
+      "formattedDate": "22 янв",
+      "depressionScore": 28,
+      "depressionPercentage": 70,
+      "hasDepressionTest": true,
+      "readingTime": 45,
+      "exerciseTime": 40,
+      "totalActivityTime": 85
+    },
+    {
+      "date": "2025-01-25",
+      "formattedDate": "25 янв",
+      "readingTime": 38,
+      "exerciseTime": 42,
+      "totalActivityTime": 80
+    },
+    {
+      "date": "2025-01-29",
+      "formattedDate": "29 янв",
+      "depressionScore": 24,
+      "depressionPercentage": 60,
+      "hasDepressionTest": true,
+      "readingTime": 48,
+      "exerciseTime": 45,
+      "totalActivityTime": 93
+    },
+    {
+      "date": "2025-02-01",
+      "formattedDate": "1 фев",
+      "readingTime": 42,
+      "exerciseTime": 48,
+      "totalActivityTime": 90
+    },
+    {
+      "date": "2025-02-05",
+      "formattedDate": "5 фев",
+      "depressionScore": 20,
+      "depressionPercentage": 50,
+      "hasDepressionTest": true,
+      "readingTime": 53,
+      "exerciseTime": 50,
+      "totalActivityTime": 103
+    },
+    {
+      "date": "2025-02-09",
+      "formattedDate": "9 фев",
+      "readingTime": 50,
+      "exerciseTime": 55,
+      "totalActivityTime": 105
+    },
+    {
+      "date": "2025-02-12",
+      "formattedDate": "12 фев",
+      "depressionScore": 16,
+      "depressionPercentage": 40,
+      "hasDepressionTest": true,
+      "readingTime": 60,
+      "exerciseTime": 60,
+      "totalActivityTime": 120
+    },
+    {
+      "date": "2025-02-16",
+      "formattedDate": "16 фев",
+      "readingTime": 55,
+      "exerciseTime": 65,
+      "totalActivityTime": 120
+    },
+    {
+      "date": "2025-02-19",
+      "formattedDate": "19 фев",
+      "depressionScore": 12,
+      "depressionPercentage": 30,
+      "hasDepressionTest": true,
+      "readingTime": 65,
+      "exerciseTime": 70,
+      "totalActivityTime": 135
+    },
+    {
+      "date": "2025-02-22",
+      "formattedDate": "22 фев",
+      "readingTime": 70,
+      "exerciseTime": 65,
+      "totalActivityTime": 135
+    },
+    {
+      "date": "2025-02-26",
+      "formattedDate": "26 фев",
+      "depressionScore": 10,
+      "depressionPercentage": 25,
+      "hasDepressionTest": true,
+      "readingTime": 75,
+      "exerciseTime": 75,
+      "totalActivityTime": 150
+    }
+  ]
+} 

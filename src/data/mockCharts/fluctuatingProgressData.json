@@ -1,0 +1,125 @@
+{
+  "chartTitle": "Непостоянная динамика за 6 недель",
+  "chartDescription": "Пример пользователя с переменным уровнем депрессии в течение 6 недель. Видно, что в периоды активного использования приложения (больше время чтения и упражнений) уровень депрессии снижается, а при уменьшении активности - повышается.",
+  "data": [
+    {
+      "date": "2025-01-01",
+      "formattedDate": "1 янв",
+      "depressionScore": 30,
+      "depressionPercentage": 75,
+      "hasDepressionTest": true,
+      "readingTime": 15,
+      "exerciseTime": 10,
+      "totalActivityTime": 25
+    },
+    {
+      "date": "2025-01-04",
+      "formattedDate": "4 янв",
+      "readingTime": 20,
+      "exerciseTime": 15,
+      "totalActivityTime": 35
+    },
+    {
+      "date": "2025-01-08",
+      "formattedDate": "8 янв",
+      "depressionScore": 25,
+      "depressionPercentage": 62,
+      "hasDepressionTest": true,
+      "readingTime": 45,
+      "exerciseTime": 35,
+      "totalActivityTime": 80
+    },
+    {
+      "date": "2025-01-12",
+      "formattedDate": "12 янв",
+      "readingTime": 30,
+      "exerciseTime": 25,
+      "totalActivityTime": 55
+    },
+    {
+      "date": "2025-01-15",
+      "formattedDate": "15 янв",
+      "depressionScore": 28,
+      "depressionPercentage": 70,
+      "hasDepressionTest": true,
+      "readingTime": 20,
+      "exerciseTime": 15,
+      "totalActivityTime": 35
+    },
+    {
+      "date": "2025-01-18",
+      "formattedDate": "18 янв",
+      "readingTime": 15,
+      "exerciseTime": 10,
+      "totalActivityTime": 25
+    },
+    {
+      "date": "2025-01-22",
+      "formattedDate": "22 янв",
+      "depressionScore": 33,
+      "depressionPercentage": 82,
+      "hasDepressionTest": true,
+      "readingTime": 8,
+      "exerciseTime": 5,
+      "totalActivityTime": 13
+    },
+    {
+      "date": "2025-01-25",
+      "formattedDate": "25 янв",
+      "readingTime": 25,
+      "exerciseTime": 20,
+      "totalActivityTime": 45
+    },
+    {
+      "date": "2025-01-29",
+      "formattedDate": "29 янв",
+      "depressionScore": 31,
+      "depressionPercentage": 77,
+      "hasDepressionTest": true,
+      "readingTime": 35,
+      "exerciseTime": 25,
+      "totalActivityTime": 60
+    },
+    {
+      "date": "2025-02-01",
+      "formattedDate": "1 фев",
+      "readingTime": 40,
+      "exerciseTime": 30,
+      "totalActivityTime": 70
+    },
+    {
+      "date": "2025-02-05",
+      "formattedDate": "5 фев",
+      "depressionScore": 26,
+      "depressionPercentage": 65,
+      "hasDepressionTest": true,
+      "readingTime": 52,
+      "exerciseTime": 40,
+      "totalActivityTime": 92
+    },
+    {
+      "date": "2025-02-08",
+      "formattedDate": "8 фев",
+      "readingTime": 58,
+      "exerciseTime": 45,
+      "totalActivityTime": 103
+    },
+    {
+      "date": "2025-02-12",
+      "formattedDate": "12 фев",
+      "depressionScore": 21,
+      "depressionPercentage": 52,
+      "hasDepressionTest": true,
+      "readingTime": 65,
+      "exerciseTime": 50,
+      "totalActivityTime": 115
+    },
+    {
+      "date": "2025-02-15",
+      "formattedDate": "15 фев",
+      "readingTime": 38,
+      "exerciseTime": 30,
+      "totalActivityTime": 68
+    }
+  ]
+} 
