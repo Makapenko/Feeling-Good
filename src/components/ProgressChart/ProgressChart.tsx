@@ -298,7 +298,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
             }}
             labelFormatter={(label) => {
               const isTestDay = testDays.includes(label);
-              return `${label}${isTestDay ? ' (проведен опросник)' : ''}`;
+              return `${label}${isTestDay ? ' (пройден тест)' : ''}`;
             }}
             contentStyle={{ fontSize: isSmallMobile ? 10 : 12 }}
           />

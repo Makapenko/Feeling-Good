@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import styles from './TodayTasks.module.css';
-import { 
-  useAppDispatch, 
-  useUnlockedContent, 
-  useCompletedChapters, 
-  useFavoriteActivities, 
+import {
+  useAppDispatch,
+  useUnlockedContent,
+  useCompletedChapters,
+  useFavoriteActivities,
   useFavoriteChapters,
   useTodayProgress,
   useTestsByType
@@ -15,9 +15,9 @@ import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { ActivityId, ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
-import { 
-  formatTimeFromSeconds, 
-  getDaysDifference, 
+import {
+  formatTimeFromSeconds,
+  getDaysDifference,
   getCurrentDate
 } from '../../utils/dateUtils';
 import { SmartProgressChart } from '../ProgressChart';
@@ -32,7 +32,7 @@ const TodayTasks: React.FC = () => {
   const favoriteActivitiesIds = useFavoriteActivities();
   const favoriteChapters = useFavoriteChapters();
   const todayProgress = useTodayProgress();
-  const burnsTestResults = useTestsByType('burns-checklist');
+  const burnsTestResults = useTestsByType(ACTIVITY_IDS.BURNS_CHECKLIST);
 
   // Получаем избранные активности напрямую из Redux
   const favoriteActivities = useMemo(() => {
@@ -52,7 +52,7 @@ const TodayTasks: React.FC = () => {
   const findFirstUnreadChapter = () => {
     // Пропускаем первые три главы (acknowledgments, foreword, introduction)
     const mainChapters = typedChaptersData.chapters.slice(3);
-    
+
     for (const chapter of mainChapters) {
       // Проверяем доступность главы
       if (!unlockedContent.chapters.includes(chapter.id)) {
@@ -63,7 +63,7 @@ const TodayTasks: React.FC = () => {
       if (chapter.sections && chapter.sections.length > 0) {
         for (const section of chapter.sections) {
           if (
-            unlockedContent.chapters.includes(section.id) && 
+            unlockedContent.chapters.includes(section.id) &&
             !completedChapters.includes(section.id)
           ) {
             return {
@@ -93,7 +93,7 @@ const TodayTasks: React.FC = () => {
       try {
         const response = await fetch(firstUnreadChapter.path);
         const content = await response.text();
-        
+
         dispatch(setCurrentChapter({
           id: firstUnreadChapter.id,
           title: firstUnreadChapter.title,
@@ -120,8 +120,8 @@ const TodayTasks: React.FC = () => {
   const readingGoalAchieved = totalReadingTime >= 300; // 5 минут = 300 секунд
 
   // Проверяем время работы с методами
-  const totalMethodsTime = getStoredActivityTime(ACTIVITY_IDS.THREE_COLUMNS_METHOD) + 
-                          getStoredActivityTime(ACTIVITY_IDS.THOUGHT_DIARY);
+  const totalMethodsTime = getStoredActivityTime(ACTIVITY_IDS.THREE_COLUMNS_METHOD) +
+    getStoredActivityTime(ACTIVITY_IDS.THOUGHT_DIARY);
   const methodsGoalAchieved = totalMethodsTime >= 900; // 15 минут = 900 секунд
 
   // Проверяем статус опросника Бернса
@@ -139,11 +139,11 @@ const TodayTasks: React.FC = () => {
     const lastCompletionDate = new Date(burnsTestResults[0].completedAt);
     const today = new Date(getCurrentDate());
     const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
-    
+
     if (daysSinceLastCompletion >= 7) {
       return {
         needToComplete: true,
-        message: burnsTestResults.length === 1 
+        message: burnsTestResults.length === 1
           ? 'Пройдите опросник Бернса повторно (второй раз)'
           : 'Пройдите опросник Бернса повторно'
       };
@@ -163,7 +163,7 @@ const TodayTasks: React.FC = () => {
   // Создадим константы для внутренних идентификаторов
   const DAILY_MOOD_ID = 'daily-mood';
   const AUTOMATIC_THOUGHTS_ID = 'automatic-thoughts';
-  
+
   const handleActivityClick = (activityId: string) => {
     switch (activityId) {
       case DAILY_MOOD_ID:
@@ -181,7 +181,7 @@ const TodayTasks: React.FC = () => {
         dispatch(setSpecialContent(activityId as ActivityId));
         break;
     }
-    
+
     // Прокрутка страницы вверх
     window.scrollTo(0, 0);
   };
@@ -192,7 +192,7 @@ const TodayTasks: React.FC = () => {
       // Пытаемся найти главу в данных глав
       const chapter = typedChaptersData.chapters.find(ch => ch.id === chapterId);
       let path = '';
-      
+
       // Проверяем, это глава или подглава
       if (chapter) {
         // Это основная глава
@@ -209,14 +209,14 @@ const TodayTasks: React.FC = () => {
           }
         }
       }
-      
+
       if (path) {
         const response = await fetch(path);
         const content = await response.text();
-        
+
         // Находим заголовок главы
         const title = favoriteChapters.find(ch => ch.id === chapterId)?.title || 'Глава';
-        
+
         dispatch(setCurrentChapter({
           id: chapterId,
           title,
@@ -234,7 +234,7 @@ const TodayTasks: React.FC = () => {
     <div className={styles.container}>
       <h2>Задания на сегодня</h2>
       <div className={styles.tasksList}>
-        <div 
+        <div
           className={`${styles.task} ${!readingGoalAchieved ? styles.clickable : ''}`}
           onClick={handleReadingClick}
         >
@@ -290,14 +290,14 @@ const TodayTasks: React.FC = () => {
                   Осталось: {formatTime(900 - totalMethodsTime)}
                 </span>
                 <div className={styles.methodLinks}>
-                  <span 
-                    className={styles.openLink} 
+                  <span
+                    className={styles.openLink}
                     onClick={() => handleActivityClick(AUTOMATIC_THOUGHTS_ID)}
                   >
                     Открыть метод трёх колонок
                   </span>
-                  <span 
-                    className={styles.openLink} 
+                  <span
+                    className={styles.openLink}
                     onClick={() => handleActivityClick(ACTIVITY_IDS.THOUGHT_DIARY)}
                   >
                     Открыть дневник мыслей
@@ -309,7 +309,7 @@ const TodayTasks: React.FC = () => {
         </div>
 
         {burnsStatus && (
-          <div 
+          <div
             className={`${styles.task} ${burnsStatus.needToComplete ? styles.clickable : ''}`}
             onClick={burnsStatus.needToComplete ? () => handleActivityClick(DAILY_MOOD_ID) : undefined}
           >
@@ -348,14 +348,14 @@ const TodayTasks: React.FC = () => {
         <h3 className={styles.chartTitle}>Ваш прогресс</h3>
         <SmartProgressChart useRealData={true} autoAdjust={true} />
       </div>
-      
+
       {favoriteActivities.length > 0 && (
         <>
           <h2 className={styles.favoritesTitle}>Избранные задания</h2>
           <div className={styles.favoritesList}>
             {favoriteActivities.map(activity => (
-              <div 
-                key={activity.id} 
+              <div
+                key={activity.id}
                 className={`${styles.favoriteItem} ${styles.clickable}`}
                 onClick={() => handleActivityClick(activity.id)}
               >
@@ -366,14 +366,14 @@ const TodayTasks: React.FC = () => {
           </div>
         </>
       )}
-      
+
       {favoriteChapters.length > 0 && (
         <>
           <h2 className={styles.favoritesTitle}>Избранные главы</h2>
           <div className={styles.favoritesList}>
             {favoriteChapters.map(chapter => (
-              <div 
-                key={chapter.id} 
+              <div
+                key={chapter.id}
                 className={`${styles.favoriteItem} ${styles.clickable}`}
                 onClick={() => handleFavoriteChapterClick(chapter.id)}
               >
