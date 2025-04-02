@@ -32,11 +32,20 @@ export const formatTime = (
 };
 
 /**
- * Форматирует секунды в читаемый формат времени (минуты:секунды)
+ * Форматирует секунды в читаемый формат времени
+ * @param seconds Количество секунд
+ * @param showHours Нужно ли всегда показывать часы (даже если они равны 0)
+ * @returns Отформатированная строка времени (часы:минуты:секунды или минуты:секунды)
  */
-export const formatTimeFromSeconds = (seconds: number): string => {
-  const minutes = Math.floor(seconds / 60);
+export const formatTimeFromSeconds = (seconds: number, showHours: boolean = false): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
+  
+  if (hours > 0 || showHours) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+  
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 

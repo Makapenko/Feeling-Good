@@ -9,7 +9,6 @@ import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
-import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import styles from './DownwardArrow.module.css';
 
 // TODO: В инпуты можно писать только после перезагрузки страницы
@@ -216,9 +215,7 @@ const DownwardArrow: React.FC = () => {
   );
 
   return (
-    <div className={styles.container}>
-      <ActivityTimer activityId={SHEET_ID} />
-      
+    <div className={styles.container}>   
       <div className={styles.header}>
         <h2>Техника падающей стрелы</h2>
         {actionButtons}

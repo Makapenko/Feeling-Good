@@ -1,0 +1,80 @@
+.universalTimer {
+  position: sticky;
+  top: 0;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 10px;
+  font-size: 14px;
+  color: #666;
+  text-align: right;
+  border-bottom: 1px solid #eee;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.isPaused {
+  background-color: rgba(250, 250, 250, 1);
+  color: #999;
+}
+
+.timerText {
+  margin-right: 10px;
+}
+
+.pauseButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #777;
+  font-size: 14px;
+  padding: 0 5px;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pauseButton:hover {
+  color: #333;
+}
+
+.pauseButton:focus {
+  outline: none;
+  color: #333;
+}
+
+/* Мобильная версия таймера */
+@media (max-width: 768px) {
+  .universalTimer {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    color: #4a5568;
+    font-weight: 500;
+    border: 1px solid #e2e8f0;
+    text-align: right;
+    border-bottom: none;
+  }
+
+  .isPaused {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+  }
+
+  .timerText {
+    margin-right: 6px;
+    font-size: 0.9rem;
+  }
+
+  .pauseButton {
+    font-size: 0.9rem;
+    padding: 0 3px;
+  }
+} 

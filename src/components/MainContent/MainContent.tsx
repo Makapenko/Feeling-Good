@@ -6,6 +6,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import ChapterContainer from '../ChapterReader/ChapterContainer';
 import ProgressCalendar from '../ProgressCalendar/ProgressCalendar';
 import TodayTasks from '../TodayTasks/TodayTasks';
+import UniversalTimer from '../UniversalTimer/UniversalTimer';
 
 import ListOfCognitiveBiases from '../Activities/ListOfCognitiveBiases/ListOfCognitiveBiases';
 import TestOfCognitiveBiases from '../Activities/TestOfCognitiveBiases/TestOfCognitiveBiases';
@@ -34,6 +35,7 @@ import RationalResponses from '../Activities/RationalResponses/RationalResponses
 import DownwardArrow from '../Activities/DownwardArrow/DownwardArrow';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
+import { updateChapterTime } from '../../redux/actions';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
 import DysfunctionalAttitudeScale from '../Activities/DysfunctionalAttitudeScale/DysfunctionalAttitudeScale';
 import AdvantagesDisadvantages from '../Activities/AdvantagesDisadvantages/AdvantagesDisadvantages';
@@ -88,6 +90,13 @@ const MainContent: React.FC = () => {
     window.scrollTo(0, 0);
   }, [currentChapter?.id, specialContent]);
 
+  // Функция для обновления времени главы, если это необходимо
+  const handleChapterTimeUpdate = (timeSpent: number) => {
+    if (currentChapter?.id) {
+      dispatch(updateChapterTime({ chapterId: currentChapter.id, timeSpent })); 
+    }
+  };
+
   const handleBackToChapters = () => {
     dispatch(setCurrentChapter(null));
     dispatch(setActiveTab('chapters'));
@@ -96,6 +105,17 @@ const MainContent: React.FC = () => {
   const handleBackToActivities = () => {
     dispatch(setSpecialContent(null));
     dispatch(setActiveTab('activities'));
+  };
+
+  // Получаем ID текущего контента для таймера
+  const getCurrentContentId = () => {
+    if (specialContent) {
+      return specialContent; // Возвращаем ID специального контента
+    }
+    if (currentChapter?.id) {
+      return currentChapter.id; // Возвращаем ID главы
+    }
+    return 'default'; // Дефолтное значение
   };
 
   // Компонент обёртка для активностей с кнопкой "назад"
@@ -146,7 +166,10 @@ const MainContent: React.FC = () => {
             <FontAwesomeIcon icon={faArrowLeft} />
             <span>К списку глав</span>
           </div>
-          <ChapterContainer content={content} chapterId={id} />
+          <ChapterContainer 
+            content={content} 
+            chapterId={id} 
+          />
         </>
       );
     }
@@ -160,7 +183,17 @@ const MainContent: React.FC = () => {
     );
   };
 
-  return <>{renderContent()}</>;
+  const contentId = getCurrentContentId();
+
+  return (
+    <>
+      <UniversalTimer 
+        componentId={contentId} 
+        onTimeUpdate={currentChapter?.id ? handleChapterTimeUpdate : undefined}
+      />
+      {renderContent()}
+    </>
+  );
 };
 
 export default MainContent;

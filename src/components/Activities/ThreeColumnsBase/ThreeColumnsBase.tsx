@@ -4,7 +4,6 @@ import { CognitiveDistortions } from '../ThoughtDiary/CognitiveDistortions/Cogni
 import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
 import { useDailyProgress } from '../../../redux/hooks';
 import { v4 as uuidv4 } from 'uuid';
-import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 import { ACTIVITY_IDS } from '../../../constants/activities';
@@ -117,7 +116,6 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
 
   return (
     <div className={styles.container}>
-      <ActivityTimer activityId={methodId} />
       <div className={styles.titleContainer}>
         <h2>{title}</h2>
         {actionButtons}

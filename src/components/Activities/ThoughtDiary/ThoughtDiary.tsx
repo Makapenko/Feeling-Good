@@ -7,7 +7,6 @@ import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
-import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -239,7 +238,6 @@ const ThoughtDiary: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <ActivityTimer activityId={SHEET_ID} />
       <div className={styles.titleContainer}>
         <h2>Дневник автоматических мыслей</h2>
         <div className={styles.actionButtons}>

@@ -9,7 +9,6 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { addExercise } from '../../../redux/actions';
 import { useIsMobile } from '../../../utils/deviceUtils';
 import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
-import ActivityTimer from '../ActivityTimer/ActivityTimer';
 import ResultsChart from './ResultsChart';
 import CategoryResults from './CategoryResults';
 import styles from './DysfunctionalAttitudeScale.module.css';
@@ -195,8 +194,6 @@ const DysfunctionalAttitudeScale: React.FC = () => {
   
   return (
     <div className={styles.mainContainer}>
-      <ActivityTimer activityId={ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE} />
-      
       <div className={styles.header}>
         <h2>Шкала дисфункциональных убеждений</h2>
         <div className={styles.actionButtons}>
