@@ -9,7 +9,7 @@ import {
   Exercise,
   DayProgress
 } from '../../types/progress.types';
-import { getCurrentDate } from '../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp } from '../../utils/dateUtils';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { chapterToActivitiesMap } from '../../data/activitiesMapping';
@@ -18,7 +18,7 @@ import type { RootState } from '../types';
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 
-const today = new Date().toISOString().split('T')[0];
+const today = getCurrentDate();
 
 // Используем тот же тип для состояния (для простоты)
 type ProgressState = UserProgress;
@@ -197,7 +197,7 @@ const progressSlice = createSlice({
         id: chapterId,
         timeSpent: state.currentChapter.timeSpent,
         completed: true,
-        completedAt: new Date().toISOString()
+        completedAt: getCurrentISOTimestamp()
       };
       
       // Обновляем ежедневный прогресс

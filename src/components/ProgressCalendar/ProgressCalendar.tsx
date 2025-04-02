@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDailyProgress } from '../../redux/hooks';
 import styles from './ProgressCalendar.module.css';
 import chaptersData from '../ListOfChapters/chapters.json';
 import { DayDetails } from './DayDetails';
 import { ChapterMap, CalendarDayProgress } from './types';
-import { formatTimeFromSeconds, formatDateWithOptions, getCurrentDate } from '../../utils/dateUtils';
+import { formatTimeFromSeconds, formatDateWithOptions, getCurrentDate, formatDateToISO } from '../../utils/dateUtils';
 
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
@@ -13,7 +13,7 @@ const ProgressCalendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(() => {
     const today = new Date();
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+    return formatDateToISO(today).substring(0, 7);
   });
 
   // Создаем карту глав для быстрого поиска
@@ -149,7 +149,7 @@ const ProgressCalendar: React.FC = () => {
   const changeMonth = (delta: number) => {
     const [year, month] = currentMonth.split('-').map(Number);
     const newDate = new Date(year, month - 1 + delta, 1);
-    setCurrentMonth(`${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(2, '0')}`);
+    setCurrentMonth(formatDateToISO(newDate).substring(0, 7));
   };
 
   const formatMonthTitle = () => {

@@ -15,6 +15,7 @@ import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { ActivityId, ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
+import { formatTimeFromSeconds, getDaysDifference } from '../../utils/dateUtils';
 
 const typedChaptersData = chaptersData as ChaptersData;
 
@@ -133,7 +134,7 @@ const TodayTasks: React.FC = () => {
 
     const lastCompletionDate = new Date(burnsTestResults[0].completedAt);
     const today = new Date();
-    const daysSinceLastCompletion = Math.floor((today.getTime() - lastCompletionDate.getTime()) / (1000 * 60 * 60 * 24));
+    const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
     
     if (daysSinceLastCompletion >= 7) {
       return {
@@ -152,11 +153,8 @@ const TodayTasks: React.FC = () => {
 
   const burnsStatus = checkBurnsStatus();
 
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
+  // Используем утилиту форматирования времени
+  const formatTime = formatTimeFromSeconds;
 
   // Создадим константы для внутренних идентификаторов
   const DAILY_MOOD_ID = 'daily-mood';

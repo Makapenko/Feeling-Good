@@ -1,3 +1,5 @@
+import { getCurrentDate } from './dateUtils';
+
 interface ChapterTime {
   [chapterId: string]: number;
 }
@@ -37,7 +39,7 @@ const saveAllData = (data: DailyTimeProgress): void => {
 };
 
 export const getStoredTime = (chapterId: string): number => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getCurrentDate();
   const dailyProgress = getAllStoredData();
   const time = dailyProgress[today]?.[chapterId] || 0;
   console.log(`Getting stored time for chapter ${chapterId} on ${today}:`, time);
@@ -45,7 +47,7 @@ export const getStoredTime = (chapterId: string): number => {
 };
 
 export const saveTime = (chapterId: string, seconds: number): void => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getCurrentDate();
   console.log(`Saving time for chapter ${chapterId} on ${today}:`, seconds);
   
   const dailyProgress = getAllStoredData();

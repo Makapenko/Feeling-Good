@@ -1,3 +1,5 @@
+import { getCurrentDate } from './dateUtils';
+
 interface ActivityTime {
   [activityId: string]: number;
 }
@@ -34,13 +36,13 @@ const saveAllData = (data: DailyActivityProgress): void => {
 };
 
 export const getStoredActivityTime = (activityId: string): number => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getCurrentDate();
   const dailyProgress = getAllStoredData();
   return dailyProgress[today]?.[activityId] || 0;
 };
 
 export const saveActivityTime = (activityId: string, seconds: number): void => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getCurrentDate();
   
   const dailyProgress = getAllStoredData();
 
