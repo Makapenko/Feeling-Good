@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ACTIVITY_IDS } from '../../../constants/activities';
@@ -10,9 +10,6 @@ import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import styles from './DownwardArrow.module.css';
-
-// TODO: В инпуты можно писать только после перезагрузки страницы
-// TODO: Не оптимизированы кнопки для мобил
 
 const SHEET_ID: SpecialContent = ACTIVITY_IDS.DOWNWARD_ARROW;
 
@@ -33,13 +30,70 @@ const DownwardArrow: React.FC = () => {
   const [chains, setChains] = useState<DownwardArrowChain[]>([]);
   const [activeChainIndex, setActiveChainIndex] = useState<number>(0);
   const [showInstructions, setShowInstructions] = useState<boolean>(true);
+  
+  // Используем useRef для отслеживания изменений без вызова повторного рендеринга
+  const chainsRef = useRef<DownwardArrowChain[]>([]);
+  
+  // Обновляем ref при изменении chains
+  useEffect(() => {
+    chainsRef.current = chains;
+  }, [chains]);
+  
+  // Сохранение в Redux (мемоизированно)
+  const saveToRedux = useCallback((updatedChains: DownwardArrowChain[]) => {
+    const exercise = {
+      ...createBaseExercise(SHEET_ID, SHEET_ID),
+      chains: updatedChains
+    };
+
+    dispatch(addExercise({ 
+      exercise, 
+      showNotification: false 
+    }));
+  }, [dispatch]);
+  
+  // Отложенное сохранение в Redux для избежания сохранения во время рендеринга
+  const deferredSaveToRedux = useCallback(() => {
+    setTimeout(() => {
+      saveToRedux([...chainsRef.current]);
+    }, 0);
+  }, [saveToRedux]);
+  
+  // Создание новой цепочки (мемоизированно)
+  const createNewChain = useCallback(() => {
+    const newChain: DownwardArrowChain = {
+      id: uuidv4(),
+      initialThought: '',
+      initialRationalResponse: '',
+      chainItems: [],
+      hiddenBeliefs: '',
+      timestamp: getCurrentISOTimestamp()
+    };
+    
+    setChains(prev => {
+      const updatedChains = [...prev, newChain];
+      chainsRef.current = updatedChains;
+      return updatedChains;
+    });
+    
+    setTimeout(() => {
+      setActiveChainIndex(chainsRef.current.length - 1);
+      deferredSaveToRedux();
+    }, 0);
+    
+    return newChain;
+  }, [deferredSaveToRedux]);
 
   // Загрузка сохраненных цепочек
   useEffect(() => {
     const loadSavedChains = () => {
       const today = getCurrentDate();
       const todayProgress = dailyProgress[today];
-      if (!todayProgress?.exercises?.exercises) return;
+      if (!todayProgress?.exercises?.exercises) {
+        // Если нет упражнений в прогрессе, создаем пустую цепочку
+        createNewChain();
+        return;
+      }
 
       const exercise = todayProgress.exercises.exercises.find(
         ex => ex.type === ACTIVITY_IDS.DOWNWARD_ARROW
@@ -49,6 +103,7 @@ const DownwardArrow: React.FC = () => {
         const loadedChains = exercise.chains as DownwardArrowChain[];
         if (loadedChains.length > 0) {
           setChains(loadedChains);
+          chainsRef.current = loadedChains;
         } else {
           // Если нет сохраненных цепочек, создаем пустую
           createNewChain();
@@ -60,25 +115,13 @@ const DownwardArrow: React.FC = () => {
     };
 
     loadSavedChains();
-  }, [dailyProgress]);
-
-  // Создание новой цепочки
-  const createNewChain = () => {
-    const newChain: DownwardArrowChain = {
-      id: uuidv4(),
-      initialThought: '',
-      initialRationalResponse: '',
-      chainItems: [],
-      hiddenBeliefs: '',
-      timestamp: getCurrentISOTimestamp()
-    };
-    setChains(prev => [...prev, newChain]);
-    setActiveChainIndex(chains.length);
-  };
+  }, [dailyProgress, createNewChain]);
 
   // Добавление новой мысли в активную цепочку
-  const addNewThought = () => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
+  const addNewThought = useCallback(() => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
+    }
 
     const randomQuestionIndex = Math.floor(Math.random() * ARROW_QUESTIONS.length);
     const defaultQuestion = ARROW_QUESTIONS[randomQuestionIndex];
@@ -90,114 +133,191 @@ const DownwardArrow: React.FC = () => {
       rationalResponse: ''
     };
 
-    const updatedChains = [...chains];
-    updatedChains[activeChainIndex].chainItems.push(newThought);
-    setChains(updatedChains);
-    saveToRedux(updatedChains);
-  };
+    setChains(prevChains => {
+      const updatedChains = [...prevChains];
+      
+      if (updatedChains[activeChainIndex]) {
+        // Создаем новый массив chainItems вместо мутирования существующего
+        const updatedChainItems = [...updatedChains[activeChainIndex].chainItems, newThought];
+        
+        // Создаем новый объект для цепочки
+        updatedChains[activeChainIndex] = {
+          ...updatedChains[activeChainIndex],
+          chainItems: updatedChainItems
+        };
+        
+        chainsRef.current = updatedChains;
+        deferredSaveToRedux();
+        return updatedChains;
+      }
+      
+      return prevChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Обновление текста мысли в активной цепочке
-  const updateThoughtText = (thoughtId: string, text: string) => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
-
-    const updatedChains = [...chains];
-    const chainItemIndex = updatedChains[activeChainIndex].chainItems.findIndex(
-      item => item.id === thoughtId
-    );
-
-    if (chainItemIndex !== -1) {
-      updatedChains[activeChainIndex].chainItems[chainItemIndex].text = text;
-      setChains(updatedChains);
-      saveToRedux(updatedChains);
+  const updateThoughtText = useCallback((thoughtId: string, text: string) => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
     }
-  };
+
+    setChains(prevChains => {
+      // Создаем глубокую копию массива цепочек
+      const updatedChains = prevChains.map((chain, index) => {
+        if (index !== activeChainIndex) return chain;
+        
+        // Для активной цепочки обновляем элемент
+        const updatedChainItems = chain.chainItems.map(item => {
+          if (item.id !== thoughtId) return item;
+          // Создаем новый объект для измененной мысли
+          return { ...item, text };
+        });
+        
+        // Возвращаем новую цепочку с обновленными элементами
+        return { ...chain, chainItems: updatedChainItems };
+      });
+      
+      chainsRef.current = updatedChains;
+      deferredSaveToRedux();
+      return updatedChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Обновление вопроса для мысли
-  const updateThoughtQuestion = (thoughtId: string, question: string) => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
-
-    const updatedChains = [...chains];
-    const chainItemIndex = updatedChains[activeChainIndex].chainItems.findIndex(
-      item => item.id === thoughtId
-    );
-
-    if (chainItemIndex !== -1) {
-      updatedChains[activeChainIndex].chainItems[chainItemIndex].question = question;
-      setChains(updatedChains);
-      saveToRedux(updatedChains);
+  const updateThoughtQuestion = useCallback((thoughtId: string, question: string) => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
     }
-  };
+
+    setChains(prevChains => {
+      // Создаем глубокую копию массива цепочек
+      const updatedChains = prevChains.map((chain, index) => {
+        if (index !== activeChainIndex) return chain;
+        
+        // Для активной цепочки обновляем элемент
+        const updatedChainItems = chain.chainItems.map(item => {
+          if (item.id !== thoughtId) return item;
+          // Создаем новый объект для измененной мысли
+          return { ...item, question };
+        });
+        
+        // Возвращаем новую цепочку с обновленными элементами
+        return { ...chain, chainItems: updatedChainItems };
+      });
+      
+      chainsRef.current = updatedChains;
+      deferredSaveToRedux();
+      return updatedChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Обновление рационального ответа для конкретной мысли
-  const updateThoughtResponse = (thoughtId: string, response: string) => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
-
-    const updatedChains = [...chains];
-    const chainItemIndex = updatedChains[activeChainIndex].chainItems.findIndex(
-      item => item.id === thoughtId
-    );
-
-    if (chainItemIndex !== -1) {
-      updatedChains[activeChainIndex].chainItems[chainItemIndex].rationalResponse = response;
-      setChains(updatedChains);
-      saveToRedux(updatedChains);
+  const updateThoughtResponse = useCallback((thoughtId: string, response: string) => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
     }
-  };
+
+    setChains(prevChains => {
+      // Создаем глубокую копию массива цепочек
+      const updatedChains = prevChains.map((chain, index) => {
+        if (index !== activeChainIndex) return chain;
+        
+        // Для активной цепочки обновляем элемент
+        const updatedChainItems = chain.chainItems.map(item => {
+          if (item.id !== thoughtId) return item;
+          // Создаем новый объект для измененной мысли
+          return { ...item, rationalResponse: response };
+        });
+        
+        // Возвращаем новую цепочку с обновленными элементами
+        return { ...chain, chainItems: updatedChainItems };
+      });
+      
+      chainsRef.current = updatedChains;
+      deferredSaveToRedux();
+      return updatedChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Обновление начальной мысли в активной цепочке
-  const updateInitialThought = (text: string) => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
+  const updateInitialThought = useCallback((text: string) => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
+    }
 
-    const updatedChains = [...chains];
-    updatedChains[activeChainIndex].initialThought = text;
-    setChains(updatedChains);
-    saveToRedux(updatedChains);
-  };
+    setChains(prevChains => {
+      const updatedChains = prevChains.map((chain, index) => {
+        if (index !== activeChainIndex) return chain;
+        // Создаем новый объект для измененной цепочки
+        return { ...chain, initialThought: text };
+      });
+      
+      chainsRef.current = updatedChains;
+      deferredSaveToRedux();
+      return updatedChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Обновление рационального ответа на начальную мысль
-  const updateInitialResponse = (text: string) => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
+  const updateInitialResponse = useCallback((text: string) => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
+    }
 
-    const updatedChains = [...chains];
-    updatedChains[activeChainIndex].initialRationalResponse = text;
-    setChains(updatedChains);
-    saveToRedux(updatedChains);
-  };
+    setChains(prevChains => {
+      const updatedChains = prevChains.map((chain, index) => {
+        if (index !== activeChainIndex) return chain;
+        // Создаем новый объект для измененной цепочки
+        return { ...chain, initialRationalResponse: text };
+      });
+      
+      chainsRef.current = updatedChains;
+      deferredSaveToRedux();
+      return updatedChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Обновление скрытых убеждений
-  const updateHiddenBeliefs = (text: string) => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
+  const updateHiddenBeliefs = useCallback((text: string) => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
+    }
 
-    const updatedChains = [...chains];
-    updatedChains[activeChainIndex].hiddenBeliefs = text;
-    setChains(updatedChains);
-    saveToRedux(updatedChains);
-  };
-
-  // Сохранение в Redux
-  const saveToRedux = (updatedChains: DownwardArrowChain[]) => {
-    const exercise = {
-      ...createBaseExercise(SHEET_ID, SHEET_ID),
-      chains: updatedChains
-    };
-
-    dispatch(addExercise({ 
-      exercise, 
-      showNotification: false 
-    }));
-  };
+    setChains(prevChains => {
+      const updatedChains = prevChains.map((chain, index) => {
+        if (index !== activeChainIndex) return chain;
+        // Создаем новый объект для измененной цепочки
+        return { ...chain, hiddenBeliefs: text };
+      });
+      
+      chainsRef.current = updatedChains;
+      deferredSaveToRedux();
+      return updatedChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Удаление мысли из активной цепочки
-  const removeThought = (thoughtId: string) => {
-    if (activeChainIndex < 0 || activeChainIndex >= chains.length) return;
+  const removeThought = useCallback((thoughtId: string) => {
+    if (chains.length === 0 || activeChainIndex < 0 || activeChainIndex >= chains.length) {
+      return;
+    }
 
-    const updatedChains = [...chains];
-    updatedChains[activeChainIndex].chainItems = updatedChains[activeChainIndex].chainItems.filter(
-      item => item.id !== thoughtId
-    );
-    setChains(updatedChains);
-    saveToRedux(updatedChains);
-  };
+    setChains(prevChains => {
+      const updatedChains = prevChains.map((chain, index) => {
+        if (index !== activeChainIndex) return chain;
+        
+        // Фильтруем элементы, создавая новый массив
+        const filteredItems = chain.chainItems.filter(item => item.id !== thoughtId);
+        
+        // Возвращаем новую цепочку с обновленными элементами
+        return { ...chain, chainItems: filteredItems };
+      });
+      
+      chainsRef.current = updatedChains;
+      deferredSaveToRedux();
+      return updatedChains;
+    });
+  }, [chains, activeChainIndex, deferredSaveToRedux]);
 
   // Получение активной цепочки
   const activeChain = chains[activeChainIndex] || {
@@ -213,6 +333,24 @@ const DownwardArrow: React.FC = () => {
       <FavoriteButton activityId={SHEET_ID} />
     </div>
   );
+
+  // Обработчики создания новой цепочки и навигации
+  const handleCreateNewChain = useCallback(() => {
+    createNewChain();
+  }, [createNewChain]);
+  
+  const handlePrevChain = useCallback(() => {
+    setActiveChainIndex(prev => Math.max(0, prev - 1));
+  }, []);
+  
+  const handleNextChain = useCallback(() => {
+    setActiveChainIndex(prev => Math.min(chains.length - 1, prev + 1));
+  }, [chains.length]);
+
+  // Переключение инструкций
+  const toggleInstructions = useCallback((show: boolean) => {
+    setShowInstructions(show);
+  }, []);
 
   return (
     <div className={styles.container}>   
@@ -243,7 +381,7 @@ const DownwardArrow: React.FC = () => {
           </ol>
           <button 
             className={styles.hideInstructionsButton}
-            onClick={() => setShowInstructions(false)}
+            onClick={() => toggleInstructions(false)}
           >
             Скрыть инструкцию
           </button>
@@ -253,7 +391,7 @@ const DownwardArrow: React.FC = () => {
       {!showInstructions && (
         <button 
           className={styles.showInstructionsButton}
-          onClick={() => setShowInstructions(true)}
+          onClick={() => toggleInstructions(true)}
         >
           Показать инструкцию
         </button>
@@ -274,7 +412,7 @@ const DownwardArrow: React.FC = () => {
                 <div className={styles.initialThought}>
                   <div className={styles.thoughtNumber}>1.</div>
                   <textarea
-                    value={activeChain.initialThought}
+                    value={activeChain.initialThought || ''}
                     onChange={(e) => updateInitialThought(e.target.value)}
                     placeholder="Запишите негативную автоматическую мысль..."
                     className={styles.thoughtTextarea}
@@ -283,7 +421,7 @@ const DownwardArrow: React.FC = () => {
               </td>
               <td className={styles.responsesColumn}>
                 <textarea
-                  value={activeChain.initialRationalResponse}
+                  value={activeChain.initialRationalResponse || ''}
                   onChange={(e) => updateInitialResponse(e.target.value)}
                   placeholder="Запишите рациональный ответ на эту мысль..."
                   className={styles.responseTextarea}
@@ -292,7 +430,7 @@ const DownwardArrow: React.FC = () => {
             </tr>
 
             {/* Цепочка мыслей и ответов */}
-                {activeChain.chainItems.map((item, index) => (
+            {activeChain.chainItems && activeChain.chainItems.map((item, index) => (
               <tr key={item.id}>
                 <td className={styles.thoughtsColumn}>
                   <div className={styles.chainItem}>
@@ -311,7 +449,7 @@ const DownwardArrow: React.FC = () => {
                       <div className={styles.thoughtInputContainer}>
                         <div className={styles.thoughtNumber}>{index + 2}.</div>
                         <textarea
-                          value={item.text}
+                          value={item.text || ''}
                           onChange={(e) => updateThoughtText(item.id, e.target.value)}
                           placeholder={`Что это означает для меня...`}
                           className={styles.thoughtTextarea}
@@ -329,7 +467,7 @@ const DownwardArrow: React.FC = () => {
                 </td>
                 <td className={styles.responsesColumn}>
                   <textarea
-                    value={item.rationalResponse}
+                    value={item.rationalResponse || ''}
                     onChange={(e) => updateThoughtResponse(item.id, e.target.value)}
                     placeholder="Запишите рациональный ответ на эту мысль..."
                     className={styles.responseTextarea}
@@ -340,12 +478,12 @@ const DownwardArrow: React.FC = () => {
           </tbody>
         </table>
 
-                <button
-                  onClick={addNewThought}
-                  className={styles.addThoughtButton}
-                >
-                  + Добавить следующую мысль
-                </button>
+        <button
+          onClick={addNewThought}
+          className={styles.addThoughtButton}
+        >
+          + Добавить следующую мысль
+        </button>
 
         <div className={styles.hiddenBeliefsSection}>
           <h3>Выявленные скрытые убеждения</h3>
@@ -353,8 +491,8 @@ const DownwardArrow: React.FC = () => {
             Изучите цепочку автоматических мыслей и запишите скрытые убеждения, 
             которые вы обнаружили в их основе
           </p>
-                <textarea
-            value={activeChain.hiddenBeliefs}
+          <textarea
+            value={activeChain.hiddenBeliefs || ''}
             onChange={(e) => updateHiddenBeliefs(e.target.value)}
             placeholder="Запишите выявленные скрытые убеждения..."
             className={styles.hiddenBeliefsTextarea}
@@ -366,7 +504,7 @@ const DownwardArrow: React.FC = () => {
         {chains.length > 1 && (
           <>
             <button 
-              onClick={() => setActiveChainIndex(prev => Math.max(0, prev - 1))}
+              onClick={handlePrevChain}
               disabled={activeChainIndex === 0}
               className={styles.paginationButton}
             >
@@ -376,7 +514,7 @@ const DownwardArrow: React.FC = () => {
               {activeChainIndex + 1} из {chains.length}
             </span>
             <button 
-              onClick={() => setActiveChainIndex(prev => Math.min(chains.length - 1, prev + 1))}
+              onClick={handleNextChain}
               disabled={activeChainIndex === chains.length - 1}
               className={styles.paginationButton}
             >
@@ -385,7 +523,7 @@ const DownwardArrow: React.FC = () => {
           </>
         )}
         <button 
-          onClick={createNewChain}
+          onClick={handleCreateNewChain}
           className={styles.newChainButton}
         >
           Новая цепочка

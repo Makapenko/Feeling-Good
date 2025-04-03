@@ -74,7 +74,7 @@
 .downwardArrowTable {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #ddd;
+  border: none;
   margin-bottom: 20px;
 }
 
@@ -84,13 +84,13 @@
   font-weight: 600;
   text-align: left;
   padding: 12px 15px;
-  border-bottom: 2px solid #ddd;
+  border-bottom: none;
 }
 
 .downwardArrowTable td {
   vertical-align: top;
   padding: 15px;
-  border: 1px solid #ddd;
+  border: none;
 }
 
 .thoughtsColumn, .responsesColumn {
@@ -136,12 +136,17 @@
 
 .chainItem {
   margin-bottom: 10px;
+  position: relative;
 }
 
 .arrowContainer {
   display: flex;
   justify-content: center;
   margin: 10px 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -45px;
 }
 
 .arrow {
@@ -306,6 +311,10 @@
 
   .newChainButton {
     margin-left: 0;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin-top: 15px;
   }
   
   .downwardArrowTable th, .downwardArrowTable td {
@@ -319,6 +328,58 @@
   .thoughtTextarea, .responseTextarea, .questionTextarea {
     font-size: 0.9rem;
     min-height: 60px;
+  }
+  
+  /* Оптимизация кнопок для мобильных устройств */
+  .addThoughtButton,
+  .paginationButton,
+  .hideInstructionsButton,
+  .showInstructionsButton {
+    padding: 12px 16px;
+    font-size: 16px;
+    min-height: 48px; /* Минимальная высота для удобства нажатия */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  
+  .addThoughtButton:active,
+  .paginationButton:active,
+  .newChainButton:active,
+  .hideInstructionsButton:active,
+  .showInstructionsButton:active {
+    transform: scale(0.98);
+    background-color: #e0e0e0;
+  }
+  
+  .removeButton {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  
+  /* Оптимизация навигации между цепочками */
+  .paginationContainer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    padding: 12px;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 -15px -15px;
+    border-top: 1px solid #eee;
+    z-index: 10;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  
+  /* Отступы внизу контейнера для компенсации sticky-панели */
+  .hiddenBeliefsSection {
+    margin-bottom: 60px;
   }
 } 
 
