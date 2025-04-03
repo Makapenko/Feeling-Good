@@ -18,6 +18,8 @@ export interface ProgressChartProps {
   useRealData?: boolean;
   // Количество дней для отображения (по умолчанию 30)
   daysToShow?: number;
+  // Смещение периода (0 - текущий, -1 - предыдущий и т.д.)
+  periodOffset?: number;
 }
 
 // Компонент для отображения особых точек на графике
@@ -54,7 +56,8 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
   title,
   description,
   useRealData = true,
-  daysToShow = 30
+  daysToShow = 30,
+  periodOffset = 0
 }) => {
   // Определяем, является ли устройство мобильным
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -80,6 +83,14 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
   const chartData = useMemo(() => {
     // Если переданы готовые данные, используем их
     if (propData) {
+      // Применяем смещение периода к готовым данным
+      if (periodOffset !== 0 && propData.length > 0) {
+        const periodSize = daysToShow;
+        const startIndex = Math.max(0, propData.length - (periodSize * (Math.abs(periodOffset) + 1)));
+        const endIndex = Math.min(propData.length, startIndex + periodSize);
+        
+        return propData.slice(startIndex, endIndex);
+      }
       return propData;
     }
     
@@ -133,10 +144,16 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
       ...progressByDate.keys()
     ])].sort(); // Сортируем даты по возрастанию
 
-    // Если есть данные за более чем daysToShow дней, ограничиваем диапазон
+    // Если есть данные за более чем daysToShow дней, ограничиваем диапазон с учетом смещения периода
+    const periods = Math.ceil(allDates.length / daysToShow);
     let datesToShow = allDates;
-    if (allDates.length > daysToShow) {
-      datesToShow = allDates.slice(-daysToShow);
+    
+    if (periods > 1) {
+      const currentPeriod = Math.min(periods - 1, Math.max(0, periods - 1 + periodOffset));
+      const startIndex = Math.max(0, allDates.length - ((currentPeriod + 1) * daysToShow));
+      const endIndex = Math.min(allDates.length, startIndex + daysToShow);
+      
+      datesToShow = allDates.slice(startIndex, endIndex);
     }
 
     // Формируем итоговые данные для графика
@@ -168,7 +185,7 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
           : 0
       };
     });
-  }, [burnsResults, dailyProgressData, propData, useRealData, daysToShow, isSmallMobile]);
+  }, [burnsResults, dailyProgressData, propData, useRealData, daysToShow, isSmallMobile, periodOffset]);
 
   // Проверяем, достаточно ли данных для графика
   if (chartData.length === 0) {
@@ -219,6 +236,12 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
   
   // Размер точек активности на графике
   const activeDotSize = isSmallMobile ? 6 : 8;
+  
+  // Определяем период отображения для текста
+  const getPeriodText = () => {
+    if (periodOffset === 0) return 'Текущий период';
+    return periodOffset < 0 ? `Предыдущий период (${Math.abs(periodOffset)})` : `Период ${periodOffset}`;
+  };
 
   return (
     <div className={styles.chartContainer}>
@@ -227,6 +250,12 @@ const ProgressChart: React.FC<ProgressChartProps> = ({
       <div className={styles.chartDescription}>
         <p>{chartDescription}</p>
       </div>
+      
+      {periodOffset !== 0 && (
+        <div className={styles.periodIndicator}>
+          {getPeriodText()}
+        </div>
+      )}
       
       <ResponsiveContainer width="100%" height={chartHeight}>
         <ComposedChart data={chartData} margin={{ 

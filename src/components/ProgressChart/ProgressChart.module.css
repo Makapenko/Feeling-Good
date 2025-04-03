@@ -6,6 +6,77 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.chartWithControls {
+  position: relative;
+}
+
+.chartControlsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.chartNavButton {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chartNavButton:hover:not(:disabled) {
+  background-color: #3a7bc8;
+  transform: scale(1.05);
+}
+
+.chartNavButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.chartResetButton {
+  background-color: #f1f1f1;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 0 15px;
+  height: 36px;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chartResetButton:hover {
+  background-color: #e0e0e0;
+}
+
+.periodIndicator {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+  font-style: italic;
+  background-color: #f9f9f9;
+  padding: 5px 10px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .chartContainer h3 {
   font-size: 18px;
   margin-top: 0;
@@ -96,6 +167,24 @@
     text-align: justify;
   }
   
+  .chartNavButton {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+  
+  .chartResetButton {
+    height: 30px;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+  
+  .periodIndicator {
+    font-size: 12px;
+    margin-bottom: 10px;
+    padding: 3px 8px;
+  }
+  
   /* Оптимизированная легенда для мобильных устройств */
   .legend {
     font-size: 11px;
@@ -146,5 +235,21 @@
   .chartDescription {
     font-size: 11px;
     margin-bottom: 10px;
+  }
+  
+  .chartControlsContainer {
+    gap: 5px;
+  }
+  
+  .chartNavButton {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .chartResetButton {
+    height: 28px;
+    font-size: 11px;
+    padding: 0 8px;
   }
 } 
