@@ -188,7 +188,7 @@ const TestOfCognitiveBiases: React.FC = () => {
             <p className={calculateQuestionScore(currentQuestion) === 100 ? styles.correct : styles.incorrect}>
               {calculateQuestionScore(currentQuestion) === 100
                 ? 'Правильно!'
-                : 'Неправильно. Правильные ответы: ' +
+                : `Правильно на ${Math.round(calculateQuestionScore(currentQuestion))}%. Правильные ответы: ` +
                 getCurrentQuestionData().rightAnswers.map(index =>
                   getCurrentQuestionData().answers[index]).join(', ')}
             </p>

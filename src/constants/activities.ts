@@ -32,7 +32,7 @@ export const ACTIVITY_IDS = {
   RATIONAL_RESPONSES: 'rational-responses',
   DOWNWARD_ARROW: 'downward-arrow',
   ADVANTAGES_DISADVANTAGES: 'advantages-disadvantages',
-  
+  REWRITE_BELIEF: 'rewrite-belief',
   // Тесты и опросники
   BURNS_CHECKLIST: 'burns-checklist',
   COGNITIVE_BIASES: 'cognitive-biases',
@@ -77,6 +77,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.COGNITIVE_BIASES_TEST]: 'Тест на когнитивные искажения',
   [ACTIVITY_IDS.NOVACO_SCALE]: 'Шкала раздражения Новако',
   [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE]: 'Шкала дисфункциональных убеждений',
+  [ACTIVITY_IDS.REWRITE_BELIEF]: 'Переписывание убеждений',
 };
 
 /**

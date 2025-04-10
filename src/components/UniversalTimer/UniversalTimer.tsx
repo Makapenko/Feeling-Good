@@ -36,6 +36,7 @@ export const HIDDEN_TIMER_COMPONENTS: (ActivityId | string)[] = [
   ACTIVITY_IDS.DOWNWARD_ARROW,
   ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES,
   ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
+  ACTIVITY_IDS.REWRITE_BELIEF, // Новый ID
 ];
 
 // Список компонентов, для которых таймер полностью отключен (не считает время)
@@ -73,6 +74,8 @@ const UniversalTimer: React.FC<UniversalTimerProps> = React.memo(({ componentId,
       return;
     }
     
+    console.log(`Таймер запущен для компонента ${componentId}. Начальное время:`, seconds);
+    
     const interval = window.setInterval(() => {
       setSeconds(prev => {
         const newTime = prev + 1;
@@ -83,6 +86,7 @@ const UniversalTimer: React.FC<UniversalTimerProps> = React.memo(({ componentId,
 
     return () => {
       window.clearInterval(interval);
+      console.log(`Таймер остановлен для компонента ${componentId}. Конечное время:`, seconds);
     };
   }, [saveCurrentTime, componentId, isPaused]);
 

@@ -7,7 +7,7 @@ import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import styles from '../Survey/Survey.module.css';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { saveTestResultWithNotification } from "../../../redux/actions";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTestsByType } from "../../../redux/hooks";
 import { formatDate } from "../../../utils/dateUtils";
 
@@ -22,8 +22,13 @@ const BurnsChecklist: React.FC = () => {
   const [showResults, setShowResults] = useState(false);
   // Получаем историю результатов теста Бернса
   const burnsTestResults = useTestsByType('burns-checklist');
+  // Сохраняем ответы в ref, чтобы избежать перерендера при их изменении
+  const answersRef = useRef<Record<number, number>>({});
 
   const handleTestComplete = (result: SurveyResult) => {
+    // Проверяем наличие суицидальных мыслей по сохраненным ответам
+    checkSuicidalThoughts(answersRef.current);
+    
     // Сохраняем результат в стейт для отображения
     setSurveyResult(result);
     // Показываем страницу с результатами
@@ -41,10 +46,12 @@ const BurnsChecklist: React.FC = () => {
     setShowResults(false);
     setSurveyResult(null);
     setShowSuicideWarning(false);
+    // Сбрасываем ответы при возврате к опроснику
+    answersRef.current = {};
   };
 
-  // Обработчик для проверки наличия суицидальных наклонностей
-  const handleSurveySubmit = (answers: Record<number, number>) => {
+  // Проверка на наличие суицидальных наклонностей
+  const checkSuicidalThoughts = (answers: Record<number, number>) => {
     // Находим индекс секции "Суицидальные побуждения" (последняя секция, индекс 3)
     const suicidalSectionIndex = 3;
     
@@ -64,6 +71,12 @@ const BurnsChecklist: React.FC = () => {
     setShowSuicideWarning(hasSuicidalThoughts);
   };
 
+  // Сохраняем выбранный ответ, но не вызываем перерендер
+  const handleAnswerChange = (questionId: string, value: string) => {
+    const questionIndex = parseInt(questionId.replace('question-', ''));
+    answersRef.current[questionIndex] = parseInt(value);
+  };
+
   // Создаем компонент с кнопками действий
   const ActionButtons = (
     <div className={styles.actionButtons}>
@@ -71,36 +84,6 @@ const BurnsChecklist: React.FC = () => {
       <FavoriteButton activityId={SHEET_ID} />
     </div>
   );
-
-  // Расширяем компонент Survey для перехвата ответов
-  const SurveyWithSuicideCheck: React.FC = () => {
-    const handleSurveyComplete = (result: SurveyResult, answers?: Record<number, number>) => {
-      if (answers) {
-        handleSurveySubmit(answers);
-      }
-      handleTestComplete(result);
-    };
-
-    return (
-      <Survey 
-        config={burnsConfig} 
-        onComplete={(result) => {
-          // Получаем доступ к внутреннему состоянию через DOM
-          const answerInputs = document.querySelectorAll<HTMLInputElement>('input[type="radio"]:checked');
-          
-          const answers: Record<number, number> = {};
-          answerInputs.forEach(input => {
-            const name = input.name;
-            const questionIndex = parseInt(name.replace('question-', ''));
-            answers[questionIndex] = parseInt(input.value);
-          });
-          
-          handleSurveyComplete(result, answers);
-        }} 
-        actionButtons={ActionButtons} 
-      />
-    );
-  };
 
   // Компонент для отображения результатов
   const ResultsPage: React.FC = () => {
@@ -202,7 +185,16 @@ const BurnsChecklist: React.FC = () => {
 
   return (
     <>
-      {!showResults ? <SurveyWithSuicideCheck /> : <ResultsPage />}
+      {!showResults ? (
+        <Survey 
+          config={burnsConfig} 
+          onComplete={handleTestComplete}
+          onAnswerChange={handleAnswerChange}
+          actionButtons={ActionButtons} 
+        />
+      ) : (
+        <ResultsPage />
+      )}
     </>
   );
 };

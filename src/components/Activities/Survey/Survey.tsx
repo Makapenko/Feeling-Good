@@ -9,11 +9,12 @@ import { createBaseExercise } from "../../../utils/exerciseUtils";
 interface SurveyProps {
   config: SurveyConfig;
   onComplete?: (result: SurveyResult) => void;
+  onAnswerChange?: (questionId: string, value: string) => void;
   actionButtons?: React.ReactNode;
 };
 
 
-const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
+const Survey = ({ config, onComplete, onAnswerChange, actionButtons }: SurveyProps) => {
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);
   const isMobile = useIsMobile();
@@ -43,6 +44,11 @@ const Survey = ({ config, onComplete, actionButtons }: SurveyProps) => {
       };
       return newState;
     });
+    
+    // Вызываем колбэк при изменении ответа
+    if (onAnswerChange) {
+      onAnswerChange(`question-${questionIndex}`, value);
+    }
   };
 
   const getCurrentResult = () => {

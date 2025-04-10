@@ -33,6 +33,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch9-3': [ACTIVITY_IDS.RATIONAL_RESPONSES],
   'ch10-0': [ACTIVITY_IDS.DOWNWARD_ARROW],
   'ch10-1': [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
+  // 'ch11-2': [ACTIVITY_IDS.PROS_CONS_ANALYSIS],
   'ch11-3': [ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES],
 };
 

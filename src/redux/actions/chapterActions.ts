@@ -2,7 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { 
   setCurrentChapter, 
   updateChapterProgress,
-  completeChapter as completeChapterAction
+  completeChapter as completeChapterAction,
+  updateActivityProgress
 } from '../slices/progressSlice';
 import { unlockContentAfterChapter } from './unlockActions';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
@@ -92,5 +93,17 @@ export const updateChapterTime = createAsyncThunk(
   async ({ chapterId, timeSpent }: { chapterId: string; timeSpent: number }, { dispatch }) => {
     dispatch(updateChapterProgress({ chapterId, timeSpent }));
     return { chapterId, timeSpent };
+  }
+);
+
+/**
+ * Обновляет время, проведенное в активности
+ */
+export const updateActivityTime = createAsyncThunk(
+  'progress/updateActivityTime',
+  async ({ activityId, timeSpent }: { activityId: string; timeSpent: number }, { dispatch }) => {
+    console.log(`Экшен: обновление времени активности ${activityId}:`, timeSpent);
+    dispatch(updateActivityProgress({ activityId, timeSpent }));
+    return { activityId, timeSpent };
   }
 ); 

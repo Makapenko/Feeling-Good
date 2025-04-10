@@ -21,6 +21,8 @@ import {
   selectIsActivityAvailable,
   selectIsFavoriteActivity,
   selectTimeSpentByChapter,
+  selectTimeSpentByActivity,
+  selectTodayActivitiesProgress,
   selectNotifications,
   selectFavoriteChapters
 } from './selectors';
@@ -78,6 +80,12 @@ export const useIsFavoriteActivity = (activityId: SpecialContent) => {
 
 export const useTimeSpentByChapter = () => useAppSelector(selectTimeSpentByChapter);
 
+// Хук для получения времени, потраченного на активности
+export const useTimeSpentByActivity = () => useAppSelector(selectTimeSpentByActivity);
+
+// Хук для получения прогресса активностей за сегодня
+export const useTodayActivitiesProgress = () => useAppSelector(selectTodayActivitiesProgress);
+
 // Хук для получения избранных глав
 export const useFavoriteChapters = () => useAppSelector(selectFavoriteChapters);
 
@@ -85,4 +93,9 @@ export const useFavoriteChapters = () => useAppSelector(selectFavoriteChapters);
 export const useIsFavoriteChapter = (chapterId: string) => {
   const favoriteChapters = useAppSelector(selectFavoriteChapters);
   return favoriteChapters.some(chapter => chapter.id === chapterId);
+};
+
+// Использование всей истории чтения
+export const useAllReadingHistory = () => {
+  return useAppSelector((state) => state.progress.readingHistory);
 }; 

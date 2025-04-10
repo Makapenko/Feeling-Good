@@ -30,6 +30,7 @@ const initialState: ProgressState = {
   dailyProgress: {
     [today]: {
       chapters: {},
+      activities: {},
       exercises: {
         testResults: [],
         exercises: []
@@ -46,7 +47,8 @@ const initialState: ProgressState = {
   lastUnlockedChapter: null,
   lastUnlockedActivities: [],
   favoriteChapters: [], // Инициализируем пустым массивом
-  reduxMigrationCompleted: true
+  reduxMigrationCompleted: true,
+  readingHistory: {} // Добавляем пустой объект истории чтения
 };
 
 // Функция для определения вновь разблокированных активностей
@@ -75,6 +77,7 @@ const progressSlice = createSlice({
       const currentDate = getCurrentDate();
       const todayProgress: DayProgress = state.dailyProgress[currentDate] || {
         chapters: {},
+        activities: {},
         exercises: {
           testResults: [],
           exercises: []
@@ -122,6 +125,7 @@ const progressSlice = createSlice({
       const currentDate = getCurrentDate();
       const todayProgress = state.dailyProgress[currentDate] || {
         chapters: {},
+        activities: {},
         exercises: {
           testResults: [],
           exercises: []
@@ -152,6 +156,7 @@ const progressSlice = createSlice({
       const currentDate = getCurrentDate();
       const todayProgress = state.dailyProgress[currentDate] || {
         chapters: {},
+        activities: {},
         exercises: {
           testResults: [],
           exercises: []
@@ -175,6 +180,42 @@ const progressSlice = createSlice({
       };
     },
     
+    // Обновление времени, проведенного в активности
+    updateActivityProgress: (state, action: PayloadAction<{ activityId: string; timeSpent: number }>) => {
+      const { activityId, timeSpent } = action.payload;
+      console.log(`Redux: обновление времени активности ${activityId}:`, timeSpent);
+      
+      // Сохраняем прогресс в ежедневной статистике
+      const currentDate = getCurrentDate();
+      const todayProgress = state.dailyProgress[currentDate] || {
+        chapters: {},
+        activities: {},
+        exercises: {
+          testResults: [],
+          exercises: []
+        }
+      };
+      
+      if (!state.dailyProgress[currentDate]) {
+        state.dailyProgress[currentDate] = todayProgress;
+      }
+      
+      // Инициализируем объект активностей, если его еще нет
+      if (!state.dailyProgress[currentDate].activities) {
+        state.dailyProgress[currentDate].activities = {};
+      }
+      
+      // Обновляем или создаем запись для активности
+      state.dailyProgress[currentDate].activities[activityId] = {
+        id: activityId,
+        timeSpent,
+        completedAt: timeSpent > 0 ? getCurrentISOTimestamp() : undefined
+      };
+      
+      console.log(`Redux: обновлено состояние для ${activityId}`, 
+        state.dailyProgress[currentDate].activities[activityId]);
+    },
+    
     // Завершение чтения главы
     completeChapter: (state, action: PayloadAction<string>) => {
       const chapterId = action.payload;
@@ -186,6 +227,7 @@ const progressSlice = createSlice({
       const currentDate = getCurrentDate();
       const todayProgress = state.dailyProgress[currentDate] || {
         chapters: {},
+        activities: {},
         exercises: {
           testResults: [],
           exercises: []
@@ -274,6 +316,7 @@ const progressSlice = createSlice({
       if (!state.dailyProgress[currentDate]) {
         state.dailyProgress[currentDate] = {
           chapters: {},
+          activities: {},
           exercises: {
             testResults: [],
             exercises: []
@@ -306,6 +349,7 @@ const progressSlice = createSlice({
       if (!state.dailyProgress[targetDate]) {
         state.dailyProgress[targetDate] = {
           chapters: {},
+          activities: {},
           exercises: {
             testResults: [],
             exercises: []
@@ -407,6 +451,7 @@ export const {
   setCurrentChapter,
   startChapterReading,
   updateChapterProgress,
+  updateActivityProgress,
   completeChapter,
   setSpecialContent,
   saveTestResult,

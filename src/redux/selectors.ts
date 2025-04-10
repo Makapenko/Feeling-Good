@@ -136,4 +136,36 @@ export const selectTimeSpentByChapter = createSelector(
     
     return result;
   }
+);
+
+// Селектор для получения времени, проведенного в активностях
+export const selectTimeSpentByActivity = createSelector(
+  [selectDailyProgress],
+  (dailyProgress) => {
+    const result: Record<string, number> = {};
+    
+    // Собираем время, потраченное на каждую активность
+    Object.values(dailyProgress).forEach(dayProgress => {
+      if (dayProgress.activities) {
+        Object.entries(dayProgress.activities).forEach(([activityId, activityProgress]) => {
+          if (!result[activityId]) {
+            result[activityId] = 0;
+          }
+          result[activityId] += activityProgress.timeSpent || 0;
+        });
+      }
+    });
+    
+    return result;
+  }
+);
+
+// Селектор для получения времени активностей за текущий день
+export const selectTodayActivitiesProgress = createSelector(
+  [selectTodayProgress],
+  (todayProgress) => {
+    const activities = todayProgress?.activities || {};
+    console.log('Redux селектор: активности за сегодня:', activities);
+    return activities;
+  }
 ); 

@@ -36,7 +36,6 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.HOT_COOL_THOUGHTS, label: 'Остудите «горячие» мысли' },
       { content: ACTIVITY_IDS.RATIONAL_RESPONSES, label: 'Рациональные ответы на самокритику' },
       { content: ACTIVITY_IDS.DOWNWARD_ARROW, label: 'Техника падающей стрелы' },
-      { content: ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES, label: 'Анализ преимуществ и недостатков убеждений' },
     ]
   },
   {
@@ -72,6 +71,13 @@ const sections: ActivitySection[] = [
     activities: [
       { content: ACTIVITY_IDS.RATIONAL_RESPONSES, label: 'Рациональные ответы на самокритику' },
       { content: ACTIVITY_IDS.DOWNWARD_ARROW, label: 'Техника падающей стрелы' }
+    ]
+  },
+  {
+    title: 'Зависимость от одобрения',
+    activities: [
+      { content: ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES, label: 'Анализ преимуществ и недостатков убеждений' },
+      { content: ACTIVITY_IDS.REWRITE_BELIEF, label: 'Переписывание убеждений' }
     ]
   }
 ];

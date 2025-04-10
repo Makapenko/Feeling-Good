@@ -216,7 +216,7 @@ export interface DysfunctionalAttitudeScaleExercise extends BaseExercise {
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
   SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |
-  CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise | DysfunctionalAttitudeScaleExercise;
+  CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise | DysfunctionalAttitudeScaleExercise | RewriteBeliefExercise;
 
 export interface ChapterProgress {
   id: string; // chapter id (e.g. 'ch01')
@@ -226,9 +226,18 @@ export interface ChapterProgress {
   completedAt?: string;
 }
 
+export interface ActivityProgress {
+  id: string; // activity id
+  timeSpent: number; // in seconds
+  completedAt?: string;
+}
+
 export interface DayProgress {
   chapters: {
     [chapterId: string]: ChapterProgress;
+  };
+  activities?: {
+    [activityId: string]: ActivityProgress;
   };
   exercises: {
     testResults: TestResult[];
@@ -280,4 +289,5 @@ export interface UserProgress {
   lastUnlockedActivities: SpecialContent[];
   favoriteChapters: FavoriteChapter[]; // Добавляем поле для избранных глав
   reduxMigrationCompleted?: boolean; // Флаг, указывающий, что миграция в Redux успешно выполнена
+  readingHistory: Record<string, DailyProgress>;
 }

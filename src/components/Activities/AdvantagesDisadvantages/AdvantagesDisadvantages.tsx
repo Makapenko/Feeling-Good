@@ -1,19 +1,22 @@
-import React from 'react';
+// src/components/Activities/AdvantagesDisadvantages/AdvantagesDisadvantages.tsx
+import React, { useState } from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
 import { useAppDispatch } from '../../../redux/hooks';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
-import { ThreeColumnsExercise } from '../../../types/progress.types';
-import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ThreeColumnsExercise, SpecialContent } from '../../../types/progress.types';
+import styles from './AdvantagesDisadvantages.module.css';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
-const SHEET_ID = ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES;
+const SHEET_ID: SpecialContent = ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES;
 
 const AdvantagesDisadvantages: React.FC = () => {
   const dispatch = useAppDispatch();
+  // Состояние для хранения анализируемого убеждения
+  const [belief, setBelief] = useState<string>('');
 
   const actionButtons = (
     <div className={styles.actionButtons}>
@@ -23,40 +26,58 @@ const AdvantagesDisadvantages: React.FC = () => {
   );
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
+    // Сохраняем упражнение в более общем формате ThreeColumnsExercise
+    // Можно расширить тип при необходимости для хранения belief
     const exercise: ThreeColumnsExercise = {
       ...createBaseExercise(SHEET_ID, result.id),
-      records: result.records
+      records: result.records,
+      // Если нужно сохранить убеждение, добавьте его как metadata или расширьте тип
+      metadata: { belief: belief } 
     };
 
     dispatch(addExercise({ 
       exercise, 
-      showNotification: false 
+      showNotification: true 
     }));
   };
 
-  const description = 
-    "Анализ преимуществ и недостатков — первый шаг на пути к изменению дисфункциональных убеждений.\n\n" +
-    "Инструкция к применению:\n" +
-    "1. Выберите одно из ваших дисфункциональных убеждений, которое вы хотели бы изменить (например, «Я всегда должна делать то, чего от меня ожидают»)\n" +
-    "2. В левой колонке запишите все преимущества и выгоды, которые даёт вам это убеждение\n" +
-    "3. В правой колонке запишите все недостатки и проблемы, которые создаёт для вас это убеждение\n" +
-    "4. Сравните обе колонки и примите решение, хотите ли вы изменить данное убеждение\n\n" +
-    "После заполнения таблицы вы сможете переписать убеждение в более реалистичной и здоровой форме.";
-
   return (
-    <ThreeColumnsBase 
-      title={ACTIVITY_NAMES[ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES]}
-      description={description}
-      leftColumnTitle="Преимущества убеждения"
-      leftColumnPlaceholder="Запишите, какие выгоды и преимущества вам даёт ваше убеждение (например, «Люди считают меня надёжным и ответственным», «Чувствую себя в безопасности»)..."
-      rightColumnTitle="Недостатки убеждения"
-      rightColumnPlaceholder="Запишите, какие проблемы и недостатки создаёт ваше убеждение (например, «Не могу отказать, даже когда это вредит моим интересам», «Чувствую себя перегруженной»)..."
-      showCognitiveDistortions={false}
-      methodId={SHEET_ID}
-      onSave={handleSave}
-      actionButtons={actionButtons}
-    />
+    <div className={styles.container}>
+      {/* Секция для ввода убеждения */}
+      <div className={styles.beliefSection}>
+        <label htmlFor="beliefInput">Убеждение для анализа:</label>
+        <input
+          id="beliefInput"
+          type="text"
+          value={belief}
+          onChange={(e) => setBelief(e.target.value)}
+          placeholder="Например: «Я всегда должна делать то, чего от меня ожидают»"
+          className={styles.beliefInput}
+        />
+      </div>
+
+      <ThreeColumnsBase 
+        title="Анализ преимуществ и недостатков для оценки скрытых убеждений"
+        description={
+          "Этот метод помогает оценить полезность какого-либо убеждения. Спросите себя, в чем преимущества и недостатки следования этому убеждению?\n\n" +
+          "В левой колонке перечислите все преимущества этого убеждения - как оно вам помогает.\n\n" +
+          "В правой колонке перечислите все недостатки, негативные последствия или цену, которую вы платите за это убеждение.\n\n" +
+          "Перечислив все варианты, как это убеждение вредит или помогает вам, вы сможете принять взвешенное решение о выработке более здоровой системы убеждений."
+        }
+        leftColumnTitle="Преимущества убеждения"
+        leftColumnPlaceholder="Запишите преимущества следования этому убеждению..."
+        rightColumnTitle="Недостатки убеждения"
+        rightColumnPlaceholder="Запишите недостатки следования этому убеждению..."
+        showCognitiveDistortions={false}
+        showMiddleColumn={false}
+        methodId={SHEET_ID}
+        onSave={handleSave}
+        actionButtons={actionButtons}
+        saveButtonDisabled={!belief.trim()}
+        saveButtonTooltip={!belief.trim() ? 'Пожалуйста, введите убеждение для анализа' : undefined}
+      />
+    </div>
   );
 };
 
-export default AdvantagesDisadvantages; 
+export default AdvantagesDisadvantages;

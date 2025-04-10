@@ -119,8 +119,9 @@
 }
 
 .incorrect {
-  color: #e53e3e;
+  color: #ffae00;
   font-weight: 500;
+  margin-bottom: 10px;
 }
 
 .explanation {

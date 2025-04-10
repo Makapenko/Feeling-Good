@@ -148,8 +148,18 @@ const ProgressCalendar: React.FC = () => {
 
   const changeMonth = (delta: number) => {
     const [year, month] = currentMonth.split('-').map(Number);
-    const newDate = new Date(year, month - 1 + delta, 1);
-    setCurrentMonth(formatDateToISO(newDate).substring(0, 7));
+    // Месяцы в JavaScript начинаются с 0, поэтому нужно вычесть 1 из номера месяца
+    const currentMonthIndex = month - 1;
+    // Добавляем delta к текущему индексу месяца
+    const newMonthIndex = currentMonthIndex + delta;
+    
+    // Создаем новую дату с учетом смещения
+    const newDate = new Date(year, newMonthIndex, 1);
+    
+    // Форматируем дату в строку формата YYYY-MM
+    const newYear = newDate.getFullYear();
+    const newMonth = newDate.getMonth() + 1; // +1, так как месяцы в JS начинаются с 0
+    setCurrentMonth(`${newYear}-${String(newMonth).padStart(2, '0')}`);
   };
 
   const formatMonthTitle = () => {

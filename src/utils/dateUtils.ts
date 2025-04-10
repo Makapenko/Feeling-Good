@@ -86,3 +86,13 @@ export const compareDatesDesc = (dateA: string, dateB: string): number => {
 export const generateTimeBasedId = (prefix: string = 'id'): string => {
   return `${prefix}-${getCurrentTimestamp()}`;
 };
+
+/**
+ * Форматирует дату в короткий формат дд.мм
+ */
+export const formatDateShort = (dateString: string): string => {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  return `${day}.${month}`;
+};
