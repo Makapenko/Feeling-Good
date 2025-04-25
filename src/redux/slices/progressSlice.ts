@@ -358,7 +358,7 @@ const progressSlice = createSlice({
       }
       
       const existingExerciseIndex = state.dailyProgress[targetDate].exercises.exercises.findIndex(
-        ex => ex.id === exercise.id
+        (ex: Exercise) => ex.id === exercise.id
       );
       
       if (existingExerciseIndex !== -1) {

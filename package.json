@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && cp dist/index.html dist/404.html && npx gh-pages -d dist",
+    "build2": "tsc -b && vite build && cp dist/index.html dist/404.html && npx gh-pages -d dist -r git@github-psyselfhelp:psyselfhelp/psyselfhelp.github.io.git",
     "lint": "eslint .",
     "preview": "vite preview"
   },

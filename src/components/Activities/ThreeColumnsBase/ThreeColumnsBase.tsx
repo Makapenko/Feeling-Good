@@ -17,9 +17,12 @@ interface ThreeColumnsBaseProps {
   rightColumnTitle: string;
   rightColumnPlaceholder: string;
   showCognitiveDistortions?: boolean;
+  showMiddleColumn?: boolean;
   methodId: string;
   onSave?: (result: ThreeColumnsMethodResult) => void;
   actionButtons?: React.ReactNode;
+  saveButtonDisabled?: boolean;
+  saveButtonTooltip?: string;
 }
 
 export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
@@ -30,9 +33,12 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   rightColumnTitle,
   rightColumnPlaceholder,
   showCognitiveDistortions = true,
+  showMiddleColumn = true,
   methodId,
   onSave,
-  actionButtons
+  actionButtons,
+  saveButtonDisabled,
+  saveButtonTooltip
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp' | 'id'>>({
     leftColumn: '',
@@ -135,7 +141,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
           />
         </div>
 
-        {showCognitiveDistortions && (
+        {showMiddleColumn && showCognitiveDistortions && (
           <CognitiveDistortions
             selectedDistortions={currentRecord.cognitiveDistortion}
             onChange={(distortions) => setCurrentRecord({
@@ -161,7 +167,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
       <button
         className={styles.addButton}
         onClick={handleAddRecord}
-        disabled={!currentRecord.leftColumn || !currentRecord.rightColumn}
+        disabled={(!currentRecord.leftColumn || !currentRecord.rightColumn) || saveButtonDisabled}
+        title={saveButtonTooltip}
       >
         Добавить запись
       </button>
@@ -171,7 +178,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
           <thead>
             <tr>
               <th>{leftColumnTitle}</th>
-              {showCognitiveDistortions && <th>Когнитивные искажения</th>}
+              {showMiddleColumn && showCognitiveDistortions && <th>Когнитивные искажения</th>}
               <th>{rightColumnTitle}</th>
             </tr>
           </thead>
@@ -179,7 +186,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
             {allRecords.map((record) => (
               <tr key={record.id}>
                 <td data-label={leftColumnTitle}>{record.leftColumn}</td>
-                {showCognitiveDistortions && (
+                {showMiddleColumn && showCognitiveDistortions && (
                   <td data-label="Когнитивные искажения">{record.cognitiveDistortion.join(', ')}</td>
                 )}
                 <td data-label={rightColumnTitle}>{record.rightColumn}</td>

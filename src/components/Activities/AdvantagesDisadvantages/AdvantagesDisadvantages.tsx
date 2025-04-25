@@ -27,12 +27,10 @@ const AdvantagesDisadvantages: React.FC = () => {
 
   const handleSave = (result: ThreeColumnsMethodResult) => {
     // Сохраняем упражнение в более общем формате ThreeColumnsExercise
-    // Можно расширить тип при необходимости для хранения belief
     const exercise: ThreeColumnsExercise = {
       ...createBaseExercise(SHEET_ID, result.id),
       records: result.records,
-      // Если нужно сохранить убеждение, добавьте его как metadata или расширьте тип
-      metadata: { belief: belief } 
+      metadata: { belief: belief }
     };
 
     dispatch(addExercise({ 

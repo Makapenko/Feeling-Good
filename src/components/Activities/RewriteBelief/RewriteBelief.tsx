@@ -8,6 +8,7 @@ import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 
 // Добавьте новый ID в constants/activities.ts
 // REWRITE_BELIEF: 'rewrite_belief'
@@ -29,11 +30,14 @@ const RewriteBelief: React.FC = () => {
     // Создаем уникальный ID для упражнения
     const exerciseId = `rewrite_belief_${Date.now()}`;
     
-    // Определите структуру упражнения в соответствии с вашими типами
+    // Определите структуру упражнения в соответствии с RewriteBeliefExercise
     const exercise = {
       ...createBaseExercise(SHEET_ID, exerciseId),
-      oldBelief,
-      newBelief
+      belief: oldBelief,
+      newBelief: newBelief,
+      advantages: [],
+      disadvantages: [],
+      timestamp: getCurrentISOTimestamp()
     };
 
     dispatch(addExercise({ 
@@ -41,9 +45,9 @@ const RewriteBelief: React.FC = () => {
       showNotification: true 
     }));
     
-    // Опционально: очистка полей после сохранения
-    // setOldBelief('');
-    // setNewBelief('');
+    // Очистка полей после сохранения
+    setOldBelief('');
+    setNewBelief('');
   };
 
   const isFormValid = oldBelief.trim() && newBelief.trim();

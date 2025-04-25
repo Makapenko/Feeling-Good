@@ -44,6 +44,7 @@ export interface ThoughtDiaryExercise extends BaseExercise {
 
 export interface ThreeColumnsExercise extends BaseExercise {
   records: ThoughtRecord[];
+  metadata?: Record<string, string | number | boolean>;
 }
 
 export interface DailyScheduleRecord {
@@ -210,6 +211,14 @@ export interface DysfunctionalAttitudeScaleExercise extends BaseExercise {
     score: number;
     isStrength: boolean;
   }[];
+  timestamp: string;
+}
+
+export interface RewriteBeliefExercise extends BaseExercise {
+  belief: string;
+  newBelief?: string;
+  advantages: string[];
+  disadvantages: string[];
   timestamp: string;
 }
 
