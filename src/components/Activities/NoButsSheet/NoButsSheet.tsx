@@ -7,7 +7,7 @@ import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { NoButsExercise } from '../../../types/progress.types';
+import { NoButsExercise } from './types';
 import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';

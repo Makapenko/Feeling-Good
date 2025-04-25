@@ -1,7 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from './types';
 import { getCurrentDate } from '../utils/dateUtils';
-import { SpecialContent, Exercise, TestResult } from '../types/progress.types';
+import { SpecialContent, Exercise } from '../types/progress.types';
+import { TestResult } from './types';
 
 // Базовые селекторы
 export const selectProgress = (state: RootState) => state.progress;

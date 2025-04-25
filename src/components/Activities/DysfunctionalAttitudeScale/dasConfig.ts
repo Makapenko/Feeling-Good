@@ -1,4 +1,4 @@
-import { DASAnswer, DASCategory, DASCategoryDescription, DASStatement } from './DysfunctionalAttitudeTypes';
+import { DASAnswer, DASCategory, DASCategoryDescription, DASStatement } from './types';
 
 // Варианты ответов
 export const DAS_ANSWERS: DASAnswer[] = [

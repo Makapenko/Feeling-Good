@@ -4,8 +4,7 @@ import progressReducer from './slices/progressSlice';
 import mobileReducer from './slices/mobileSlice';
 import notificationReducer, { notificationMiddleware } from './slices/notificationSlice';
 import { STORAGE_KEY } from './constants';
-import { ChapterWithContent, UserProgress } from '../types/progress.types';
-
+import { ChapterWithContent, UserProgress } from './types';
 // Middleware для управления сохранением в localStorage
 const localStorageMiddleware: Middleware = store => next => action => {
   const result = next(action);

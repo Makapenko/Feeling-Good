@@ -26,19 +26,20 @@ import ImagineSuccess from '../Activities/ImagineSuccess/ImagineSuccess';
 import CountAchievements from '../Activities/CountAchievements/CountAchievements';
 import CheckCantDo from '../Activities/CheckCantDo/CheckCantDo';
 import DisarmingTechnique from '../Activities/DisarmingTechnique/DisarmingTechnique';
-import WelcomePage from '../WelcomePage/WelcomePage';
-import BurnsChecklist from '../Activities/BurnsChecklist';
-import NovacoScale from '../Activities/NovacoScale';
+import BurnsChecklist from '../Activities/BurnsChecklist/BurnsChecklist';
+import NovacoScale from '../Activities/NovacoScale/NovacoScale';
 import HotCoolThoughts from '../Activities/HotCoolThoughts/HotCoolThoughts';
 import RewriteShouldRules from '../Activities/RewriteShouldRules/RewriteShouldRules';
 import RationalResponses from '../Activities/RationalResponses/RationalResponses';
 import DownwardArrow from '../Activities/DownwardArrow/DownwardArrow';
+import DysfunctionalAttitudeScale from '../Activities/DysfunctionalAttitudeScale/DysfunctionalAttitudeScale';
+import AdvantagesDisadvantages from '../Activities/AdvantagesDisadvantages/AdvantagesDisadvantages';
+
+import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
 import { updateChapterTime } from '../../redux/actions';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
-import DysfunctionalAttitudeScale from '../Activities/DysfunctionalAttitudeScale/DysfunctionalAttitudeScale';
-import AdvantagesDisadvantages from '../Activities/AdvantagesDisadvantages/AdvantagesDisadvantages';
 
 // Определяем маппинг компонентов активностей
 const ACTIVITY_COMPONENTS = {

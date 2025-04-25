@@ -3,13 +3,14 @@ import React, { useState } from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
 import { useAppDispatch } from '../../../redux/hooks';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
-import { ThreeColumnsExercise, SpecialContent } from '../../../types/progress.types';
+import { SpecialContent } from '../../../types/progress.types';
 import styles from './AdvantagesDisadvantages.module.css';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
+import { ThreeColumnsExercise } from '../ThreeColumnsBase/types';
 
 const SHEET_ID: SpecialContent = ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES;
 

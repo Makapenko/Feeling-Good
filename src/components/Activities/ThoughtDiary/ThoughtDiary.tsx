@@ -6,7 +6,7 @@ import { RecordsList } from './RecordsList/RecordsList';
 import { SituationInput } from './SituationInput/SituationInput';
 import { EmotionsSection } from './EmotionsSection/EmotionsSection';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
-import { ThoughtDiaryRecord, ThoughtDiaryExercise } from '../../../types/progress.types';
+import { ThoughtDiaryRecord, ThoughtDiaryExercise } from './types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';

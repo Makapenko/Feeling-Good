@@ -1,3 +1,5 @@
+import { BaseExercise } from "../../../types/progress.types";
+
 export interface Activity {
   id: string;
   text: string;
@@ -8,3 +10,7 @@ export interface Activity {
   date: string;
   completed: boolean;
 } 
+
+export interface PleasureSheetExercise extends BaseExercise {
+  records: Activity[];
+}

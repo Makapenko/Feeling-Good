@@ -4,7 +4,6 @@ import { Task } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
-import { AntiProcrastinationTask } from '../../../types/progress.types';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -155,7 +154,7 @@ const AntiProcrastinationSheet: React.FC = () => {
     );
     
     if (antiProcrastinationExercise && 'records' in antiProcrastinationExercise) {
-      return antiProcrastinationExercise.records as AntiProcrastinationTask[];
+      return antiProcrastinationExercise.records as Task[];
     }
     
     return [];
@@ -172,7 +171,8 @@ const AntiProcrastinationSheet: React.FC = () => {
 
   // Получаем все записи из прогресса, используя новую утилиту
   const allTasks = useMemo(() => {
-    return getAllRecordsFromProgress<AntiProcrastinationTask>(
+    // После изменения recordsUtils.ts фильтрация происходит внутри функции
+    return getAllRecordsFromProgress<Task>(
       dailyProgress,
       SHEET_ID,
       SHEET_ID
@@ -180,9 +180,9 @@ const AntiProcrastinationSheet: React.FC = () => {
   }, [dailyProgress]);
 
   const saveToProgress = (updatedTasks: Task[]) => {
-    const records: AntiProcrastinationTask[] = updatedTasks.map(task => ({
+    const records = updatedTasks.map(task => ({
       ...task,
-      timestamp: getCurrentISOTimestamp()
+      timestamp: getCurrentISOTimestamp() // Это обеспечивает, что timestamp всегда существует
     }));
 
     // Сразу обновляем локальный state перед отправкой в Redux
@@ -350,7 +350,7 @@ const AntiProcrastinationSheet: React.FC = () => {
             {allTasks.map(task => (
               <div key={task.id} className={styles.taskRow}>
                 <div className={styles.taskDate}>
-                  {new Date(task.timestamp).toLocaleDateString('ru-RU')}
+                  {task.timestamp && new Date(task.timestamp).toLocaleDateString('ru-RU')}
                 </div>
                 <div className={styles.taskText}>{task.text}</div>
                 <div className={styles.ratings}>

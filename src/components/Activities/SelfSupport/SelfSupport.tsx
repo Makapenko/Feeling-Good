@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import styles from './SelfSupport.module.css';
-import { SupportStatement } from '../../../types/progress.types';
+import { SupportStatement } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';

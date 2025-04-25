@@ -1,7 +1,7 @@
 import React from 'react';
-import { DownwardArrowExercise } from '../../../../types/progress.types';
-import ExerciseWrapper from '../ExerciseWrapper';
-import styles from '../../DayDetails.module.css';
+import { DownwardArrowExercise } from '../../Activities/DownwardArrow/types';
+import ExerciseWrapper from './ExerciseWrapper';
+import styles from '../DayDetails.module.css';
 
 interface DownwardArrowExerciseProps {
   exercise: DownwardArrowExercise;

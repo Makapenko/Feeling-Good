@@ -5,6 +5,7 @@ import { useAppDispatch } from '../../../redux/hooks';
 import { setSpecialContent } from '../../../redux/slices/progressSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { ActivityId } from '../../../constants/activities';
 
 interface ExerciseWrapperProps {
   exercise: Exercise;
@@ -23,7 +24,7 @@ const ExerciseButton: React.FC<{ exercise: Exercise, onClose?: () => void }> = (
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Предотвращаем всплытие события
     // Устанавливаем специальный контент (упражнение) в Redux
-    dispatch(setSpecialContent(exercise.type));
+    dispatch(setSpecialContent(exercise.type as ActivityId));
     
     // Прокрутка страницы вверх
     window.scrollTo(0, 0);

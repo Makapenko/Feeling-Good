@@ -1,4 +1,4 @@
-import { DayProgress } from '../types/progress.types';
+import { DayProgress } from '../redux/types';
 import { compareDatesDesc } from './dateUtils';
 
 /**
@@ -9,7 +9,7 @@ import { compareDatesDesc } from './dateUtils';
  * @param filterFn Дополнительная функция фильтрации записей (опционально)
  * @returns Массив записей с добавленной датой, отсортированный по убыванию времени
  */
-export function getAllRecordsFromProgress<T extends { timestamp: string }>(
+export function getAllRecordsFromProgress<T extends { timestamp?: string }>(
   dailyProgress: Record<string, DayProgress> | undefined,
   exerciseType: string | string[],
   exerciseId: string,
@@ -43,5 +43,7 @@ export function getAllRecordsFromProgress<T extends { timestamp: string }>(
   });
 
   // Сортируем по дате и времени (новые сверху)
-  return allRecords.sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+  return allRecords
+    .filter(record => record.timestamp !== undefined)
+    .sort((a, b) => compareDatesDesc(a.timestamp || '', b.timestamp || ''));
 } 

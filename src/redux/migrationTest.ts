@@ -5,7 +5,7 @@
  * что все компоненты успешно мигрированы на Redux.
  */
 
-import { UserProgress } from '../types/progress.types';
+import { UserProgress } from './types';
 import { store } from './store';
 
 /**

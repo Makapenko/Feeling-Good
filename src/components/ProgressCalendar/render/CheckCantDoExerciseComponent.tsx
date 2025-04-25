@@ -1,5 +1,5 @@
 import React from 'react';
-import {  CheckCantDoExercise } from '../../../types/progress.types';
+import {  CheckCantDoExercise } from '../../Activities/CheckCantDo/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

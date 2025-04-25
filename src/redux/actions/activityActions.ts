@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { SpecialContent, Exercise, TestResult } from '../../types/progress.types';
+import { SpecialContent, Exercise } from '../../types/progress.types';
+import { TestResult } from '../types';
 import { 
   toggleFavoriteActivity as toggleFavorite,
   setSpecialContent as setContent,

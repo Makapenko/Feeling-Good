@@ -6,6 +6,8 @@ import { ActivityId } from "../../../constants/activities";
 import { useIsMobile } from "../../../utils/deviceUtils";
 import { createBaseExercise } from "../../../utils/exerciseUtils";
 
+
+// TODO  перенести конфиг в отдельные компоненты и убрать индекс.ts
 interface SurveyProps {
   config: SurveyConfig;
   onComplete?: (result: SurveyResult) => void;

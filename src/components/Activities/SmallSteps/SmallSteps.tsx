@@ -7,11 +7,11 @@ import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
-import { SmallStepsExercise, Exercise } from '../../../types/progress.types';
+import { SmallStepsExercise } from './types';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { formatTimeFromSeconds } from '../../../utils/dateUtils';
 import { useIsMobile } from '../../../utils/deviceUtils';
-
+import { Exercise } from '../../../types/progress.types';
 //TODO: В мобильной версии кнопка закончено внизу экрана - кривая
 
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;

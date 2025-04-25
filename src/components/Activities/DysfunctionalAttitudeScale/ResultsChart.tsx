@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { DASCategoryResult } from './DysfunctionalAttitudeTypes';
+import { DASCategoryResult } from './types';
 import styles from './DysfunctionalAttitudeScale.module.css';
 import { CATEGORY_DESCRIPTIONS } from './dasConfig';
 

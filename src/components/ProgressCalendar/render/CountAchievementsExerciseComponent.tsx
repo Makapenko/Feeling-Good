@@ -1,5 +1,5 @@
 import React from 'react';
-import { CountAchievementsExercise } from '../../../types/progress.types';
+import { CountAchievementsExercise } from '../../Activities/CountAchievements/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

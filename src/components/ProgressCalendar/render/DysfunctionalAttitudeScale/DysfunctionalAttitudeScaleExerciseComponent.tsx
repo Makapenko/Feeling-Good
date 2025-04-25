@@ -1,5 +1,5 @@
 import React from 'react';
-import { DysfunctionalAttitudeScaleExercise } from '../../../../types/progress.types';
+import { DysfunctionalAttitudeScaleExercise } from '../../../Activities/DysfunctionalAttitudeScale/types';
 import ExerciseWrapper from '../ExerciseWrapper';
 import styles from './DysfunctionalAttitudeScaleExerciseComponent.module.css';
 import { CATEGORY_DESCRIPTIONS } from '../../../Activities/DysfunctionalAttitudeScale/dasConfig';

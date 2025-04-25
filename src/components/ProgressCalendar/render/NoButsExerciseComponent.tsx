@@ -1,5 +1,5 @@
 import React from 'react';
-import { NoButsExercise } from '../../../types/progress.types';
+import { NoButsExercise } from '../../Activities/NoButsSheet/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

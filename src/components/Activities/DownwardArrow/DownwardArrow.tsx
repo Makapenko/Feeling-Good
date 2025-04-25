@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import { SpecialContent } from '../../../types/progress.types';
-import { ThoughtItem, DownwardArrowChain } from './DownwardArrowTypes';
+import { ThoughtItem, DownwardArrowChain } from './types';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';

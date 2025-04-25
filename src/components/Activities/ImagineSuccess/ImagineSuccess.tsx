@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './ImagineSuccess.module.css';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
-import { ImagineSuccessRecord, ImagineSuccessExercise, Exercise } from '../../../types/progress.types';
+import { ImagineSuccessRecord, ImagineSuccessExercise } from './types';
+import { Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS } from '../../../constants/activities';

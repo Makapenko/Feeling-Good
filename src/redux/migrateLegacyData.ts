@@ -1,5 +1,5 @@
 import { STORAGE_KEY } from './constants';
-import { UserProgress } from '../types/progress.types';
+import { UserProgress } from './types';
 import { store } from './store';
 import { loadStateFromStorage } from './slices/progressSlice';
 

@@ -8,6 +8,7 @@ import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 // TODO - поправить верхний и нижний паддинги в таблице старых записей в мобильной версии
+// TODO - увеличить ширину инпутов, если их два
 
 interface ThreeColumnsBaseProps {
   title: string;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './RecordsList.module.css';
-import { ThoughtDiaryRecord } from '../../../../types/progress.types';
+import { ThoughtDiaryRecord } from '../types';
 import { formatDateWithOptions, formatTime } from '../../../../utils/dateUtils';
 
 interface RecordsListProps {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MotivationWithoutCoercionExercise } from '../../../types/progress.types';
+import { MotivationWithoutCoercionExercise } from '../../Activities/MotivationWithoutCoercion/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

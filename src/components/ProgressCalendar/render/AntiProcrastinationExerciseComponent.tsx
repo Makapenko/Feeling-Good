@@ -1,5 +1,5 @@
 import React from 'react';
-import { AntiProcrastinationExercise } from '../../../types/progress.types';
+import { AntiProcrastinationExercise } from '../../Activities/AntiProcrastinationSheet/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

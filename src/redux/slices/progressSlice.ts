@@ -1,19 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  UserProgress,
-  Chapter,
-  ChapterWithContent,
-  ChapterProgress,
   SpecialContent,
-  TestResult,
   Exercise,
-  DayProgress
 } from '../../types/progress.types';
+import { TestResult, ChapterProgress, ChapterWithContent, Chapter } from '../types';
 import { getCurrentDate, getCurrentISOTimestamp } from '../../utils/dateUtils';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { chapterToActivitiesMap } from '../../data/activitiesMapping';
-import type { RootState } from '../types';
+import type { DayProgress, RootState, UserProgress } from '../types';
+import { ACTIVITY_IDS } from '../../constants/activities';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -342,7 +338,7 @@ const progressSlice = createSlice({
       const exercise = action.payload;
       
       // Определяем дату для сохранения
-      const targetDate = 'date' in exercise && exercise.type === 'daily-schedule'
+      const targetDate = 'date' in exercise && exercise.type === ACTIVITY_IDS.DAILY_SCHEDULE
         ? exercise.date 
         : getCurrentDate();
       

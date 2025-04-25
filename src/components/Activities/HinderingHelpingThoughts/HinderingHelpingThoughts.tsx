@@ -2,7 +2,7 @@ import React from 'react';
 import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
 import { useAppDispatch } from '../../../redux/hooks';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
-import { ThreeColumnsExercise } from '../../../types/progress.types';
+import { ThreeColumnsExercise } from '../ThreeColumnsBase/types';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';

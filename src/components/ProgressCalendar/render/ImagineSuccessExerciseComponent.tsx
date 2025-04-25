@@ -1,5 +1,5 @@
 import React from 'react';
-import {  ImagineSuccessExercise, ImagineSuccessRecord } from '../../../types/progress.types';
+import {  ImagineSuccessExercise, ImagineSuccessRecord } from '../../Activities/ImagineSuccess/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

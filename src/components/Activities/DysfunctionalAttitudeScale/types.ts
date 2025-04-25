@@ -53,3 +53,13 @@ export interface DASState {
   step: 'instructions' | 'survey' | 'results';
   categoryResults: DASCategoryResult[];
 } 
+
+export interface DysfunctionalAttitudeScaleExercise extends BaseExercise {
+  answers: Record<number, number>;
+  categoryResults: {
+    category: string;
+    score: number;
+    isStrength: boolean;
+  }[];
+  timestamp: string;
+}

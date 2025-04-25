@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelfSupportExercise } from '../../../types/progress.types';
+import { SelfSupportExercise } from '../../Activities/SelfSupport/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

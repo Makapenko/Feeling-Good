@@ -1,5 +1,5 @@
 import React from 'react';
-import { NoLoseTechniqueExercise } from '../../../types/progress.types';
+import { NoLoseTechniqueExercise } from '../../Activities/NoLoseTechnique/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

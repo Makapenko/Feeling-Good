@@ -1,5 +1,5 @@
 import React from 'react';
-import { PleasureSheetExercise } from '../../../types/progress.types';
+import { PleasureSheetExercise } from '../../Activities/PleasureSheet/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

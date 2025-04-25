@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppDispatch } from '../../../redux/hooks';
-import { DASCategory, DASCategoryResult, DASState } from './DysfunctionalAttitudeTypes';
+import { DASCategory, DASCategoryResult, DASState, DysfunctionalAttitudeScaleExercise } from './types';
 import { DAS_ANSWERS, DAS_STATEMENTS } from './dasConfig';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
@@ -12,7 +12,7 @@ import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import ResultsChart from './ResultsChart';
 import CategoryResults from './CategoryResults';
 import styles from './DysfunctionalAttitudeScale.module.css';
-import { DysfunctionalAttitudeScaleExercise } from '../../../types/progress.types';
+
 
 const DysfunctionalAttitudeScale: React.FC = () => {
   const [state, setState] = useState<DASState>({

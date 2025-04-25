@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThoughtDiaryExercise } from '../../../types/progress.types';
+import { ThoughtDiaryExercise } from '../../Activities/ThoughtDiary/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 

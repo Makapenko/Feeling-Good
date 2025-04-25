@@ -1,3 +1,5 @@
+import { BaseExercise } from '../../../types/progress.types';
+
 export interface SmallStep {
   id: string;
   text: string;
@@ -16,3 +18,7 @@ export interface SmallStepsTask {
   isCompleted?: boolean; // флаг завершения всей задачи
   currentStepId?: string;
 } 
+
+export interface SmallStepsExercise extends BaseExercise {
+  records: SmallStepsTask[];
+}

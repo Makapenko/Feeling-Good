@@ -1,3 +1,5 @@
+import { BaseExercise } from "../../../types/progress.types";
+
 export interface ThoughtRecord {
   id: string;
   leftColumn: string;
@@ -13,3 +15,8 @@ export interface ThreeColumnsMethodResult {
   completedAt: string;
   records: ThoughtRecord[];
 } 
+
+export interface ThreeColumnsExercise extends BaseExercise {
+  records: ThoughtRecord[];
+  metadata?: Record<string, string | number | boolean>;
+}

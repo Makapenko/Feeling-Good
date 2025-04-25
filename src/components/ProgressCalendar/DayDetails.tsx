@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
-import { Exercise, ThreeColumnsExercise, DailyScheduleExercise, AntiProcrastinationExercise, PleasureSheetExercise, NoButsExercise, SelfSupportExercise, SmallStepsExercise, MotivationWithoutCoercionExercise, ImagineSuccessExercise, CountAchievementsExercise, CheckCantDoExercise, NoLoseTechniqueExercise, ThoughtDiaryExercise, DownwardArrowExercise, DysfunctionalAttitudeScaleExercise } from '../../types/progress.types';
+import { Exercise } from '../../types/progress.types';
+import { ThreeColumnsExercise } from '../Activities/ThreeColumnsBase/types';
+import { ThoughtDiaryExercise } from '../Activities/ThoughtDiary/types';
+import { DailyScheduleExercise } from '../Activities/DailySchedule/types';
+import { AntiProcrastinationExercise } from '../Activities/AntiProcrastinationSheet/types';
+import { PleasureSheetExercise } from '../Activities/PleasureSheet/types';
+import { NoButsExercise } from '../Activities/NoButsSheet/types';
+
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import { formatDateWithOptions, formatTimeFromSeconds } from '../../utils/dateUtils';
 import { useAppDispatch } from '../../redux/hooks';
@@ -21,10 +28,19 @@ import NoLoseTechniqueExerciseComponent from './render/NoLoseTechniqueExerciseCo
 import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseComponent';
 import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
-import DownwardArrowExerciseComponent from './render/DownwardArrow/DownwardArrowExerciseComponent';
+import DownwardArrowExerciseComponent from './render/DownwardArrowExerciseComponent';
 import DysfunctionalAttitudeScaleExerciseComponent from './render/DysfunctionalAttitudeScale/DysfunctionalAttitudeScaleExerciseComponent';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { loadChapter } from '../../redux/actions/chapterActions';
+import { SelfSupportExercise } from '../Activities/SelfSupport/types';
+import { MotivationWithoutCoercionExercise } from '../Activities/MotivationWithoutCoercion/types';
+import { SmallStepsExercise } from '../Activities/SmallSteps/types';
+import { CountAchievementsExercise } from '../Activities/CountAchievements/types';
+import { ImagineSuccessExercise } from '../Activities/ImagineSuccess/types';
+import { DownwardArrowExercise } from '../Activities/DownwardArrow/types';
+import { CheckCantDoExercise } from '../Activities/CheckCantDo/types';
+import { NoLoseTechniqueExercise } from '../Activities/NoLoseTechnique/types';
+import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
 
 interface DayDetailsProps {
   date: string;

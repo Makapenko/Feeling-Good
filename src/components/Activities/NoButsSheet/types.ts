@@ -1,3 +1,5 @@
+import { BaseExercise } from "../../../types/progress.types";
+
 export interface ButPair {
   id: string;
   but: string;
@@ -5,7 +7,6 @@ export interface ButPair {
   timestamp: string;
 }
 
-export interface NoButsData {
-  date: string;
-  pairs: ButPair[];
-} 
+export interface NoButsExercise extends BaseExercise {
+  records: ButPair[];
+}

@@ -1,3 +1,5 @@
+import { BaseExercise } from "../../../types/progress.types";
+
 export interface Task {
   id: string;
   text: string;
@@ -6,6 +8,7 @@ export interface Task {
   actualDifficulty: number | null;
   actualPleasure: number | null;
   completed: boolean;
+  timestamp?: string;
 }
 
 export interface TaskStep {
@@ -13,3 +16,7 @@ export interface TaskStep {
   text: string;
   isCompleted: boolean;
 } 
+
+export interface AntiProcrastinationExercise extends BaseExercise {
+  records: Task[];
+}

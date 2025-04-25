@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThreeColumnsExercise } from '../../../types/progress.types';
+import { ThreeColumnsExercise } from '../../Activities/ThreeColumnsBase/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from './ThreeColumnsExerciseComponent.module.css';
 import { ACTIVITY_IDS } from '../../../constants/activities';
