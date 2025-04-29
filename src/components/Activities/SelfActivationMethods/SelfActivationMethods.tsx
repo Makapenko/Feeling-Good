@@ -30,7 +30,7 @@ const SelfActivationMethods: React.FC = () => {
         content = ACTIVITY_IDS.ANTI_PROCRASTINATION;
         break;
       case 'Ежедневная запись автоматических мыслей':
-        content = ACTIVITY_IDS.THOUGHT_DIARY;
+        content = ACTIVITY_IDS.PROCRASTINATION_DIARY;
         break;
       case 'Листок предполагаемого удовольствия':
         content = ACTIVITY_IDS.PLEASURE_SHEET;

@@ -12,7 +12,9 @@ interface EmotionsSectionProps {
   onEmotionChange: (emotion: Emotion) => void;
   onAdd: () => void;
   onEdit: (index: number) => void;
+  showIntensity?: boolean;
 }
+
 
 export const EmotionsSection: React.FC<EmotionsSectionProps> = ({
   title,
@@ -22,6 +24,7 @@ export const EmotionsSection: React.FC<EmotionsSectionProps> = ({
   onEmotionChange,
   onAdd,
   onEdit,
+  showIntensity = true,
 }) => {
   return (
     <div className={styles.column}>
@@ -30,12 +33,14 @@ export const EmotionsSection: React.FC<EmotionsSectionProps> = ({
         emotion={emotion}
         onEmotionChange={onEmotionChange}
         onAdd={onAdd}
+        showIntensity={showIntensity}
       />
       {emotions.length > 0 && (
         <div className={styles.emotionsList}>
           <EmotionsList
             emotions={emotions}
             onEdit={onEdit}
+            showIntensity={showIntensity}
           />
         </div>
       )}

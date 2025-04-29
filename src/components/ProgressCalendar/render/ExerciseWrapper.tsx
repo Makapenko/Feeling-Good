@@ -13,6 +13,7 @@ interface ExerciseWrapperProps {
   toggleExercise: (id: string) => void;
   children: React.ReactNode;
   onClose?: () => void;
+  customTitle?: string;
 }
 
 /**
@@ -52,7 +53,8 @@ const ExerciseWrapper: React.FC<ExerciseWrapperProps> = ({
   expandedExercises, 
   toggleExercise,
   children,
-  onClose 
+  onClose,
+  customTitle
 }) => {
   const isExpanded = expandedExercises.includes(exercise.id);
   return (
@@ -61,7 +63,7 @@ const ExerciseWrapper: React.FC<ExerciseWrapperProps> = ({
         className={styles.exerciseHeader} 
         onClick={() => toggleExercise(exercise.id)}
       >
-        <h4>{exercise.name}</h4>
+        <h4>{customTitle || exercise.name}</h4>
         <div className={styles.exerciseActions}>
           <ExerciseButton exercise={exercise} onClose={onClose} />
           <span className={`${styles.arrow} ${isExpanded ? styles.expanded : ''}`}>▼</span>

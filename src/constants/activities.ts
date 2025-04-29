@@ -13,6 +13,7 @@ export const ACTIVITY_IDS = {
   // Техники самопомощи
   THREE_COLUMNS_METHOD: 'three-columns-method',
   THOUGHT_DIARY: 'thought-diary',
+  PROCRASTINATION_DIARY: 'procrastination-diary',
   DAILY_SCHEDULE: 'daily-schedule',
   ANTI_PROCRASTINATION: 'anti-procrastination',
   PLEASURE_SHEET: 'pleasure-sheet',
@@ -52,6 +53,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   
   [ACTIVITY_IDS.THREE_COLUMNS_METHOD]: 'Метод трёх колонок',
   [ACTIVITY_IDS.THOUGHT_DIARY]: 'Дневник автоматических мыслей',
+  [ACTIVITY_IDS.PROCRASTINATION_DIARY]: 'Дневник прокрастинации',
   [ACTIVITY_IDS.DAILY_SCHEDULE]: 'Расписание дня',
   [ACTIVITY_IDS.ANTI_PROCRASTINATION]: 'Листок антипрокрастинации',
   [ACTIVITY_IDS.PLEASURE_SHEET]: 'Листок предполагаемого удовольствия',

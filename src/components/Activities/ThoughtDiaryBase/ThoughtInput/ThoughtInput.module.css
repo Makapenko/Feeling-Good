@@ -88,6 +88,17 @@
   /* margin-bottom: 24px; */
 }
 
+.deleteThoughtButton {
+  margin-left: 8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+
+}
+.deleteThoughtButton:hover {
+  background-color: #4299e1;
+}
+
 .addThoughtButton {
   padding: 8px 16px;
   background-color: #4299e1;

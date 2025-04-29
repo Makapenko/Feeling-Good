@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './ThreeColumnsBase.module.css';
-import { CognitiveDistortions } from '../ThoughtDiary/CognitiveDistortions/CognitiveDistortions';
+import { CognitiveDistortions } from '../ThoughtDiaryBase/CognitiveDistortions/CognitiveDistortions';
 import { ThoughtRecord, ThreeColumnsMethodResult } from './types';
 import { useDailyProgress } from '../../../redux/hooks';
 import { v4 as uuidv4 } from 'uuid';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThoughtDiaryExercise } from '../../Activities/ThoughtDiary/types';
+import { ThoughtDiaryExercise } from '../../Activities/ThoughtDiaryBase/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 
@@ -8,13 +8,21 @@ interface ThoughtDiaryExerciseProps {
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
   onClose?: () => void;
+  customTitle?: string;
+  showCognitiveDistortions?: boolean;
+  showEmotionIntensity?: boolean;
+  showResultIntensity?: boolean;
 }
 
 const ThoughtDiaryExerciseComponent: React.FC<ThoughtDiaryExerciseProps> = ({ 
   exercise, 
   expandedExercises, 
   toggleExercise,
-  onClose
+  onClose,
+  customTitle,
+  showCognitiveDistortions = true,
+  showEmotionIntensity = true,
+  showResultIntensity = true
 }) => {
   return (
     <ExerciseWrapper
@@ -22,6 +30,7 @@ const ThoughtDiaryExerciseComponent: React.FC<ThoughtDiaryExerciseProps> = ({
       expandedExercises={expandedExercises}
       toggleExercise={toggleExercise}
       onClose={onClose}
+      customTitle={customTitle}
     >
       <div className={styles.recordsList}>
         {exercise.records.map((record, index) => (
@@ -41,14 +50,19 @@ const ThoughtDiaryExerciseComponent: React.FC<ThoughtDiaryExerciseProps> = ({
                 <strong>Эмоции:</strong>
                 <ul>
                   {record.emotions.map((emotion, i) => (
-                    <li key={i}>{emotion.name} - {emotion.intensity}%</li>
+                    <li key={i}>
+                      {emotion.name}
+                      {showEmotionIntensity && ` - ${emotion.intensity}%`}
+                    </li>
                   ))}
                 </ul>
               </div>
               {record.automaticThoughts.map((thought, i) => (
                 <div key={i} className={styles.thought}>
                   <p><strong>Автоматическая мысль:</strong> {thought.thought}</p>
-                  <p><strong>Когнитивные искажения:</strong> {thought.cognitiveDistortions.join(', ')}</p>
+                  {showCognitiveDistortions && thought.cognitiveDistortions.length > 0 && (
+                    <p><strong>Когнитивные искажения:</strong> {thought.cognitiveDistortions.join(', ')}</p>
+                  )}
                   <p><strong>Рациональный ответ:</strong> {thought.rationalResponse}</p>
                 </div>
               ))}
@@ -57,7 +71,10 @@ const ThoughtDiaryExerciseComponent: React.FC<ThoughtDiaryExerciseProps> = ({
                   <strong>Результат:</strong>
                   <ul>
                     {record.result.emotions.map((emotion, i) => (
-                      <li key={i}>{emotion.name} - {emotion.intensity}%</li>
+                      <li key={i}>
+                        {emotion.name}
+                        {showResultIntensity && ` - ${emotion.intensity}%`}
+                      </li>
                     ))}
                   </ul>
                 </div>

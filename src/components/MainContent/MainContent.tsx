@@ -12,6 +12,7 @@ import ListOfCognitiveBiases from '../Activities/ListOfCognitiveBiases/ListOfCog
 import TestOfCognitiveBiases from '../Activities/TestOfCognitiveBiases/TestOfCognitiveBiases';
 import ThreeColumnsMethod  from '../Activities/ThreeColumnsMethod/ThreeColumnsMethod';
 import ThoughtDiary from '../Activities/ThoughtDiary/ThoughtDiary';
+import ProcrastinationDiary from '../Activities/ProcrastinationDiary/ProcrastinationDiary';
 import DailySchedule from '../Activities/DailySchedule/DailySchedule';
 import AntiProcrastinationSheet from '../Activities/AntiProcrastinationSheet/AntiProcrastinationSheet';
 import PleasureSheet from '../Activities/PleasureSheet/PleasureSheet';
@@ -51,6 +52,7 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.COGNITIVE_BIASES_TEST]: TestOfCognitiveBiases,
   [ACTIVITY_IDS.THREE_COLUMNS_METHOD]: ThreeColumnsMethod,
   [ACTIVITY_IDS.THOUGHT_DIARY]: ThoughtDiary,
+  [ACTIVITY_IDS.PROCRASTINATION_DIARY]: ProcrastinationDiary,
   [ACTIVITY_IDS.DAILY_SCHEDULE]: DailySchedule,
   [ACTIVITY_IDS.ANTI_PROCRASTINATION]: AntiProcrastinationSheet,
   [ACTIVITY_IDS.PLEASURE_SHEET]: PleasureSheet,

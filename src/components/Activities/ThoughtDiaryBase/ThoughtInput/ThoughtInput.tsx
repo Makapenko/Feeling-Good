@@ -9,6 +9,7 @@ interface ThoughtInputProps {
   onThoughtChange: (field: keyof AutomaticThought, value: string | string[], index: number) => void;
   onAddThought: () => void;
   onDeleteThought: (index: number) => void;
+  showCognitiveDistortions?: boolean;
 }
 
 export const ThoughtInput: React.FC<ThoughtInputProps> = ({
@@ -16,6 +17,7 @@ export const ThoughtInput: React.FC<ThoughtInputProps> = ({
   onThoughtChange,
   onAddThought,
   onDeleteThought,
+  showCognitiveDistortions = true,
 }) => {
   const adjustTextareaHeight = (element: HTMLTextAreaElement) => {
     element.style.height = 'auto';
@@ -59,10 +61,12 @@ export const ThoughtInput: React.FC<ThoughtInputProps> = ({
               )}
             </div>
             <div className={styles.thoughtAnalysis}>
-              <CognitiveDistortions
-                selectedDistortions={thought.cognitiveDistortions}
-                onChange={(distortions) => onThoughtChange('cognitiveDistortions', distortions, index)}
-              />
+              {showCognitiveDistortions && (
+                <CognitiveDistortions
+                  selectedDistortions={thought.cognitiveDistortions}
+                  onChange={(distortions) => onThoughtChange('cognitiveDistortions', distortions, index)}
+                />
+              )}
               <RationalResponse
                 response={thought.rationalResponse}
                 onChange={(response) => onThoughtChange('rationalResponse', response, index)}

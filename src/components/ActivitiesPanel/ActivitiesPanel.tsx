@@ -44,7 +44,7 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.SELF_ACTIVATION, label: 'Методы самоактивации' },
       { content: ACTIVITY_IDS.DAILY_SCHEDULE, label: 'Расписание дня' },
       { content: ACTIVITY_IDS.ANTI_PROCRASTINATION, label: 'Листок антипрокрастинации' },
-      { content: ACTIVITY_IDS.THOUGHT_DIARY, label: 'Дневник автоматических мыслей' },
+      { content: ACTIVITY_IDS.PROCRASTINATION_DIARY, label: 'Дневник прокрастинации' },
       { content: ACTIVITY_IDS.PLEASURE_SHEET, label: 'Листок предполагаемого удовольствия' },
       { content: ACTIVITY_IDS.NO_BUTS, label: 'Техника «Никаких но»' },
       { content: ACTIVITY_IDS.SELF_SUPPORT, label: 'Самоподдержка' },

@@ -1,0 +1,353 @@
+import { useState, useMemo } from 'react';
+import styles from './ThoughtDiaryBase.module.css';
+import { ThoughtInput } from './ThoughtInput/ThoughtInput';
+import { AutomaticThought } from './types';
+import { RecordsList } from './RecordsList/RecordsList';
+import { SituationInput } from './SituationInput/SituationInput';
+import { EmotionsSection } from './EmotionsSection/EmotionsSection';
+import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
+import { ThoughtDiaryRecord, ThoughtDiaryExercise } from './types';
+import { ActivityId } from '../../../constants/activities';
+import ChapterLinkButton from '../../shared/ChapterLinkButton';
+import FavoriteButton from '../../shared/FavoriteButton';
+import { addExercise } from '../../../redux/actions';
+import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
+
+interface ThoughtDiaryBaseProps {
+  activityId: ActivityId;
+  title: string;
+  emotionsLabel?: string;
+  emotionsTooltip?: string;
+  resultLabel?: string;
+  resultTooltip?: string;
+  showEmotionIntensity?: boolean;
+  showResultIntensity?: boolean;
+  showCognitiveDistortions?: boolean;
+  description?: string;
+}
+// TODO валидация перед сохранением, стили, сохранение 
+// TODO Главы 7.5 7.12 8.2 - добавить копию этого компонента с другим описанием полей
+
+const ThoughtDiaryBase: React.FC<ThoughtDiaryBaseProps> = ({
+  activityId,
+  title,
+  emotionsLabel = "Эмоции",
+  emotionsTooltip = "1. Определите характер эмоции: грусть, волнение, злость и т.д. 2. Оцените интенсивность эмоции от 1 до 100%",
+  resultLabel = "Результат",
+  resultTooltip = "Определите ваши эмоции и их интенсивность после проведенной работы от 0 до 100%",
+  showEmotionIntensity = true,
+  showResultIntensity = true,
+  showCognitiveDistortions = true,
+  description
+}) => {
+  const dispatch = useAppDispatch();
+  const dailyProgress = useDailyProgress();
+  const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtDiaryRecord, 'timestamp'>>({
+    situation: '',
+    emotions: [],
+    automaticThoughts: [{
+      thought: '',
+      cognitiveDistortions: [],
+      rationalResponse: ''
+    }],
+    result: {
+      emotions: []
+    }
+  });
+
+  // Получаем все записи из прогресса
+  const allRecords = useMemo(() => {
+    // Фильтр для проверки правильного формата записей
+    const filterValidRecord = (record: unknown): record is ThoughtDiaryRecord => {
+      return typeof record === 'object' && 
+        record !== null && 
+        'situation' in record &&
+        'emotions' in record &&
+        'automaticThoughts' in record &&
+        'result' in record;
+    };
+    
+    return getAllRecordsFromProgress<ThoughtDiaryRecord>(
+      dailyProgress,
+      activityId,
+      activityId,
+      filterValidRecord
+    );
+  }, [dailyProgress, activityId]);
+
+  const [newEmotion, setNewEmotion] = useState({ name: '', intensity: 0 });
+  const [resultEmotion, setResultEmotion] = useState({ name: '', intensity: 0 });
+  const [showValidation, setShowValidation] = useState(false);
+
+  const getValidationErrors = () => {
+    const errors: string[] = [];
+
+    if (!currentRecord.situation) {
+      errors.push('ситуация');
+    }
+    if (currentRecord.emotions.length === 0) {
+      errors.push('эмоции');
+    }
+
+    const invalidThoughts = currentRecord.automaticThoughts.reduce((acc, thought, index) => {
+      if (!thought.thought) {
+        acc.push(`мысль ${index + 1}`);
+      }
+      if (showCognitiveDistortions && thought.cognitiveDistortions.length === 0) {
+        acc.push(`когнитивные искажения для мысли ${index + 1}`);
+      }
+      if (!thought.rationalResponse) {
+        acc.push(`рациональный ответ для мысли ${index + 1}`);
+      }
+      return acc;
+    }, [] as string[]);
+
+    return [...errors, ...invalidThoughts];
+  };
+
+  const handleSaveAttempt = () => {
+    const errors = getValidationErrors();
+    if (errors.length === 0) {
+      handleAddRecord();
+    } else {
+      setShowValidation(true);
+    }
+  };
+
+  const handleAddEmotion = () => {
+    if (newEmotion.name) {
+      setCurrentRecord(prev => ({
+        ...prev,
+        emotions: [...prev.emotions, newEmotion]
+      }));
+      setNewEmotion({ name: '', intensity: 0 });
+    }
+  };
+
+  const handleAddResultEmotion = () => {
+    if (resultEmotion.name) {
+      setCurrentRecord(prev => ({
+        ...prev,
+        result: {
+          emotions: [...prev.result.emotions, resultEmotion]
+        }
+      }));
+      setResultEmotion({ name: '', intensity: 0 });
+    }
+  };
+
+  const handleEditEmotion = (index: number) => {
+    const emotionToEdit = currentRecord.emotions[index];
+    setNewEmotion(emotionToEdit);
+    setCurrentRecord(prev => ({
+      ...prev,
+      emotions: prev.emotions.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleEditResultEmotion = (index: number) => {
+    const emotionToEdit = currentRecord.result.emotions[index];
+    setResultEmotion(emotionToEdit);
+    setCurrentRecord(prev => ({
+      ...prev,
+      result: {
+        emotions: prev.result.emotions.filter((_, i) => i !== index)
+      }
+    }));
+  };
+
+  const handleAddRecord = () => {
+    const isRecordValid = 
+      currentRecord.situation &&
+      currentRecord.emotions.length > 0 &&
+      currentRecord.automaticThoughts[0].thought &&
+      (!showCognitiveDistortions || currentRecord.automaticThoughts[0].cognitiveDistortions.length > 0) &&
+      currentRecord.automaticThoughts[0].rationalResponse;
+      
+    if (isRecordValid) {
+      const newRecord: ThoughtDiaryRecord = {
+        ...currentRecord,
+        timestamp: getCurrentISOTimestamp()
+      };
+
+      // Получаем текущую дату
+      const today = getCurrentDate();
+
+      // Получаем существующие записи за сегодня
+      const todayExercise = dailyProgress[today]?.exercises.exercises?.find(
+        exercise => exercise.type === activityId && exercise.id === activityId
+      );
+
+      // Фильтруем существующие записи, чтобы убедиться, что они правильного типа
+      let existingRecords: ThoughtDiaryRecord[] = [];
+      if (todayExercise && 'records' in todayExercise && todayExercise.type === activityId) {
+        // Сначала приводим к unknown, затем фильтруем
+        const records = todayExercise.records as unknown as Record<string, unknown>[];
+        existingRecords = records.filter(record =>
+          'situation' in record &&
+          'emotions' in record &&
+          'automaticThoughts' in record &&
+          'result' in record
+        ) as unknown as ThoughtDiaryRecord[];
+      }
+
+      // Объединяем с новой записью
+      const updatedRecords: ThoughtDiaryRecord[] = [...existingRecords, newRecord];
+
+      // Создаем объект упражнения
+      const exercise: ThoughtDiaryExercise = {
+        ...createBaseExercise(activityId),
+        records: updatedRecords
+      };
+
+      // Сохраняем в Redux
+      dispatch(addExercise({ 
+        exercise, 
+        showNotification: false 
+      }));
+
+      // Очищаем форму
+      setCurrentRecord({
+        situation: '',
+        emotions: [],
+        automaticThoughts: [{
+          thought: '',
+          cognitiveDistortions: [],
+          rationalResponse: ''
+        }],
+        result: {
+          emotions: []
+        }
+      });
+      setShowValidation(false);
+    }
+  };
+
+  const handleAddThought = () => {
+    setCurrentRecord(prev => ({
+      ...prev,
+      automaticThoughts: [
+        ...prev.automaticThoughts,
+        {
+          thought: '',
+          cognitiveDistortions: [],
+          rationalResponse: ''
+        }
+      ]
+    }));
+  };
+
+  const handleUpdateThought = (field: keyof AutomaticThought, value: string | string[], index: number) => {
+    setCurrentRecord(prev => ({
+      ...prev,
+      automaticThoughts: prev.automaticThoughts.map((thought, i) =>
+        i === index
+          ? { ...thought, [field]: value }
+          : thought
+      )
+    }));
+  };
+
+  const handleDeleteThought = (index: number) => {
+    setCurrentRecord(prev => ({
+      ...prev,
+      automaticThoughts: prev.automaticThoughts.filter((_, i) => i !== index)
+    }));
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.titleContainer}>
+        <h2>{title}</h2>
+        <div className={styles.actionButtons}>
+          <ChapterLinkButton activityId={activityId} />
+          <FavoriteButton activityId={activityId} />
+        </div>
+      </div>
+      
+      {description && (
+        <div className={styles.description}>
+          <p>{description}</p>
+        </div>
+      )}
+
+      <div className={styles.diaryGrid}>
+        {/* Первая строка: Ситуация и эмоции */}
+        <div className={styles.topRow}>
+          <SituationInput
+            situation={currentRecord.situation}
+            onChange={(situation) => setCurrentRecord({
+              ...currentRecord,
+              situation
+            })}
+            isValid={!!currentRecord.situation}
+            showValidation={showValidation}
+          />
+
+          <EmotionsSection
+            title={emotionsLabel}
+            titleTooltip={emotionsTooltip}
+            emotion={newEmotion}
+            emotions={currentRecord.emotions}
+            onEmotionChange={setNewEmotion}
+            onAdd={handleAddEmotion}
+            onEdit={handleEditEmotion}
+            showIntensity={showEmotionIntensity}
+          />
+        </div>
+
+        {/* Вторая строка: Мысли, искажения, ответ */}
+        <div className={styles.middleRow}>
+          <div className={styles.thoughtsSection}>
+            <ThoughtInput
+              thoughts={currentRecord.automaticThoughts}
+              onThoughtChange={handleUpdateThought}
+              onAddThought={handleAddThought}
+              onDeleteThought={handleDeleteThought}
+              showCognitiveDistortions={showCognitiveDistortions}
+            />
+          </div>
+        </div>
+
+        {/* Третья строка: Результат */}
+        <div className={styles.bottomRow}>
+          <EmotionsSection
+            title={resultLabel}
+            titleTooltip={resultTooltip}
+            emotion={resultEmotion}
+            emotions={currentRecord.result.emotions}
+            onEmotionChange={setResultEmotion}
+            onAdd={handleAddResultEmotion}
+            onEdit={handleEditResultEmotion}
+            showIntensity={showResultIntensity}
+          />
+        </div>
+      </div>
+
+      <button
+        className={styles.addButton}
+        onClick={handleSaveAttempt}
+      >
+        Сохранить запись
+      </button>
+
+      {showValidation && getValidationErrors().length > 0 && (
+        <div className={styles.validationSummary}>
+          Пожалуйста, заполните следующие поля: {getValidationErrors().join(', ')}
+        </div>
+      )}
+
+      <RecordsList 
+        records={allRecords}
+        showCognitiveDistortions={showCognitiveDistortions}
+        showEmotionIntensity={showEmotionIntensity}
+        showResultIntensity={showResultIntensity}
+      />
+    </div>
+  );
+};
+
+export default ThoughtDiaryBase;
+

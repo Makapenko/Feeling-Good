@@ -4,7 +4,7 @@ import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
 import { Exercise } from '../../types/progress.types';
 import { ThreeColumnsExercise } from '../Activities/ThreeColumnsBase/types';
-import { ThoughtDiaryExercise } from '../Activities/ThoughtDiary/types';
+import { ThoughtDiaryExercise } from '../Activities/ThoughtDiaryBase/types';
 import { DailyScheduleExercise } from '../Activities/DailySchedule/types';
 import { AntiProcrastinationExercise } from '../Activities/AntiProcrastinationSheet/types';
 import { PleasureSheetExercise } from '../Activities/PleasureSheet/types';
@@ -124,6 +124,18 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
             onClose={onClose}
+          />;
+        case ACTIVITY_IDS.PROCRASTINATION_DIARY:
+          return <ThoughtDiaryExerciseComponent
+            key={exercise.id}
+            exercise={exercise as ThoughtDiaryExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+            customTitle="Дневник прокрастинации"
+            showCognitiveDistortions={false}
+            showEmotionIntensity={false}
+            showResultIntensity={false}
           />;
         case ACTIVITY_IDS.DAILY_SCHEDULE:
           return <DailyScheduleExerciseComponent

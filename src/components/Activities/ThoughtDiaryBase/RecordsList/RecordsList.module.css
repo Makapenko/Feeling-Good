@@ -1,0 +1,188 @@
+.recordsContainer {
+  margin-top: 30px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 30px;
+}
+
+.recordsContainer h3 {
+  color: #2d3748;
+  margin-bottom: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.recordsContainer h3::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin-left: 15px;
+}
+
+.hintText {
+  color: #718096;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+}
+
+.hintText::before {
+  content: "💡";
+  margin-right: 8px;
+}
+
+.dateGroup {
+  margin-bottom: 25px;
+}
+
+.dateHeader {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  padding-left: 5px;
+  border-left: 3px solid #4299e1;
+}
+
+.record {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.record:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.record.expanded {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.record:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #4299e1;
+}
+
+.recordHeader {
+  background-color: #f8fafc;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.recordHeader:hover {
+  background-color: #f1f5f9;
+}
+
+.recordHeader::after {
+  content: "▼";
+  position: absolute;
+  right: 20px;
+  color: #718096;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.expanded .recordHeader::after {
+  transform: rotate(180deg);
+}
+
+.situationPreview {
+  flex: 1;
+  color: #4a5568;
+  font-size: 0.95rem;
+  margin-right: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recordTime {
+  color: #718096;
+  font-size: 0.85rem;
+  font-family: monospace;
+  padding-right: 15px;
+}
+
+.recordDetails {
+  padding: 20px;
+  border-top: 1px solid #e2e8f0;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.emotionList, .results, .thought {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.emotionList {
+  background-color: #ebf8ff;
+  border-left: 3px solid #63b3ed;
+}
+
+.thought {
+  background-color: #f7fafc;
+  border-left: 3px solid #4a5568;
+}
+
+.thought .distortions {
+  margin: 10px 0;
+  padding: 8px 12px;
+  background-color: #fff5f5;
+  border-radius: 5px;
+  border-left: 3px solid #f56565;
+}
+
+.thought .response {
+  margin: 10px 0;
+  padding: 8px 12px;
+  background-color: #f0fff4;
+  border-radius: 5px;
+  border-left: 3px solid #48bb78;
+}
+
+.results {
+  background-color: #e6fffa;
+  border-left: 3px solid #38b2ac;
+}
+
+.emotionList strong, .results strong, .thought strong {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.emotionList ul, .results ul {
+  list-style: none;
+  padding: 8px 0 0 0;
+  margin: 0;
+}
+
+.emotionList li, .results li {
+  margin-bottom: 5px;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+}
+
+.emotionList li::before, .results li::before {
+  content: "•";
+  color: #4299e1;
+  font-weight: bold;
+  margin-right: 8px;
+}
