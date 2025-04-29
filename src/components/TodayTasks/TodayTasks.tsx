@@ -264,7 +264,7 @@ const TodayTasks: React.FC = () => {
           <ReadingHistoryBar readingGoalSeconds={READING_GOAL_SECONDS} />
         </div>
 
-        <h3 className={styles.taskSectionTitle}>Работа с методами</h3>
+        <h3 className={styles.taskSectionTitle}>Работа с самооценкой</h3>
         <div className={`${styles.task} ${!methodsGoalAchieved ? styles.clickable : ''}`}
              onClick={!methodsGoalAchieved ? () => handleActivityClick(AUTOMATIC_THOUGHTS_ID) : undefined}
         >
@@ -316,7 +316,7 @@ const TodayTasks: React.FC = () => {
 
         {/* Обновленная секция с историей методов */}
         <div className={styles.methodsHistorySection}>
-          <h4 className={styles.methodsHistoryTitle}>История работы с методами</h4>
+          <h4 className={styles.methodsHistoryTitle}>История работы с самооценкой</h4>
           <MethodsHistoryBar readingGoalSeconds={READING_GOAL_SECONDS} />
         </div>
 

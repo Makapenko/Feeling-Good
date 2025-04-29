@@ -37,6 +37,7 @@ export const HIDDEN_TIMER_COMPONENTS: (ActivityId | string)[] = [
   ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES,
   ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
   ACTIVITY_IDS.REWRITE_BELIEF, // Новый ID
+  ACTIVITY_IDS.PROCRASTINATION_SCALE, // Новый ID
 ];
 
 // Список компонентов, для которых таймер полностью отключен (не считает время)

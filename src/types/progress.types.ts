@@ -1,5 +1,5 @@
 import { DailyScheduleExercise } from '../components/Activities/DailySchedule/types';
-import { ThoughtDiaryExercise } from '../components/Activities/ThoughtDiary/types';
+import { ThoughtDiaryExercise } from '../components/Activities/ThoughtDiaryBase/types';
 import { SmallStepsExercise } from '../components/Activities/SmallSteps/types';
 import { ActivityId } from '../constants/activities';
 import { ThreeColumnsExercise } from '../components/Activities/ThreeColumnsBase/types';

@@ -21,17 +21,21 @@ const sections: ActivitySection[] = [
     title: 'Оценка состояния',
     activities: [
       { content: ACTIVITY_IDS.BURNS_CHECKLIST, label: 'Опросник депрессии Бернса' },
-      { content: ACTIVITY_IDS.COGNITIVE_BIASES, label: 'Список когнитивных искажений' },
-      { content: ACTIVITY_IDS.COGNITIVE_BIASES_TEST, label: 'Тест на когнитивные искажения' },
+      { content: ACTIVITY_IDS.PROCRASTINATION_SCALE, label: 'Шкала иррациональной прокрастинации' },
       { content: ACTIVITY_IDS.NOVACO_SCALE, label: 'Шкала раздражения Новако' },
       { content: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE, label: 'Шкала дисфункциональных убеждений' },
     ]
   },
   {
+    title: 'Когнитивные искажения',
+    activities: [
+      { content: ACTIVITY_IDS.COGNITIVE_BIASES, label: 'Список когнитивных искажений' },
+      { content: ACTIVITY_IDS.COGNITIVE_BIASES_TEST, label: 'Тест на когнитивные искажения' },
+    ]
+  },
+  {
     title: 'Работа с мыслями',
     activities: [
-      { content: ACTIVITY_IDS.THREE_COLUMNS_METHOD, label: 'Метод трёх колонок' },
-      { content: ACTIVITY_IDS.THOUGHT_DIARY, label: 'Дневник автоматических мыслей' },
       { content: ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS, label: 'Мешающие и помогающие мысли' },
       { content: ACTIVITY_IDS.HOT_COOL_THOUGHTS, label: 'Остудите «горячие» мысли' },
       { content: ACTIVITY_IDS.RATIONAL_RESPONSES, label: 'Рациональные ответы на самокритику' },
@@ -39,8 +43,16 @@ const sections: ActivitySection[] = [
     ]
   },
   {
-    title: 'Методы самоактивации',
+    title: 'Самооценка',
     activities: [
+      { content: ACTIVITY_IDS.THREE_COLUMNS_METHOD, label: 'Метод трёх колонок' },
+      { content: ACTIVITY_IDS.THOUGHT_DIARY, label: 'Дневник автоматических мыслей' },
+    ]
+  },
+  {
+    title: 'Прокрастинация',
+    activities: [
+      { content: ACTIVITY_IDS.PROCRASTINATION_SCALE, label: 'Шкала иррациональной прокрастинации' },
       { content: ACTIVITY_IDS.SELF_ACTIVATION, label: 'Методы самоактивации' },
       { content: ACTIVITY_IDS.DAILY_SCHEDULE, label: 'Расписание дня' },
       { content: ACTIVITY_IDS.ANTI_PROCRASTINATION, label: 'Листок антипрокрастинации' },
