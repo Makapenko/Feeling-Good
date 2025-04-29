@@ -1,4 +1,4 @@
-import { SurveyConfig } from "../types";
+import { SurveyConfig } from "../Survey/types";
 
 export const burnsConfig: SurveyConfig = {
   id: "burns-checklist",

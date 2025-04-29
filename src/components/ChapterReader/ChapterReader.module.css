@@ -5,9 +5,9 @@
   position: relative;
 }
 
-.chapterContent {
+/* .chapterContent {
   margin-top: 40px;
-}
+} */
 
 .content {
   line-height: 1.6;
@@ -163,7 +163,7 @@
   }
 
   .chapterContent {
-    margin-top: 60px;
+    margin-top: 20px;
   }
 
   .content {

@@ -1,8 +1,8 @@
 import styles from '../Survey/Survey.module.css';
 import { useAppDispatch } from "../../../redux/hooks";
 import { saveTestResultWithNotification } from "../../../redux/actions";
-import Survey from "../Survey";
-import { novacoConfig } from "../Survey/configs";
+import Survey from "../Survey/Survey";
+import { novacoConfig } from "./novacoConfig";
 import { SurveyResult } from "../Survey/types";
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';

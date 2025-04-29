@@ -63,14 +63,23 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     // Получаем базовый путь из окружения
     const basePath = import.meta.env.BASE_URL || '/';
     
-    // Если базовый путь уже содержится в URL изображений, не меняем ничего
-    if (basePath === '/') {
+    // 1. Обрабатываем случай, когда пути содержат /Feeling-Good/ 
+    if (htmlContent.includes('src="/Feeling-Good/content/images/')) {
+      // Если текущий basePath не /Feeling-Good/, то нужно исправить пути
+      if (basePath !== '/Feeling-Good/') {
+        // Удаляем /Feeling-Good/ и добавляем правильный basePath
+        return htmlContent.replace(/src="\/Feeling-Good\/content\/images\//g, `src="${basePath}content/images/`);
+      }
+      // Если basePath = /Feeling-Good/, оставляем как есть
       return htmlContent;
     }
     
-    // Если базовый путь не '/', но он не содержится в путях - добавляем его
-    return htmlContent
-      .replace(/src="\/content\/images\//g, `src="${basePath}content/images/`);
+    // 2. Обрабатываем стандартные пути /content/images/
+    if (htmlContent.includes('src="/content/images/')) {
+      return htmlContent.replace(/src="\/content\/images\//g, `src="${basePath}content/images/`);
+    }
+    
+    return htmlContent;
   }, []);
 
   const findNextChapter = useCallback(() => {
@@ -131,7 +140,7 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
       // Загружаем следующую главу с небольшой задержкой для анимации
       setTimeout(() => {
         dispatch(loadChapter(nextChapter.id));
-      }, 300);
+      }, 100);
     }
 
     onNext?.();

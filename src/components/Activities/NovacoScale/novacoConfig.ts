@@ -1,4 +1,4 @@
-import { SurveyConfig } from "../types";
+import { SurveyConfig } from "../Survey/types";
 
 export const novacoConfig: SurveyConfig = {
   title: "Шкала раздражения Новако",
