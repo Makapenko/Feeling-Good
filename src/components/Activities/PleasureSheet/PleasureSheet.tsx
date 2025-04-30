@@ -7,7 +7,7 @@ import { addExercise } from '../../../redux/actions';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { getCurrentISOTimestamp, formatDate, compareDatesDesc } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp, formatDate, compareDatesDesc, getCurrentDate } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
@@ -157,7 +157,10 @@ const ActivityAnalysis: React.FC<{ activities: Activity[] }> = ({ activities }) 
  * Компонент для отображения истории активностей
  */
 const HistoricalActivitiesList: React.FC<{ activities: Activity[] }> = ({ activities }) => {
-  if (activities.length === 0) return null;
+  // Фильтруем только завершенные активности для истории
+  const completedActivities = activities.filter(activity => activity.completed);
+  
+  if (completedActivities.length === 0) return null;
   
   return (
     <div className={styles.historicalActivities}>
@@ -171,7 +174,7 @@ const HistoricalActivitiesList: React.FC<{ activities: Activity[] }> = ({ activi
           <div>Реальный уровень</div>
         </div>
 
-        {activities.map(activity => (
+        {completedActivities.map(activity => (
           <div key={activity.id} className={styles.activityRow}>
             <div data-label="Дата">{formatDate(activity.timestamp)}</div>
             <div data-label="Занятие">{activity.text}</div>
@@ -189,7 +192,7 @@ const HistoricalActivitiesList: React.FC<{ activities: Activity[] }> = ({ activi
         ))}
       </div>
       
-      <ActivityAnalysis activities={activities} />
+      <ActivityAnalysis activities={completedActivities} />
     </div>
   );
 };
@@ -222,6 +225,7 @@ const AddActivityForm: React.FC<{
             value={newActivity.date}
             onChange={(e) => setNewActivity({ ...newActivity, date: e.target.value })}
             className={styles.dateInput}
+            
           />
         </label>
       </div>
@@ -268,6 +272,18 @@ const ActivityList: React.FC<{
   onCompleteActivity: (activityId: string) => void;
   onDeleteActivity: (activityId: string) => void;
 }> = ({ activities, onActivityChange, onCompleteActivity, onDeleteActivity }) => {
+  // Состояние для отслеживания ID активности в режиме редактирования
+  const [editingActivityId, setEditingActivityId] = useState<string | null>(null);
+  
+  const startEditing = (activityId: string) => {
+    setEditingActivityId(activityId);
+  };
+  
+  const finishEditing = (activityId: string) => {
+    setEditingActivityId(null);
+    onCompleteActivity(activityId);
+  };
+  
   return (
     <div className={styles.activityList}>
       <div className={styles.headers}>
@@ -288,26 +304,35 @@ const ActivityList: React.FC<{
             <RatingInput
               value={activity.expectedPleasure}
               onChange={() => { }}
-              disabled={activity.completed}
+              disabled={true}
             />
           </div>
           <div className={styles.ratingCell}>
-            {!activity.completed ? (
+            {editingActivityId !== activity.id ? (
               <div className={styles.completeButtonContainer}>
                 <button
-                  onClick={() => onCompleteActivity(activity.id)}
+                  onClick={() => startEditing(activity.id)}
                   className={styles.completeButton}
                 >
                   Выполнено
                 </button>
               </div>
             ) : (
-              <RatingInput
-                value={activity.actualPleasure}
-                onChange={(value) => onActivityChange(activity.id, 'actualPleasure', value)}
-                isActual
-                compareValue={activity.expectedPleasure}
-              />
+              <>
+                <RatingInput
+                  value={activity.actualPleasure !== null ? activity.actualPleasure : activity.expectedPleasure}
+                  onChange={(value) => onActivityChange(activity.id, 'actualPleasure', value)}
+                  isActual
+                  compareValue={activity.expectedPleasure}
+                  placeholder="Укажите реальное удовольствие"
+                />
+                <button
+                  onClick={() => finishEditing(activity.id)}
+                  className={styles.saveButton}
+                >
+                  Сохранить в историю
+                </button>
+              </>
             )}
           </div>
           <button
@@ -326,33 +351,65 @@ const ActivityList: React.FC<{
 const PleasureSheet: React.FC = () => {
   const dispatch = useAppDispatch();
   const progress = useAppSelector(state => state.progress);
-  const [activities, setActivities] = useState<Activity[]>([]);
+  
+  // Используем функцию из dateUtils
+  const today = getCurrentDate();
+  
   const [newActivity, setNewActivity] = useState({
-    date: '',
+    date: today,
     text: '',
     participants: '',
     expectedPleasure: 0
   });
 
-  // Получаем все записи из прогресса
-  const allActivities = useMemo(() => {
+  // Получаем все записи из прогресса и устанавливаем их в локальное состояние
+  const activities = useMemo(() => {
     if (!progress?.dailyProgress) return [];
 
-    return getAllRecordsFromProgress<Activity & { date: string }>(
+    const allRecords = getAllRecordsFromProgress<Activity>(
       progress.dailyProgress,
       ACTIVITY_IDS.PLEASURE_SHEET,
       SHEET_ID
-    ).sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
+    );
+    
+    return allRecords.sort((a, b) => 
+      // Сначала не завершенные активности
+      a.completed === b.completed 
+        ? compareDatesDesc(a.timestamp, b.timestamp) 
+        : (a.completed ? 1 : -1) - (b.completed ? 1 : -1)
+    );
   }, [progress]);
 
-  const saveToProgress = (updatedActivities: Activity[]) => {
+  // Фильтруем активности для текущего списка и истории
+  const currentActivities = useMemo(() => 
+    activities.filter(activity => !activity.completed), 
+    [activities]
+  );
+  
+  const historicalActivities = useMemo(() => 
+    activities.filter(activity => activity.completed), 
+    [activities]
+  );
+
+  const saveToProgress = (updatedActivity: Activity) => {
+    // Находим индекс активности для обновления или -1 для новой
+    const activityIndex = activities.findIndex(a => a.id === updatedActivity.id);
+    
+    // Создаем новый массив с обновленной/добавленной активностью
+    let updatedActivities;
+    if (activityIndex >= 0) {
+      // Обновляем существующую активность
+      updatedActivities = [...activities];
+      updatedActivities[activityIndex] = updatedActivity;
+    } else {
+      // Добавляем новую активность
+      updatedActivities = [...activities, updatedActivity];
+    }
+    
     dispatch(addExercise({
       exercise: {
         ...createBaseExercise(SHEET_ID),
-        records: updatedActivities.map(activity => ({
-          ...activity,
-          timestamp: getCurrentISOTimestamp()
-        }))
+        records: updatedActivities
       },
       showNotification: false
     }));
@@ -369,15 +426,13 @@ const PleasureSheet: React.FC = () => {
       timestamp: getCurrentISOTimestamp()
     };
 
-    const updatedActivities = [...activities, activity];
-    setActivities(updatedActivities);
+    saveToProgress(activity);
     setNewActivity({
-      date: '',
+      date: today,
       text: '',
       participants: '',
       expectedPleasure: 0
     });
-    saveToProgress(updatedActivities);
   };
 
   const handleActivityChange = (
@@ -385,25 +440,43 @@ const PleasureSheet: React.FC = () => {
     field: 'actualPleasure',
     value: number
   ) => {
-    const updatedActivities = activities.map(activity =>
-      activity.id === activityId ? { ...activity, [field]: value } : activity
-    );
-    setActivities(updatedActivities);
-    saveToProgress(updatedActivities);
+    const activity = activities.find(a => a.id === activityId);
+    if (!activity) return;
+    
+    // Обновляем только поле actualPleasure, не меняя статус completed
+    const updatedActivity = { ...activity, [field]: value };
+    saveToProgress(updatedActivity);
   };
 
   const handleCompleteActivity = (activityId: string) => {
-    const updatedActivities = activities.map(activity =>
-      activity.id === activityId ? { ...activity, completed: true } : activity
-    );
-    setActivities(updatedActivities);
-    saveToProgress(updatedActivities);
+    const activity = activities.find(a => a.id === activityId);
+    if (!activity) return;
+    
+    // При сохранении задаем actualPleasure (если еще не задано) и устанавливаем completed в true
+    const actualPleasure = activity.actualPleasure !== null 
+      ? activity.actualPleasure 
+      : activity.expectedPleasure;
+    
+    const updatedActivity = { 
+      ...activity, 
+      actualPleasure: actualPleasure,
+      completed: true 
+    };
+    
+    saveToProgress(updatedActivity);
   };
 
   const handleDeleteActivity = (activityId: string) => {
-    const updatedActivities = activities.filter(activity => activity.id !== activityId);
-    setActivities(updatedActivities);
-    saveToProgress(updatedActivities);
+    // Находим все активности кроме удаляемой
+    const filteredActivities = activities.filter(a => a.id !== activityId);
+    
+    dispatch(addExercise({
+      exercise: {
+        ...createBaseExercise(SHEET_ID),
+        records: filteredActivities
+      },
+      showNotification: false
+    }));
   };
 
   return (
@@ -430,13 +503,13 @@ const PleasureSheet: React.FC = () => {
       />
 
       <ActivityList
-        activities={activities}
+        activities={currentActivities}
         onActivityChange={handleActivityChange}
         onCompleteActivity={handleCompleteActivity}
         onDeleteActivity={handleDeleteActivity}
       />
 
-      <HistoricalActivitiesList activities={allActivities} />
+      <HistoricalActivitiesList activities={historicalActivities} />
     </div>
   );
 };

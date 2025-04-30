@@ -13,8 +13,6 @@ import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
 const SHEET_ID = ACTIVITY_IDS.ANTI_PROCRASTINATION;
 
-//TODO Поправить вёрстку заголовков в таблице (на средних разрешениях)
-
 const SAME = 'same'
 const BETTER = 'better'
 const WORSE = 'worse'

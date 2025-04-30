@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './ImagineSuccess.module.css';
-import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
+import { useAppDispatch, useDailyProgress, useIsFavoriteActivity } from '../../../redux/hooks';
 import { ImagineSuccessRecord, ImagineSuccessExercise } from './types';
 import { Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,13 +12,12 @@ import { addExercise } from '../../../redux/actions';
 import { useIsMobile } from '../../../utils/deviceUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
-// TODO добавить отображение в ежедневных задачах
-
 const SHEET_ID = ACTIVITY_IDS.IMAGINE_SUCCESS;
 
 const ImagineSuccess: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
+  const isFavorite = useIsFavoriteActivity(SHEET_ID);
   const [goal, setGoal] = useState('');
   const [advantages, setAdvantages] = useState<Array<{ id: string; text: string }>>([]);
   const [newAdvantage, setNewAdvantage] = useState('');
@@ -225,6 +224,9 @@ const ImagineSuccess: React.FC = () => {
         <div className={styles.section}>
           <h3>Шаг 1: Список преимуществ</h3>
           <p className={styles.description}>
+            {!isFavorite && (
+              <em>Добавьте упражнение в избранное - <FavoriteButton activityId={SHEET_ID} /> <br /></em>
+            )}
             Составьте список всех положительных последствий, которые вы получите после достижения цели.
             Перечислите как можно больше пунктов.
           </p>

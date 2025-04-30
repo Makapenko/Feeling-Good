@@ -19,18 +19,19 @@ import { ActivityId, ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activi
 import {
   formatTimeFromSeconds,
   getDaysDifference,
-  getCurrentDate,
-  formatDateWithOptions
+  getCurrentDate
 } from '../../utils/dateUtils';
 import ReadingHistoryBar from './ReadingHistoryBar';
 import ActivityHistoryBar from './ActivityHistoryBar';
+import TestTaskComponent from './TestTaskComponent';
+import MethodsTaskComponent, { MethodsTask } from './MethodsTaskComponent';
 
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
 const METHODS_GOAL_SECONDS = 900; // 15 минут
 const PROCRASTINATION_GOAL_SECONDS = 900; // 15 минут
 const BURNS_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями опросника Бернса
-const PROCRASTINATION_TEST_INTERVAL_DAYS = 14; // Интервал между прохождениями теста на прокрастинацию
+const PROCRASTINATION_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями теста на прокрастинацию
 
 // Типизируем импортированные JSON-данные
 const typedChaptersData = chaptersData as ChaptersData;
@@ -39,146 +40,6 @@ const typedChaptersData = chaptersData as ChaptersData;
 const DAILY_MOOD_ID = 'daily-mood';
 const AUTOMATIC_THOUGHTS_ID = 'automatic-thoughts';
 const PROCRASTINATION_SCALE_ID = 'procrastination-scale';
-
-// Интерфейс для тестового задания
-interface TestTask {
-  id: string;
-  testId: string;
-  title: string;
-  message: string;
-  needToComplete: boolean;
-  lastScore: number | null;
-  scorePercent: number | null;
-  completedAt: string | null;
-  buttonText: string;
-}
-
-// Интерфейс для задания с методиками
-interface MethodsTask {
-  id: string;
-  title: string;
-  description: string;
-  goalSeconds: number;
-  methodIds: { id: string, name: string }[];
-  totalTime: number;
-}
-
-// Компонент для отображения тестовых заданий
-const TestTaskComponent: React.FC<{ 
-  task: TestTask,
-  onActivityClick: (activityId: string) => void
-}> = ({ task, onActivityClick }) => {
-  return (
-    <div
-      className={`${styles.task} ${task.needToComplete ? styles.clickable : ''}`}
-      onClick={task.needToComplete ? () => onActivityClick(task.id) : undefined}
-    >
-      <div className={styles.taskHeader}>
-        <div className={styles.checkbox}>
-          <input
-            type="checkbox"
-            checked={!task.needToComplete}
-            readOnly
-          />
-        </div>
-        <span className={styles.taskTitle}>
-          {task.message}
-        </span>
-      </div>
-      
-      <div className={styles.taskProgress}>
-        {/* Показываем информацию о последнем результате, если он есть */}
-        {task.lastScore !== null && (
-          <div className={styles.testResultContainer}>
-            <div className={styles.testScoreInfo}>
-              <span className={styles.testScoreLabel}>Последний результат:</span>
-              <span className={styles.testScoreValue}>
-                {task.lastScore} баллов
-                {task.scorePercent !== null && ` (${task.scorePercent}%)`}
-              </span>
-              <span className={styles.testScoreDate}>
-                {formatDateWithOptions(task.completedAt || '')}
-              </span>
-            </div>
-          </div>
-        )}
-        
-        {/* Показываем кнопку прохождения, если нужно */}
-        {task.needToComplete && (
-          <span 
-            className={styles.openLink}
-            onClick={(e) => {
-              e.stopPropagation();
-              onActivityClick(task.id);
-            }}
-          >
-            {task.buttonText}
-          </span>
-        )}
-        
-        {!task.needToComplete && (
-          <span className={styles.timeSpent}>
-            {task.message}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Компонент для отображения заданий с методиками
-const MethodsTaskComponent: React.FC<{ 
-  task: MethodsTask,
-  onActivityClick: (activityId: string) => void
-}> = ({ task, onActivityClick }) => {
-  const goalAchieved = task.totalTime >= task.goalSeconds;
-  
-  return (
-    <div 
-      className={`${styles.task} ${!goalAchieved ? styles.clickable : ''}`}
-      onClick={!goalAchieved ? () => onActivityClick(task.methodIds[0].id) : undefined}
-    >
-      <div className={styles.taskHeader}>
-        <div className={styles.checkbox}>
-          <input
-            type="checkbox"
-            checked={goalAchieved}
-            readOnly
-          />
-        </div>
-        <span className={styles.taskTitle}>
-          {task.description}
-        </span>
-      </div>
-      <div className={styles.taskProgress}>
-        <span className={styles.timeSpent}>
-          Время работы: {formatTimeFromSeconds(task.totalTime)}
-        </span>
-        {!goalAchieved && (
-          <>
-            <span className={styles.remainingTime}>
-              Осталось: {formatTimeFromSeconds(task.goalSeconds - task.totalTime)}
-            </span>
-            <div className={styles.methodLinks}>
-              {task.methodIds.map(method => (
-                <span
-                  key={method.id}
-                  className={styles.openLink}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onActivityClick(method.id);
-                  }}
-                >
-                  Открыть {method.name}
-                </span>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
 
 const TodayTasks: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -474,7 +335,43 @@ const TodayTasks: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Задания на сегодня</h2>
+     
+      {favoriteActivities.length > 0 && (
+        <>
+          <h2 className={styles.favoritesTitle}>Избранные задания</h2>
+          <div className={styles.favoritesList}>
+            {favoriteActivities.map(activity => (
+              <div
+                key={activity.id}
+                className={`${styles.favoriteItem} ${styles.clickable}`}
+                onClick={() => handleActivityClick(activity.id)}
+              >
+                <div className={styles.favoriteIcon}>★</div>
+                <span className={styles.favoriteTitle}>{activity.name}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {favoriteChapters.length > 0 && (
+        <>
+          <h2 className={styles.favoritesTitle}>Избранные главы</h2>
+          <div className={styles.favoritesList}>
+            {favoriteChapters.map(chapter => (
+              <div
+                key={chapter.id}
+                className={`${styles.favoriteItem} ${styles.clickable}`}
+                onClick={() => handleFavoriteChapterClick(chapter.id)}
+              >
+                <div className={styles.favoriteIcon}>★</div>
+                <span className={styles.favoriteTitle}>{chapter.title}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      <h2 className={styles.todayTasksTitle}>Задания на сегодня</h2>
       <div className={styles.tasksList}>
         <h3 className={styles.taskSectionTitle}>Ежедневное чтение</h3>
         <div
@@ -597,43 +494,6 @@ const TodayTasks: React.FC = () => {
           />
           </div>
       </div>
-
-     
-      {favoriteActivities.length > 0 && (
-        <>
-          <h2 className={styles.favoritesTitle}>Избранные задания</h2>
-          <div className={styles.favoritesList}>
-            {favoriteActivities.map(activity => (
-              <div
-                key={activity.id}
-                className={`${styles.favoriteItem} ${styles.clickable}`}
-                onClick={() => handleActivityClick(activity.id)}
-              >
-                <div className={styles.favoriteIcon}>★</div>
-                <span className={styles.favoriteTitle}>{activity.name}</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {favoriteChapters.length > 0 && (
-        <>
-          <h2 className={styles.favoritesTitle}>Избранные главы</h2>
-          <div className={styles.favoritesList}>
-            {favoriteChapters.map(chapter => (
-              <div
-                key={chapter.id}
-                className={`${styles.favoriteItem} ${styles.clickable}`}
-                onClick={() => handleFavoriteChapterClick(chapter.id)}
-              >
-                <div className={styles.favoriteIcon}>★</div>
-                <span className={styles.favoriteTitle}>{chapter.title}</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
     </div>
   );
 };

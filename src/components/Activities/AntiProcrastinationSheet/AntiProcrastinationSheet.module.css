@@ -113,7 +113,7 @@ h2 {
 
 .headers {
   display: grid;
-  grid-template-columns: minmax(200px, 2fr) 4fr 50px;
+  grid-template-columns: minmax(150px, 2fr) 4fr 50px;
   background-color: #f8fafc;
   border-bottom: 2px solid #e2e8f0;
   font-weight: 600;
@@ -136,7 +136,7 @@ h2 {
 
 .taskRow {
   display: grid;
-  grid-template-columns: minmax(200px, 2fr) 4fr 50px;
+  grid-template-columns: minmax(150px, 2fr) 4fr 50px;
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid #eee;
