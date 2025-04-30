@@ -1,14 +1,15 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import styles from './SelfSupport.module.css';
 import { SupportStatement } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
 import { addExercise } from '../../../redux/actions';
-import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../../constants/activities';
+import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp, formatDate, getCurrentDate } from '../../../utils/dateUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
+import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
@@ -19,23 +20,37 @@ const SelfSupport: React.FC = () => {
   const [newDevaluing, setNewDevaluing] = useState('');
   const [newSupporting, setNewSupporting] = useState('');
 
-  // Получаем все записи из прогресса, используя новую утилиту
-  const allStatements = useMemo(() => {
+  // Получаем все исторические записи (кроме текущего дня) из прогресса
+  const historicalStatements = useMemo(() => {
+    const currentDate = getCurrentDate();
     return getAllRecordsFromProgress<SupportStatement>(
       dailyProgress,
       SHEET_ID,
       SHEET_ID
+    ).filter(statement => {
+      // Исключаем записи текущего дня
+      const statementDate = statement.date || formatDate(statement.timestamp).split(',')[0];
+      return statementDate !== currentDate;
+    });
+  }, [dailyProgress]);
+
+  // Загружаем записи текущего дня из прогресса при инициализации компонента
+  useEffect(() => {
+    const currentDate = getCurrentDate();
+    const dayProgress = dailyProgress[currentDate];
+    const exercise = dayProgress?.exercises?.exercises?.find(
+      (ex) => ex.type === SHEET_ID && ex.id === SHEET_ID
     );
+    
+    if (exercise && 'records' in exercise) {
+      setStatements(exercise.records as SupportStatement[]);
+    }
   }, [dailyProgress]);
 
   const saveToProgress = (updatedStatements: SupportStatement[]) => {
     dispatch(addExercise({
       exercise: {
-        type: SHEET_ID,
-        id: SHEET_ID,
-        name: ACTIVITY_NAMES[SHEET_ID],
-        completed: true,
-        completedAt: getCurrentISOTimestamp(),
+        ...createBaseExercise(SHEET_ID),
         records: updatedStatements.map(statement => ({
           ...statement,
           timestamp: getCurrentISOTimestamp()
@@ -151,7 +166,7 @@ const SelfSupport: React.FC = () => {
         </button>
       </div>
 
-      {allStatements.length > 0 && (
+      {historicalStatements.length > 0 && (
         <div className={styles.historicalStatements}>
           <h3>История записей</h3>
           <div className={styles.statementsTable}>
@@ -162,7 +177,7 @@ const SelfSupport: React.FC = () => {
               <div className={styles.supportingColumn}>Поддерживающее утверждение</div>
             </div>
             <div className={styles.tableBody}>
-              {allStatements.map((statement) => (
+              {historicalStatements.map((statement) => (
                 <div key={statement.id} className={styles.tableRow}>
                   <div className={styles.dateColumn}>
                     {formatDate(statement.timestamp)}

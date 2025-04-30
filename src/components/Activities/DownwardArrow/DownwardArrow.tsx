@@ -42,7 +42,7 @@ const DownwardArrow: React.FC = () => {
   // Сохранение в Redux (мемоизированно)
   const saveToRedux = useCallback((updatedChains: DownwardArrowChain[]) => {
     const exercise = {
-      ...createBaseExercise(SHEET_ID, SHEET_ID),
+      ...createBaseExercise(SHEET_ID),
       chains: updatedChains
     };
 

@@ -13,6 +13,7 @@ import ResultsChart from './ResultsChart';
 import CategoryResults from './CategoryResults';
 import styles from './DysfunctionalAttitudeScale.module.css';
 
+const SHEET_ID = ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE;
 
 const DysfunctionalAttitudeScale: React.FC = () => {
   const [state, setState] = useState<DASState>({
@@ -71,7 +72,7 @@ const DysfunctionalAttitudeScale: React.FC = () => {
     
     // Сохраняем результаты
     const exercise: DysfunctionalAttitudeScaleExercise = {
-      ...createBaseExercise(ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE),
+      ...createBaseExercise(SHEET_ID),
       answers: state.answers,
       categoryResults,
       timestamp: getCurrentISOTimestamp()
@@ -197,8 +198,8 @@ const DysfunctionalAttitudeScale: React.FC = () => {
       <div className={styles.header}>
         <h2>Шкала дисфункциональных убеждений</h2>
         <div className={styles.actionButtons}>
-          <ChapterLinkButton activityId={ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE} />
-          <FavoriteButton activityId={ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE} />
+          <ChapterLinkButton activityId={SHEET_ID} />
+          <FavoriteButton activityId={SHEET_ID} />
         </div>
       </div>
       
