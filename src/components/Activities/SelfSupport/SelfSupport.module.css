@@ -256,23 +256,9 @@
   .column {
     position: relative;
   }
-
-  .column:first-child::before {
-    content: "Обесценивающее утверждение";
-    display: block;
-    font-weight: 500;
-    color: #4a5568;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-  }
-
-  .column:nth-child(2):before {
-    content: "Поддерживающее утверждение";
-    display: block;
-    font-weight: 500;
-    color: #4a5568;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
+  
+  .devaluingColumn {
+    margin-top: 16px;
   }
 
   .textArea {
@@ -350,24 +336,6 @@
     border: none;
     width: 100%;
     flex-direction: column;
-  }
-
-  .devaluingColumn::before {
-    content: "Обесценивающее утверждение";
-    display: block;
-    font-weight: 500;
-    color: #4a5568;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-  }
-
-  .supportingColumn::before {
-    content: "Поддерживающее утверждение";
-    display: block;
-    font-weight: 500;
-    color: #4a5568;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
   }
 
   .arrowColumn {
