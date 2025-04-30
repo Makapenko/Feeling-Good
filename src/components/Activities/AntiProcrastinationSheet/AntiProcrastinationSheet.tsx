@@ -148,7 +148,7 @@ const AntiProcrastinationSheet: React.FC = () => {
     if (!todayProgress?.exercises?.exercises) return [];
     
     const antiProcrastinationExercise = todayProgress.exercises.exercises.find(
-      exercise => exercise.type === 'anti-procrastination' && exercise.id === SHEET_ID
+      exercise => exercise.type === SHEET_ID && exercise.id === SHEET_ID
     );
     
     if (antiProcrastinationExercise && 'records' in antiProcrastinationExercise) {

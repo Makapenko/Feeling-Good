@@ -23,7 +23,7 @@ const SelfSupport: React.FC = () => {
   const allStatements = useMemo(() => {
     return getAllRecordsFromProgress<SupportStatement>(
       dailyProgress,
-      ACTIVITY_IDS.SELF_SUPPORT,
+      SHEET_ID,
       SHEET_ID
     );
   }, [dailyProgress]);
@@ -31,9 +31,9 @@ const SelfSupport: React.FC = () => {
   const saveToProgress = (updatedStatements: SupportStatement[]) => {
     dispatch(addExercise({
       exercise: {
-        type: ACTIVITY_IDS.SELF_SUPPORT,
+        type: SHEET_ID,
         id: SHEET_ID,
-        name: ACTIVITY_NAMES[ACTIVITY_IDS.SELF_SUPPORT],
+        name: ACTIVITY_NAMES[SHEET_ID],
         completed: true,
         completedAt: getCurrentISOTimestamp(),
         records: updatedStatements.map(statement => ({

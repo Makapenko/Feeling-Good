@@ -45,7 +45,7 @@ const DailySchedule: React.FC = () => {
       .filter(([, dayProgress]) => {
         const exercise = dayProgress?.exercises.exercises.find(
           (ex: Exercise): ex is DailyScheduleExercise =>
-            ex.type === ACTIVITY_IDS.DAILY_SCHEDULE && ex.id === SHEET_ID
+            ex.type === SHEET_ID && ex.id === SHEET_ID
         );
         
         if (!exercise?.timeSlots) return false;
@@ -78,7 +78,7 @@ const DailySchedule: React.FC = () => {
       return;
     }
     const schedule = dayProgress.exercises.exercises.find(
-      exercise => exercise.type === ACTIVITY_IDS.DAILY_SCHEDULE && exercise.id === SHEET_ID
+      exercise => exercise.type === SHEET_ID && exercise.id === SHEET_ID
     ) as DailyScheduleExercise | undefined;
 
 

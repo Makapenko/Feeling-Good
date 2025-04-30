@@ -35,7 +35,7 @@ const ThreeColumnsMethod: React.FC = () => {
 
   return (
     <ThreeColumnsBase 
-      title={ACTIVITY_NAMES[ACTIVITY_IDS.THREE_COLUMNS_METHOD]}
+      title={ACTIVITY_NAMES[SHEET_ID]}
       description="Запишите свои автоматические мысли и найдите им более рациональную альтернативу"
       leftColumnTitle="Автоматическая мысль"
       leftColumnPlaceholder="Запишите вашу негативную мысль... (самокритика)"

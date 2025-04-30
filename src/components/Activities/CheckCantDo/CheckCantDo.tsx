@@ -31,7 +31,7 @@ const CheckCantDo: React.FC = () => {
     const dayProgress = dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is CheckCantDoExercise =>
-        ex.type === ACTIVITY_IDS.CHECK_CANT_DO && ex.id === SHEET_ID
+        ex.type === SHEET_ID && ex.id === SHEET_ID
     );
     return exercise?.records || [];
   }, [dailyProgress]);

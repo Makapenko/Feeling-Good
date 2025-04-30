@@ -36,7 +36,7 @@ const HinderingHelpingThoughts: React.FC = () => {
 
   return (
     <ThreeColumnsBase 
-      title={ACTIVITY_NAMES[ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS]}
+      title={ACTIVITY_NAMES[SHEET_ID]}
       description="Запишите свои мешающие мысли и найдите им более конструктивную помогающую альтернативу"
       leftColumnTitle="Мешающая мысль"
       leftColumnPlaceholder="Запишите мысль, которая мешает вам действовать..."

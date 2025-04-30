@@ -39,7 +39,7 @@ const SmallSteps: React.FC = () => {
     Object.values(dailyProgress).forEach(dayProgress => {
       const smallStepsExercises = dayProgress?.exercises.exercises.filter(
         (ex: Exercise): ex is SmallStepsExercise =>
-          ex.type === ACTIVITY_IDS.SMALL_STEPS && ex.id === SHEET_ID
+          ex.type === SHEET_ID && ex.id === SHEET_ID
       );
       
       if (smallStepsExercises?.length) {

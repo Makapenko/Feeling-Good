@@ -26,7 +26,7 @@ const CountAchievements: React.FC = () => {
     const dayProgress = dailyProgress[currentDate];
     const exercise = dayProgress?.exercises.exercises.find(
       (ex: Exercise): ex is CountAchievementsExercise =>
-        ex.type === ACTIVITY_IDS.COUNT_ACHIEVEMENTS && ex.id === SHEET_ID
+        ex.type === SHEET_ID && ex.id === SHEET_ID
     );
     return exercise?.records || [];
   }, [dailyProgress]);

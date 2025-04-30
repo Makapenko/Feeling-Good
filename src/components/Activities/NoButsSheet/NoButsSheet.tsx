@@ -25,7 +25,7 @@ const NoButsSheet: React.FC = () => {
   const allPairs = useMemo(() => {
     return getAllRecordsFromProgress<ButPair>(
       dailyProgress,
-      ACTIVITY_IDS.NO_BUTS,
+      SHEET_ID,
       SHEET_ID
     ).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }, [dailyProgress]);

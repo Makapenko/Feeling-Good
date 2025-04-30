@@ -14,7 +14,7 @@ const SHEET_ID = ACTIVITY_IDS.SELF_ACTIVATION;
 const SelfActivationMethods: React.FC = () => {
   const dispatch = useAppDispatch();
   const handleTechniqueClick = (technique: string) => {
-    let content: SpecialContent = ACTIVITY_IDS.SELF_ACTIVATION; // Инициализируем default значением
+    let content: SpecialContent = SHEET_ID; // Инициализируем default значением
 
     switch (technique) {
       case 'Метод маленьких шагов':

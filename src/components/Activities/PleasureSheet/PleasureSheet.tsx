@@ -366,7 +366,7 @@ const PleasureSheet: React.FC = () => {
 
     const allRecords = getAllRecordsFromProgress<Activity>(
       progress.dailyProgress,
-      ACTIVITY_IDS.PLEASURE_SHEET,
+      SHEET_ID,
       SHEET_ID
     );
     

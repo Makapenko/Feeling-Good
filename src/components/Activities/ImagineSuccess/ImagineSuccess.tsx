@@ -34,7 +34,7 @@ const ImagineSuccess: React.FC = () => {
     Object.values(dailyProgress).forEach(dayProgress => {
       const exercise = dayProgress?.exercises.exercises.find(
         (ex: Exercise): ex is ImagineSuccessExercise =>
-          ex.type === ACTIVITY_IDS.IMAGINE_SUCCESS && ex.id === SHEET_ID
+          ex.type ===  SHEET_ID && ex.id === SHEET_ID
       );
       
       if (exercise?.records?.length) {
