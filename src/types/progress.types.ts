@@ -29,6 +29,19 @@ export interface BaseExercise {
   completedAt: string;
 }
 
+/**
+ * Интерфейс для результатов тестов
+ */
+export interface TestResult {
+  id: string;
+  type: ActivityId; 
+  name: string;
+  date: string;
+  completedAt: string;
+  score: number;
+  maxScore: number;
+}
+
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
   SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |

@@ -42,7 +42,6 @@ import { CheckCantDoExercise } from '../Activities/CheckCantDo/types';
 import { NoLoseTechniqueExercise } from '../Activities/NoLoseTechnique/types';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
 import ProcrastinationScaleExerciseComponent from './render/ProcrastinationScale/ProcrastinationScaleExerciseComponent';
-import { ProcrastinationScaleExercise } from './render/ProcrastinationScale/ProcrastinationScaleExerciseComponent';
 
 interface DayDetailsProps {
   date: string;
@@ -245,7 +244,15 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
         case ACTIVITY_IDS.PROCRASTINATION_SCALE:
           return <ProcrastinationScaleExerciseComponent
             key={exercise.id}
-            exercise={exercise as ProcrastinationScaleExercise}
+            exercise={{
+              id: exercise.id,
+              type: exercise.type,
+              name: exercise.name,
+              date: exercise.completedAt,
+              completedAt: exercise.completedAt,
+              score: 'score' in exercise ? Number(exercise.score) : 0,
+              maxScore: 'maxScore' in exercise ? Number(exercise.maxScore) : 45
+            }}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;

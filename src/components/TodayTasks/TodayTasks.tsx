@@ -23,16 +23,162 @@ import {
   formatDateWithOptions
 } from '../../utils/dateUtils';
 import ReadingHistoryBar from './ReadingHistoryBar';
-import MethodsHistoryBar from './MethodsHistoryBar';
+import ActivityHistoryBar from './ActivityHistoryBar';
 
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
 const METHODS_GOAL_SECONDS = 900; // 15 минут
+const PROCRASTINATION_GOAL_SECONDS = 900; // 15 минут
 const BURNS_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями опросника Бернса
+const PROCRASTINATION_TEST_INTERVAL_DAYS = 14; // Интервал между прохождениями теста на прокрастинацию
 
 // Типизируем импортированные JSON-данные
 const typedChaptersData = chaptersData as ChaptersData;
 
+// Создадим константы для внутренних идентификаторов
+const DAILY_MOOD_ID = 'daily-mood';
+const AUTOMATIC_THOUGHTS_ID = 'automatic-thoughts';
+const PROCRASTINATION_SCALE_ID = 'procrastination-scale';
+
+// Интерфейс для тестового задания
+interface TestTask {
+  id: string;
+  testId: string;
+  title: string;
+  message: string;
+  needToComplete: boolean;
+  lastScore: number | null;
+  scorePercent: number | null;
+  completedAt: string | null;
+  buttonText: string;
+}
+
+// Интерфейс для задания с методиками
+interface MethodsTask {
+  id: string;
+  title: string;
+  description: string;
+  goalSeconds: number;
+  methodIds: { id: string, name: string }[];
+  totalTime: number;
+}
+
+// Компонент для отображения тестовых заданий
+const TestTaskComponent: React.FC<{ 
+  task: TestTask,
+  onActivityClick: (activityId: string) => void
+}> = ({ task, onActivityClick }) => {
+  return (
+    <div
+      className={`${styles.task} ${task.needToComplete ? styles.clickable : ''}`}
+      onClick={task.needToComplete ? () => onActivityClick(task.id) : undefined}
+    >
+      <div className={styles.taskHeader}>
+        <div className={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={!task.needToComplete}
+            readOnly
+          />
+        </div>
+        <span className={styles.taskTitle}>
+          {task.message}
+        </span>
+      </div>
+      
+      <div className={styles.taskProgress}>
+        {/* Показываем информацию о последнем результате, если он есть */}
+        {task.lastScore !== null && (
+          <div className={styles.testResultContainer}>
+            <div className={styles.testScoreInfo}>
+              <span className={styles.testScoreLabel}>Последний результат:</span>
+              <span className={styles.testScoreValue}>
+                {task.lastScore} баллов
+                {task.scorePercent !== null && ` (${task.scorePercent}%)`}
+              </span>
+              <span className={styles.testScoreDate}>
+                {formatDateWithOptions(task.completedAt || '')}
+              </span>
+            </div>
+          </div>
+        )}
+        
+        {/* Показываем кнопку прохождения, если нужно */}
+        {task.needToComplete && (
+          <span 
+            className={styles.openLink}
+            onClick={(e) => {
+              e.stopPropagation();
+              onActivityClick(task.id);
+            }}
+          >
+            {task.buttonText}
+          </span>
+        )}
+        
+        {!task.needToComplete && (
+          <span className={styles.timeSpent}>
+            {task.message}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Компонент для отображения заданий с методиками
+const MethodsTaskComponent: React.FC<{ 
+  task: MethodsTask,
+  onActivityClick: (activityId: string) => void
+}> = ({ task, onActivityClick }) => {
+  const goalAchieved = task.totalTime >= task.goalSeconds;
+  
+  return (
+    <div 
+      className={`${styles.task} ${!goalAchieved ? styles.clickable : ''}`}
+      onClick={!goalAchieved ? () => onActivityClick(task.methodIds[0].id) : undefined}
+    >
+      <div className={styles.taskHeader}>
+        <div className={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={goalAchieved}
+            readOnly
+          />
+        </div>
+        <span className={styles.taskTitle}>
+          {task.description}
+        </span>
+      </div>
+      <div className={styles.taskProgress}>
+        <span className={styles.timeSpent}>
+          Время работы: {formatTimeFromSeconds(task.totalTime)}
+        </span>
+        {!goalAchieved && (
+          <>
+            <span className={styles.remainingTime}>
+              Осталось: {formatTimeFromSeconds(task.goalSeconds - task.totalTime)}
+            </span>
+            <div className={styles.methodLinks}>
+              {task.methodIds.map(method => (
+                <span
+                  key={method.id}
+                  className={styles.openLink}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onActivityClick(method.id);
+                  }}
+                >
+                  Открыть {method.name}
+                </span>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const TodayTasks: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,6 +188,7 @@ const TodayTasks: React.FC = () => {
   const favoriteChapters = useFavoriteChapters();
   const todayProgress = useTodayProgress();
   const burnsTestResults = useTestsByType(ACTIVITY_IDS.BURNS_CHECKLIST);
+  const procrastinationTestResults = useTestsByType(ACTIVITY_IDS.PROCRASTINATION_SCALE);
   const todayActivitiesProgress = useTodayActivitiesProgress();
 
   // Получаем избранные активности напрямую из Redux
@@ -116,10 +263,15 @@ const TodayTasks: React.FC = () => {
 
     if (burnsTestResults.length === 0) {
       return {
-        needToComplete: true,
+        id: DAILY_MOOD_ID,
+        testId: ACTIVITY_IDS.BURNS_CHECKLIST,
+        title: 'Опросник депрессии Бернса',
         message: 'Пройдите опросник депрессии Бернса',
+        needToComplete: true,
         lastScore: null,
-        completedAt: null
+        scorePercent: null,
+        completedAt: null,
+        buttonText: 'Открыть опросник'
       };
     }
 
@@ -128,56 +280,163 @@ const TodayTasks: React.FC = () => {
     const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
     
     // Сохраняем последний результат
-    const lastScore = burnsTestResults[0].score;
+    const lastScore = burnsTestResults[0].score ?? null;
     const maxScore = burnsTestResults[0].maxScore || 100;
-    const scorePercent = lastScore !== undefined ? Math.round((lastScore / maxScore) * 100) : null;
+    const scorePercent = lastScore !== null ? Math.round((lastScore / maxScore) * 100) : null;
 
     if (daysSinceLastCompletion >= BURNS_TEST_INTERVAL_DAYS) {
       return {
-        needToComplete: true,
+        id: DAILY_MOOD_ID,
+        testId: ACTIVITY_IDS.BURNS_CHECKLIST,
+        title: 'Опросник депрессии Бернса',
         message: burnsTestResults.length === 1
           ? 'Пройдите опросник Бернса повторно (второй раз)'
           : 'Пройдите опросник Бернса повторно',
+        needToComplete: true,
         lastScore,
         scorePercent,
-        completedAt: burnsTestResults[0].completedAt
+        completedAt: burnsTestResults[0].completedAt,
+        buttonText: 'Открыть опросник'
       };
     }
 
     return {
-      needToComplete: false,
+      id: DAILY_MOOD_ID,
+      testId: ACTIVITY_IDS.BURNS_CHECKLIST,
+      title: 'Опросник депрессии Бернса',
       message: `Следующее прохождение опросника через ${BURNS_TEST_INTERVAL_DAYS - daysSinceLastCompletion} дн.`,
+      needToComplete: false,
       lastScore,
       scorePercent,
-      completedAt: burnsTestResults[0].completedAt
+      completedAt: burnsTestResults[0].completedAt,
+      buttonText: 'Открыть опросник'
     };
   };
 
-  // Получаем время работы с каждой методикой
+  // Проверяем статус шкалы прокрастинации
+  const checkProcrastinationScaleStatus = () => {
+    const availableActivities = getAvailableActivities(unlockedContent.chapters);
+    if (!availableActivities.has(ACTIVITY_IDS.PROCRASTINATION_SCALE)) return null;
+
+    if (procrastinationTestResults.length === 0) {
+      return {
+        id: PROCRASTINATION_SCALE_ID,
+        testId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
+        title: 'Шкала иррациональной прокрастинации',
+        message: 'Пройдите тест на прокрастинацию',
+        needToComplete: true,
+        lastScore: null,
+        scorePercent: null,
+        completedAt: null,
+        buttonText: 'Открыть тест'
+      };
+    }
+
+    const lastCompletionDate = new Date(procrastinationTestResults[0].completedAt);
+    const today = new Date(getCurrentDate());
+    const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
+    
+    // Сохраняем последний результат
+    const lastScore = procrastinationTestResults[0].score ?? null;
+    const maxScore = procrastinationTestResults[0].maxScore || 45;
+    const scorePercent = lastScore !== null ? Math.round((lastScore / maxScore) * 100) : null;
+
+    if (daysSinceLastCompletion >= PROCRASTINATION_TEST_INTERVAL_DAYS) {
+      return {
+        id: PROCRASTINATION_SCALE_ID,
+        testId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
+        title: 'Шкала иррациональной прокрастинации',
+        message: procrastinationTestResults.length === 1
+          ? 'Пройдите тест на прокрастинацию повторно (второй раз)'
+          : 'Пройдите тест на прокрастинацию повторно',
+        needToComplete: true,
+        lastScore,
+        scorePercent,
+        completedAt: procrastinationTestResults[0].completedAt,
+        buttonText: 'Открыть тест'
+      };
+    }
+
+    return {
+      id: PROCRASTINATION_SCALE_ID,
+      testId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
+      title: 'Шкала иррациональной прокрастинации',
+      message: `Следующее прохождение теста через ${PROCRASTINATION_TEST_INTERVAL_DAYS - daysSinceLastCompletion} дн.`,
+      needToComplete: false,
+      lastScore,
+      scorePercent,
+      completedAt: procrastinationTestResults[0].completedAt,
+      buttonText: 'Открыть тест'
+    };
+  };
+
+  // Получаем время работы с каждой методикой самооценки
   const threeCategoryTime = todayActivitiesProgress[ACTIVITY_IDS.THREE_COLUMNS_METHOD]?.timeSpent || 0;
   const diaryTime = todayActivitiesProgress[ACTIVITY_IDS.THOUGHT_DIARY]?.timeSpent || 0;
   const totalMethodsTime = threeCategoryTime + diaryTime;
-  const methodsGoalAchieved = totalMethodsTime >= METHODS_GOAL_SECONDS;
+  
+  // Получаем время работы с методиками прокрастинации
+  const procrastinationMethodsTime = Object.entries(todayActivitiesProgress)
+    .filter(([key]) => {
+      return key === ACTIVITY_IDS.PROCRASTINATION_DIARY ||
+             key === ACTIVITY_IDS.ANTI_PROCRASTINATION ||
+             key === ACTIVITY_IDS.DAILY_SCHEDULE ||
+             key === ACTIVITY_IDS.PLEASURE_SHEET ||
+             key === ACTIVITY_IDS.NO_BUTS ||
+             key === ACTIVITY_IDS.SELF_SUPPORT ||
+             key === ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS ||
+             key === ACTIVITY_IDS.SMALL_STEPS ||
+             key === ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION ||
+             key === ACTIVITY_IDS.DISARMING_TECHNIQUE ||
+             key === ACTIVITY_IDS.IMAGINE_SUCCESS ||
+             key === ACTIVITY_IDS.COUNT_ACHIEVEMENTS ||
+             key === ACTIVITY_IDS.CHECK_CANT_DO ||
+             key === ACTIVITY_IDS.NO_LOSE_TECHNIQUE;
+    })
+    .reduce((total, [, data]) => total + (data?.timeSpent || 0), 0);
+  
+  const totalProcrastinationTime = procrastinationMethodsTime;
+
+  // Создаем объекты задач
+  const selfEsteemTask: MethodsTask = {
+    id: 'self-esteem',
+    title: 'Работа с самооценкой',
+    description: 'Поработать с методом трёх колонок или Дневником автоматических мыслей (минимум 15 минут)',
+    goalSeconds: METHODS_GOAL_SECONDS,
+    methodIds: [
+      { id: AUTOMATIC_THOUGHTS_ID, name: 'метод трёх колонок' },
+      { id: ACTIVITY_IDS.THOUGHT_DIARY, name: 'дневник мыслей' }
+    ],
+    totalTime: totalMethodsTime
+  };
+
+  const procrastinationTask: MethodsTask = {
+    id: 'procrastination',
+    title: 'Работа с прокрастинацией',
+    description: 'Поработать с методиками по преодолению прокрастинации (минимум 15 минут)',
+    goalSeconds: PROCRASTINATION_GOAL_SECONDS,
+    methodIds: [
+      { id: ACTIVITY_IDS.SELF_ACTIVATION, name: 'список методов самоактивации' },
+    ],
+    totalTime: totalProcrastinationTime
+  };
 
   const burnsStatus = checkBurnsStatus();
+  const procrastinationScaleStatus = checkProcrastinationScaleStatus();
 
   // Используем утилиту форматирования времени
   const formatTime = formatTimeFromSeconds;
-
-  // Создадим константы для внутренних идентификаторов
-  const DAILY_MOOD_ID = 'daily-mood';
-  const AUTOMATIC_THOUGHTS_ID = 'automatic-thoughts';
 
   const handleActivityClick = (activityId: string) => {
     switch (activityId) {
       case DAILY_MOOD_ID:
         dispatch(setSpecialContent(ACTIVITY_IDS.BURNS_CHECKLIST));
         break;
+      case PROCRASTINATION_SCALE_ID:
+        dispatch(setSpecialContent(ACTIVITY_IDS.PROCRASTINATION_SCALE));
+        break;
       case AUTOMATIC_THOUGHTS_ID:
         dispatch(setSpecialContent(ACTIVITY_IDS.THREE_COLUMNS_METHOD));
-        break;
-      case ACTIVITY_IDS.THOUGHT_DIARY:
-        dispatch(setSpecialContent(ACTIVITY_IDS.THOUGHT_DIARY));
         break;
       default:
         // Для избранных активностей передаем идентификатор напрямую
@@ -265,118 +524,78 @@ const TodayTasks: React.FC = () => {
         </div>
 
         <h3 className={styles.taskSectionTitle}>Работа с самооценкой</h3>
-        <div className={`${styles.task} ${!methodsGoalAchieved ? styles.clickable : ''}`}
-             onClick={!methodsGoalAchieved ? () => handleActivityClick(AUTOMATIC_THOUGHTS_ID) : undefined}
-        >
-          <div className={styles.taskHeader}>
-            <div className={styles.checkbox}>
-              <input
-                type="checkbox"
-                checked={methodsGoalAchieved}
-                readOnly
-              />
-            </div>
-            <span className={styles.taskTitle}>
-              Поработать с методом трёх колонок или Дневником автоматических мыслей (минимум 15 минут)
-            </span>
-          </div>
-          <div className={styles.taskProgress}>
-            <span className={styles.timeSpent}>
-              Время работы: {formatTime(totalMethodsTime)}
-            </span>
-            {!methodsGoalAchieved && (
-              <>
-                <span className={styles.remainingTime}>
-                  Осталось: {formatTime(METHODS_GOAL_SECONDS - totalMethodsTime)}
-                </span>
-                <div className={styles.methodLinks}>
-                  <span
-                    className={styles.openLink}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleActivityClick(AUTOMATIC_THOUGHTS_ID);
-                    }}
-                  >
-                    Открыть метод трёх колонок
-                  </span>
-                  <span
-                    className={styles.openLink}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleActivityClick(ACTIVITY_IDS.THOUGHT_DIARY);
-                    }}
-                  >
-                    Открыть дневник мыслей
-                  </span>
-                </div>
-              </>
+        <MethodsTaskComponent 
+          task={selfEsteemTask}
+          onActivityClick={handleActivityClick}
+        />
+
+        {/* Добавляем опросник Бернса в раздел работы с самооценкой */}
+        {burnsStatus && (
+          <TestTaskComponent 
+            task={burnsStatus} 
+            onActivityClick={handleActivityClick} 
+          />
             )}
-          </div>
-        </div>
 
         {/* Обновленная секция с историей методов */}
         <div className={styles.methodsHistorySection}>
           <h4 className={styles.methodsHistoryTitle}>История работы с самооценкой</h4>
-          <MethodsHistoryBar readingGoalSeconds={READING_GOAL_SECONDS} />
+          <ActivityHistoryBar 
+            goalSeconds={METHODS_GOAL_SECONDS} 
+            config={{
+              title: "История работы с самооценкой",
+              emptyHistoryText: "История работы с методами самооценки пока отсутствует",
+              activityIds: [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY],
+              testActivityId: ACTIVITY_IDS.BURNS_CHECKLIST,
+              testScoreBadgeLabel: "опросника"
+            }}
+          />
         </div>
 
-        {/* Модифицированный блок опросника */}
-        {burnsStatus && (
-          <div
-            className={`${styles.task} ${burnsStatus.needToComplete ? styles.clickable : ''}`}
-            onClick={burnsStatus.needToComplete ? () => handleActivityClick(DAILY_MOOD_ID) : undefined}
-          >
-            <div className={styles.taskHeader}>
-              <div className={styles.checkbox}>
-                <input
-                  type="checkbox"
-                  checked={!burnsStatus.needToComplete}
-                  readOnly
-                />
-              </div>
-              <span className={styles.taskTitle}>
-                {burnsStatus.message}
-              </span>
-            </div>
-            
-            <div className={styles.taskProgress}>
-              {/* Показываем информацию о последнем результате, если он есть */}
-              {burnsStatus.lastScore !== null && (
-                <div className={styles.burnsResultContainer}>
-                  <div className={styles.burnsScoreInfo}>
-                    <span className={styles.burnsScoreLabel}>Последний результат:</span>
-                    <span className={styles.burnsScoreValue}>
-                      {burnsStatus.lastScore} баллов
-                      {burnsStatus.scorePercent !== null && ` (${burnsStatus.scorePercent}%)`}
-                    </span>
-                    <span className={styles.burnsScoreDate}>
-                      {formatDateWithOptions(burnsStatus.completedAt || '')}
-                    </span>
-                  </div>
-                </div>
-              )}
-              
-              {/* Показываем кнопку прохождения, если нужно */}
-              {burnsStatus.needToComplete && (
-                <span 
-                  className={styles.openLink}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleActivityClick(DAILY_MOOD_ID);
-                  }}
-                >
-                  Открыть опросник
-                </span>
-              )}
-              
-              {!burnsStatus.needToComplete && (
-                <span className={styles.timeSpent}>
-                  {burnsStatus.message}
-                </span>
-              )}
-            </div>
-          </div>
+        {/* Раздел: Работа с прокрастинацией */}
+        <h3 className={styles.taskSectionTitle}>Работа с прокрастинацией</h3>
+        <MethodsTaskComponent 
+          task={procrastinationTask}
+          onActivityClick={handleActivityClick}
+        />
+        
+        {/* Шкала прокрастинации */}
+        {procrastinationScaleStatus && (
+          <TestTaskComponent 
+            task={procrastinationScaleStatus} 
+            onActivityClick={handleActivityClick} 
+          />
         )}
+
+        {/* Секция с историей работы с прокрастинацией */}
+        <div className={styles.procrastinationHistorySection}>
+          <h4 className={styles.procrastinationHistoryTitle}>История работы с прокрастинацией</h4>
+          <ActivityHistoryBar 
+            goalSeconds={PROCRASTINATION_GOAL_SECONDS}
+            config={{
+              title: "История работы с прокрастинацией",
+              emptyHistoryText: "История работы с прокрастинацией пока отсутствует",
+              activityIds: [
+                ACTIVITY_IDS.PROCRASTINATION_DIARY, 
+                ACTIVITY_IDS.ANTI_PROCRASTINATION,
+                ACTIVITY_IDS.DAILY_SCHEDULE,
+                ACTIVITY_IDS.PLEASURE_SHEET,
+                ACTIVITY_IDS.NO_BUTS,
+                ACTIVITY_IDS.SELF_SUPPORT,
+                ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS,
+                ACTIVITY_IDS.SMALL_STEPS,
+                ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION,
+                ACTIVITY_IDS.DISARMING_TECHNIQUE,
+                ACTIVITY_IDS.IMAGINE_SUCCESS,
+                ACTIVITY_IDS.COUNT_ACHIEVEMENTS,
+                ACTIVITY_IDS.CHECK_CANT_DO,
+                ACTIVITY_IDS.NO_LOSE_TECHNIQUE
+              ],
+              testActivityId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
+              testScoreBadgeLabel: "теста"
+            }}
+          />
+          </div>
       </div>
 
      

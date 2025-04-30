@@ -1,110 +1,93 @@
-import { useTestsByType } from "../../redux/hooks";
-import { useEffect, useState } from "react";
-import { useDailyProgress } from "../../redux/hooks";
-import { ACTIVITY_IDS } from "../../constants/activities";
+import React, { useState, useEffect, useRef } from 'react';
+import styles from './TodayTasks.module.css';
+import { useTestsByType, useDailyProgress } from "../../redux/hooks";
 import { formatTimeFromSeconds, getCurrentDate, formatDateWithOptions } from "../../utils/dateUtils";
-import styles from "./TodayTasks.module.css";
 
-// Интерфейс для дневной статистики методов
-interface DayMethodsStats {
+// Интерфейс для дневной статистики активностей
+interface DayActivityStats {
   date: string;
   totalTime: number;
-  burnsScore?: number | null;
+  testScore?: number | null;
 }
 
-// Хук для получения истории работы с методами
-const useMethodsHistory = (): DayMethodsStats[] => {
-  const [stats, setStats] = useState<DayMethodsStats[]>([]);
+// Интерфейс для конфигурации компонента
+interface ActivityHistoryConfig {
+  title: string;
+  emptyHistoryText: string;
+  activityIds: string[];
+  testActivityId: string;
+  testScoreBadgeLabel?: string;
+}
+
+// Хук для получения истории работы с определенными активностями
+const useActivityHistory = (config: ActivityHistoryConfig): DayActivityStats[] => {
+  const [stats, setStats] = useState<DayActivityStats[]>([]);
   const dailyProgress = useDailyProgress();
-  const burnsResults = useTestsByType(ACTIVITY_IDS.BURNS_CHECKLIST);
+  const testResults = useTestsByType(config.testActivityId);
   
   useEffect(() => {
     if (!dailyProgress) return;
     
-    // Словарь для хранения статистики методов по дням
-    const methodsStats: Record<string, DayMethodsStats> = {};
+    // Словарь для хранения статистики активностей по дням
+    const activityStats: Record<string, DayActivityStats> = {};
     
-    // Сначала найдем все дни с работой над методами
+    // Сначала найдем все дни с работой над активностями
     Object.entries(dailyProgress).forEach(([date, dayData]) => {
-      // Считаем работу с методами
-      let totalMethodsTime = 0;
+      // Считаем работу с активностями
+      let totalActivityTime = 0;
       
       // Проверяем активности за день (новый способ хранения времени)
       if (dayData?.activities) {
-        // Получаем время для метода трёх колонок
-        const threeColumnsTime = dayData.activities[ACTIVITY_IDS.THREE_COLUMNS_METHOD]?.timeSpent || 0;
-        
-        // Получаем время для дневника мыслей
-        const diaryTime = dayData.activities[ACTIVITY_IDS.THOUGHT_DIARY]?.timeSpent || 0;
-        
-        // Суммируем времена из активностей
-        totalMethodsTime += threeColumnsTime + diaryTime;
+        // Суммируем времена из требуемых активностей
+        config.activityIds.forEach(activityId => {
+          const activities = dayData.activities || {};
+          const activityTime = activities[activityId]?.timeSpent || 0;
+          totalActivityTime += activityTime;
+        });
       }
       
       // Проверяем упражнения за день (старый способ хранения времени)
       if (dayData?.exercises?.exercises) {
-        const threeColumnsExercises = dayData.exercises.exercises.filter(
-          ex => ex.type === ACTIVITY_IDS.THREE_COLUMNS_METHOD
-        );
-        
-        const diaryExercises = dayData.exercises.exercises.filter(
-          ex => ex.type === ACTIVITY_IDS.THOUGHT_DIARY
-        );
-        
-        // Суммируем время для всех упражнений типа "метод трёх колонок"
-        let exerciseTime = 0;
-        threeColumnsExercises.forEach(exercise => {
-          if ('timeSpent' in exercise) {
-            exerciseTime += (exercise.timeSpent || 0) as number;
-          }
+        config.activityIds.forEach(activityId => {
+          const exercises = dayData.exercises.exercises.filter(
+            ex => ex.type === activityId
+          );
+          
+          // Суммируем время для всех упражнений
+          exercises.forEach(exercise => {
+            if ('timeSpent' in exercise) {
+              totalActivityTime += (exercise.timeSpent || 0) as number;
+            }
+          });
         });
-        totalMethodsTime += exerciseTime;
-        
-        // Суммируем время для всех упражнений типа "дневник мыслей"
-        exerciseTime = 0;
-        diaryExercises.forEach(exercise => {
-          if ('timeSpent' in exercise) {
-            exerciseTime += (exercise.timeSpent || 0) as number;
-          }
-        });
-        totalMethodsTime += exerciseTime;
       }
       
-      // Если было время работы с методами, сохраняем запись
-      if (totalMethodsTime > 0) {
-        methodsStats[date] = {
-          date,
-          totalTime: totalMethodsTime,
-          burnsScore: null // Изначально нет данных опросника
-        };
-      } else {
-        // Создаем запись даже если не было работы, для непрерывности истории
-        methodsStats[date] = {
-          date,
-          totalTime: 0,
-          burnsScore: null
-        };
-      }
+      // Сохраняем запись для непрерывности истории
+      activityStats[date] = {
+        date,
+        totalTime: totalActivityTime,
+        testScore: null // Изначально нет данных опросника
+      };
     });
     
-    // Добавляем результаты опросника Бернса
-    burnsResults.forEach(result => {
+    // Добавляем результаты тестов
+    testResults.forEach(result => {
       const completionDate = result.completedAt.split('T')[0];
       
-      if (methodsStats[completionDate]) {
-        methodsStats[completionDate].burnsScore = result.score;
+      if (activityStats[completionDate]) {
+        activityStats[completionDate].testScore = result.score;
       } else {
         // Если еще не было записи для этой даты, создаем новую
-        methodsStats[completionDate] = {
+        activityStats[completionDate] = {
           date: completionDate,
           totalTime: 0,
-          burnsScore: result.score
+          testScore: result.score
         };
       }
     });
     
     // Сортируем дни и заполняем пропуски
-    const sortedDays = Object.keys(methodsStats).sort();
+    const sortedDays = Object.keys(activityStats).sort();
     
     if (sortedDays.length > 0) {
       // Найдем первый день с активностью
@@ -112,21 +95,21 @@ const useMethodsHistory = (): DayMethodsStats[] => {
       const lastDay = getCurrentDate();
       
       // Создаем массив всех дней между первым и последним
-      const allDays: DayMethodsStats[] = [];
+      const allDays: DayActivityStats[] = [];
       const currentDate = new Date(firstDay);
       const endDate = new Date(lastDay);
       
       while (currentDate <= endDate) {
         const dateString = currentDate.toISOString().split('T')[0];
         
-        if (methodsStats[dateString]) {
-          allDays.push(methodsStats[dateString]);
+        if (activityStats[dateString]) {
+          allDays.push(activityStats[dateString]);
         } else {
           // Заполняем пропущенные дни
           allDays.push({
             date: dateString,
             totalTime: 0,
-            burnsScore: null
+            testScore: null
           });
         }
         
@@ -135,16 +118,33 @@ const useMethodsHistory = (): DayMethodsStats[] => {
       
       setStats(allDays);
     }
-  }, [dailyProgress, burnsResults]);
+  }, [dailyProgress, testResults, config.activityIds, config.testActivityId]);
   
   return stats;
 };
 
-// Компонент для отображения истории работы с методами
-const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGoalSeconds }) => {
-  const methodsHistory = useMethodsHistory();
+// Компонент для отображения истории работы с активностями
+const ActivityHistoryBar: React.FC<{ 
+  goalSeconds: number;
+  config: ActivityHistoryConfig;
+}> = ({ goalSeconds, config }) => {
+  const activityHistory = useActivityHistory(config);
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
   const [showTestsMode, setShowTestsMode] = useState<boolean>(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Прокручиваем до сегодняшнего дня при монтировании и при изменении истории
+  useEffect(() => {
+    if (scrollContainerRef.current && activityHistory.length > 0) {
+      // Задержка перед прокруткой, чтобы дать время для рендеринга
+      setTimeout(() => {
+        if (scrollContainerRef.current) {
+          // Прокрутка в самый конец
+          scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
+        }
+      }, 100);
+    }
+  }, [activityHistory.length]);
   
   // Функция для форматирования месяца
   const getMonthName = (date: Date): string => {
@@ -161,35 +161,35 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
     }
   };
   
-  // Определяем цвет квадратика в зависимости от времени работы с методами
+  // Определяем цвет квадратика в зависимости от времени работы
   const getColorByTime = (seconds: number) => {
     if (seconds === 0) return styles.methodsNone; // Серый
-    if (seconds < readingGoalSeconds) return styles.methodsLow; // Желтый
+    if (seconds < goalSeconds) return styles.methodsLow; // Желтый
     return styles.methodsGood; // Зеленый (>=15 минут)
   };
   
-  // Подсчитываем общее время работы с методами
-  const getTotalMethodsTime = (): number => {
-    return methodsHistory.reduce((total, day) => total + day.totalTime, 0);
+  // Подсчитываем общее время работы
+  const getTotalActivityTime = (): number => {
+    return activityHistory.reduce((total, day) => total + day.totalTime, 0);
   };
   
-  // Находим текущую серию дней с работой над методами
+  // Находим текущую серию дней с работой
   const getCurrentStreak = (): number => {
-    if (methodsHistory.length === 0) return 0;
+    if (activityHistory.length === 0) return 0;
     
     let streak = 0;
     const today = getCurrentDate();
-    const todayIndex = methodsHistory.findIndex(day => day.date === today);
+    const todayIndex = activityHistory.findIndex(day => day.date === today);
     
     if (todayIndex < 0) return 0;
     
     // Проверяем текущий день
-    if (methodsHistory[todayIndex].totalTime > 0) {
+    if (activityHistory[todayIndex].totalTime > 0) {
       streak = 1;
       
       // Проверяем предыдущие дни
       for (let i = todayIndex - 1; i >= 0; i--) {
-        if (methodsHistory[i].totalTime > 0) {
+        if (activityHistory[i].totalTime > 0) {
           streak++;
         } else {
           break;
@@ -202,22 +202,18 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
   
   // Подсчитываем количество дней с полным выполнением цели
   const getGoodDays = (): number => {
-    return methodsHistory.filter(day => day.totalTime >= readingGoalSeconds).length;
+    return activityHistory.filter(day => day.totalTime >= goalSeconds).length;
   };
-  
-  const methodsStreak = getCurrentStreak();
-  const totalMethodsTime = getTotalMethodsTime();
-  const goodMethodsDays = getGoodDays();
   
   // Функция для получения дней в режиме отображения тестов
   const getTestsAndIntervalsDays = (): React.ReactNode[] => {
-    // Отфильтруем дни с результатами теста Бернса
-    const daysWithTests = methodsHistory.filter(day => day.burnsScore !== null);
+    // Отфильтруем дни с результатами теста
+    const daysWithTests = activityHistory.filter(day => day.testScore !== null);
     
     if (daysWithTests.length === 0) {
       return [
         <div key="no-tests" className={styles.noMethodsHistory}>
-          Результаты опросника Бернса отсутствуют
+          Результаты {config.testScoreBadgeLabel || "теста"} отсутствуют
         </div>
       ];
     }
@@ -238,16 +234,16 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
           <div 
             className={`${styles.daySquare} ${getColorByTime(testDay.totalTime)} ${testDay.date === getCurrentDate() ? styles.today : ''} ${expandedDay === testDay.date ? styles.expanded : ''} ${styles.hasBurnsScore}`}
             onClick={() => handleDayClick(testDay.date)}
-            title={`${formatDateWithOptions(testDay.date)}: ${testDay.totalTime > 0 ? formatTimeFromSeconds(testDay.totalTime) : 'нет активности'} ${testDay.burnsScore !== null ? `, Опросник: ${testDay.burnsScore} баллов` : ''}`}
+            title={`${formatDateWithOptions(testDay.date)}: ${testDay.totalTime > 0 ? formatTimeFromSeconds(testDay.totalTime) : 'нет активности'} ${testDay.testScore !== null ? `, Тест: ${testDay.testScore} баллов` : ''}`}
           >
             {showMonthLabel && (
               <span className={styles.monthLabel}>{getMonthName(testDate)}</span>
             )}
             <span className={styles.dayNumber}>{testDate.getDate()}</span>
             
-            {/* Показываем индикатор прохождения опросника */}
+            {/* Показываем индикатор прохождения теста */}
             <span className={styles.burnsScoreBadge}>
-              {testDay.burnsScore}
+              {testDay.testScore}
             </span>
           </div>
         </div>
@@ -261,7 +257,7 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
         // Если последний тест был не сегодня, добавляем ещё один интервальный квадратик
         if (lastTestDate.getTime() < today.getTime()) {
           // Находим все дни после последнего теста
-          const daysAfterLastTest = methodsHistory.filter(day => {
+          const daysAfterLastTest = activityHistory.filter(day => {
             const dayDate = new Date(day.date);
             return dayDate > lastTestDate && dayDate <= today;
           });
@@ -284,7 +280,7 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
                 <div key={`after-last-test`} className={styles.dayBlock}>
                   <div 
                     className={`${styles.daySquare} ${getColorByTime(afterTestTime)} ${styles.intervalTime}`}
-                    title={`Время активностей после последнего опросника (${formatDateWithOptions(testDay.date)}): ${formatTimeFromSeconds(afterTestTime)}`}
+                    title={`Время активностей после последнего теста (${formatDateWithOptions(testDay.date)}): ${formatTimeFromSeconds(afterTestTime)}`}
                   >
                     {showMonthLabel && (
                       <span className={styles.monthLabel}>{getMonthName(firstDayAfterTestDate)}</span>
@@ -310,7 +306,7 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
         let intervalTime = 0;
         
         // Вычисляем общее время для всех дней в интервале
-        const intervalDays = methodsHistory.filter(day => {
+        const intervalDays = activityHistory.filter(day => {
           const dayDate = new Date(day.date);
           return dayDate > currentDate && dayDate < nextDate;
         });
@@ -360,23 +356,27 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
     return result;
   };
   
-  if (methodsHistory.length === 0) {
-    return <div className={styles.noMethodsHistory}>История работы с методами пока отсутствует</div>;
+  const activityStreak = getCurrentStreak();
+  const totalActivityTime = getTotalActivityTime();
+  const goodActivityDays = getGoodDays();
+  
+  if (activityHistory.length === 0) {
+    return <div className={styles.noMethodsHistory}>{config.emptyHistoryText}</div>;
   }
   
   return (
     <div className={styles.methodsHistoryContainer}>
       <div className={styles.methodsStats}>
         <div className={styles.methodsStatItem}>
-          <span className={styles.methodsStatValue}>{methodsStreak}</span>
+          <span className={styles.methodsStatValue}>{activityStreak}</span>
           <span className={styles.methodsStatLabel}>Дней подряд</span>
         </div>
         <div className={styles.methodsStatItem}>
-          <span className={styles.methodsStatValue}>{formatTimeFromSeconds(totalMethodsTime, true)}</span>
+          <span className={styles.methodsStatValue}>{formatTimeFromSeconds(totalActivityTime, true)}</span>
           <span className={styles.methodsStatLabel}>Всего практики</span>
         </div>
         <div className={styles.methodsStatItem}>
-          <span className={styles.methodsStatValue}>{goodMethodsDays}</span>
+          <span className={styles.methodsStatValue}>{goodActivityDays}</span>
           <span className={styles.methodsStatLabel}>Успешных дней</span>
         </div>
       </div>
@@ -388,7 +388,7 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
             checked={showTestsMode} 
             onChange={() => setShowTestsMode(!showTestsMode)}
           />
-          <span>Режим результатов опросника</span>
+          <span>Режим результатов {config.testScoreBadgeLabel || "теста"}</span>
         </label>
       </div>
       
@@ -396,22 +396,22 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
         <div className={styles.modeLegend}>
           <div className={styles.legendItem}>
             <span className={styles.burnsScoreBadgeSmall}>№</span> 
-            <span>Результаты опросника Бернса (баллы)</span>
+            <span>Результаты {config.testScoreBadgeLabel || "теста"} (баллы)</span>
           </div>
           <div className={styles.legendItem}>
             <span className={styles.sumSymbol}>∑</span> 
-            <span>Суммарное время работы с методами между тестами</span>
+            <span>Суммарное время работы между тестами</span>
           </div>
         </div>
       )}
       
-      <div className={styles.methodsHistoryScroll}>
+      <div className={styles.methodsHistoryScroll} ref={scrollContainerRef}>
         {showTestsMode ? (
           // Показываем только дни с тестами и интервалы между ними
           getTestsAndIntervalsDays()
         ) : (
           // Стандартное отображение - все дни
-          methodsHistory.map((day, index) => {
+          activityHistory.map((day, index) => {
             const isToday = day.date === getCurrentDate();
             const dayDate = new Date(day.date);
             const dayNumber = dayDate.getDate();
@@ -421,9 +421,9 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
             return (
               <div key={index} className={styles.dayBlock}>
                 <div 
-                  className={`${styles.daySquare} ${getColorByTime(day.totalTime)} ${isToday ? styles.today : ''} ${isExpanded ? styles.expanded : ''} ${day.burnsScore !== null ? styles.hasBurnsScore : ''}`}
+                  className={`${styles.daySquare} ${getColorByTime(day.totalTime)} ${isToday ? styles.today : ''} ${isExpanded ? styles.expanded : ''} ${day.testScore !== null ? styles.hasBurnsScore : ''}`}
                   onClick={() => handleDayClick(day.date)}
-                  title={`${formatDateWithOptions(day.date)}: ${day.totalTime > 0 ? formatTimeFromSeconds(day.totalTime) : 'нет активности'} ${day.burnsScore !== null ? `, Опросник: ${day.burnsScore} баллов` : ''}`}
+                  title={`${formatDateWithOptions(day.date)}: ${day.totalTime > 0 ? formatTimeFromSeconds(day.totalTime) : 'нет активности'} ${day.testScore !== null ? `, Тест: ${day.testScore} баллов` : ''}`}
                 >
                   {isFirstDayOfMonth && (
                     <span className={styles.monthLabel}>{getMonthName(dayDate)}</span>
@@ -437,10 +437,10 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
                     </span>
                   )}
                   
-                  {/* Показываем индикатор прохождения опросника */}
-                  {day.burnsScore !== null && (
+                  {/* Показываем индикатор прохождения теста */}
+                  {day.testScore !== null && (
                     <span className={styles.burnsScoreBadge}>
-                      {day.burnsScore}
+                      {day.testScore}
                     </span>
                   )}
                 </div>
@@ -453,4 +453,4 @@ const MethodsHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
   );
 };
 
-export default MethodsHistoryBar;
+export default ActivityHistoryBar; 

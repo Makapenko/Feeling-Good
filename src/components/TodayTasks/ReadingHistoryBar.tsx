@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDailyProgress } from "../../redux/hooks";
 import { formatTimeFromSeconds, getCurrentDate, formatDateWithOptions } from "../../utils/dateUtils";
 import styles from "./TodayTasks.module.css";
@@ -14,6 +14,7 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
   const dailyProgress = useDailyProgress();
   const [dayStats, setDayStats] = useState<DayReadingStats[]>([]);
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   // Функция для форматирования месяца
   const getMonthName = (date: Date): string => {
@@ -29,6 +30,19 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
       setExpandedDay(date);
     }
   };
+  
+  // Прокручиваем до сегодняшнего дня при монтировании и при изменении истории
+  useEffect(() => {
+    if (scrollContainerRef.current && dayStats.length > 0) {
+      // Задержка перед прокруткой, чтобы дать время для рендеринга
+      setTimeout(() => {
+        if (scrollContainerRef.current) {
+          // Прокрутка в самый конец
+          scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
+        }
+      }, 100);
+    }
+  }, [dayStats.length]);
   
   useEffect(() => {
     if (!dailyProgress) return;
@@ -145,7 +159,7 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
           <span className={styles.readingStatLabel}>Успешных дней</span>
         </div>
       </div>
-      <div className={styles.readingHistoryScroll}>
+      <div className={styles.readingHistoryScroll} ref={scrollContainerRef}>
         {dayStats.map((day, index) => {
           const isToday = day.date === getCurrentDate();
           const dayDate = new Date(day.date);
@@ -159,7 +173,10 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
               <div 
                 className={`${styles.daySquare} ${getColorByTime(day.totalTime)} ${isToday ? styles.today : ''} ${isExpanded ? styles.expanded : ''}`}
                 onClick={() => handleDayClick(day.date)}
-                title={`${formatDateWithOptions(day.date)}: ${hasReading ? formatTimeFromSeconds(day.totalTime) : 'нет чтения'}`}
+                title={`${formatDateWithOptions(day.date, {
+                  day: 'numeric',
+                  month: 'long'
+                })}: ${hasReading ? formatTimeFromSeconds(day.totalTime) : 'нет чтения'}`}
               >
                 {isFirstDayOfMonth && (
                   <span className={styles.monthLabel}>{getMonthName(dayDate)}</span>
