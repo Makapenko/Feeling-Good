@@ -8,6 +8,8 @@ import styles from './MobileLayout.module.css';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 
+// TODO На разных вкладках - разные виды скроллов - ближе к краю и дальше
+
 type MobileTab = 'today' | 'chapters' | 'activities' | 'calendar' | 'about';
 
 const MobileLayout: FC = () => {

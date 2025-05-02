@@ -26,7 +26,6 @@ import ActivityHistoryBar from './ActivityHistoryBar';
 import TestTaskComponent from './TestTaskComponent';
 import MethodsTaskComponent, { MethodsTask } from './MethodsTaskComponent';
 
-// TODO: В мобильной версии два скрола справа
 // TODO: В мобильной версии стрелочки на кнопках "Откыть ..." - кривые
 
 // Константы для времени в секундах
