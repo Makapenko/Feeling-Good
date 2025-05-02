@@ -1,23 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styles from './TodayTasks.module.css';
 import {
   useAppDispatch,
   useUnlockedContent,
-  useCompletedChapters,
-  useFavoriteActivities,
-  useFavoriteChapters,
-  useTodayProgress,
   useTestsByType,
   useTodayActivitiesProgress
 } from '../../redux/hooks';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
-import { loadChapter } from '../../redux/actions/chapterActions';
 import { getAvailableActivities } from '../../data/activitiesMapping';
-import chaptersData from '../ListOfChapters/chapters.json';
-import type { ChaptersData } from '../../types/chapters.types';
-import { ActivityId, ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
+import { ActivityId, ACTIVITY_IDS } from '../../constants/activities';
 import {
-  formatTimeFromSeconds,
   getDaysDifference,
   getCurrentDate
 } from '../../utils/dateUtils';
@@ -25,8 +17,8 @@ import ReadingHistoryBar from './ReadingHistoryBar';
 import ActivityHistoryBar from './ActivityHistoryBar';
 import TestTaskComponent from './TestTaskComponent';
 import MethodsTaskComponent, { MethodsTask } from './MethodsTaskComponent';
-
-// TODO: В мобильной версии стрелочки на кнопках "Откыть ..." - кривые
+import ReadingTaskComponent from './ReadingTaskComponent';
+import FaviritesComponent from './FaviritesComponent';
 
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
@@ -35,8 +27,6 @@ const PROCRASTINATION_GOAL_SECONDS = 900; // 15 минут
 const BURNS_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями опросника Бернса
 const PROCRASTINATION_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями теста на прокрастинацию
 
-// Типизируем импортированные JSON-данные
-const typedChaptersData = chaptersData as ChaptersData;
 
 // Создадим константы для внутренних идентификаторов
 const DAILY_MOOD_ID = 'daily-mood';
@@ -46,78 +36,10 @@ const PROCRASTINATION_SCALE_ID = 'procrastination-scale';
 const TodayTasks: React.FC = () => {
   const dispatch = useAppDispatch();
   const unlockedContent = useUnlockedContent();
-  const completedChapters = useCompletedChapters();
-  const favoriteActivitiesIds = useFavoriteActivities();
-  const favoriteChapters = useFavoriteChapters();
-  const todayProgress = useTodayProgress();
+
   const burnsTestResults = useTestsByType(ACTIVITY_IDS.BURNS_CHECKLIST);
   const procrastinationTestResults = useTestsByType(ACTIVITY_IDS.PROCRASTINATION_SCALE);
   const todayActivitiesProgress = useTodayActivitiesProgress();
-
-  // Получаем избранные активности напрямую из Redux
-  const favoriteActivities = useMemo(() => {
-    const favoriteIds = favoriteActivitiesIds || [];
-    return favoriteIds.map(id => ({
-      id,
-      name: getActivityNameById(id)
-    })).filter(activity => activity.name); // Фильтруем по наличию имени
-  }, [favoriteActivitiesIds]);
-
-  // Функция для получения имени активности по ID
-  function getActivityNameById(id: string): string {
-    return ACTIVITY_NAMES[id as keyof typeof ACTIVITY_NAMES] || '';
-  }
-
-  // Находим первую непрочитанную главу или подглаву
-  const findFirstUnreadChapter = () => {
-    // Пропускаем первые три главы (acknowledgments, foreword, introduction)
-    const mainChapters = typedChaptersData.chapters.slice(3);
-
-    for (const chapter of mainChapters) {
-      // Проверяем доступность главы
-      if (!unlockedContent.chapters.includes(chapter.id)) {
-        continue;
-      }
-
-      // Если у главы есть подглавы
-      if (chapter.sections && chapter.sections.length > 0) {
-        for (const section of chapter.sections) {
-          if (
-            unlockedContent.chapters.includes(section.id) &&
-            !completedChapters.includes(section.id)
-          ) {
-            return {
-              id: section.id,
-              title: section.title
-            };
-          }
-        }
-      } else if (!completedChapters.includes(chapter.id)) {
-        // Если это глава без подглав
-        return {
-          id: chapter.id,
-          title: chapter.title
-        };
-      }
-    }
-    return null;
-  };
-
-  const handleReadingClick = async () => {
-    const firstUnreadChapter = findFirstUnreadChapter();
-    
-    if (firstUnreadChapter) {
-      try {
-        // Используем экшен loadChapter для загрузки главы
-        await dispatch(loadChapter(firstUnreadChapter.id));
-      } catch (error) {
-        console.error('Ошибка загрузки главы:', error);
-        alert('Не удалось загрузить главу. Пожалуйста, попробуйте позже или обратитесь в поддержку.');
-      }
-    } else {
-      alert('Все доступные главы уже прочитаны. Попробуйте открыть другие главы или подождите новый контент.');
-    }
-  };
 
   // Проверяем статус опросника Бернса
   const checkBurnsStatus = () => {
@@ -287,9 +209,6 @@ const TodayTasks: React.FC = () => {
   const burnsStatus = checkBurnsStatus();
   const procrastinationScaleStatus = checkProcrastinationScaleStatus();
 
-  // Используем утилиту форматирования времени
-  const formatTime = formatTimeFromSeconds;
-
   const handleActivityClick = (activityId: string) => {
     switch (activityId) {
       case DAILY_MOOD_ID:
@@ -312,108 +231,14 @@ const TodayTasks: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  // Функция для перехода к чтению избранной главы
-  const handleFavoriteChapterClick = async (chapterId: string) => {
-    try {
-      // Используем экшен loadChapter для загрузки избранной главы
-      await dispatch(loadChapter(chapterId));
-    } catch (error) {
-      console.error('Ошибка загрузки главы:', error);
-    }
-  };
-
-  // Подсчитываем общее время чтения за сегодня
-  const getTotalReadingTime = () => {
-    if (!todayProgress?.chapters) return 0;
-    return Object.values(todayProgress.chapters).reduce(
-      (total, chapter) => total + chapter.timeSpent,
-      0
-    );
-  };
-
-  const totalReadingTime = getTotalReadingTime();
-  const readingGoalAchieved = totalReadingTime >= READING_GOAL_SECONDS;
-
   return (
     <div className={styles.container}>
-     
-      {favoriteActivities.length > 0 && (
-        <>
-          <h2 className={styles.favoritesTitle}>Избранные задания</h2>
-          <div className={styles.favoritesList}>
-            {favoriteActivities.map(activity => (
-              <div
-                key={activity.id}
-                className={`${styles.favoriteItem} ${styles.clickable}`}
-                onClick={() => handleActivityClick(activity.id)}
-              >
-                <div className={styles.favoriteIcon}>★</div>
-                <span className={styles.favoriteTitle}>{activity.name}</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {favoriteChapters.length > 0 && (
-        <>
-          <h2 className={styles.favoritesTitle}>Избранные главы</h2>
-          <div className={styles.favoritesList}>
-            {favoriteChapters.map(chapter => (
-              <div
-                key={chapter.id}
-                className={`${styles.favoriteItem} ${styles.clickable}`}
-                onClick={() => handleFavoriteChapterClick(chapter.id)}
-              >
-                <div className={styles.favoriteIcon}>★</div>
-                <span className={styles.favoriteTitle}>{chapter.title}</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+      <FaviritesComponent onActivityClick={handleActivityClick} />
+      
       <h2 className={styles.todayTasksTitle}>Задания на сегодня</h2>
       <div className={styles.tasksList}>
         <h3 className={styles.taskSectionTitle}>Ежедневное чтение</h3>
-        <div
-          className={`${styles.task} ${!readingGoalAchieved ? styles.clickable : ''}`}
-          onClick={!readingGoalAchieved ? handleReadingClick : undefined}
-        >
-          <div className={styles.taskHeader}>
-            <div className={styles.checkbox}>
-              <input
-                type="checkbox"
-                checked={readingGoalAchieved}
-                readOnly
-              />
-            </div>
-            <span className={styles.taskTitle}>
-              Чтение (минимум 5 минут)
-            </span>
-          </div>
-          <div className={styles.taskProgress}>
-            <span className={styles.timeSpent}>
-              Время чтения: {formatTime(totalReadingTime)}
-            </span>
-            {!readingGoalAchieved && (
-              <>
-                <span className={styles.remainingTime}>
-                  Осталось: {formatTime(READING_GOAL_SECONDS - totalReadingTime)}
-                </span>
-                <span 
-                  className={styles.openLink} 
-                  onClick={(e) => {
-                    e.stopPropagation(); // Предотвращаем всплытие события
-                    
-                    handleReadingClick();
-                  }}
-                >
-                  Продолжить чтение
-                </span>
-              </>
-            )}
-          </div>
-        </div>
+        <ReadingTaskComponent readingGoalSeconds={READING_GOAL_SECONDS} />
         
         {/* Компонент для отображения истории чтения */}
         <div className={styles.readingHistorySection}>
