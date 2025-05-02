@@ -74,10 +74,10 @@ const ReadingTaskComponent: React.FC<{ readingGoalSeconds: number }> = ({ readin
         await dispatch(loadChapter(firstUnreadChapter.id));
       } catch (error) {
         console.error('Ошибка загрузки главы:', error);
-        alert('Не удалось загрузить главу. Пожалуйста, попробуйте позже или обратитесь в поддержку.');
+        alert('Упс. Что-то пошло не так во время загрузки главы.');
       }
     } else {
-      alert('Все доступные главы уже прочитаны. Попробуйте открыть другие главы или подождите новый контент.');
+      alert('Упс. Что-то пошло не так. Глава не найдена.');
     }
   };
 

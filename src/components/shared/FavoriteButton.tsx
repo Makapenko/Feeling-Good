@@ -25,7 +25,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   const handleToggleFavorite = () => {
     dispatch(toggleFavoriteActivity({
       activityId,
-      showNotification: false
+      showNotification: true
     }));
   };
   

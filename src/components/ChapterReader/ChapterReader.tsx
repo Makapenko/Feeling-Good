@@ -15,6 +15,8 @@ import { completeChapter, loadChapter } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
+// TODO: иногда глава не отмечается прочитанной
+
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 
@@ -196,6 +198,9 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
 
   // Обработчик перехода к активности
   const handleGoToActivity = useCallback((activityId: string) => {
+    // Отмечаем текущую главу как завершенную при переходе к упражнению
+    dispatch(completeChapter(chapterId));
+    
     // Проверяем, находимся ли мы на мобильном устройстве
     const isMobile = window.innerWidth <= 768;
     
@@ -209,12 +214,12 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
       // Затем с небольшой задержкой устанавливаем специальный контент
       setTimeout(() => {
         dispatch(setSpecialContent(activityId as SpecialContent));
-      }, 100);
+      }, 10);
     } else {
       // На десктопе просто устанавливаем специальный контент
       dispatch(setSpecialContent(activityId as SpecialContent));
     }
-  }, [dispatch]);
+  }, [dispatch, chapterId]);
 
   // Очищаем HTML, адаптируем пути к изображениям и разрешаем только безопасные теги и атрибуты
   const sanitizedContent = useMemo(() => {

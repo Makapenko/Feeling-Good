@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { SpecialContent, Exercise } from '../../types/progress.types';
 import { TestResult } from '../types';
-import { 
+import {
   toggleFavoriteActivity as toggleFavorite,
   setSpecialContent as setContent,
   saveExercise,
-  saveTestResult
+  saveTestResult,
 } from '../slices/progressSlice';
 import { addNotification } from '../slices/notificationSlice';
 import { RootState } from '../types';
@@ -15,25 +15,33 @@ import { RootState } from '../types';
  */
 export const toggleFavoriteActivity = createAsyncThunk(
   'progress/toggleFavoriteActivity',
-  async ({ activityId, showNotification = true }: { activityId: string; showNotification?: boolean }, { dispatch, getState }) => {
+  async (
+    {
+      activityId,
+      showNotification = true,
+    }: { activityId: string; showNotification?: boolean },
+    { dispatch, getState }
+  ) => {
     // Переключаем статус избранного
     dispatch(toggleFavorite(activityId));
-    
+
     if (showNotification) {
       // Проверяем, добавлена ли активность в избранное
       const state = getState() as RootState;
       const isFavorite = state.progress.favoriteActivities.includes(activityId);
-      
+
       // Отправляем уведомление в зависимости от статуса
-      dispatch(addNotification({
-        message: isFavorite 
-          ? 'Задание добавлено в избранное' 
-          : 'Задание удалено из избранного',
-        type: 'success',
-        duration: 2000
-      }));
+      dispatch(
+        addNotification({
+          message: isFavorite
+            ? 'Задание добавлено в избранное'
+            : 'Задание удалено из избранного',
+          type: 'success',
+          duration: 2000,
+        })
+      );
     }
-    
+
     return activityId;
   }
 );
@@ -43,19 +51,27 @@ export const toggleFavoriteActivity = createAsyncThunk(
  */
 export const setSpecialContent = createAsyncThunk(
   'progress/setSpecialContent',
-  async ({ content, showNotification = true }: { content: SpecialContent; showNotification?: boolean }, { dispatch }) => {
+  async (
+    {
+      content,
+      showNotification = true,
+    }: { content: SpecialContent; showNotification?: boolean },
+    { dispatch }
+  ) => {
     // Устанавливаем контент
     dispatch(setContent(content));
-    
+
     if (showNotification) {
       // Отправляем уведомление о переходе к активности
-      dispatch(addNotification({
-        message: 'Переход к новой активности',
-        type: 'info',
-        duration: 2000
-      }));
+      dispatch(
+        addNotification({
+          message: 'Переход к новой активности',
+          type: 'info',
+          duration: 2000,
+        })
+      );
     }
-    
+
     return content;
   }
 );
@@ -65,19 +81,27 @@ export const setSpecialContent = createAsyncThunk(
  */
 export const addExercise = createAsyncThunk(
   'progress/addExercise',
-  async ({ exercise, showNotification = true }: { exercise: Exercise; showNotification?: boolean }, { dispatch }) => {
+  async (
+    {
+      exercise,
+      showNotification = true,
+    }: { exercise: Exercise; showNotification?: boolean },
+    { dispatch }
+  ) => {
     // Сохраняем упражнение
     dispatch(saveExercise(exercise));
-    
+
     if (showNotification) {
       // Отправляем уведомление о сохранении
-      dispatch(addNotification({
-        message: 'Результаты упражнения сохранены',
-        type: 'success',
-        duration: 3000
-      }));
+      dispatch(
+        addNotification({
+          message: 'Результаты упражнения сохранены',
+          type: 'success',
+          duration: 3000,
+        })
+      );
     }
-    
+
     return exercise;
   }
 );
@@ -87,25 +111,30 @@ export const addExercise = createAsyncThunk(
  */
 export const saveTestResultWithNotification = createAsyncThunk(
   'progress/saveTestResultWithNotification',
-  async ({ 
-    testResult, 
-    showNotification = true 
-  }: { 
-    testResult: TestResult; 
-    showNotification?: boolean 
-  }, { dispatch }) => {
+  async (
+    {
+      testResult,
+      showNotification = true,
+    }: {
+      testResult: TestResult;
+      showNotification?: boolean;
+    },
+    { dispatch }
+  ) => {
     // Сохраняем результат теста
     dispatch(saveTestResult(testResult));
-    
+
     if (showNotification) {
       // Отправляем уведомление о сохранении
-      dispatch(addNotification({
-        message: 'Результаты теста сохранены',
-        type: 'success',
-        duration: 3000
-      }));
+      dispatch(
+        addNotification({
+          message: 'Результаты теста сохранены',
+          type: 'success',
+          duration: 3000,
+        })
+      );
     }
-    
+
     return testResult;
   }
-); 
+);
