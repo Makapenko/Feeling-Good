@@ -1,6 +1,6 @@
 .universalTimer {
   position: sticky;
-  top: 0;
+  top: 74px;
   background-color: rgba(255, 255, 255, 1);
   padding: 10px;
   font-size: 14px;
@@ -70,11 +70,11 @@
 
   .timerText {
     margin-right: 6px;
-    font-size: 0.9rem;
+    font-size: 16px;
   }
 
   .pauseButton {
-    font-size: 0.9rem;
+    font-size: 16px;
     padding: 0 3px;
   }
 } 

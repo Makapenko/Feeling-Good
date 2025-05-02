@@ -88,7 +88,7 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     // Добавляем класс к ссылкам примечаний и оборачиваем в span для лучшего отображения на мобильных
     return htmlContent.replace(
       /<a name="anotelink([0-9]+)" id="anotelink([0-9]+)" href="(#n_[0-9]+)" title="([^"]+)">([^<]+)<\/a>/g, 
-      (match, nameNum, idNum, href, title, text) => {
+      (_match, nameNum, idNum, _href, title, text) => {
         return `<a class="${styles.noteLink}" name="anotelink${nameNum}" id="anotelink${idNum}" href="javascript:void(0)" title="${title}" aria-label="Примечание ${text}"><span class="${styles.noteLinkText}">${text}</span></a>`;
       }
     );
