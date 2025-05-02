@@ -43,8 +43,6 @@ import { NoLoseTechniqueExercise } from '../Activities/NoLoseTechnique/types';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
 import ProcrastinationScaleExerciseComponent from './render/ProcrastinationScale/ProcrastinationScaleExerciseComponent';
 
-// TODO: В мобильной версии - не видно нижние главы если их много.
-
 interface DayDetailsProps {
   date: string;
   dayProgress: CalendarDayProgress;

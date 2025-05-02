@@ -15,9 +15,6 @@ import { completeChapter, loadChapter } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
-// TODO В мобильной версии - При переходе к следующей главе - старница скролится не до самого верха, а немного ниже
-// TODO В мобильной версии - При переходе к упражнениям  - страница не скролится верха (в десктопе скролится)
-
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 
