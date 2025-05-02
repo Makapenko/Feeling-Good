@@ -13,8 +13,6 @@ export interface MethodsTask {
   totalTime: number;
 }
 
-
-
 // Компонент для отображения заданий с методиками
 const MethodsTaskComponent: React.FC<{ 
   task: MethodsTask,

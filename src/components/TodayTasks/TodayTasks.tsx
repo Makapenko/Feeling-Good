@@ -319,7 +319,6 @@ const TodayTasks: React.FC = () => {
       await dispatch(loadChapter(chapterId));
     } catch (error) {
       console.error('Ошибка загрузки главы:', error);
-      alert('Не удалось загрузить главу. Пожалуйста, попробуйте позже или обратитесь в поддержку.');
     }
   };
 
@@ -405,11 +404,11 @@ const TodayTasks: React.FC = () => {
                   className={styles.openLink} 
                   onClick={(e) => {
                     e.stopPropagation(); // Предотвращаем всплытие события
-                    console.log('Клик на кнопке "Продолжить чтение"');
+                    
                     handleReadingClick();
                   }}
                 >
-                  Продолжить чтение →
+                  Продолжить чтение
                 </span>
               </>
             )}
