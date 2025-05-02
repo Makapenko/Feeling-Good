@@ -4,6 +4,7 @@ import chaptersData from '../ListOfChapters/chapters.json';
 import type { ChaptersData, Section } from '../../types/chapters.types';
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ImageModal from './ImageModal';
+import NoteModal from './NoteModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTasks } from '@fortawesome/free-solid-svg-icons';
 import { chapterToActivitiesMap } from '../../data/activitiesMapping';
@@ -14,9 +15,11 @@ import { completeChapter, loadChapter } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
-// TODO Сравнить два таймера и объединить в один, который работает во всех активностях
 
 // TODO Примечание на телефонах не работают
+// TODO В мобильной версии - При переходе к следующей главе - старница скролится не до самого верха
+// TODO В мобильной версии - При переходе к тесту Бернса - страница вообще не скролится
+
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -30,13 +33,14 @@ interface ChapterReaderProps {
 const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapterId, onNext }) => {
   const dispatch = useAppDispatch();
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [selectedNote, setSelectedNote] = useState<string | null>(null);
 
   // Получаем активности, связанные с текущей главой
   const relatedActivities = useMemo(() => {
     return chapterToActivitiesMap[chapterId] || [];
   }, [chapterId]);
 
-  // Обработчик кликов только по изображениям
+  // Обработчик кликов по изображениям
   useEffect(() => {
     const handleImageClick = (e: Event) => {
       const target = e.target as HTMLElement;
@@ -56,6 +60,44 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
         contentElement.removeEventListener('click', handleImageClick);
       };
     }
+  }, []);
+
+  // Обработчик кликов по сноскам/примечаниям
+  useEffect(() => {
+    const handleNoteClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      
+      // Проверяем, является ли элемент ссылкой на примечание
+      if (target.tagName === 'A' && target.id.startsWith('anotelink')) {
+        e.preventDefault();
+        
+        const noteLink = target as HTMLAnchorElement;
+        const noteText = noteLink.title || '';
+        
+        if (noteText) {
+          setSelectedNote(noteText);
+        }
+      }
+    };
+    
+    const contentElement = document.querySelector(`.${styles.content}`);
+    if (contentElement) {
+      contentElement.addEventListener('click', handleNoteClick);
+      return () => {
+        contentElement.removeEventListener('click', handleNoteClick);
+      };
+    }
+  }, []);
+
+  // Преобразуем ссылки на примечания для стилизации
+  const transformNoteLinks = useCallback((htmlContent: string): string => {
+    // Добавляем класс к ссылкам примечаний и оборачиваем в span для лучшего отображения на мобильных
+    return htmlContent.replace(
+      /<a name="anotelink([0-9]+)" id="anotelink([0-9]+)" href="(#n_[0-9]+)" title="([^"]+)">([^<]+)<\/a>/g, 
+      (match, nameNum, idNum, href, title, text) => {
+        return `<a class="${styles.noteLink}" name="anotelink${nameNum}" id="anotelink${idNum}" href="javascript:void(0)" title="${title}" aria-label="Примечание ${text}"><span class="${styles.noteLinkText}">${text}</span></a>`;
+      }
+    );
   }, []);
 
   // Функция для адаптации путей к изображениям в зависимости от окружения
@@ -157,10 +199,11 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
       ALLOWED_TAGS: ['p', 'br', 'img', 'i', 'b', 'sup', 'sub', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'center'],
       ALLOWED_ATTR: ['class', 'src', 'alt', 'title', 'border', 'id', 'name', 'href'],
     };
-    // Применяем санитайзер и адаптируем пути
+    // Применяем санитайзер, адаптируем пути и преобразуем ссылки на примечания
     const sanitized = DOMPurify.sanitize(content, config);
-    return adaptImagePaths(sanitized);
-  }, [content, adaptImagePaths]);
+    const withAdaptedPaths = adaptImagePaths(sanitized);
+    return transformNoteLinks(withAdaptedPaths);
+  }, [content, adaptImagePaths, transformNoteLinks]);
 
   const contentElement = useMemo(() => (
     <div 
@@ -210,6 +253,13 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
           src={selectedImage.src}
           alt={selectedImage.alt}
           onClose={() => setSelectedImage(null)}
+        />
+      )}
+      
+      {selectedNote && (
+        <NoteModal
+          content={selectedNote}
+          onClose={() => setSelectedNote(null)}
         />
       )}
     </div>

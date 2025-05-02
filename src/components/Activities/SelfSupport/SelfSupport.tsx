@@ -13,6 +13,8 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID = ACTIVITY_IDS.SELF_SUPPORT;
 
+// TODO: Проверить - есть ли записи в истории (они добавляются туда если другой день)
+
 const SelfSupport: React.FC = () => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();

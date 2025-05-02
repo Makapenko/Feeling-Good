@@ -96,7 +96,7 @@ const DownwardArrow: React.FC = () => {
       }
 
       const exercise = todayProgress.exercises.exercises.find(
-        ex => ex.type === ACTIVITY_IDS.DOWNWARD_ARROW
+        ex => ex.type === SHEET_ID
       );
 
       if (exercise && 'chains' in exercise) {

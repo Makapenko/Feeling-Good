@@ -26,6 +26,9 @@ import ActivityHistoryBar from './ActivityHistoryBar';
 import TestTaskComponent from './TestTaskComponent';
 import MethodsTaskComponent, { MethodsTask } from './MethodsTaskComponent';
 
+// TODO: В мобильной версии два скрола справа
+// TODO: В мобильной версии стрелочки на кнопках "Откыть ..." - кривые
+
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
 const METHODS_GOAL_SECONDS = 900; // 15 минут
