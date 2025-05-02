@@ -15,11 +15,8 @@ import { completeChapter, loadChapter } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
-
-// TODO Примечание на телефонах не работают
-// TODO В мобильной версии - При переходе к следующей главе - старница скролится не до самого верха
-// TODO В мобильной версии - При переходе к тесту Бернса - страница вообще не скролится
-
+// TODO В мобильной версии - При переходе к следующей главе - старница скролится не до самого верха, а немного ниже
+// TODO В мобильной версии - При переходе к упражнениям  - страница не скролится верха (в десктопе скролится)
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -176,13 +173,25 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     // Отмечаем текущую главу как завершенную - используем action
     dispatch(completeChapter(chapterId));
 
+    // Проверяем, находимся ли мы на мобильном устройстве
+    const isMobile = window.innerWidth <= 768;
+
     // Находим следующую главу или подглаву
     const nextChapter = findNextChapter();
     if (nextChapter && nextChapter.id) {
-      // Загружаем следующую главу с небольшой задержкой для анимации
+      // На мобильных устройствах добавляем большую задержку
+      const delay = isMobile ? 250 : 100;
+      
       setTimeout(() => {
+        // Сначала скроллим на самый верх
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+        
+        // Затем загружаем следующую главу
         dispatch(loadChapter(nextChapter.id));
-      }, 100);
+      }, delay);
     }
 
     onNext?.();
@@ -190,7 +199,24 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
 
   // Обработчик перехода к активности
   const handleGoToActivity = useCallback((activityId: string) => {
-    dispatch(setSpecialContent(activityId as SpecialContent));
+    // Проверяем, находимся ли мы на мобильном устройстве
+    const isMobile = window.innerWidth <= 768;
+    
+    // На мобильных сначала скроллим страницу вверх
+    if (isMobile) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+      });
+      
+      // Затем с небольшой задержкой устанавливаем специальный контент
+      setTimeout(() => {
+        dispatch(setSpecialContent(activityId as SpecialContent));
+      }, 100);
+    } else {
+      // На десктопе просто устанавливаем специальный контент
+      dispatch(setSpecialContent(activityId as SpecialContent));
+    }
   }, [dispatch]);
 
   // Очищаем HTML, адаптируем пути к изображениям и разрешаем только безопасные теги и атрибуты

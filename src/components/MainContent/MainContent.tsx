@@ -91,8 +91,24 @@ const MainContent: React.FC = () => {
 
   // Эффект для прокрутки страницы наверх при смене контента
   useEffect(() => {
-    // Прокручиваем страницу наверх только при изменении ID главы или типа специального контента
-    window.scrollTo(0, 0);
+    // Сначала проверяем, находимся ли мы на мобильном устройстве
+    const isMobile = window.innerWidth <= 768;
+    
+    // Добавляем небольшую задержку для мобильных устройств, чтобы DOM успел обновиться
+    if (isMobile) {
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+      }, 100);
+    } else {
+      // На десктопе используем мгновенный скролл
+      window.scrollTo({
+        top: 0,
+        behavior: 'instant'
+      });
+    }
   }, [currentChapter?.id, specialContent]);
 
   // Функция для обновления времени главы, если это необходимо

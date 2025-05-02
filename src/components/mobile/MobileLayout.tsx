@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { useAppDispatch, useActiveTab, useCurrentChapter, useSpecialContent } from '../../redux/hooks';
 import MobileNavBar from './MobileNavBar';
 import ListOfChapters from '../ListOfChapters/ListOfChapters';
@@ -15,6 +15,25 @@ const MobileLayout: FC = () => {
   const dispatch = useAppDispatch();
   const currentChapter = useCurrentChapter();
   const specialContent = useSpecialContent();
+  const contentWrapperRef = useRef<HTMLDivElement>(null);
+
+  // Добавляем эффект для принудительного скролла контента к верху при смене контента
+  useEffect(() => {
+    if (contentWrapperRef.current) {
+      // Сбрасываем скролл на самый верх контейнера с задержкой
+      setTimeout(() => {
+        if (contentWrapperRef.current) {
+          contentWrapperRef.current.scrollTop = 0;
+          
+          // Дополнительно сбрасываем скролл у окна
+          window.scrollTo({
+            top: 0,
+            behavior: 'instant'
+          });
+        }
+      }, 150);
+    }
+  }, [currentChapter?.id, specialContent]);
 
   // Получаем нужную панель в зависимости от текущей активной вкладки
   const getCurrentView = useCallback((tab: MobileTab) => {
@@ -50,7 +69,7 @@ const MobileLayout: FC = () => {
 
   return (
     <div className={styles.mobileLayout}>
-      <div className={styles.contentWrapper}>
+      <div ref={contentWrapperRef} className={styles.contentWrapper}>
         {getCurrentView(activeTab)}
       </div>
       <MobileNavBar />
