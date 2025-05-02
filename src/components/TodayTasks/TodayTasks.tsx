@@ -18,7 +18,7 @@ import ActivityHistoryBar from './ActivityHistoryBar';
 import TestTaskComponent from './TestTaskComponent';
 import MethodsTaskComponent, { MethodsTask } from './MethodsTaskComponent';
 import ReadingTaskComponent from './ReadingTaskComponent';
-import FaviritesComponent from './FaviritesComponent';
+import FavoritesComponent from './FavoritesComponent';
 
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
@@ -233,7 +233,7 @@ const TodayTasks: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <FaviritesComponent onActivityClick={handleActivityClick} />
+      <FavoritesComponent onActivityClick={handleActivityClick} />
       
       <h2 className={styles.todayTasksTitle}>Задания на сегодня</h2>
       <div className={styles.tasksList}>

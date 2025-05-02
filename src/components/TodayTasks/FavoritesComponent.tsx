@@ -4,7 +4,7 @@ import styles from './TodayTasks.module.css';
 import { loadChapter } from '../../redux/actions/chapterActions';
 import { ACTIVITY_NAMES } from '../../constants/activities';
 
-const FaviritesComponent: React.FC<{ onActivityClick: (activityId: string) => void }> = ({ onActivityClick }) => {
+const FavoritesComponent: React.FC<{ onActivityClick: (activityId: string) => void }> = ({ onActivityClick }) => {
   const dispatch = useAppDispatch();
 
   const favoriteActivitiesIds = useFavoriteActivities();
@@ -73,4 +73,4 @@ const FaviritesComponent: React.FC<{ onActivityClick: (activityId: string) => vo
   );
 };
 
-export default FaviritesComponent;
+export default FavoritesComponent;
