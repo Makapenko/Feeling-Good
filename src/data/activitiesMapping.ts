@@ -11,7 +11,8 @@ export const allActivities: SpecialContent[] = ALL_ACTIVITY_IDS.filter(id =>
 // Маппинг подглав к активностям, которые они открывают
 export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch2': [ACTIVITY_IDS.BURNS_CHECKLIST],
-  'ch3-1': [ACTIVITY_IDS.COGNITIVE_BIASES, ACTIVITY_IDS.COGNITIVE_BIASES_TEST],
+  'ch3-0': [ACTIVITY_IDS.COGNITIVE_BIASES],
+  'ch3-1': [ACTIVITY_IDS.COGNITIVE_BIASES_TEST],
   'ch4-2': [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY],
   'ch5-0': [ACTIVITY_IDS.PROCRASTINATION_SCALE],
   'ch5-1': [ACTIVITY_IDS.DAILY_SCHEDULE],
