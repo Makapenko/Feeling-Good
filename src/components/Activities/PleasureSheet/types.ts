@@ -5,7 +5,7 @@ export interface Activity {
   text: string;
   participants: string;
   expectedPleasure: number;
-  actualPleasure: number | null;
+  actualPleasure: number;
   timestamp: string;
   date: string;
   completed: boolean;
