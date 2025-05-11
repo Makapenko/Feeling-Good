@@ -5,6 +5,7 @@
   height: 100%;
   background: white;
   border-radius: 8px;
+  max-width: 30%;
   /* padding: 15px; */
 }
 
@@ -13,6 +14,9 @@
   color: #2c3e50;
   font-size: 1.1rem;
   font-weight: 600;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
 }
 
 .distortionsList {
@@ -232,6 +236,16 @@
 
 
 @media (max-width: 768px) {
+  .column {
+    max-width: 100%;
+  }
+
+  .column h3 {
+  min-height: auto;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  }
+  
   .arrow {
     margin-top: 4px;
   }

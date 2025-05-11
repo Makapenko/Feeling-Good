@@ -27,8 +27,10 @@
 }
 
 .inputSection {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* display: grid;
+  grid-template-columns: repeat(3, 1fr); */
+  display: flex;
+  width: 100%;
   gap: 20px;
   margin-bottom: 30px;
   align-items: start;
@@ -38,6 +40,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  flex: 1;
+
 }
 
 .column h3 {
@@ -46,6 +50,7 @@
   min-height: 42px;
   display: flex;
   align-items: center;
+  font-size: 1.1em;
 }
 
 .column textarea {
@@ -139,6 +144,7 @@
   }
 
   .inputSection {
+    display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
     margin-bottom: 16px;

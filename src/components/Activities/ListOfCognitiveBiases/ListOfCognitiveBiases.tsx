@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './ListOfCognitiveBiases.module.css';
 import { cognitiveBiases } from './cognitiveBiases';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
@@ -9,10 +9,27 @@ const SHEET_ID = ACTIVITY_IDS.COGNITIVE_BIASES;
 
 const ListOfCognitiveBiases: React.FC = () => {
   const [openBiasIndex, setOpenBiasIndex] = useState<number | null>(null);
+  const biasRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleBiasClick = (index: number) => {
-    setOpenBiasIndex(openBiasIndex === index ? null : index);
+    const newIndex = openBiasIndex === index ? null : index;
+    setOpenBiasIndex(newIndex);
+    
+    if (newIndex !== null) {
+      // Добавляем небольшую задержку, чтобы дать время для рендеринга
+      setTimeout(() => {
+        const currentRef = biasRefs.current[newIndex];
+        if (currentRef) {
+          currentRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   };
+
+  // Инициализация массива рефов
+  useEffect(() => {
+    biasRefs.current = biasRefs.current.slice(0, cognitiveBiases.length);
+  }, []);
 
   return (
     <div className={styles.listOfCognitiveBiases}>
@@ -27,6 +44,9 @@ const ListOfCognitiveBiases: React.FC = () => {
         {cognitiveBiases.map((bias, index) => (
           <li key={index}>
             <div
+              ref={el => {
+                biasRefs.current[index] = el;
+              }}
               className={`${styles.biasHeader} ${openBiasIndex === index ? styles.open : ''}`}
               onClick={() => handleBiasClick(index)}
             >

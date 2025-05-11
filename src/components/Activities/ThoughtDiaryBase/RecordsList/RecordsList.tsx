@@ -3,9 +3,6 @@ import styles from './RecordsList.module.css';
 import { ThoughtDiaryRecord } from '../types';
 import { formatDateWithOptions } from '../../../../utils/dateUtils';
 
-
-// TODO - стилизовать историю записей и сделать понятным что оно выпадает при нажатии
-
 interface RecordsListProps {
   records: (ThoughtDiaryRecord & { date?: string })[];
   showCognitiveDistortions?: boolean;
