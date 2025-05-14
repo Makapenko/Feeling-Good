@@ -30,6 +30,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch5-13': [ACTIVITY_IDS.CHECK_CANT_DO],
   'ch5-14': [ACTIVITY_IDS.NO_LOSE_TECHNIQUE],
   'ch5-15': [ACTIVITY_IDS.SELF_ACTIVATION],
+  'ch6-0': [ACTIVITY_IDS.VERBAL_JUDO],
   'ch7-1': [ACTIVITY_IDS.NOVACO_SCALE],
   'ch7-4': [ACTIVITY_IDS.HOT_COOL_THOUGHTS],
   'ch7-6': [ACTIVITY_IDS.REWRITE_SHOULD_RULES],

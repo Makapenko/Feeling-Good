@@ -6,6 +6,8 @@ import { SpecialContent } from '../../types/progress.types';
 import { getAvailableActivities } from '../../data/activitiesMapping';
 import { ACTIVITY_IDS } from '../../constants/activities';
 
+// TODO - упорядочить согласно главам книги
+
 interface ActivityItem {
   content: SpecialContent;
   label: string;
@@ -71,6 +73,12 @@ const sections: ActivitySection[] = [
     ]
   },
   {
+    title: 'Работа с критикой',
+    activities: [
+      { content: ACTIVITY_IDS.VERBAL_JUDO, label: 'Вербальное дзюдо' }
+    ]
+  },
+  {
     title: 'Управление гневом',
     activities: [
       { content: ACTIVITY_IDS.NOVACO_SCALE, label: 'Шкала раздражения Новако' },
@@ -78,6 +86,7 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.REWRITE_SHOULD_RULES, label: 'Пересмотр правил со словом «должен»' }
     ]
   },
+
   {
     title: 'Преодоление депрессии',
     activities: [

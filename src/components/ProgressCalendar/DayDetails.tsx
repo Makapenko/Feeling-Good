@@ -24,7 +24,6 @@ import SelfSupportExerciseComponent from './render/SelfSupportExerciseComponent'
 import NoButsExerciseComponent from './render/NoButsExerciseComponent';
 import MotivationWithoutCoercionExerciseComponent from './render/MotivationWithoutCoercionExerciseComponent';
 import ImagineSuccessExerciseComponent from './render/ImagineSuccessExerciseComponent';
-import NoLoseTechniqueExerciseComponent from './render/NoLoseTechniqueExerciseComponent';
 import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseComponent';
 import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
@@ -39,7 +38,6 @@ import { CountAchievementsExercise } from '../Activities/CountAchievements/types
 import { ImagineSuccessExercise } from '../Activities/ImagineSuccess/types';
 import { DownwardArrowExercise } from '../Activities/DownwardArrow/types';
 import { CheckCantDoExercise } from '../Activities/CheckCantDo/types';
-import { NoLoseTechniqueExercise } from '../Activities/NoLoseTechnique/types';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
 import ProcrastinationScaleExerciseComponent from './render/ProcrastinationScale/ProcrastinationScaleExerciseComponent';
 
@@ -111,6 +109,13 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
     return exercises.map((exercise) => {
       switch (exercise.type) {
         case ACTIVITY_IDS.THREE_COLUMNS_METHOD:
+        case ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS:
+        case ACTIVITY_IDS.HOT_COOL_THOUGHTS:
+        case ACTIVITY_IDS.REWRITE_SHOULD_RULES:
+        case ACTIVITY_IDS.RATIONAL_RESPONSES:
+        case ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES:
+        case ACTIVITY_IDS.NO_LOSE_TECHNIQUE:
+        case ACTIVITY_IDS.VERBAL_JUDO:
           return <ThreeColumnsExerciseComponent
             key={exercise.id}
             exercise={exercise as ThreeColumnsExercise}
@@ -214,14 +219,6 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
           return <CheckCantDoExerciseComponent
             key={exercise.id}
             exercise={exercise as CheckCantDoExercise}
-            expandedExercises={expandedExercises}
-            toggleExercise={toggleExercise}
-            onClose={onClose}
-          />;
-        case ACTIVITY_IDS.NO_LOSE_TECHNIQUE:
-          return <NoLoseTechniqueExerciseComponent
-            key={exercise.id}
-            exercise={exercise as NoLoseTechniqueExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
             onClose={onClose}

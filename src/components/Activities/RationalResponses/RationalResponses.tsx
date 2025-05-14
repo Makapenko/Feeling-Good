@@ -11,6 +11,8 @@ import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
+// TODO - не отображается в DayDetails
+
 const SHEET_ID: SpecialContent = ACTIVITY_IDS.RATIONAL_RESPONSES;
 
 const RationalResponses: React.FC = () => {

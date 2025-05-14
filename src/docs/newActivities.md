@@ -10,6 +10,7 @@
    2.2. Если это метод трёх или двух колонок - использовать src/components/Activities/ThreeColumnsBase/ThreeColumnsBase.tsx
       2.2.1 Создать новую директорию для активности (например, NewColumnsMethod/)
       2.2.2 Создать основной компонент по аналогии с ThreeColumnsMethod.tsx
+      2.2.3 Добавить в ThreeColumnsBase необходимые строки с названием нового метода
    2.3 Типы добавлять в файл /types.ts в папке с активностью
    2.4 Добавить кнопки в активности
       2.4.1 import ChapterLinkButton from '../../shared/ChapterLinkButton';
@@ -25,7 +26,9 @@
 
 5. Создать отображение результатов в календаре - src/components/ProgressCalendar/render
    5.1. Создать новый компонент по аналогии с существующими (например, NewExerciseComponent.tsx)
+    5.1.1  Если новый компонент является вариантом компонента ThreeColumnsBase то вместо создания нового компонента - добавить вариант в render/ThreeColumnsExerciseComponent.tsx
    5.2. Добавить этот рендер в src/components/ProgressCalendar/DayDetails.tsx в функцию renderExercises
+   5.3. Стили используй из '../DayDetails.module.css' если нужны дополнительные - допиши
 
 6. Добавить в список компонентов со скрытым таймером в src/components/UniversalTimer/UniversalTimer.tsx
    6.1. Добавить идентификатор активности в массив HIDDEN_TIMER_COMPONENTS

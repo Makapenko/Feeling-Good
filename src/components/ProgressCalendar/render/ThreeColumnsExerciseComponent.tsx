@@ -45,6 +45,16 @@ const ThreeColumnsExerciseComponent: React.FC<ThreeColumnsExerciseProps> = ({
           left: 'Преимущества убеждения',
           right: 'Недостатки убеждения'
         };
+      case ACTIVITY_IDS.VERBAL_JUDO:
+        return {
+          left: 'Критика',
+          right: 'Рациональный ответ'
+        };
+      case ACTIVITY_IDS.NO_LOSE_TECHNIQUE:
+        return {
+          left: 'Ситуация дилеммы',
+          right: 'Решение'
+        };
       default:
         return {
           left: 'Автоматическая мысль',
@@ -55,6 +65,20 @@ const ThreeColumnsExerciseComponent: React.FC<ThreeColumnsExerciseProps> = ({
 
   const columnTitles = getColumnTitles();
 
+  // Если записей нет, показываем сообщение
+  if (!exercise.records || exercise.records.length === 0) {
+    return (
+      <ExerciseWrapper
+        exercise={exercise}
+        expandedExercises={expandedExercises}
+        toggleExercise={toggleExercise}
+        onClose={onClose}
+      >
+        <div className={styles.emptyMessage}>Нет записей</div>
+      </ExerciseWrapper>
+    );
+  }
+
   return (
     <ExerciseWrapper
       exercise={exercise}
@@ -64,9 +88,9 @@ const ThreeColumnsExerciseComponent: React.FC<ThreeColumnsExerciseProps> = ({
     >
       <div className={styles.recordsList}>
         {exercise.records.map((record, index) => (
-          <div key={index} className={styles.record}>
+          <div key={record.id || index} className={styles.record}>
             <div className={styles.recordTime}>
-              {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
+              {record.timestamp && new Date(record.timestamp).toLocaleTimeString('ru-RU', {
                 hour: '2-digit',
                 minute: '2-digit'
               })}

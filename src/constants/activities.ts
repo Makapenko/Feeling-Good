@@ -34,6 +34,7 @@ export const ACTIVITY_IDS = {
   DOWNWARD_ARROW: 'downward-arrow',
   ADVANTAGES_DISADVANTAGES: 'advantages-disadvantages',
   REWRITE_BELIEF: 'rewrite-belief',
+  VERBAL_JUDO: 'verbal-judo',
   // Тесты и опросники
   BURNS_CHECKLIST: 'burns-checklist',
   COGNITIVE_BIASES: 'cognitive-biases',
@@ -82,6 +83,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE]: 'Шкала дисфункциональных убеждений',
   [ACTIVITY_IDS.REWRITE_BELIEF]: 'Переписывание убеждений',
   [ACTIVITY_IDS.PROCRASTINATION_SCALE]: 'Шкала иррациональной прокрастинации',
+  [ACTIVITY_IDS.VERBAL_JUDO]: 'Вербальное дзюдо',
 };
 
 /**

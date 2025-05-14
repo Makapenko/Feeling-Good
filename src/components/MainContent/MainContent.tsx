@@ -36,6 +36,7 @@ import DownwardArrow from '../Activities/DownwardArrow/DownwardArrow';
 import DysfunctionalAttitudeScale from '../Activities/DysfunctionalAttitudeScale/DysfunctionalAttitudeScale';
 import AdvantagesDisadvantages from '../Activities/AdvantagesDisadvantages/AdvantagesDisadvantages';
 import ProcrastinationScale from '../Activities/ProcrastinationScale/ProcrastinationScale';
+import VerbalJudo from '../Activities/VerbalJudo/VerbalJudo';
 
 import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
@@ -75,7 +76,8 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES]: AdvantagesDisadvantages,
   [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE]: DysfunctionalAttitudeScale,
   [ACTIVITY_IDS.PROCRASTINATION_SCALE]: ProcrastinationScale,
-  [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar
+  [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar,
+  [ACTIVITY_IDS.VERBAL_JUDO]: VerbalJudo
 };
 
 const MainContent: React.FC = () => {
