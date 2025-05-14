@@ -1,0 +1,82 @@
+.criticismManagementMethods {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.methodHeader {
+  cursor: pointer;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.methodHeader:hover {
+  background-color: #e9e9e9;
+}
+
+.methodHeader.open {
+  background-color: #e0e0e0;
+  margin-bottom: 0;
+  border-radius: 5px 5px 0 0;
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.headerContent b {
+  font-size: 18px;
+  color: #333;
+}
+
+.headerContent span {
+  font-size: 14px;
+  color: #666;
+}
+
+.arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.open .arrow {
+  transform: rotate(180deg);
+}
+
+.methodDescription {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 0 0 5px 5px;
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  border-top: none;
+}
+
+.methodDescription p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.methodDescription p:last-child {
+  margin-bottom: 0;
+} 

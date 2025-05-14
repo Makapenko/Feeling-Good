@@ -24,7 +24,7 @@
    4.1. Импортировать созданный компонент активности
    4.2. Добавить компонент в объект ACTIVITY_COMPONENTS
 
-5. Создать отображение результатов в календаре - src/components/ProgressCalendar/render
+5. Создать отображение результатов в календаре - src/components/ProgressCalendar/render (не нужно если задание не интерактивно - шпаргалка, список)
    5.1. Создать новый компонент по аналогии с существующими (например, NewExerciseComponent.tsx)
     5.1.1  Если новый компонент является вариантом компонента ThreeColumnsBase то вместо создания нового компонента - добавить вариант в render/ThreeColumnsExerciseComponent.tsx
    5.2. Добавить этот рендер в src/components/ProgressCalendar/DayDetails.tsx в функцию renderExercises

@@ -75,7 +75,8 @@ const sections: ActivitySection[] = [
   {
     title: 'Работа с критикой',
     activities: [
-      { content: ACTIVITY_IDS.VERBAL_JUDO, label: 'Вербальное дзюдо' }
+      { content: ACTIVITY_IDS.VERBAL_JUDO, label: 'Вербальное дзюдо' },
+      { content: ACTIVITY_IDS.CRITICISM_MANAGEMENT_METHODS, label: 'Методы управления критикой' }
     ]
   },
   {
@@ -100,7 +101,7 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES, label: 'Анализ преимуществ и недостатков убеждений' },
       { content: ACTIVITY_IDS.REWRITE_BELIEF, label: 'Переписывание убеждений' }
     ]
-  }
+  },
 ];
 
 const ActivitiesPanel: React.FC = () => {

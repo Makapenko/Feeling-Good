@@ -37,6 +37,7 @@ import DysfunctionalAttitudeScale from '../Activities/DysfunctionalAttitudeScale
 import AdvantagesDisadvantages from '../Activities/AdvantagesDisadvantages/AdvantagesDisadvantages';
 import ProcrastinationScale from '../Activities/ProcrastinationScale/ProcrastinationScale';
 import VerbalJudo from '../Activities/VerbalJudo/VerbalJudo';
+import CriticismManagementMethods from '../Activities/CriticismManagementMethods/CriticismManagementMethods';
 
 import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
@@ -77,7 +78,8 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE]: DysfunctionalAttitudeScale,
   [ACTIVITY_IDS.PROCRASTINATION_SCALE]: ProcrastinationScale,
   [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar,
-  [ACTIVITY_IDS.VERBAL_JUDO]: VerbalJudo
+  [ACTIVITY_IDS.VERBAL_JUDO]: VerbalJudo,
+  [ACTIVITY_IDS.CRITICISM_MANAGEMENT_METHODS]: CriticismManagementMethods
 };
 
 const MainContent: React.FC = () => {
