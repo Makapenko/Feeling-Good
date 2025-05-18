@@ -147,6 +147,8 @@
   padding: 8px;
   border-bottom: 1px solid #eee;
   align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .chapterInfo {
@@ -878,7 +880,7 @@
   }
 
   .chapter, .test {
-    flex-direction: row;
+    /* flex-direction: row; */
     align-items: center;
     padding: 10px;
   }
@@ -976,4 +978,163 @@
   margin: 0 0 12px 0;
   font-size: 1.1rem;
   color: #1e293b;
+}
+
+/* Добавить недостающие стили для тестов */
+.test {
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
+}
+
+.test:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.testHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  gap: 12px;
+  width: 100%;
+}
+
+.testHeader:hover {
+  background-color: #f0f0f0;
+}
+
+.testInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.testTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.testName {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.testTime {
+  font-size: 0.8rem;
+  color: #666;
+  margin-left: 12px;
+}
+
+.testScore {
+  color: #3182ce;
+  font-weight: 500;
+}
+
+.expandIconContainer {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.expandIcon {
+  display: inline-block;
+  transition: transform 0.2s;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* .expanded {
+  transform: rotate(180deg);
+} */
+
+.testDetails {
+  padding: 16px;
+  border-top: 1px solid #eaeaea;
+  background-color: white;
+  display: block;
+  width: 100%;
+  margin-top: 0;
+}
+
+.resultInterpretation {
+  margin-top: 0;
+}
+
+.resultInterpretation h5 {
+  margin: 0 0 8px 0;
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.resultInterpretation p {
+  margin: 0;
+  color: #4a5568;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.testsList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+}
+
+/* Стили для шкалы дисфункциональных убеждений */
+.resultsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.categoryResult {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px;
+  background-color: #f8fafc;
+}
+
+.strength {
+  border-left: 4px solid #22c55e;
+}
+
+.weakness {
+  border-left: 4px solid #ef4444;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.categoryHeader strong {
+  color: #1e293b;
+  font-size: 1rem;
+}
+
+.score {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: #f1f5f9;
+}
+
+.categoryDescription {
+  color: #475569;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
 } 

@@ -1,40 +1,60 @@
-import React from "react";
+import { useState } from "react";
 import styles from "./DayDetails.module.css";
+
 import { ACTIVITY_IDS } from "../../constants/activities";
 import { Exercise } from '../../types/progress.types';
+
 import { ThreeColumnsExercise } from '../Activities/ThreeColumnsBase/types';
-import { ThoughtDiaryExercise } from '../Activities/ThoughtDiaryBase/types';
-import { DailyScheduleExercise } from '../Activities/DailySchedule/types';
-import { AntiProcrastinationExercise } from '../Activities/AntiProcrastinationSheet/types';
-import { PleasureSheetExercise } from '../Activities/PleasureSheet/types';
-import { NoButsExercise } from '../Activities/NoButsSheet/types';
 import ThreeColumnsExerciseComponent from './render/ThreeColumnsExerciseComponent';
+
+import { ThoughtDiaryExercise } from '../Activities/ThoughtDiaryBase/types';
 import ThoughtDiaryExerciseComponent from './render/ThoughtDiaryExerciseComponent';
+
+import { DailyScheduleExercise } from '../Activities/DailySchedule/types';
 import DailyScheduleExerciseComponent from './render/DailyScheduleExerciseComponent';
+
+import { AntiProcrastinationExercise } from '../Activities/AntiProcrastinationSheet/types';
 import AntiProcrastinationExerciseComponent from './render/AntiProcrastinationExerciseComponent';
-import SmallStepsExerciseComponent from './render/SmallStepsExerciseComponent';
-import SelfSupportExerciseComponent from './render/SelfSupportExerciseComponent';
-import NoButsExerciseComponent from './render/NoButsExerciseComponent';
-import MotivationWithoutCoercionExerciseComponent from './render/MotivationWithoutCoercionExerciseComponent';
-import ImagineSuccessExerciseComponent from './render/ImagineSuccessExerciseComponent';
+
+import { PleasureSheetExercise } from '../Activities/PleasureSheet/types';
 import PleasureSheetExerciseComponent from './render/PleasureSheetExerciseComponent';
-import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
-import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
-import DownwardArrowExerciseComponent from './render/DownwardArrowExerciseComponent';
-import DysfunctionalAttitudeScaleExerciseComponent from './render/DysfunctionalAttitudeScale/DysfunctionalAttitudeScaleExerciseComponent';
-import { SelfSupportExercise } from '../Activities/SelfSupport/types';
-import { MotivationWithoutCoercionExercise } from '../Activities/MotivationWithoutCoercion/types';
+
+import { NoButsExercise } from '../Activities/NoButsSheet/types';
+import NoButsExerciseComponent from './render/NoButsExerciseComponent';
+
+import SmallStepsExerciseComponent from './render/SmallStepsExerciseComponent';
 import { SmallStepsExercise } from '../Activities/SmallSteps/types';
-import { CountAchievementsExercise } from '../Activities/CountAchievements/types';
+
+import SelfSupportExerciseComponent from './render/SelfSupportExerciseComponent';
+import { SelfSupportExercise } from '../Activities/SelfSupport/types';
+
+import MotivationWithoutCoercionExerciseComponent from './render/MotivationWithoutCoercionExerciseComponent';
+import { MotivationWithoutCoercionExercise } from '../Activities/MotivationWithoutCoercion/types';
+
+import ImagineSuccessExerciseComponent from './render/ImagineSuccessExerciseComponent';
 import { ImagineSuccessExercise } from '../Activities/ImagineSuccess/types';
-import { DownwardArrowExercise } from '../Activities/DownwardArrow/types';
+
+import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import { CheckCantDoExercise } from '../Activities/CheckCantDo/types';
+
+import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
+import { CountAchievementsExercise } from '../Activities/CountAchievements/types';
+
+import DownwardArrowExerciseComponent from './render/DownwardArrowExerciseComponent';
+import { DownwardArrowExercise } from '../Activities/DownwardArrow/types';
+
+import DysfunctionalAttitudeScaleExerciseComponent from './render/DysfunctionalAttitudeScale/DysfunctionalAttitudeScaleExerciseComponent';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
-import ProcrastinationScaleExerciseComponent from './render/ProcrastinationScale/ProcrastinationScaleExerciseComponent';
+
 import AngerProsConsExerciseComponent from './render/AngerProsConsExerciseComponent';
 import { AngerProsConsExercise } from '../Activities/AngerProsCons/types';
-import { useState } from "react";
 
+/**
+ * Компонент для отображения и управления упражнениями пользователя
+ * 
+ * Отвечает за отображение списка упражнений различных типов,
+ * управление их состоянием развернутости и группировкой некоторых специальных типов упражнений.
+ */
 interface TestResult {
   id: string;
   name: string;
@@ -45,12 +65,6 @@ interface TestResult {
   content?: string;
 }
 
-/**
- * Компонент для отображения и управления упражнениями пользователя
- * 
- * Отвечает за отображение списка упражнений различных типов,
- * управление их состоянием развернутости и группировкой некоторых специальных типов упражнений.
- */
 interface RenderExercisesProps {
   exercises: {
     exercises?: Exercise[];
@@ -200,21 +214,6 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
           return <DysfunctionalAttitudeScaleExerciseComponent
             key={exercise.id}
             exercise={exercise as DysfunctionalAttitudeScaleExercise}
-            expandedExercises={expandedExercises}
-            toggleExercise={toggleExercise}
-          />;
-        case ACTIVITY_IDS.PROCRASTINATION_SCALE:
-          return <ProcrastinationScaleExerciseComponent
-            key={exercise.id}
-            exercise={{
-              id: exercise.id,
-              type: exercise.type,
-              name: exercise.name,
-              date: exercise.completedAt,
-              completedAt: exercise.completedAt,
-              score: 'score' in exercise ? Number(exercise.score) : 0,
-              maxScore: 'maxScore' in exercise ? Number(exercise.maxScore) : 45
-            }}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './DayDetails.module.css';
 import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
@@ -11,12 +11,26 @@ import { useAppDispatch } from '../../redux/hooks';
 import { loadChapter } from '../../redux/actions/chapterActions';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import RenderExercises from './RenderExercises';
+import RenderTests from './RenderTests';
+import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
 
 interface DayDetailsProps {
   date: string;
   dayProgress: CalendarDayProgress;
   chapterMap: ChapterMap;
   onClose: () => void;
+}
+
+// Интерфейс для объекта результата теста
+interface TestResult {
+  id: string;
+  name?: string;
+  type?: string;
+  score?: number;
+  maxScore?: number;
+  completedAt: string;
+  content?: string;
+  categoryResults?: Array<{category: string, score: number, isStrength: boolean}>;
 }
 
 type ActiveTab = 'chapters' | 'tests' | 'exercises';
@@ -47,6 +61,45 @@ const ChapterButton: React.FC<{ chapterId: string, onClose: () => void }> = ({ c
 
 export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, onClose }) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('chapters');
+  const [expandedTests, setExpandedTests] = useState<string[]>([]);
+  const [allTestResults, setAllTestResults] = useState<TestResult[]>([]);
+
+  // Обрабатываем все типы тестов, включая шкалу дисфункциональных убеждений
+  useEffect(() => {
+    const testResults = [...(dayProgress.exercises.testResults || [])].map(result => ({
+      ...result,
+      type: result.content
+    })) as TestResult[];
+    
+    // Добавляем упражнения шкалы дисфункциональных убеждений к тестам
+    if (dayProgress.exercises.exercises) {
+      const dasExercises = dayProgress.exercises.exercises.filter(
+        ex => ex.type === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE
+      );
+      
+      // Преобразуем упражнения в формат тестов
+      const dasTestResults = dasExercises.map(exercise => {
+        const dasExercise = exercise as DysfunctionalAttitudeScaleExercise;
+        return {
+          id: dasExercise.id,
+          name: 'Шкала дисфункциональных убеждений',
+          type: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
+          completedAt: dasExercise.completedAt || new Date().toISOString(),
+          categoryResults: dasExercise.categoryResults
+        } as TestResult;
+      });
+      
+      setAllTestResults([...testResults, ...dasTestResults]);
+    } else {
+      setAllTestResults(testResults);
+    }
+  }, [dayProgress]);
+
+  const toggleTest = (testId: string) => {
+    setExpandedTests(prev => 
+      prev.includes(testId) ? prev.filter(id => id !== testId) : [...prev, testId]
+    );
+  };
 
   const groupChaptersByParent = (chapters: NonNullable<typeof dayProgress.chapters>) => {
     const grouped: { [key: string]: typeof chapters } = {};
@@ -109,21 +162,13 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
       </>
     );
   };
-
-  const renderTestsContent = () => {
-    if (!dayProgress.exercises.testResults || dayProgress.exercises.testResults.length === 0) {
-      return <div className={styles.emptyState}>Нет пройденных тестов за этот день</div>;
-    }
-
-    return dayProgress.exercises.testResults.map(test => (
-      <div key={test.id} className={styles.test}>
-        <span>{test.name}</span>
-        <span>
-          {test.score !== undefined && `Результат: ${test.score}`}
-          {test.maxScore !== undefined && ` из ${test.maxScore}`}
-        </span>
-      </div>
-    ));
+  
+  // Фильтруем упражнения, исключая шкалу дисфункциональных убеждений
+  const filteredExercises = {
+    ...dayProgress.exercises,
+    exercises: dayProgress.exercises.exercises?.filter(
+      ex => ex.type !== ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE
+    )
   };
 
   return (
@@ -151,16 +196,16 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
                 getStoredActivityTime(ACTIVITY_IDS.THOUGHT_DIARY)
               )}</strong>
             </div>
-            {dayProgress.exercises.testResults && dayProgress.exercises.testResults.length > 0 && (
+            {allTestResults.length > 0 && (
               <div className={styles.stat}>
                 <span>✍️</span>
-                <strong>{dayProgress.exercises.testResults.length}</strong>
+                <strong>{allTestResults.length}</strong>
               </div>
             )}
-            {dayProgress.exercises.exercises && dayProgress.exercises.exercises.length > 0 && (
+            {filteredExercises.exercises && filteredExercises.exercises.length > 0 && (
               <div className={styles.stat}>
                 <span>🎯</span>
-                <strong>{dayProgress.exercises.exercises.length}</strong>
+                <strong>{filteredExercises.exercises.length}</strong>
               </div>
             )}
           </div>
@@ -188,8 +233,14 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
 
           <div className={styles.tabContent}>
             {activeTab === 'chapters' && renderChaptersContent()}
-            {activeTab === 'tests' && renderTestsContent()}
-            {activeTab === 'exercises' && <RenderExercises exercises={dayProgress.exercises} onClose={onClose} />}
+            {activeTab === 'tests' && (
+              <RenderTests 
+                testResults={allTestResults} 
+                expandedTests={expandedTests}
+                toggleTest={toggleTest}
+              />
+            )}
+            {activeTab === 'exercises' && <RenderExercises exercises={filteredExercises} onClose={onClose} />}
           </div>
         </div>
       </div>

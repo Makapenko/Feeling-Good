@@ -6,6 +6,8 @@ import { ActivityId } from "../../../constants/activities";
 import { useIsMobile } from "../../../utils/deviceUtils";
 import { createBaseExercise } from "../../../utils/exerciseUtils";
 
+//TODO В Опросник депрессии Бернса Шкала иррациональной прокрастинации после прохождения опроса - кнопки избранного и перехода к главе показываются внизу страницы, а не рядом с заголовком
+
  interface SurveyProps {
   config: SurveyConfig;
   onComplete?: (result: SurveyResult) => void;
