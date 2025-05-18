@@ -30,7 +30,7 @@ interface RenderTestsProps {
  * Получить название и детали теста по его типу
  */
 const getTestDetails = (testType: string | undefined) => {
-  console.log('testType', testType);
+
   if (!testType) return { name: 'Тест', config: null, hasDetails: false };
 
   // Проверяем, есть ли такой тип в константах активностей
@@ -60,34 +60,33 @@ const getTestDetails = (testType: string | undefined) => {
 
   // Дополнительная проверка для ID из конфигураций
   switch (testType) {
-    case 'procrastination-scale': // ID из procrastinationConfig
+    case ACTIVITY_IDS.PROCRASTINATION_SCALE:
       return {
-        name: 'Шкала иррациональной прокрастинации',
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.PROCRASTINATION_SCALE],
         config: procrastinationConfig,
         hasDetails: true
       };
-    case 'burns-checklist': // ID из burnsConfig
+    case ACTIVITY_IDS.BURNS_CHECKLIST: 
       return {
-        name: 'Опросник депрессии Бернса',
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.BURNS_CHECKLIST],
         config: burnsConfig,
         hasDetails: true
       };
-    case 'survey-шкала-раздражения-новако':
+    case ACTIVITY_IDS.NOVACO_SCALE: 
       return {
-        name: 'Шкала раздражения Новако',
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.NOVACO_SCALE],
         config: novacoConfig,
         hasDetails: true
       };
-    case 'cognitive-biases-test':
+    case ACTIVITY_IDS.COGNITIVE_BIASES_TEST: 
       return {
         name: 'Тест на понимание когнитивных искажений',
         config: null,
         hasDetails: false
       };
-    case 'dysfunctional-attitude-scale':
-    // case 'das-exercise':
+    case ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE: 
       return {
-        name: 'Шкала дисфункциональных убеждений',
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
         config: null,
         hasDetails: true
       };
@@ -130,38 +129,6 @@ const getNovacoScaleInterpretation = (score: number) => {
   );
 
   return result ? result.description : 'Интерпретация не найдена';
-};
-
-/**
- * Получить возможный тип теста из объекта результата
- */
-const getTestType = (test: TestObject): string | undefined => {
-  // Проверяем доступные поля в различных форматах объекта теста
-  // content приходит из объекта TestResult в redux
-  // type приходит из BaseExercise
-  // id может содержать идентификатор теста
-
-  // Специальная обработка для шкалы дисфункциональных убеждений
-  if (test.type === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE ||
-    test.content === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE ||
-    test.id === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE ||
-    test.id?.includes('das') ||
-    test.id?.includes('dysfunctional') ||
-    test?.name?.toLowerCase().includes('дисфункц')) {
-    return ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE;
-  }
-
-  if (test.content) return test.content;
-  if (test.type) return test.type;
-
-  // Проверим известные ID тестов
-  if (test.id === 'burns-checklist') return 'burns-checklist';
-  if (test.id === 'procrastination-scale') return 'procrastination-scale';
-  if (test.id?.includes('novaco')) return ACTIVITY_IDS.NOVACO_SCALE;
-  if (test.id?.includes('cognitive-biases')) return ACTIVITY_IDS.COGNITIVE_BIASES_TEST;
-
-  // В крайнем случае возвращаем ID
-  return test.id;
 };
 
 /**
@@ -212,7 +179,7 @@ const RenderTests: React.FC<RenderTestsProps> = ({ testResults, expandedTests, t
       {testResults.map(test => {
         const isExpanded = expandedTests.includes(test.id);
         // В разных интерфейсах тип может храниться в разных полях
-        const testType = getTestType(test);
+        const testType = test.id;
         const { name, hasDetails } = getTestDetails(testType);
 
         // Форматируем время
@@ -221,16 +188,7 @@ const RenderTests: React.FC<RenderTestsProps> = ({ testResults, expandedTests, t
           minute: '2-digit'
         });
 
-        // Стили для блока интерпретации
-        const detailsBlockStyle: React.CSSProperties = {
-          display: 'block',
-          width: '100%',
-          padding: '16px',
-          boxSizing: 'border-box',
-          borderTop: '1px solid #eaeaea',
-          marginTop: '0',
-          backgroundColor: 'white'
-        };
+
 
         return (
           <div key={test.id} className={styles.test}>
@@ -260,31 +218,29 @@ const RenderTests: React.FC<RenderTestsProps> = ({ testResults, expandedTests, t
             </div>
 
             {isExpanded && (
-              <div className={styles.testDetails} style={detailsBlockStyle}>
-                {(testType === ACTIVITY_IDS.PROCRASTINATION_SCALE || testType === 'procrastination-scale') && (
+              <div className={styles.testDetails}>
+                {(testType === ACTIVITY_IDS.PROCRASTINATION_SCALE) && (
                   <div className={styles.resultInterpretation}>
                     <h5>Интерпретация:</h5>
                     <p>{getProcrastinationResultInterpretation(Number(test.score))}</p>
                   </div>
                 )}
 
-                {(testType === ACTIVITY_IDS.BURNS_CHECKLIST || testType === 'burns-checklist') && (
+                {(testType === ACTIVITY_IDS.BURNS_CHECKLIST) && (
                   <div className={styles.resultInterpretation}>
                     <h5>Интерпретация:</h5>
                     <p>{getBurnsChecklistInterpretation(Number(test.score))}</p>
                   </div>
                 )}
 
-                {(testType === ACTIVITY_IDS.NOVACO_SCALE || testType === 'survey-шкала-раздражения-новако') && (
+                {(testType === ACTIVITY_IDS.NOVACO_SCALE) && (
                   <div className={styles.resultInterpretation}>
                     <h5>Интерпретация:</h5>
                     <p>{getNovacoScaleInterpretation(Number(test.score))}</p>
                   </div>
                 )}
 
-                {(testType === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE ||
-                  testType === 'dysfunctional-attitude-scale' ||
-                  testType === 'das-exercise') && (
+                {(testType === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE) && (
                     <div className={styles.resultInterpretation}>
                       <h5>Интерпретация:</h5>
                       {test.categoryResults && test.categoryResults.length > 0 ? (

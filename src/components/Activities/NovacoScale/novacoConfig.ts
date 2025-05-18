@@ -1,6 +1,7 @@
 import { SurveyConfig } from "../Survey/types";
-
+import { ACTIVITY_IDS } from "../../../constants/activities";
 export const novacoConfig: SurveyConfig = {
+  id: ACTIVITY_IDS.NOVACO_SCALE,
   title: "Шкала раздражения Новако",
   answers: [
     { value: 0, label: "Не вызовет раздражения" },

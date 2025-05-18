@@ -9,7 +9,7 @@ import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import { formatDateWithOptions, formatTimeFromSeconds } from '../../utils/dateUtils';
 import { useAppDispatch } from '../../redux/hooks';
 import { loadChapter } from '../../redux/actions/chapterActions';
-import { ACTIVITY_IDS } from '../../constants/activities';
+import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
 import RenderExercises from './RenderExercises';
 import RenderTests from './RenderTests';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
@@ -82,7 +82,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
         const dasExercise = exercise as DysfunctionalAttitudeScaleExercise;
         return {
           id: dasExercise.id,
-          name: 'Шкала дисфункциональных убеждений',
+          name: ACTIVITY_NAMES[ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
           type: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
           completedAt: dasExercise.completedAt || new Date().toISOString(),
           categoryResults: dasExercise.categoryResults

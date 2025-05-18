@@ -1,7 +1,8 @@
 import { SurveyConfig } from "../Survey/types";
+import { ACTIVITY_IDS } from "../../../constants/activities";
 
 export const burnsConfig: SurveyConfig = {
-  id: "burns-checklist",
+  id: ACTIVITY_IDS.BURNS_CHECKLIST,
   title: "Опросник депрессии Бернса",
   answers: [
     { value: 0, label: "Ни разу" },

@@ -1057,12 +1057,13 @@
 } */
 
 .testDetails {
-  padding: 16px;
   border-top: 1px solid #eaeaea;
-  background-color: white;
   display: block;
   width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
   margin-top: 0;
+  background-color: white;
 }
 
 .resultInterpretation {

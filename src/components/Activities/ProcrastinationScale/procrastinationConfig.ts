@@ -1,7 +1,8 @@
 import { SurveyConfig } from "../Survey/types";
+import { ACTIVITY_IDS } from "../../../constants/activities";
 
 export const procrastinationConfig: SurveyConfig = {
-  id: "procrastination-scale",
+  id: ACTIVITY_IDS.PROCRASTINATION_SCALE,
   title: "Шкала иррациональной прокрастинации (IPS)",
   answers: [
     { value: 1, label: "Очень редко, почти никогда" },

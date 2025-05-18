@@ -40,6 +40,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch7-1': [ACTIVITY_IDS.NOVACO_SCALE],
   'ch7-3': [ACTIVITY_IDS.ANGER_PROS_CONS],
   'ch7-4': [ACTIVITY_IDS.HOT_COOL_THOUGHTS],
+  // 'ch7-5'
   'ch7-6': [ACTIVITY_IDS.REWRITE_SHOULD_RULES],
   
   'ch9-3': [ACTIVITY_IDS.RATIONAL_RESPONSES],

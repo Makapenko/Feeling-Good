@@ -12,6 +12,8 @@ import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { AngerProsConsExercise } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
+// TODO добавить возможность добавлять только левую или только правую колонку
+
 // Идентификатор активности
 const SHEET_ID = ACTIVITY_IDS.ANGER_PROS_CONS;
 
