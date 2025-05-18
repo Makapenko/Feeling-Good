@@ -179,7 +179,6 @@ const progressSlice = createSlice({
     // Обновление времени, проведенного в активности
     updateActivityProgress: (state, action: PayloadAction<{ activityId: string; timeSpent: number }>) => {
       const { activityId, timeSpent } = action.payload;
-      console.log(`Redux: обновление времени активности ${activityId}:`, timeSpent);
       
       // Сохраняем прогресс в ежедневной статистике
       const currentDate = getCurrentDate();
@@ -208,8 +207,6 @@ const progressSlice = createSlice({
         completedAt: timeSpent > 0 ? getCurrentISOTimestamp() : undefined
       };
       
-      console.log(`Redux: обновлено состояние для ${activityId}`, 
-        state.dailyProgress[currentDate].activities[activityId]);
     },
     
     // Завершение чтения главы
@@ -342,6 +339,10 @@ const progressSlice = createSlice({
         ? exercise.date 
         : getCurrentDate();
       
+      if (typeof targetDate !== 'string') {
+        return; // Если targetDate не строка, прерываем выполнение
+      }
+
       if (!state.dailyProgress[targetDate]) {
         state.dailyProgress[targetDate] = {
           chapters: {},
@@ -353,14 +354,19 @@ const progressSlice = createSlice({
         };
       }
       
-      const existingExerciseIndex = state.dailyProgress[targetDate].exercises.exercises.findIndex(
+      if (!state.dailyProgress[targetDate]?.exercises?.exercises) {
+        return; // Если exercises не существует, прерываем выполнение
+      }
+      
+      const exercises = state.dailyProgress[targetDate].exercises.exercises;
+      const existingExerciseIndex = exercises.findIndex(
         (ex: Exercise) => ex.id === exercise.id
       );
       
       if (existingExerciseIndex !== -1) {
-        state.dailyProgress[targetDate].exercises.exercises[existingExerciseIndex] = exercise;
+        exercises[existingExerciseIndex] = exercise;
       } else {
-        state.dailyProgress[targetDate].exercises.exercises.push(exercise);
+        exercises.push(exercise);
       }
     },
     

@@ -15,6 +15,7 @@ import { NoLoseTechniqueExercise } from '../components/Activities/NoLoseTechniqu
 import { DownwardArrowExercise } from '../components/Activities/DownwardArrow/types';
 import { RewriteBeliefExercise } from '../components/Activities/RewriteBelief/types';
 import { DysfunctionalAttitudeScaleExercise } from '../components/Activities/DysfunctionalAttitudeScale/types';
+import { AngerProsConsExercise } from '../components/Activities/AngerProsCons/types';
 
 
 /**
@@ -45,6 +46,7 @@ export interface TestResult {
 export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailyScheduleExercise | 
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
   SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |
-  CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise | DysfunctionalAttitudeScaleExercise | RewriteBeliefExercise;
+  CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise | DysfunctionalAttitudeScaleExercise | 
+  RewriteBeliefExercise | AngerProsConsExercise;
 
 export type SpecialContent = ActivityId;

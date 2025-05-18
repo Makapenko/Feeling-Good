@@ -30,6 +30,7 @@ export const EXCLUDED_TIMER_COMPONENTS: (ActivityId | string)[] = [
   ACTIVITY_IDS.WELCOME,
   ACTIVITY_IDS.PROGRESS_CALENDAR,
   ACTIVITY_IDS.TODAY_TASKS,
+  ACTIVITY_IDS.ANGER_PROS_CONS, // Добавляем упражнение "Преимущества и недостатки гнева"
   // Добавьте другие активности, где полностью не нужен таймер
   'default' // Для случая, когда нет активного компонента
 ];
@@ -60,7 +61,6 @@ const UniversalTimer: React.FC<UniversalTimerProps> = React.memo(({ componentId,
       return;
     }
     
-    console.log(`Таймер запущен для компонента ${componentId}. Начальное время:`, seconds);
     
     const interval = window.setInterval(() => {
       setSeconds(prev => {
@@ -72,7 +72,6 @@ const UniversalTimer: React.FC<UniversalTimerProps> = React.memo(({ componentId,
 
     return () => {
       window.clearInterval(interval);
-      console.log(`Таймер остановлен для компонента ${componentId}. Конечное время:`, seconds);
     };
   }, [saveCurrentTime, componentId, isPaused]);
 

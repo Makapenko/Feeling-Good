@@ -11,9 +11,12 @@ export const allActivities: SpecialContent[] = ALL_ACTIVITY_IDS.filter(id =>
 // Маппинг подглав к активностям, которые они открывают
 export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch2': [ACTIVITY_IDS.BURNS_CHECKLIST],
+  // Когнитивные искажения
   'ch3-0': [ACTIVITY_IDS.COGNITIVE_BIASES],
   'ch3-1': [ACTIVITY_IDS.COGNITIVE_BIASES_TEST],
+  // Самооценка
   'ch4-2': [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY],
+  // Прокрастинация
   'ch5-0': [ACTIVITY_IDS.PROCRASTINATION_SCALE],
   'ch5-1': [ACTIVITY_IDS.DAILY_SCHEDULE],
   'ch5-2': [ACTIVITY_IDS.ANTI_PROCRASTINATION],
@@ -30,12 +33,17 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch5-13': [ACTIVITY_IDS.CHECK_CANT_DO],
   'ch5-14': [ACTIVITY_IDS.NO_LOSE_TECHNIQUE],
   'ch5-15': [ACTIVITY_IDS.SELF_ACTIVATION],
+  // Работа с критикой
   'ch6-0': [ACTIVITY_IDS.VERBAL_JUDO],
   'ch6-4': [ACTIVITY_IDS.CRITICISM_MANAGEMENT_METHODS],
+  // Управление гневом
   'ch7-1': [ACTIVITY_IDS.NOVACO_SCALE],
+  'ch7-3': [ACTIVITY_IDS.ANGER_PROS_CONS],
   'ch7-4': [ACTIVITY_IDS.HOT_COOL_THOUGHTS],
   'ch7-6': [ACTIVITY_IDS.REWRITE_SHOULD_RULES],
+  
   'ch9-3': [ACTIVITY_IDS.RATIONAL_RESPONSES],
+  
   'ch10-0': [ACTIVITY_IDS.DOWNWARD_ARROW],
   'ch10-1': [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
   // 'ch11-2': [ACTIVITY_IDS.PROS_CONS_ANALYSIS],

@@ -942,4 +942,38 @@
   .exerciseActions {
     gap: 8px;
   }
+}
+
+.exerciseTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.exerciseTable th,
+.exerciseTable td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.exerciseTable th {
+  background: #f1f5f9;
+  font-weight: 500;
+  text-align: center;
+}
+
+.exerciseTable tbody tr:nth-child(odd) {
+  background-color: #f8fafc;
+}
+
+.exerciseTable tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.sectionTitle {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  color: #1e293b;
 } 

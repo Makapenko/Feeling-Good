@@ -102,7 +102,6 @@ export const updateChapterTime = createAsyncThunk(
 export const updateActivityTime = createAsyncThunk(
   'progress/updateActivityTime',
   async ({ activityId, timeSpent }: { activityId: string; timeSpent: number }, { dispatch }) => {
-    console.log(`Экшен: обновление времени активности ${activityId}:`, timeSpent);
     dispatch(updateActivityProgress({ activityId, timeSpent }));
     return { activityId, timeSpent };
   }

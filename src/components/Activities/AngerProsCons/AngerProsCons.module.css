@@ -1,0 +1,215 @@
+.stepContainer {
+  max-width: 700px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 32px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.inputRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.inputRow input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.inputRow button {
+  padding: 8px 16px;
+  background: #4299e1;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.inputRow button:hover {
+  background: #2563eb;
+}
+
+.list {
+  list-style: disc inside;
+  margin: 0 0 12px 0;
+  padding: 0;
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.removeBtn:hover {
+  background: #fee2e2;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.actions button {
+  padding: 8px 18px;
+  border-radius: 4px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #e2e8f0;
+  color: #222;
+  transition: background 0.2s;
+}
+.actions button:last-child {
+  background: #22c55e;
+  color: #fff;
+}
+.actions button:disabled {
+  background: #cbd5e1;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.currentTable {
+  margin: 18px 0 8px 0;
+}
+.currentTable table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8fafc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.currentTable th, .currentTable td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  text-align: left;
+}
+.currentTable th {
+  background: #e0e7ef;
+  font-weight: 600;
+}
+
+.critiqueSection {
+  margin: 18px 0 8px 0;
+}
+
+.historySection {
+  margin-top: 32px;
+  overflow-x: auto;
+}
+
+.historyTableContainer {
+  min-width: 650px;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8fafc;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 0.97rem;
+}
+
+.historyTable th, .historyTable td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  vertical-align: top;
+}
+
+.historyTable th {
+  background: #e0e7ef;
+  font-weight: 600;
+}
+
+.historyTable th:first-child,
+.historyTable td:first-child {
+  width: 15%;
+  white-space: nowrap;
+}
+
+.historyTable tr:nth-child(odd) {
+  background-color: #fbfcfd;
+}
+
+.historyTable tr:hover {
+  background-color: #f1f5f9;
+}
+
+.historyTable ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.recordGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.recordItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 2px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.recordItem:last-child {
+  border-bottom: none;
+}
+
+.recordLabel {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.recordValue {
+  color: #2d3748;
+}
+
+.emptyMsg {
+  color: #a0aec0;
+  font-style: italic;
+  text-align: center;
+  padding: 6px;
+}
+
+@media (max-width: 768px) {
+  .stepContainer {
+    padding: 24px 16px 16px 16px;
+  }
+
+  .historySection {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 0 16px;
+  }
+} 

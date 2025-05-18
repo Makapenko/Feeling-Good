@@ -77,11 +77,9 @@ export const saveTime = (componentId: string, seconds: number): void => {
   
   // Если это активность, сохраняем в Redux
   const isActivity = Object.values(ACTIVITY_IDS).some(id => id === componentId);
-  console.log(`Проверка компонента ${componentId}:`, { isActivity });
   
   if (isActivity) {
     // Сохраняем время активности в Redux
-    console.log(`Сохраняем время активности ${componentId} в Redux:`, seconds);
     store.dispatch(updateActivityTime({ activityId: componentId, timeSpent: seconds }));
   } else {
     // Проверяем, может быть это глава (для них id обычно начинается с 'ch' или содержит определенный префикс)
@@ -90,7 +88,6 @@ export const saveTime = (componentId: string, seconds: number): void => {
         componentId === 'foreword' || 
         componentId === 'introduction') {
       // Сохраняем время чтения главы в Redux
-      console.log(`Сохраняем время главы ${componentId} в Redux:`, seconds);
       store.dispatch(updateChapterTime({ chapterId: componentId, timeSpent: seconds }));
     }
   }

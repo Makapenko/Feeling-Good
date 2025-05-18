@@ -40,6 +40,8 @@ import { DownwardArrowExercise } from '../Activities/DownwardArrow/types';
 import { CheckCantDoExercise } from '../Activities/CheckCantDo/types';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
 import ProcrastinationScaleExerciseComponent from './render/ProcrastinationScale/ProcrastinationScaleExerciseComponent';
+import AngerProsConsExerciseComponent from './render/AngerProsConsExerciseComponent';
+import { AngerProsConsExercise } from '../Activities/AngerProsCons/types';
 
 interface DayDetailsProps {
   date: string;
@@ -253,6 +255,14 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
+        case ACTIVITY_IDS.ANGER_PROS_CONS:
+          return <AngerProsConsExerciseComponent
+            key={exercise.id}
+            exercises={[exercise as AngerProsConsExercise]}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+          />;
         default:
           return null;
       }
@@ -323,7 +333,30 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
       return <div className={styles.emptyState}>Нет выполненных упражнений за этот день</div>;
     }
 
-    return renderExercises(dayProgress.exercises.exercises);
+    // Группируем упражнения преимуществ и недостатков гнева
+    const angerProsConsExercises = dayProgress.exercises.exercises.filter(
+      ex => ex.type === ACTIVITY_IDS.ANGER_PROS_CONS
+    ) as AngerProsConsExercise[];
+    
+    // Остальные упражнения
+    const otherExercises = dayProgress.exercises.exercises.filter(
+      ex => ex.type !== ACTIVITY_IDS.ANGER_PROS_CONS
+    );
+
+    return (
+      <>
+        {angerProsConsExercises.length > 0 && (
+          <AngerProsConsExerciseComponent
+            key={`anger-pros-cons-group-${date}`}
+            exercises={angerProsConsExercises}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+          />
+        )}
+        {renderExercises(otherExercises)}
+      </>
+    );
   };
 
   return (

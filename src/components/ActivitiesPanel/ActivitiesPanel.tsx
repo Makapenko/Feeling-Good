@@ -36,15 +36,6 @@ const sections: ActivitySection[] = [
     ]
   },
   {
-    title: 'Работа с мыслями',
-    activities: [
-      { content: ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS, label: 'Мешающие и помогающие мысли' },
-      { content: ACTIVITY_IDS.HOT_COOL_THOUGHTS, label: 'Остудите «горячие» мысли' },
-      { content: ACTIVITY_IDS.RATIONAL_RESPONSES, label: 'Рациональные ответы на самокритику' },
-      { content: ACTIVITY_IDS.DOWNWARD_ARROW, label: 'Техника падающей стрелы' },
-    ]
-  },
-  {
     title: 'Самооценка',
     activities: [
       { content: ACTIVITY_IDS.THREE_COLUMNS_METHOD, label: 'Метод трёх колонок' },
@@ -83,11 +74,17 @@ const sections: ActivitySection[] = [
     title: 'Управление гневом',
     activities: [
       { content: ACTIVITY_IDS.NOVACO_SCALE, label: 'Шкала раздражения Новако' },
+      { content: ACTIVITY_IDS.ANGER_PROS_CONS, label: 'Преимущества и недостатки гнева' },
       { content: ACTIVITY_IDS.HOT_COOL_THOUGHTS, label: 'Остудите «горячие» мысли' },
-      { content: ACTIVITY_IDS.REWRITE_SHOULD_RULES, label: 'Пересмотр правил со словом «должен»' }
+      { content: ACTIVITY_IDS.REWRITE_SHOULD_RULES, label: 'Пересмотр правил со словом «должен»' },
     ]
   },
-
+  {
+    title: 'Работа с мыслями',
+    activities: [
+      { content: ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS, label: 'Мешающие и помогающие мысли' },
+    ]
+  },
   {
     title: 'Преодоление депрессии',
     activities: [
@@ -112,7 +109,7 @@ const ActivitiesPanel: React.FC = () => {
 
   const handleActivityClick = (content: SpecialContent) => {
     dispatch(setSpecialContent(content));
-    
+
     // Прокрутка страницы вверх
     window.scrollTo(0, 0);
   };

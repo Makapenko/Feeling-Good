@@ -35,6 +35,7 @@ export const ACTIVITY_IDS = {
   ADVANTAGES_DISADVANTAGES: 'advantages-disadvantages',
   REWRITE_BELIEF: 'rewrite-belief',
   VERBAL_JUDO: 'verbal-judo',
+  ANGER_PROS_CONS: 'anger-pros-cons',
   // Тесты и опросники
   BURNS_CHECKLIST: 'burns-checklist',
   COGNITIVE_BIASES: 'cognitive-biases',
@@ -85,6 +86,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.REWRITE_BELIEF]: 'Переписывание убеждений',
   [ACTIVITY_IDS.PROCRASTINATION_SCALE]: 'Шкала иррациональной прокрастинации',
   [ACTIVITY_IDS.VERBAL_JUDO]: 'Вербальное дзюдо',
+  [ACTIVITY_IDS.ANGER_PROS_CONS]: 'Преимущества и недостатки гнева',
   [ACTIVITY_IDS.CRITICISM_MANAGEMENT_METHODS]: 'Методы управления критикой',
 };
 

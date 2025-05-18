@@ -22,6 +22,7 @@ interface ThreeColumnsBaseProps {
   actionButtons?: React.ReactNode;
   saveButtonDisabled?: boolean;
   saveButtonTooltip?: string;
+  hideHistory?: boolean;
 }
 
 export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
@@ -37,7 +38,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   onSave,
   actionButtons,
   saveButtonDisabled,
-  saveButtonTooltip
+  saveButtonTooltip,
+  hideHistory = false,
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp' | 'id'>>({
     leftColumn: '',
@@ -59,7 +61,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
        ACTIVITY_IDS.REWRITE_SHOULD_RULES,
        ACTIVITY_IDS.RATIONAL_RESPONSES,
        ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES,
-       ACTIVITY_IDS.VERBAL_JUDO],
+       ACTIVITY_IDS.VERBAL_JUDO,
+       ACTIVITY_IDS.ANGER_PROS_CONS],
       methodId
     );
   }, [dailyProgress, methodId]);
@@ -81,15 +84,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
 
       if (todayProgress?.exercises?.exercises) {
         const exercise = todayProgress.exercises.exercises.find(
-          ex => (ex.type === ACTIVITY_IDS.THREE_COLUMNS_METHOD 
-            || ex.type === ACTIVITY_IDS.NO_LOSE_TECHNIQUE 
-            || ex.type === ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS
-            || ex.type === ACTIVITY_IDS.HOT_COOL_THOUGHTS
-            || ex.type === ACTIVITY_IDS.REWRITE_SHOULD_RULES
-            || ex.type === ACTIVITY_IDS.RATIONAL_RESPONSES
-            || ex.type === ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES
-            || ex.type === ACTIVITY_IDS.VERBAL_JUDO) 
-            && ex.id === methodId
+          ex => ex.id === methodId
         );
 
         if (exercise && 'records' in exercise) {
@@ -174,28 +169,30 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
         Добавить запись
       </button>
 
-      <div className={styles.recordsList}>
-        <table>
-          <thead>
-            <tr>
-              <th>{leftColumnTitle}</th>
-              {showMiddleColumn && showCognitiveDistortions && <th>Когнитивные искажения</th>}
-              <th>{rightColumnTitle}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allRecords.map((record) => (
-              <tr key={record.id}>
-                <td data-label={leftColumnTitle}>{record.leftColumn}</td>
-                {showMiddleColumn && showCognitiveDistortions && (
-                  <td data-label="Когнитивные искажения">{record.cognitiveDistortion.join(', ')}</td>
-                )}
-                <td data-label={rightColumnTitle}>{record.rightColumn}</td>
+      {!hideHistory && (
+        <div className={styles.recordsList}>
+          <table>
+            <thead>
+              <tr>
+                <th>{leftColumnTitle}</th>
+                {showMiddleColumn && showCognitiveDistortions && <th>Когнитивные искажения</th>}
+                <th>{rightColumnTitle}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {allRecords.map((record) => (
+                <tr key={record.id}>
+                  <td data-label={leftColumnTitle}>{record.leftColumn}</td>
+                  {showMiddleColumn && showCognitiveDistortions && (
+                    <td data-label="Когнитивные искажения">{record.cognitiveDistortion.join(', ')}</td>
+                  )}
+                  <td data-label={rightColumnTitle}>{record.rightColumn}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }; 

@@ -11,3 +11,4 @@ export interface VerbalJudoEntry {
 export interface VerbalJudoExercise extends BaseExercise {
   entries: VerbalJudoEntry[];
 } 
+ 
