@@ -13,10 +13,15 @@
       2.2.1 Создать новую директорию для активности (например, NewColumnsMethod/)
       2.2.2 Создать основной компонент по аналогии с ThreeColumnsMethod.tsx
       2.2.3 Добавить в ThreeColumnsBase необходимые строки с названием нового метода
-   2.3 Типы добавлять в файл /types.ts в папке с активностью
-   2.4 Добавить кнопки в активности
-      2.4.1 import ChapterLinkButton from '../../shared/ChapterLinkButton';
-      2.4.2 import FavoriteButton from '../../shared/FavoriteButton';
+   
+   2.3. Если это форма дневника - использовать src/components/Activities/ThoughtDiaryBase/ThoughtDiaryBase.tsx
+      2.3.1 Создать новую директорию для активности (например, NewDiary/)
+      2.3.2 Создать основной компонент по аналогии с ThoughtDiary.tsx
+   
+   2.4 Типы добавлять в файл /types.ts в папке с активностью
+   2.5 Добавить кнопки в активности
+      2.5.1 import ChapterLinkButton from '../../shared/ChapterLinkButton';
+      2.5.2 import FavoriteButton from '../../shared/FavoriteButton';
 
 3. Добавить активность в src/components/ActivitiesPanel/ActivitiesPanel.tsx
    3.1. Добавить новую активность в соответствующую секцию в массиве sections
@@ -28,7 +33,8 @@
 
 5. Создать отображение результатов в календаре - src/components/ProgressCalendar/render (не нужно если задание не интерактивно - шпаргалка, список)
    5.1. Создать новый компонент по аналогии с существующими (например, NewExerciseComponent.tsx)
-    5.1.1  Если новый компонент является вариантом компонента ThreeColumnsBase то вместо создания нового компонента - добавить вариант в render/ThreeColumnsExerciseComponent.tsx
+      5.1.1. Если новый компонент является вариантом компонента ThreeColumnsBase, то вместо создания нового компонента - добавить вариант в render/ThreeColumnsExerciseComponent.tsx
+      5.1.2. Если новый компонент является вариантом компонента ThoughtDiaryBase, то вместо создания нового компонента - использовать универсальный компонент ThoughtDiaryExerciseComponent внутри RenderExercises с нужными параметрами (customTitle, showCognitiveDistortions, showEmotionIntensity, showResultIntensity)
    5.2. Добавить этот рендер в src/components/ProgressCalendar/DayDetails.tsx в функцию renderExercises
    5.3. Стили используй из '../DayDetails.module.css' если нужны дополнительные - допиши
 

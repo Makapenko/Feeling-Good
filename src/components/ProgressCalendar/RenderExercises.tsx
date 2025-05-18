@@ -110,6 +110,16 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
             toggleExercise={toggleExercise}
             onClose={onClose}
           />;
+        case ACTIVITY_IDS.IMAGERY_SCENES_DIARY:
+          return <ThoughtDiaryExerciseComponent
+            key={exercise.id}
+            exercise={exercise as ThoughtDiaryExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+            customTitle="Дневник воображаемых сцен"
+            showCognitiveDistortions={false}
+          />;
         case ACTIVITY_IDS.PROCRASTINATION_DIARY:
           return <ThoughtDiaryExerciseComponent
             key={exercise.id}

@@ -2,7 +2,7 @@ import React from 'react';
 import { ThoughtDiaryExercise } from '../../Activities/ThoughtDiaryBase/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
-
+// TODO: возможно не отображается финальные эмоции - перепроверить
 interface ThoughtDiaryExerciseProps {
   exercise: ThoughtDiaryExercise;
   expandedExercises: string[];

@@ -12,6 +12,7 @@ import ListOfCognitiveBiases from '../Activities/ListOfCognitiveBiases/ListOfCog
 import TestOfCognitiveBiases from '../Activities/TestOfCognitiveBiases/TestOfCognitiveBiases';
 import ThreeColumnsMethod  from '../Activities/ThreeColumnsMethod/ThreeColumnsMethod';
 import ThoughtDiary from '../Activities/ThoughtDiary/ThoughtDiary';
+import ImageryScenesDiary from '../Activities/ImageryScenesDiary/ImageryScenesDiary';
 import ProcrastinationDiary from '../Activities/ProcrastinationDiary/ProcrastinationDiary';
 import DailySchedule from '../Activities/DailySchedule/DailySchedule';
 import AntiProcrastinationSheet from '../Activities/AntiProcrastinationSheet/AntiProcrastinationSheet';
@@ -72,6 +73,7 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.COUNT_ACHIEVEMENTS]: CountAchievements,
   [ACTIVITY_IDS.CHECK_CANT_DO]: CheckCantDo,
   [ACTIVITY_IDS.HOT_COOL_THOUGHTS]: HotCoolThoughts,
+  [ACTIVITY_IDS.IMAGERY_SCENES_DIARY]: ImageryScenesDiary,
   [ACTIVITY_IDS.REWRITE_SHOULD_RULES]: RewriteShouldRules,
   [ACTIVITY_IDS.RATIONAL_RESPONSES]: RationalResponses,
   [ACTIVITY_IDS.DOWNWARD_ARROW]: DownwardArrow,
