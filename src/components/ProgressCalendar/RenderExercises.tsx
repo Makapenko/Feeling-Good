@@ -95,6 +95,7 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
         case ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES:
         case ACTIVITY_IDS.NO_LOSE_TECHNIQUE:
         case ACTIVITY_IDS.VERBAL_JUDO:
+        case ACTIVITY_IDS.REASONS_SHOULD_REFUTATION:
           return <ThreeColumnsExerciseComponent
             key={exercise.id}
             exercise={exercise as ThreeColumnsExercise}

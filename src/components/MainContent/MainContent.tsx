@@ -40,6 +40,7 @@ import ProcrastinationScale from '../Activities/ProcrastinationScale/Procrastina
 import VerbalJudo from '../Activities/VerbalJudo/VerbalJudo';
 import CriticismManagementMethods from '../Activities/CriticismManagementMethods/CriticismManagementMethods';
 import AngerProsCons from '../Activities/AngerProsCons/AngerProsCons';
+import ReasonsShouldRefutation from '../Activities/ReasonsShouldRefutation/ReasonsShouldRefutation';
 
 import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
@@ -83,7 +84,8 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.PROGRESS_CALENDAR]: ProgressCalendar,
   [ACTIVITY_IDS.VERBAL_JUDO]: VerbalJudo,
   [ACTIVITY_IDS.CRITICISM_MANAGEMENT_METHODS]: CriticismManagementMethods,
-  [ACTIVITY_IDS.ANGER_PROS_CONS]: AngerProsCons
+  [ACTIVITY_IDS.ANGER_PROS_CONS]: AngerProsCons,
+  [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION]: ReasonsShouldRefutation
 };
 
 const MainContent: React.FC = () => {

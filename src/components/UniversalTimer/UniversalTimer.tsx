@@ -24,6 +24,7 @@ export const HIDDEN_TIMER_COMPONENTS: (ActivityId | string)[] = [
   ACTIVITY_IDS.IMAGERY_SCENES_DIARY, // Новый дневник воображаемых сцен
   ACTIVITY_IDS.REWRITE_BELIEF, // Новый ID
   ACTIVITY_IDS.PROCRASTINATION_SCALE, // Новый ID
+  ACTIVITY_IDS.REASONS_SHOULD_REFUTATION, // Для упражнения по главе 7-9
 ];
 
 // Список компонентов, для которых таймер полностью отключен (не считает время)

@@ -44,7 +44,8 @@ export const ACTIVITY_IDS = {
   NOVACO_SCALE: 'novaco-scale',
   DYSFUNCTIONAL_ATTITUDE_SCALE: 'dysfunctional-attitude-scale',
   PROCRASTINATION_SCALE: 'procrastination-scale',
-  IMAGERY_SCENES_DIARY: 'IMAGERY_SCENES_DIARY',
+  IMAGERY_SCENES_DIARY: 'imagery-scenes-diary',
+  REASONS_SHOULD_REFUTATION: 'reasons-should-refutation',
 } as const;
 
 // Типизированный объединенный тип из всех идентификаторов
@@ -90,6 +91,7 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.REWRITE_BELIEF]: 'Переписывание убеждений',
   [ACTIVITY_IDS.PROCRASTINATION_SCALE]: 'Шкала иррациональной прокрастинации',
   [ACTIVITY_IDS.IMAGERY_SCENES_DIARY]: 'Дневник воображаемых сцен',
+  [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION]: 'Причины и опровержения "должен"-мышления',
 };
 
 /**

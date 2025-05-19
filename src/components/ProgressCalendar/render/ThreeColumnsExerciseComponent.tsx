@@ -55,6 +55,11 @@ const ThreeColumnsExerciseComponent: React.FC<ThreeColumnsExerciseProps> = ({
           left: 'Ситуация дилеммы',
           right: 'Решение'
         };
+      case ACTIVITY_IDS.REASONS_SHOULD_REFUTATION:
+        return {
+          left: 'Причина "должен"-мышления',
+          right: 'Рациональное опровержение'
+        };
       default:
         return {
           left: 'Автоматическая мысль',

@@ -78,6 +78,7 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.HOT_COOL_THOUGHTS, label: 'Остудите «горячие» мысли' },
       { content: ACTIVITY_IDS.IMAGERY_SCENES_DIARY, label: 'Дневник воображаемых сцен' },
       { content: ACTIVITY_IDS.REWRITE_SHOULD_RULES, label: 'Пересмотр правил со словом «должен»' },
+      { content: ACTIVITY_IDS.REASONS_SHOULD_REFUTATION, label: 'Причины и опровержение убеждений' },
     ]
   },
   {

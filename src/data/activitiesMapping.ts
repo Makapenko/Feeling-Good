@@ -42,6 +42,8 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch7-4': [ACTIVITY_IDS.HOT_COOL_THOUGHTS],
   'ch7-5': [ACTIVITY_IDS.IMAGERY_SCENES_DIARY],
   'ch7-6': [ACTIVITY_IDS.REWRITE_SHOULD_RULES],
+  // ch7-7 - потом решить добавлять или нет
+  'ch7-9': [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION],
   
   'ch9-3': [ACTIVITY_IDS.RATIONAL_RESPONSES],
   
