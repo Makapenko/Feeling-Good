@@ -113,18 +113,15 @@ const progressSlice = createSlice({
       
       // Сохраняем прогресс в ежедневной статистике
       const currentDate = getCurrentDate();
-      const todayProgress = state.dailyProgress[currentDate] || createEmptyDayProgress();
+      if (!state.dailyProgress[currentDate]) {
+        state.dailyProgress[currentDate] = createEmptyDayProgress();
+      }
       
-      const currentChapterProgress = todayProgress.chapters[chapterId] || {
+      const currentChapterProgress = state.dailyProgress[currentDate].chapters[chapterId] || {
         id: chapterId,
         timeSpent: 0,
         completed: false
       };
-      
-      // Обновляем сегодняшний прогресс
-      if (!state.dailyProgress[currentDate]) {
-        state.dailyProgress[currentDate] = todayProgress;
-      }
       
       state.dailyProgress[currentDate].chapters[chapterId] = {
         ...currentChapterProgress,
@@ -138,10 +135,8 @@ const progressSlice = createSlice({
       
       // Сохраняем прогресс в ежедневной статистике
       const currentDate = getCurrentDate();
-      const todayProgress = state.dailyProgress[currentDate] || createEmptyDayProgress();
-      
       if (!state.dailyProgress[currentDate]) {
-        state.dailyProgress[currentDate] = todayProgress;
+        state.dailyProgress[currentDate] = createEmptyDayProgress();
       }
       
       // Инициализируем объект активностей, если его еще нет
@@ -166,7 +161,9 @@ const progressSlice = createSlice({
       }
       
       const currentDate = getCurrentDate();
-      const todayProgress = state.dailyProgress[currentDate] || createEmptyDayProgress();
+      if (!state.dailyProgress[currentDate]) {
+        state.dailyProgress[currentDate] = createEmptyDayProgress();
+      }
       
       // Создаем запись о завершенной главе
       const completedChapterProgress: ChapterProgress = {
@@ -175,11 +172,6 @@ const progressSlice = createSlice({
         completed: true,
         completedAt: getCurrentISOTimestamp()
       };
-      
-      // Обновляем ежедневный прогресс
-      if (!state.dailyProgress[currentDate]) {
-        state.dailyProgress[currentDate] = todayProgress;
-      }
       
       state.dailyProgress[currentDate].chapters[chapterId] = completedChapterProgress;
       
@@ -251,7 +243,7 @@ const progressSlice = createSlice({
         state.dailyProgress[currentDate] = createEmptyDayProgress();
       }
       
-      const currentTests = state.dailyProgress[currentDate].exercises.testResults || [];
+      const currentTests = state.dailyProgress[currentDate].exercises.testResults;
       const existingTestIndex = currentTests.findIndex(
         test => test.id === result.id && 
         test.completedAt.split('T')[0] === result.completedAt.split('T')[0]

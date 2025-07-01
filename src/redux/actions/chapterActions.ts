@@ -9,7 +9,7 @@ import { unlockContentAfterChapter } from './unlockActions';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { getCurrentDate, createEmptyDayProgress } from '../../utils/dateUtils';
-import type { ChapterWithContent, DayProgress, RootState } from '../types';
+import type { ChapterWithContent, RootState } from '../types';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
@@ -27,9 +27,12 @@ export const setChapter = createAsyncThunk(
 
     const currentDate = getCurrentDate();
     const state = getState() as RootState;
-    const todayProgress: DayProgress = state.progress.dailyProgress[currentDate] || createEmptyDayProgress();
+    
+    if (!state.progress.dailyProgress[currentDate]) {
+      state.progress.dailyProgress[currentDate] = createEmptyDayProgress();
+    }
 
-    const todayTimeSpent = todayProgress.chapters[chapter.id]?.timeSpent || 0;
+    const todayTimeSpent = state.progress.dailyProgress[currentDate].chapters[chapter.id]?.timeSpent || 0;
 
     // Создаем объект главы для установки
     const chapterToSet: ChapterWithContent = {
@@ -151,9 +154,11 @@ export const startChapterReading = createAsyncThunk(
     }
 
     const currentDate = getCurrentDate();
-    const todayProgress = state.progress.dailyProgress[currentDate] || createEmptyDayProgress();
+    if (!state.progress.dailyProgress[currentDate]) {
+      state.progress.dailyProgress[currentDate] = createEmptyDayProgress();
+    }
 
-    const timeSpent = todayProgress.chapters[chapterId]?.timeSpent || 0;
+    const timeSpent = state.progress.dailyProgress[currentDate].chapters[chapterId]?.timeSpent || 0;
     
     // Обновляем время через существующий action
     dispatch(updateChapterProgress({ chapterId, timeSpent }));
