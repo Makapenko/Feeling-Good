@@ -147,13 +147,8 @@ export const startChapterReading = createAsyncThunk(
   'progress/startChapterReading',
   async (chapterId: string, { dispatch, getState }) => {
     const state = getState() as RootState;
-    const currentChapter = state.progress.currentChapter;
-
-    if (!currentChapter || currentChapter.id !== chapterId) {
-      return;
-    }
-
     const currentDate = getCurrentDate();
+    
     if (!state.progress.dailyProgress[currentDate]) {
       state.progress.dailyProgress[currentDate] = createEmptyDayProgress();
     }
