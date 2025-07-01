@@ -4,7 +4,7 @@ import {
   Exercise,
 } from '../../types/progress.types';
 import { TestResult, ChapterProgress, ChapterWithContent, Chapter } from '../types';
-import { getCurrentDate, getCurrentISOTimestamp } from '../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp, createEmptyDayProgress } from '../../utils/dateUtils';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { chapterToActivitiesMap } from '../../data/activitiesMapping';
@@ -24,14 +24,7 @@ const initialState: ProgressState = {
   currentChapter: null,
   specialContent: null,
   dailyProgress: {
-    [today]: {
-      chapters: {},
-      activities: {},
-      exercises: {
-        testResults: [],
-        exercises: []
-      }
-    }
+    [today]: createEmptyDayProgress()
   },
   chapters: [],
   unlockedContent: {
@@ -99,7 +92,6 @@ const progressSlice = createSlice({
         return;
       }
       
-      // Вся логика перенесена в chapterActions.startChapterReading
     },
     
     // Обновление прогресса чтения главы
@@ -121,14 +113,7 @@ const progressSlice = createSlice({
       
       // Сохраняем прогресс в ежедневной статистике
       const currentDate = getCurrentDate();
-      const todayProgress = state.dailyProgress[currentDate] || {
-        chapters: {},
-        activities: {},
-        exercises: {
-          testResults: [],
-          exercises: []
-        }
-      };
+      const todayProgress = state.dailyProgress[currentDate] || createEmptyDayProgress();
       
       const currentChapterProgress = todayProgress.chapters[chapterId] || {
         id: chapterId,
@@ -153,14 +138,7 @@ const progressSlice = createSlice({
       
       // Сохраняем прогресс в ежедневной статистике
       const currentDate = getCurrentDate();
-      const todayProgress = state.dailyProgress[currentDate] || {
-        chapters: {},
-        activities: {},
-        exercises: {
-          testResults: [],
-          exercises: []
-        }
-      };
+      const todayProgress = state.dailyProgress[currentDate] || createEmptyDayProgress();
       
       if (!state.dailyProgress[currentDate]) {
         state.dailyProgress[currentDate] = todayProgress;
@@ -177,7 +155,6 @@ const progressSlice = createSlice({
         timeSpent,
         completedAt: timeSpent > 0 ? getCurrentISOTimestamp() : undefined
       };
-      
     },
     
     // Завершение чтения главы
@@ -189,14 +166,7 @@ const progressSlice = createSlice({
       }
       
       const currentDate = getCurrentDate();
-      const todayProgress = state.dailyProgress[currentDate] || {
-        chapters: {},
-        activities: {},
-        exercises: {
-          testResults: [],
-          exercises: []
-        }
-      };
+      const todayProgress = state.dailyProgress[currentDate] || createEmptyDayProgress();
       
       // Создаем запись о завершенной главе
       const completedChapterProgress: ChapterProgress = {
@@ -278,14 +248,7 @@ const progressSlice = createSlice({
       const currentDate = getCurrentDate();
       
       if (!state.dailyProgress[currentDate]) {
-        state.dailyProgress[currentDate] = {
-          chapters: {},
-          activities: {},
-          exercises: {
-            testResults: [],
-            exercises: []
-          }
-        };
+        state.dailyProgress[currentDate] = createEmptyDayProgress();
       }
       
       const currentTests = state.dailyProgress[currentDate].exercises.testResults || [];
@@ -315,14 +278,7 @@ const progressSlice = createSlice({
       }
 
       if (!state.dailyProgress[targetDate]) {
-        state.dailyProgress[targetDate] = {
-          chapters: {},
-          activities: {},
-          exercises: {
-            testResults: [],
-            exercises: []
-          }
-        };
+        state.dailyProgress[targetDate] = createEmptyDayProgress();
       }
       
       if (!state.dailyProgress[targetDate]?.exercises?.exercises) {

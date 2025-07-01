@@ -8,7 +8,7 @@ import {
 import { unlockContentAfterChapter } from './unlockActions';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
-import { getCurrentDate } from '../../utils/dateUtils';
+import { getCurrentDate, createEmptyDayProgress } from '../../utils/dateUtils';
 import type { ChapterWithContent, DayProgress, RootState } from '../types';
 
 // Указываем тип для импортированных данных
@@ -27,14 +27,7 @@ export const setChapter = createAsyncThunk(
 
     const currentDate = getCurrentDate();
     const state = getState() as RootState;
-    const todayProgress: DayProgress = state.progress.dailyProgress[currentDate] || {
-      chapters: {},
-      activities: {},
-      exercises: {
-        testResults: [],
-        exercises: []
-      }
-    };
+    const todayProgress: DayProgress = state.progress.dailyProgress[currentDate] || createEmptyDayProgress();
 
     const todayTimeSpent = todayProgress.chapters[chapter.id]?.timeSpent || 0;
 
@@ -158,14 +151,7 @@ export const startChapterReading = createAsyncThunk(
     }
 
     const currentDate = getCurrentDate();
-    const todayProgress = state.progress.dailyProgress[currentDate] || {
-      chapters: {},
-      activities: {},
-      exercises: {
-        testResults: [],
-        exercises: []
-      }
-    };
+    const todayProgress = state.progress.dailyProgress[currentDate] || createEmptyDayProgress();
 
     const timeSpent = todayProgress.chapters[chapterId]?.timeSpent || 0;
     

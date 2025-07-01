@@ -1,3 +1,5 @@
+import { DayProgress } from '../redux/types';
+
 export const getCurrentDate = () => new Date().toISOString().split('T')[0];
 
 export const getCurrentISOTimestamp = () => new Date().toISOString();
@@ -96,3 +98,15 @@ export const formatDateShort = (dateString: string): string => {
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   return `${day}.${month}`;
 };
+
+/**
+ * Создает пустую структуру ежедневного прогресса
+ */
+export const createEmptyDayProgress = (): DayProgress => ({
+  chapters: {},
+  activities: {},
+  exercises: {
+    testResults: [],
+    exercises: []
+  }
+});
