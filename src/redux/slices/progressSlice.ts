@@ -85,13 +85,8 @@ const progressSlice = createSlice({
     },
     
     // Начало чтения главы
-    startChapterReading: (state, action: PayloadAction<string>) => {
-      const chapterId = action.payload;
-      
-      if (!state.currentChapter || state.currentChapter.id !== chapterId) {
-        return;
-      }
-      
+    startChapterReading: () => {
+      // Этот редюсер оставлен для совместимости
     },
     
     // Обновление прогресса чтения главы
