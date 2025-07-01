@@ -3,7 +3,8 @@ import {
   setCurrentChapter, 
   updateChapterProgress,
   completeChapter as completeChapterAction,
-  updateActivityProgress
+  updateActivityProgress,
+  startChapterReading as startChapterReadingAction
 } from '../slices/progressSlice';
 import { unlockContentAfterChapter } from './unlockActions';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
@@ -145,19 +146,8 @@ export const updateActivityTime = createAsyncThunk(
  */
 export const startChapterReading = createAsyncThunk(
   'progress/startChapterReading',
-  async (chapterId: string, { dispatch, getState }) => {
-    const state = getState() as RootState;
-    const currentDate = getCurrentDate();
-    
-    if (!state.progress.dailyProgress[currentDate]) {
-      state.progress.dailyProgress[currentDate] = createEmptyDayProgress();
-    }
-
-    const timeSpent = state.progress.dailyProgress[currentDate].chapters[chapterId]?.timeSpent || 0;
-    
-    // Обновляем время через существующий action
-    dispatch(updateChapterProgress({ chapterId, timeSpent }));
-    
-    return { chapterId, timeSpent };
+  async (chapterId: string, { dispatch }) => {
+    dispatch(startChapterReadingAction(chapterId));
+    return chapterId;
   }
 ); 

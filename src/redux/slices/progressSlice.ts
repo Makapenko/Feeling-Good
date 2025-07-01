@@ -85,8 +85,24 @@ const progressSlice = createSlice({
     },
     
     // Начало чтения главы
-    startChapterReading: () => {
-      // Этот редюсер оставлен для совместимости
+    startChapterReading: (state, action: PayloadAction<string>) => {
+      const chapterId = action.payload;
+      const currentDate = getCurrentDate();
+      
+      // Инициализируем прогресс если нужно
+      if (!state.dailyProgress[currentDate]) {
+        state.dailyProgress[currentDate] = createEmptyDayProgress();
+      }
+
+      // Получаем или инициализируем прогресс главы
+      const timeSpent = state.dailyProgress[currentDate].chapters[chapterId]?.timeSpent || 0;
+
+      // Обновляем или создаем запись для главы
+      state.dailyProgress[currentDate].chapters[chapterId] = {
+        id: chapterId,
+        timeSpent,
+        completed: false
+      };
     },
     
     // Обновление прогресса чтения главы
