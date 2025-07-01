@@ -8,9 +8,46 @@ import {
 import { unlockContentAfterChapter } from './unlockActions';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
+import { getCurrentDate } from '../../utils/dateUtils';
+import type { ChapterWithContent, DayProgress, RootState } from '../types';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
+
+/**
+ * Подготавливает данные главы и устанавливает её как текущую
+ */
+export const setChapter = createAsyncThunk(
+  'progress/setChapter',
+  async (chapter: ChapterWithContent | null, { dispatch, getState }) => {
+    if (!chapter) {
+      dispatch(setCurrentChapter(null));
+      return;
+    }
+
+    const currentDate = getCurrentDate();
+    const state = getState() as RootState;
+    const todayProgress: DayProgress = state.progress.dailyProgress[currentDate] || {
+      chapters: {},
+      activities: {},
+      exercises: {
+        testResults: [],
+        exercises: []
+      }
+    };
+
+    const todayTimeSpent = todayProgress.chapters[chapter.id]?.timeSpent || 0;
+
+    // Создаем объект главы для установки
+    const chapterToSet: ChapterWithContent = {
+      ...chapter,
+      timeSpent: todayTimeSpent
+    };
+
+    dispatch(setCurrentChapter(chapterToSet));
+    return chapter.id;
+  }
+);
 
 /**
  * Загружает главу из файла и устанавливает её как текущую
@@ -52,8 +89,8 @@ export const loadChapter = createAsyncThunk(
       const response = await fetch(chapterPath);
       const content = await response.text();
       
-      // Устанавливаем главу как текущую
-      dispatch(setCurrentChapter({
+      // Устанавливаем главу как текущую через новый action
+      await dispatch(setChapter({
         id: chapterId,
         title: chapterTitle,
         content,

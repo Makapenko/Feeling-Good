@@ -8,7 +8,7 @@ import { getCurrentDate, getCurrentISOTimestamp } from '../../utils/dateUtils';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
 import { chapterToActivitiesMap } from '../../data/activitiesMapping';
-import type { DayProgress, RootState, UserProgress } from '../types';
+import type { RootState, UserProgress } from '../types';
 import { ACTIVITY_IDS } from '../../constants/activities';
 
 // Указываем тип для импортированных данных
@@ -70,39 +70,20 @@ const progressSlice = createSlice({
         return;
       }
 
-      const currentDate = getCurrentDate();
-      const todayProgress: DayProgress = state.dailyProgress[currentDate] || {
-        chapters: {},
-        activities: {},
-        exercises: {
-          testResults: [],
-          exercises: []
-        }
-      };
+      // Обновляем currentChapter
+      state.currentChapter = chapter;
       
-      const todayTimeSpent = todayProgress.chapters[chapter.id]?.timeSpent || 0;
-      
-      // Создаем объект без контента для хранения в списке глав
+      // Обновляем список глав
       const chapterForList: Chapter = {
         id: chapter.id,
         title: chapter.title,
-        timeSpent: todayTimeSpent,
+        timeSpent: chapter.timeSpent,
         completed: chapter.completed || false
       };
       
-      // Обновляем currentChapter с контентом
-      state.currentChapter = {
-        ...chapter,
-        timeSpent: todayTimeSpent
-      };
-      
-      // Обновляем список глав
       const existingChapterIndex = state.chapters.findIndex(ch => ch.id === chapter.id);
       if (existingChapterIndex !== -1) {
-        state.chapters[existingChapterIndex] = {
-          ...chapterForList,
-          timeSpent: state.chapters[existingChapterIndex].timeSpent
-        };
+        state.chapters[existingChapterIndex] = chapterForList;
       } else {
         state.chapters.push(chapterForList);
       }
