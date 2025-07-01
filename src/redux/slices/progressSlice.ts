@@ -99,17 +99,7 @@ const progressSlice = createSlice({
         return;
       }
       
-      const currentDate = getCurrentDate();
-      const todayProgress = state.dailyProgress[currentDate] || {
-        chapters: {},
-        activities: {},
-        exercises: {
-          testResults: [],
-          exercises: []
-        }
-      };
-      
-      state.currentChapter.timeSpent = todayProgress.chapters[chapterId]?.timeSpent || 0;
+      // Вся логика перенесена в chapterActions.startChapterReading
     },
     
     // Обновление прогресса чтения главы

@@ -142,4 +142,36 @@ export const updateActivityTime = createAsyncThunk(
     dispatch(updateActivityProgress({ activityId, timeSpent }));
     return { activityId, timeSpent };
   }
+);
+
+/**
+ * Инициализирует начало чтения главы
+ */
+export const startChapterReading = createAsyncThunk(
+  'progress/startChapterReading',
+  async (chapterId: string, { dispatch, getState }) => {
+    const state = getState() as RootState;
+    const currentChapter = state.progress.currentChapter;
+
+    if (!currentChapter || currentChapter.id !== chapterId) {
+      return;
+    }
+
+    const currentDate = getCurrentDate();
+    const todayProgress = state.progress.dailyProgress[currentDate] || {
+      chapters: {},
+      activities: {},
+      exercises: {
+        testResults: [],
+        exercises: []
+      }
+    };
+
+    const timeSpent = todayProgress.chapters[chapterId]?.timeSpent || 0;
+    
+    // Обновляем время через существующий action
+    dispatch(updateChapterProgress({ chapterId, timeSpent }));
+    
+    return { chapterId, timeSpent };
+  }
 ); 
