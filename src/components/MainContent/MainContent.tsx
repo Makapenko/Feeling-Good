@@ -44,8 +44,7 @@ import ReasonsShouldRefutation from '../Activities/ReasonsShouldRefutation/Reaso
 
 import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
-import { setCurrentChapter, setSpecialContent, startChapterReading } from '../../redux/slices/progressSlice';
-import { updateChapterTime } from '../../redux/actions';
+import { setCurrentChapter, setSpecialContent, startChapterReading, updateChapterProgress } from '../../redux/slices/progressSlice';
 import { setActiveTab } from '../../redux/slices/mobileSlice';
 
 // Определяем маппинг компонентов активностей
@@ -124,7 +123,7 @@ const MainContent: React.FC = () => {
   // Функция для обновления времени главы, если это необходимо
   const handleChapterTimeUpdate = (timeSpent: number) => {
     if (currentChapter?.id) {
-      dispatch(updateChapterTime({ chapterId: currentChapter.id, timeSpent })); 
+      dispatch(updateChapterProgress({ chapterId: currentChapter.id, timeSpent })); 
     }
   };
 

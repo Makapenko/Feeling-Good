@@ -5,13 +5,13 @@ import {
 } from '../../types/progress.types';
 import { TestResult, ChapterProgress, ChapterWithContent, Chapter } from '../types';
 import { getCurrentDate, getCurrentISOTimestamp, createEmptyDayProgress } from '../../utils/dateUtils';
-import chaptersData from '../../components/ListOfChapters/chapters.json';
-import type { ChaptersData } from '../../types/chapters.types';
-import { chapterToActivitiesMap } from '../../data/activitiesMapping';
 import type { RootState, UserProgress } from '../types';
 import { ACTIVITY_IDS } from '../../constants/activities';
+import { getChapterActivities } from '../../utils/chapterUtils';
+import chaptersData from '../../components/ListOfChapters/chapters.json';
+import type { ChaptersData } from '../../types/chapters.types';
 
-// Указываем тип для импортированных данных
+// Указываем тип для импортированных данных  
 const typedChaptersData = chaptersData as ChaptersData;
 
 const today = getCurrentDate();
@@ -40,15 +40,6 @@ const initialState: ProgressState = {
   readingHistory: {} // Добавляем пустой объект истории чтения
 };
 
-// Функция для определения вновь разблокированных активностей
-export const getNewlyUnlockedActivities = (
-  newlyUnlockedChapter: string
-): SpecialContent[] => {
-  // Получаем список активностей, связанных с новой главой
-  const unlockedActivities = chapterToActivitiesMap[newlyUnlockedChapter] || [];
-  return unlockedActivities;
-};
-
 const progressSlice = createSlice({
   name: 'progress',
   initialState,
@@ -63,14 +54,25 @@ const progressSlice = createSlice({
         return;
       }
 
-      // Обновляем currentChapter
-      state.currentChapter = chapter;
+      // Подготавливаем данные главы с учетом текущего дневного прогресса
+      const currentDate = getCurrentDate();
+      if (!state.dailyProgress[currentDate]) {
+        state.dailyProgress[currentDate] = createEmptyDayProgress();
+      }
+
+      const todayTimeSpent = state.dailyProgress[currentDate].chapters[chapter.id]?.timeSpent || chapter.timeSpent || 0;
+
+      // Обновляем currentChapter с актуальным временем
+      state.currentChapter = {
+        ...chapter,
+        timeSpent: todayTimeSpent
+      };
       
       // Обновляем список глав
       const chapterForList: Chapter = {
         id: chapter.id,
         title: chapter.title,
-        timeSpent: chapter.timeSpent,
+        timeSpent: todayTimeSpent,
         completed: chapter.completed || false
       };
       
@@ -199,44 +201,6 @@ const progressSlice = createSlice({
       
       // Сбрасываем текущую главу
       state.currentChapter = null;
-      
-      // Определяем разблокированное содержимое
-      let newlyUnlockedChapter = '';
-      
-      // Находим текущую главу в структуре данных
-      const currentMainChapter = typedChaptersData.chapters.find(ch => {
-        // Проверяем, является ли это главной главой или подглавой
-        if (ch.id === chapterId) return true;
-        return ch.sections.some(section => section.id === chapterId);
-      });
-      
-      if (currentMainChapter) {
-        // Если это подглава, проверяем, нужно ли разблокировать следующую
-        const currentSectionIndex = currentMainChapter.sections.findIndex(s => s.id === chapterId);
-        
-        if (currentSectionIndex !== -1 && currentSectionIndex < currentMainChapter.sections.length - 1) {
-          // Есть следующая подглава - разблокируем её
-          const nextSection = currentMainChapter.sections[currentSectionIndex + 1];
-          if (!state.unlockedContent.chapters.includes(nextSection.id)) {
-            newlyUnlockedChapter = nextSection.id;
-            state.unlockedContent.chapters.push(nextSection.id);
-          }
-        } else if (currentSectionIndex === currentMainChapter.sections.length - 1 || currentMainChapter.sections.length === 0) {
-          // Это последняя подглава или глава без подглав - разблокируем следующую главу
-          const currentChapterIndex = typedChaptersData.chapters.findIndex(ch => ch.id === currentMainChapter.id);
-          if (currentChapterIndex !== -1 && currentChapterIndex < typedChaptersData.chapters.length - 1) {
-            const nextChapter = typedChaptersData.chapters[currentChapterIndex + 1];
-            if (!state.unlockedContent.chapters.includes(nextChapter.id)) {
-              newlyUnlockedChapter = nextChapter.id;
-              state.unlockedContent.chapters.push(nextChapter.id);
-            }
-          }
-        }
-      }
-      
-      // Получаем список новых активностей, связанных с разблокированной главой
-      state.lastUnlockedChapter = newlyUnlockedChapter || null;
-      state.lastUnlockedActivities = newlyUnlockedChapter ? getNewlyUnlockedActivities(newlyUnlockedChapter) : [];
     },
     
     // Установка специального контента (активности)
@@ -325,7 +289,7 @@ const progressSlice = createSlice({
         // Если разблокируем главу, проверяем какие активности будут разблокированы
         if (contentType === 'chapter') {
           state.lastUnlockedChapter = contentId;
-          state.lastUnlockedActivities = getNewlyUnlockedActivities(contentId);
+          state.lastUnlockedActivities = getChapterActivities(contentId);
         }
       }
     },

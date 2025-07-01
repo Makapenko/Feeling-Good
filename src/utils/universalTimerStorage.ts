@@ -1,7 +1,7 @@
 // Типы для хранения времени по активностям и главам
 import { getCurrentDate } from './dateUtils';
 import { store } from '../redux/store';
-import { updateChapterTime, updateActivityTime } from '../redux/actions/chapterActions';
+import { updateChapterProgress, updateActivityProgress } from '../redux/slices/progressSlice';
 import { ACTIVITY_IDS } from '../constants/activities';
 
 interface TimeData {
@@ -80,7 +80,7 @@ export const saveTime = (componentId: string, seconds: number): void => {
   
   if (isActivity) {
     // Сохраняем время активности в Redux
-    store.dispatch(updateActivityTime({ activityId: componentId, timeSpent: seconds }));
+    store.dispatch(updateActivityProgress({ activityId: componentId, timeSpent: seconds }));
   } else {
     // Проверяем, может быть это глава (для них id обычно начинается с 'ch' или содержит определенный префикс)
     if (componentId.startsWith('ch') || 
@@ -88,7 +88,7 @@ export const saveTime = (componentId: string, seconds: number): void => {
         componentId === 'foreword' || 
         componentId === 'introduction') {
       // Сохраняем время чтения главы в Redux
-      store.dispatch(updateChapterTime({ chapterId: componentId, timeSpent: seconds }));
+      store.dispatch(updateChapterProgress({ chapterId: componentId, timeSpent: seconds }));
     }
   }
 };

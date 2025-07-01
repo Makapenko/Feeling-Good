@@ -1,50 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { 
   setCurrentChapter, 
-  updateChapterProgress,
-  completeChapter as completeChapterAction,
-  updateActivityProgress,
-  startChapterReading as startChapterReadingAction
+  completeChapter as completeChapterSliceAction
 } from '../slices/progressSlice';
 import { unlockContentAfterChapter } from './unlockActions';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import type { ChaptersData } from '../../types/chapters.types';
-import { getCurrentDate, createEmptyDayProgress } from '../../utils/dateUtils';
-import type { ChapterWithContent, RootState } from '../types';
-
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
-
-/**
- * Подготавливает данные главы и устанавливает её как текущую
- */
-export const setChapter = createAsyncThunk(
-  'progress/setChapter',
-  async (chapter: ChapterWithContent | null, { dispatch, getState }) => {
-    if (!chapter) {
-      dispatch(setCurrentChapter(null));
-      return;
-    }
-
-    const currentDate = getCurrentDate();
-    const state = getState() as RootState;
-    
-    if (!state.progress.dailyProgress[currentDate]) {
-      state.progress.dailyProgress[currentDate] = createEmptyDayProgress();
-    }
-
-    const todayTimeSpent = state.progress.dailyProgress[currentDate].chapters[chapter.id]?.timeSpent || 0;
-
-    // Создаем объект главы для установки
-    const chapterToSet: ChapterWithContent = {
-      ...chapter,
-      timeSpent: todayTimeSpent
-    };
-
-    dispatch(setCurrentChapter(chapterToSet));
-    return chapter.id;
-  }
-);
 
 /**
  * Загружает главу из файла и устанавливает её как текущую
@@ -86,12 +49,12 @@ export const loadChapter = createAsyncThunk(
       const response = await fetch(chapterPath);
       const content = await response.text();
       
-      // Устанавливаем главу как текущую через новый action
-      await dispatch(setChapter({
+      // Устанавливаем главу как текущую (логика подготовки данных в slice)
+      dispatch(setCurrentChapter({
         id: chapterId,
         title: chapterTitle,
         content,
-        timeSpent: 0,
+        timeSpent: 0, // setCurrentChapter сам подготовит актуальное время
         completed: false
       }));
       
@@ -106,48 +69,15 @@ export const loadChapter = createAsyncThunk(
 /**
  * Отмечает главу как завершенную и разблокирует новый контент
  */
-export const completeChapter = createAsyncThunk(
-  'progress/completeChapter',
+export const completeChapterAsync = createAsyncThunk(
+  'progress/completeChapterAsync',
   async (chapterId: string, { dispatch }) => {
     // Отмечаем главу как завершенную
-    dispatch(completeChapterAction(chapterId));
+    dispatch(completeChapterSliceAction(chapterId));
     
     // Разблокируем новый контент и показываем уведомление
     dispatch(unlockContentAfterChapter(chapterId));
     
-    return chapterId;
-  }
-);
-
-/**
- * Обновляет время, проведенное в главе
- */
-export const updateChapterTime = createAsyncThunk(
-  'progress/updateChapterTime',
-  async ({ chapterId, timeSpent }: { chapterId: string; timeSpent: number }, { dispatch }) => {
-    dispatch(updateChapterProgress({ chapterId, timeSpent }));
-    return { chapterId, timeSpent };
-  }
-);
-
-/**
- * Обновляет время, проведенное в активности
- */
-export const updateActivityTime = createAsyncThunk(
-  'progress/updateActivityTime',
-  async ({ activityId, timeSpent }: { activityId: string; timeSpent: number }, { dispatch }) => {
-    dispatch(updateActivityProgress({ activityId, timeSpent }));
-    return { activityId, timeSpent };
-  }
-);
-
-/**
- * Инициализирует начало чтения главы
- */
-export const startChapterReading = createAsyncThunk(
-  'progress/startChapterReading',
-  async (chapterId: string, { dispatch }) => {
-    dispatch(startChapterReadingAction(chapterId));
     return chapterId;
   }
 ); 
