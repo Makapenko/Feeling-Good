@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import styles from './MainContent.module.css';
 import { useAppDispatch, useCurrentChapter, useSpecialContent } from '../../redux/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -121,11 +121,11 @@ const MainContent: React.FC = () => {
   }, [currentChapter?.id, specialContent]);
 
   // Функция для обновления времени главы, если это необходимо
-  const handleChapterTimeUpdate = (timeSpent: number) => {
+  const handleChapterTimeUpdate = useCallback((timeSpent: number) => {
     if (currentChapter?.id) {
       dispatch(updateChapterProgress({ chapterId: currentChapter.id, timeSpent })); 
     }
-  };
+  }, [currentChapter?.id, dispatch]);
 
   const handleBackToChapters = () => {
     dispatch(setCurrentChapter(null));
