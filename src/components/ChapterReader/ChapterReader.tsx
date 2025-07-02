@@ -11,7 +11,7 @@ import { chapterToActivitiesMap } from '../../data/activitiesMapping';
 import { ACTIVITY_NAMES } from '../../constants/activities';
 import { SpecialContent } from '../../types/progress.types';
 import { useAppDispatch } from '../../redux/hooks';
-import { completeChapter, loadChapter } from '../../redux/actions';
+import { loadChapter, completeChapterWithUnlock } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
@@ -125,13 +125,13 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
     const currentChapter = typedChaptersData.chapters.find(ch => {
       // Проверяем, является ли текущий ID главой или подглавой
       if (chapterId === ch.id) return true;
-      return ch.sections.some(section => section.id === chapterId);
+      return ch.sections?.some(section => section.id === chapterId);
     });
 
     if (!currentChapter) return null;
 
     // Если это подглава, находим следующую подглаву в текущей главе
-    if (chapterId !== currentChapter.id) {
+    if (chapterId !== currentChapter.id && currentChapter.sections) {
       const currentSectionIndex = currentChapter.sections.findIndex(s => s.id === chapterId);
       if (currentSectionIndex < currentChapter.sections.length - 1) {
         // Есть следующая подглава
@@ -157,20 +157,22 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
           path: firstSection.path
         };
       }
-      // Если нет подглав, берем саму главу
-      return {
-        id: nextChapter.id,
-        title: nextChapter.title,
-        path: nextChapter.path
-      };
+      // Если нет подглав, берем саму главу (только если у неё есть path)
+      if (nextChapter.path) {
+        return {
+          id: nextChapter.id,
+          title: nextChapter.title,
+          path: nextChapter.path
+        };
+      }
     }
 
     return null;
   }, [chapterId]);
 
   const handleComplete = useCallback(async () => {
-    // Отмечаем текущую главу как завершенную - используем action
-    dispatch(completeChapter(chapterId));
+    // Отмечаем текущую главу как завершенную и разблокируем новый контент
+    dispatch(completeChapterWithUnlock(chapterId));
 
     // Проверяем, находимся ли мы на мобильном устройстве
     const isMobile = window.innerWidth <= 768;
@@ -198,8 +200,8 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
 
   // Обработчик перехода к активности
   const handleGoToActivity = useCallback((activityId: string) => {
-    // Отмечаем текущую главу как завершенную при переходе к упражнению
-    dispatch(completeChapter(chapterId));
+    // Отмечаем текущую главу как завершенную и разблокируем новый контент при переходе к упражнению
+    dispatch(completeChapterWithUnlock(chapterId));
     
     // Проверяем, находимся ли мы на мобильном устройстве
     const isMobile = window.innerWidth <= 768;

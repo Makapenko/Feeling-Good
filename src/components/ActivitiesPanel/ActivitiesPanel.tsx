@@ -111,8 +111,6 @@ const ActivitiesPanel: React.FC = () => {
 
   const handleActivityClick = (content: SpecialContent) => {
     dispatch(setSpecialContent(content));
-
-    // Прокрутка страницы вверх
     window.scrollTo(0, 0);
   };
 

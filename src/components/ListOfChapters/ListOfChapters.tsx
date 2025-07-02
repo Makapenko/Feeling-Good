@@ -3,7 +3,7 @@ import chaptersData from './chapters.json';
 import { useState } from 'react';
 import type { Chapter, ChaptersData, Section } from '../../types/chapters.types';
 import { useAppDispatch, useUnlockedContent, useCompletedChapters, useCurrentChapter } from '../../redux/hooks';
-import { setCurrentChapter } from '../../redux/slices/progressSlice';
+import { loadChapter } from '../../redux/actions';
 
 // TODO: В мобильной версии на телефоне не видно последнюю 19 главу. Если открыть мобильную версию на компе - то всё нормально.
 
@@ -55,6 +55,12 @@ function ListOfChapters() {
       return false;
     }
 
+    // Если это введение (первая подглава) и основная глава доступна, то введение тоже доступно
+    const isIntroSection = chapter.sections[0]?.id === sectionId;
+    if (isIntroSection) {
+      return true;
+    }
+
     // Проверяем, разблокирована ли конкретная подглава
     return unlockedContent?.chapters?.includes(sectionId);
   };
@@ -67,23 +73,8 @@ function ListOfChapters() {
     return chapter.sections.every(section => isSubchapterCompleted(section.id));
   };
 
-  const handleChapterClick = async (path: string | undefined, chapterId: string, title: string) => {
-    if (path) {
-      try {
-        const response = await fetch(path);
-        const content = await response.text();
-        
-        dispatch(setCurrentChapter({
-          id: chapterId,
-          title: title,
-          content,
-          timeSpent: 0,
-          completed: false
-        }));
-      } catch (error) {
-        console.error(`Error loading chapter: ${error}`);
-      }
-    }
+  const handleChapterClick = (chapterId: string) => {
+    dispatch(loadChapter(chapterId));
   };
 
   return (
@@ -126,7 +117,7 @@ function ListOfChapters() {
                               key={section.id}
                               onClick={() => 
                                 isSubchapterAvailable(chapter, section.id) && 
-                                handleChapterClick(section.path, section.id, section.title)
+                                handleChapterClick(section.id)
                               }
                               className={`
                                 ${styles.sectionItem} 
@@ -143,7 +134,7 @@ function ListOfChapters() {
                     </>
                   ) : (
                     <div
-                      onClick={() => isAvailable && handleChapterClick(chapter.path, chapter.id, chapter.title)}
+                      onClick={() => isAvailable && handleChapterClick(chapter.id)}
                       className={`
                         ${styles.chapterItem} 
                         ${!isAvailable ? styles.disabled : ''}

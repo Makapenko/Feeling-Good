@@ -5,6 +5,6 @@ export * from './unlockActions';
 
 // Экспортируем избранные действия отдельно, чтобы избежать конфликта имен
 import { toggleFavoriteChapter } from './favoriteActions';
-import { completeChapterAsync } from './chapterActions';
+import { loadChapter, completeChapterWithUnlock } from './chapterActions';
 
-export { toggleFavoriteChapter, completeChapterAsync as completeChapter }; 
+export { toggleFavoriteChapter, loadChapter, completeChapterWithUnlock }; 

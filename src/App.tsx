@@ -11,7 +11,7 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import { migrateDataToRedux } from './redux/migrateLegacyData';
 import { useIsMobile } from './utils/deviceUtils';
-
+// TODO: Задания из введений не отображаются в ActivitiesPanel
 function App() {
   const isMobile = useIsMobile();
 

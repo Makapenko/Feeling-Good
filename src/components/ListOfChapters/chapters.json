@@ -4,66 +4,35 @@
       "id": "acknowledgments",
       "title": "Благодарности",
       "path": "content/chapters/ch01.html",
-      "order": 1,
-      "sections": [
-        {
-          "id": "acknowledgments",
-          "title": "Благодарности"
-        }
-      ]
+      "order": 1
     },
     {
       "id": "foreword",
       "title": "Предисловие",
       "path": "content/chapters/ch02.html",
-      "order": 2,
-      "sections": [
-        {
-          "id": "foreword",
-          "title": "Предисловие"
-        }
-      ]
+      "order": 2
     },
     {
       "id": "introduction",
       "title": "Введение",
       "path": "content/chapters/ch03.html",
-      "order": 3,
-      "sections": [
-        {
-          "id": "introduction",
-          "title": "Введение"
-        }
-      ]
+      "order": 3
     },
     {
       "id": "ch1",
       "title": "Глава 1. Прорыв в лечении аффективных расстройств",
       "path": "content/chapters/ch1.html",
-      "order": 4,
-      "sections": [
-        {
-          "id": "ch1",
-          "title": "Введение"
-        }
-      ]
+      "order": 4
     },
     {
       "id": "ch2",
       "title": "Глава 2. Диагностика настроения. Первый шаг к исцелению",
       "path": "content/chapters/ch2.html",
-      "order": 5,
-      "sections": [
-        {
-          "id": "ch2",
-          "title": "Введение"
-        }
-      ]
+      "order": 5
     },
     {
       "id": "ch3",
       "title": "Глава 3. Понимание своего настроения. Каковы мысли, таковы и чувства",
-      "path": "content/chapters/ch3-0.html",
       "order": 6,
       "sections": [
         {
@@ -81,7 +50,6 @@
     {
       "id": "ch4",
       "title": "Глава 4. Начните с самооценки",
-      "path": "content/chapters/ch4-0.html",
       "order": 7,
       "sections": [
         {
@@ -104,7 +72,6 @@
     {
       "id": "ch5",
       "title": "Глава 5. Как справиться с бездельем",
-      "path": "content/chapters/ch5-0.html",
       "order": 8,
       "sections": [
         {
@@ -192,7 +159,6 @@
     {
       "id": "ch6",
       "title": "Глава 6. Вербальное дзюдо: учитесь давать отпор критике",
-      "path": "content/chapters/ch6-0.html",
       "order": 9,
       "sections": [
         {
@@ -230,7 +196,6 @@
     {
       "id": "ch7",
       "title": "Глава 7. Вы злитесь? Каков ваш IQ?",
-      "path": "content/chapters/ch7-0.html",
       "order": 10,
       "sections": [
         {
@@ -308,7 +273,6 @@
       {
         "id": "ch8",
         "title": "Глава 8. Как справиться с чувством вины",
-        "path": "content/chapters/ch8-0.html",
         "order": 11,
         "sections": [
           {
@@ -369,7 +333,6 @@
       {
         "id": "ch10",
         "title": "Глава 10. Причина всех проблем",
-        "path": "content/chapters/ch10-0.html",
         "order": 13,
         "sections": [
           {
@@ -392,7 +355,6 @@
       {
         "id": "ch11",
         "title": "Глава 11. Зависимость от одобрения",
-        "path": "content/chapters/ch11-0.html",
         "order": 14,
         "sections": [
           {
@@ -445,7 +407,6 @@
       {
         "id": "ch12",
         "title": "Глава 12. Зависимость от любви",
-        "path": "content/chapters/ch12-0.html",
         "order": 15,
         "sections": [
           {
@@ -478,7 +439,6 @@
       {
         "id": "ch13",
         "title": "Глава 13. Работа не определяет вашу ценность",
-        "path": "content/chapters/ch13-0.html",
         "order": 16,
         "sections": [
           {
@@ -516,7 +476,6 @@
       {
         "id": "ch14",
         "title": "Глава 14. Осмельтесь быть посредственным. Способы преодоления перфекционизма",
-        "path": "content/chapters/ch14-0.html",
         "order": 17,
         "sections": [
           {
@@ -534,7 +493,6 @@
       {
         "id": "ch15",
         "title": "Глава 15. Окончательная победа: выбирая жизнь",
-        "path": "content/chapters/ch15-0.html",
         "order": 17,
         "sections": [
           {
@@ -557,7 +515,6 @@
       {
         "id": "ch16",
         "title": "Глава 16.  Как я следую своим же советам",
-        "path": "content/chapters/ch16-0.html",
         "order": 18,
         "sections": [
           {
@@ -585,7 +542,6 @@
       {
         "id": "ch17",
         "title": "Глава 17.  В поисках «черной желчи»",
-        "path": "content/chapters/ch17-0.html",
         "order": 19,
         "sections": [
           {
@@ -623,7 +579,6 @@
       {
         "id": "ch18",
         "title": "Глава 18.  Проблема ума и тела",
-        "path": "content/chapters/ch18-0.html",
         "order": 20,
         "sections": [
           {
@@ -646,7 +601,6 @@
       {
         "id": "ch19",
         "title": "Глава 19.  Что следует знать о распространенных антидепрессантах",
-        "path": "content/chapters/ch19-0.html",
         "order": 21,
         "sections": [
           {

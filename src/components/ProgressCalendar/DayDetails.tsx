@@ -8,7 +8,7 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
 import { formatDateWithOptions, formatTimeFromSeconds } from '../../utils/dateUtils';
 import { useAppDispatch } from '../../redux/hooks';
-import { loadChapter } from '../../redux/actions/chapterActions';
+import { loadChapter } from '../../redux/actions';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
 import RenderExercises from './RenderExercises';
 import RenderTests from './RenderTests';

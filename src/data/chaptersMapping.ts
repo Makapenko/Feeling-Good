@@ -37,44 +37,16 @@ export const CHAPTER_TITLES: Record<string, string> = typedChaptersData.chapters
     // Добавляем основную главу
     acc[chapter.id] = chapter.title;
     
-    // Добавляем все подглавы
-    chapter.sections.forEach(section => {
-      acc[section.id] = section.title;
-    });
+    // Добавляем все подглавы, если они есть
+    if (chapter.sections) {
+      chapter.sections.forEach(section => {
+        acc[section.id] = section.title;
+      });
+    }
     
     return acc;
   },
   {} as Record<string, string>
 );
 
-/**
- * Возвращает заголовок главы по её ID
- * @param chapterId ID главы
- * @returns Заголовок главы или сам ID, если заголовок не найден
- */
-export const getChapterTitle = (chapterId: string): string => {
-  return CHAPTER_TITLES[chapterId] || chapterId;
-};
-
-/**
- * Возвращает путь к содержимому главы
- * @param chapterId ID главы
- * @returns Путь к файлу с содержимым или null, если не найден
- */
-export const getChapterPath = (chapterId: string): string | null => {
-  // Сначала ищем как основную главу
-  const mainChapter = typedChaptersData.chapters.find(ch => ch.id === chapterId);
-  if (mainChapter?.path) {
-    return mainChapter.path;
-  }
-  
-  // Если не нашли как основную главу, ищем как подглаву
-  for (const chapter of typedChaptersData.chapters) {
-    const section = chapter.sections.find(s => s.id === chapterId);
-    if (section?.path) {
-      return section.path;
-    }
-  }
-  
-  return null;
-}; 
+ 

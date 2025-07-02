@@ -7,9 +7,9 @@ export interface Section {
 export interface Chapter {
     id: string;
     title: string;
-    path: string;
+    path?: string;
     order: number;
-    sections: Section[];
+    sections?: Section[];
 }
 
 export interface SectionGroup {
