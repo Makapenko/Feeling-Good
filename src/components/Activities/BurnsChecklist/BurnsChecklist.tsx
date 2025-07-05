@@ -21,7 +21,7 @@ const BurnsChecklist: React.FC = () => {
   const [surveyResult, setSurveyResult] = useState<SurveyResult | null>(null);
   const [showResults, setShowResults] = useState(false);
   // Получаем историю результатов теста Бернса
-  const burnsTestResults = useTestsByType('burns-checklist');
+  const burnsTestResults = useTestsByType(SHEET_ID);
   // Сохраняем ответы в ref, чтобы избежать перерендера при их изменении
   const answersRef = useRef<Record<number, number>>({});
 
@@ -115,7 +115,10 @@ const BurnsChecklist: React.FC = () => {
 
     return (
       <div className={styles.resultsContainer}>
-        <h2>Результаты опросника Бернса</h2>
+        <div className={styles.titleContainer}>
+          <h2 className={styles.surveyTitle}>Результаты опросника Бернса</h2>
+          {ActionButtons}
+        </div>
         
         {/* Отображаем предупреждение, если необходимо */}
         {showSuicideWarning && (
@@ -171,7 +174,6 @@ const BurnsChecklist: React.FC = () => {
         )}
         
         <div className={styles.resultActions}>
-          {ActionButtons}
           <button 
             onClick={handleBackToSurvey} 
             className={styles.repeatButton}

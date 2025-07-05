@@ -87,7 +87,10 @@ const ProcrastinationScale: React.FC = () => {
 
     return (
       <div className={styles.resultsContainer}>
-        <h2>Результаты шкалы иррациональной прокрастинации</h2>
+        <div className={styles.titleContainer}>
+          <h2 className={styles.surveyTitle}>Результаты шкалы иррациональной прокрастинации</h2>
+          {ActionButtons}
+        </div>
         
         <div className={styles.resultScore}>
           <h3>Ваш результат: {score} {maxScore && `из ${maxScore} баллов`} {percentage && `(${percentage}%)`}</h3>
@@ -136,7 +139,6 @@ const ProcrastinationScale: React.FC = () => {
         )}
         
         <div className={styles.resultActions}>
-          {ActionButtons}
           <button 
             onClick={handleBackToSurvey} 
             className={styles.repeatButton}
