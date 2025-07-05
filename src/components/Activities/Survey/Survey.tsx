@@ -1,28 +1,24 @@
 import { useState } from "react";
 import styles from "./Survey.module.css";
 import { SurveyConfig, SurveyState, SurveyResult } from "./types";
-import FavoriteButton from "../../../components/shared/FavoriteButton";
-import { ActivityId } from "../../../constants/activities";
 import { useIsMobile } from "../../../utils/deviceUtils";
 import { createBaseExercise } from "../../../utils/exerciseUtils";
+import { ActivityId } from "../../../constants/activities";
 
-//TODO В Опросник депрессии Бернса Шкала иррациональной прокрастинации после прохождения опроса - кнопки избранного и перехода к главе показываются внизу страницы, а не рядом с заголовком
-
- interface SurveyProps {
+interface SurveyProps {
   config: SurveyConfig;
   onComplete?: (result: SurveyResult) => void;
   onAnswerChange?: (questionId: string, value: string) => void;
   actionButtons?: React.ReactNode;
 };
 
-
 const Survey = ({ config, onComplete, onAnswerChange, actionButtons }: SurveyProps) => {
   const [state, setState] = useState<SurveyState>({ score: 0, answers: {} });
   const [isCompleted, setIsCompleted] = useState(false);
   const isMobile = useIsMobile();
 
-  // Используем ID опроса из конфигурации или генерируем на основе названия
-  const SURVEY_ID = (config.id || `survey-${config.title.toLowerCase().replace(/\s+/g, '-')}`) as ActivityId;
+  // Используем ID опроса из конфигурации
+  const SURVEY_ID: ActivityId = config.id;
 
   // Вычисляем максимально возможный балл
   const calculateMaxScore = () => {
@@ -116,11 +112,7 @@ const Survey = ({ config, onComplete, onAnswerChange, actionButtons }: SurveyPro
     <div className={styles.survey}>
       <div className={styles.titleContainer}>
         <h2 className={styles.surveyTitle}>{config.title}</h2>
-        {actionButtons ? (
-          actionButtons
-        ) : (
-          <FavoriteButton activityId={SURVEY_ID} />
-        )}
+        {actionButtons}
       </div>
       <table className={styles.table}>
         <thead className={styles.thead}>

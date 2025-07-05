@@ -1,3 +1,5 @@
+import { ActivityId } from '../../../constants/activities';
+
 export interface Question {
   text: string;
 }
@@ -8,7 +10,7 @@ export interface Part {
 }
 
 export interface SurveyConfig {
-  id?: string;
+  id: ActivityId;
   title: string;
   parts: {
     title: string;
