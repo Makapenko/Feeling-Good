@@ -23,6 +23,7 @@ interface ThreeColumnsBaseProps {
   saveButtonDisabled?: boolean;
   saveButtonTooltip?: string;
   hideHistory?: boolean;
+  allowPartialColumns?: boolean; // Позволяет добавлять только левую или только правую колонку
 }
 
 export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
@@ -40,6 +41,7 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   saveButtonDisabled,
   saveButtonTooltip,
   hideHistory = false,
+  allowPartialColumns = false, // По умолчанию требуем обе колонки
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Omit<ThoughtRecord, 'timestamp' | 'id'>>({
     leftColumn: '',
@@ -68,7 +70,12 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
   }, [dailyProgress, methodId]);
 
   const handleAddRecord = () => {
-    if (currentRecord.leftColumn && currentRecord.rightColumn) {
+    // Проверяем наличие данных в зависимости от режима
+    const hasRequiredData = allowPartialColumns 
+      ? (currentRecord.leftColumn || currentRecord.rightColumn) // Хотя бы одна колонка
+      : (currentRecord.leftColumn && currentRecord.rightColumn); // Обе колонки
+    
+    if (hasRequiredData) {
       const newRecord: ThoughtRecord = {
         ...currentRecord,
         id: uuidv4(),
@@ -163,7 +170,13 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
       <button
         className={styles.addButton}
         onClick={handleAddRecord}
-        disabled={(!currentRecord.leftColumn || !currentRecord.rightColumn) || saveButtonDisabled}
+        disabled={(() => {
+          // Определяем, можно ли добавить запись в зависимости от режима
+          const canAdd = allowPartialColumns 
+            ? (currentRecord.leftColumn || currentRecord.rightColumn) // Хотя бы одна колонка
+            : (currentRecord.leftColumn && currentRecord.rightColumn); // Обе колонки
+          return !canAdd || saveButtonDisabled;
+        })()}
         title={saveButtonTooltip}
       >
         Добавить запись

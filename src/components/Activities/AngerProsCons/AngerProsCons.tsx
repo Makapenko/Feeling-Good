@@ -12,7 +12,7 @@ import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { AngerProsConsExercise } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
-// TODO добавить возможность добавлять только левую или только правую колонку
+// TODO: У компонента есть счетчик времени, который не работает, разобраться - нужен ли он, зачем и может его лучше скрыть
 
 // Идентификатор активности
 const SHEET_ID = ACTIVITY_IDS.ANGER_PROS_CONS;
@@ -130,14 +130,15 @@ const AngerProsCons: React.FC = () => {
     setHistoryRefreshTrigger(prev => prev + 1);
   };
 
-  // Можно ли сохранить
+  // Можно ли сохранить - проверяем наличие записей и последствий
+  // Записи могут содержать только левую или только правую колонку
   const canSave = records.length > 0 && consequences.length > 0;
 
   return (
     <div className={styles.stepContainer}>
       <ThreeColumnsBase
         title="Преимущества и недостатки гнева"
-        description="В левой колонке перечислите все преимущества гнева и мстительного поведения (что вы получаете, когда злитесь). В правой колонке — все недостатки и потери от гнева (чего вы лишаетесь, когда злитесь). Будьте честны, учитывайте как краткосрочные, так и долгосрочные последствия."
+        description="В левой колонке перечислите все преимущества гнева и мстительного поведения (что вы получаете, когда злитесь). В правой колонке — все недостатки и потери от гнева (чего вы лишаетесь, когда злитесь). Будьте честны, учитывайте как краткосрочные, так и долгосрочные последствия. Можете заполнить только одну колонку, если у вас есть данные только для неё."
         leftColumnTitle="Преимущества гнева"
         leftColumnPlaceholder="Что я получаю, когда злюсь..."
         rightColumnTitle="Недостатки гнева"
@@ -146,6 +147,7 @@ const AngerProsCons: React.FC = () => {
         showMiddleColumn={false}
         methodId={SHEET_ID}
         hideHistory={true}
+        allowPartialColumns={true} // Позволяем добавлять только левую или только правую колонку
         onSave={handleThreeColumnsResult}
         actionButtons={
           <>
@@ -169,8 +171,8 @@ const AngerProsCons: React.FC = () => {
             <tbody>
               {records.map((rec, idx) => (
                 <tr key={rec.id || idx}>
-                  <td>{rec.leftColumn}</td>
-                  <td>{rec.rightColumn}</td>
+                  <td>{rec.leftColumn || '-'}</td>
+                  <td>{rec.rightColumn || '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -237,12 +239,12 @@ const AngerProsCons: React.FC = () => {
                       )}
                       <td>
                         {entry.records && entry.records[rowIndex] 
-                          ? entry.records[rowIndex].leftColumn 
+                          ? entry.records[rowIndex].leftColumn || '-' 
                           : ''}
                       </td>
                       <td>
                         {entry.records && entry.records[rowIndex] 
-                          ? entry.records[rowIndex].rightColumn 
+                          ? entry.records[rowIndex].rightColumn || '-' 
                           : ''}
                       </td>
                       <td>
