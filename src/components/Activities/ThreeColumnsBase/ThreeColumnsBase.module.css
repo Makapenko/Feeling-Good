@@ -1,7 +1,260 @@
+/* Общие стили для всех компонентов на основе ThreeColumnsBase */
 .container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Общие стили для расширенного контейнера */
+.extendedContainer {
+  max-width: 700px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 32px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Общие стили для дополнительных секций */
+.additionalSection {
+  margin: 18px 0 8px 0;
+}
+
+.additionalSection h3 {
+  margin-bottom: 12px;
+  color: #2d3748;
+  font-size: 1.1em;
+}
+
+/* Общие стили для полей ввода */
+.inputRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.inputRow input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.inputRow button {
+  padding: 8px 16px;
+  background: #4299e1;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.inputRow button:hover {
+  background: #2563eb;
+}
+
+/* Общие стили для списков */
+.list {
+  list-style: disc inside;
+  margin: 0 0 12px 0;
+  padding: 0;
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.removeBtn:hover {
+  background: #fee2e2;
+}
+
+/* Общие стили для секции убеждений */
+.beliefSection {
+  margin-bottom: 20px;
+}
+
+.beliefSection label {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+  font-weight: bold;
+}
+
+.beliefInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Общие стили для таблиц */
+.currentTable {
+  margin: 18px 0 8px 0;
+}
+
+.currentTable h3 {
+  margin-bottom: 12px;
+  color: #2d3748;
+  font-size: 1.1em;
+}
+
+.currentTable table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8fafc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.currentTable th, 
+.currentTable td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.currentTable th {
+  background: #e0e7ef;
+  font-weight: 600;
+}
+
+/* Общие стили для истории */
+.historySection {
+  margin-top: 32px;
+  overflow-x: auto;
+}
+
+.historyTableContainer {
+  min-width: 650px;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f8fafc;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 0.97rem;
+}
+
+.historyTable th, 
+.historyTable td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  vertical-align: top;
+}
+
+.historyTable th {
+  background: #e0e7ef;
+  font-weight: 600;
+}
+
+.historyTable th:first-child,
+.historyTable td:first-child {
+  width: 15%;
+  white-space: nowrap;
+}
+
+.historyTable tr:nth-child(odd) {
+  background-color: #fbfcfd;
+}
+
+.historyTable tr:hover {
+  background-color: #f1f5f9;
+}
+
+.historyTable ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.recordGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.recordItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 2px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.recordItem:last-child {
+  border-bottom: none;
+}
+
+.recordLabel {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.recordValue {
+  color: #2d3748;
+}
+
+.emptyMsg {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Общие стили для действий */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.actions button {
+  padding: 8px 18px;
+  border-radius: 4px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #e2e8f0;
+  color: #222;
+  transition: background 0.2s;
+}
+
+.actions button:last-child {
+  background: #22c55e;
+  color: #fff;
+}
+
+.actions button:disabled {
+  background: #cbd5e1;
+  color: #888;
+  cursor: not-allowed;
 }
 
 .titleContainer {
@@ -11,10 +264,10 @@
   margin-bottom: 30px;
   }
   
-  .actionButtons {
+.actionButtons {
   display: flex;
   gap: 10px;
-  }
+}
 
 .titleContainer h2 {
   margin: 0;
@@ -134,6 +387,11 @@
     padding: 60px 0 60px;
   }
 
+  .extendedContainer {
+    padding: 16px 12px 12px 12px;
+    gap: 12px;
+  }
+
   .titleContainer {
     margin-bottom: 16px;
   }
@@ -198,63 +456,78 @@
     margin-bottom: 12px;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
-    padding: 8px;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 12px;
+    background-color: #f8fafc;
   }
 
   .recordsList td {
     display: block;
     padding: 6px 0;
-    border: none;
-    position: relative;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    border-bottom: none;
   }
 
   .recordsList td:not(:last-child) {
-    margin-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
   }
 
   .recordsList td::before {
-    content: attr(data-label);
+    content: attr(data-label) ": ";
     font-weight: 600;
-    display: block;
-    margin: -8px -8px 6px -8px;
-    font-size: 0.85rem;
-    background: #f7fafc;
-    padding: 6px 8px;
-    border-bottom: 1px solid #e2e8f0;
-    border-radius: 6px 6px 0 0;
+    color: #4a5568;
+    display: inline-block;
+    margin-right: 8px;
   }
 
   .recordsList td[data-label="Автоматическая мысль"]::before,
-  .recordsList td[data-label="Мешающая мысль"]::before,
-  .recordsList td[data-label="Негативная мысль"]::before {
-    color: #e53e3e;
-    background: #fff5f5;
-    border-bottom-color: #fed7d7;
+  .recordsList td[data-label="Уязвимость"]::before,
+  .recordsList td[data-label="Эмоции"]::before,
+  .recordsList td[data-label="Причина"]::before,
+  .recordsList td[data-label="Что говорит критик"]::before,
+  .recordsList td[data-label="Что говорит защитник"]::before {
+    content: attr(data-label) ": ";
   }
 
   .recordsList td[data-label="Когнитивные искажения"]::before {
-    color: #718096;
-    background: #f7fafc;
-    border-bottom-color: #e2e8f0;
+    content: attr(data-label) ": ";
   }
 
   .recordsList td[data-label="Рациональный ответ"]::before,
-  .recordsList td[data-label="Помогающая мысль"]::before {
-    color: #38a169;
-    background: #f0fff4;
-    border-bottom-color: #c6f6d5;
+  .recordsList td[data-label="Ответ"]::before,
+  .recordsList td[data-label="Решение"]::before {
+    content: attr(data-label) ": ";
+  }
+
+  .historySection {
+    margin-top: 16px;
+  }
+
+  .inputRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .inputRow input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .inputRow button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .actions button {
+    width: 100%;
+    padding: 12px;
   }
 }
 
-.actionButtons {
-  display: flex;
-  gap: 10px;
-}
-
 .chapterButton {
-  font-size: 24px;
+  margin-right: 10px;
 } 

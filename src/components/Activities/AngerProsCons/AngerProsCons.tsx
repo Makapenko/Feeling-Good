@@ -6,13 +6,15 @@ import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
-import styles from './AngerProsCons.module.css';
+import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 import { AngerProsConsExercise } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
 // TODO: У компонента есть счетчик времени, который не работает, разобраться - нужен ли он, зачем и может его лучше скрыть
+
+// TODO: Кнопки с сылкой на главу и добавление в избранное неправильно стиллизованы
 
 // Идентификатор активности
 const SHEET_ID = ACTIVITY_IDS.ANGER_PROS_CONS;
@@ -134,8 +136,15 @@ const AngerProsCons: React.FC = () => {
   // Записи могут содержать только левую или только правую колонку
   const canSave = records.length > 0 && consequences.length > 0;
 
+  const actionButtons = (
+    <div className={styles.actionButtons}>
+      <ChapterLinkButton activityId={SHEET_ID} />
+      <FavoriteButton activityId={SHEET_ID} />
+    </div>
+  );
+
   return (
-    <div className={styles.stepContainer}>
+    <div className={styles.extendedContainer}>
       <ThreeColumnsBase
         title="Преимущества и недостатки гнева"
         description="В левой колонке перечислите все преимущества гнева и мстительного поведения (что вы получаете, когда злитесь). В правой колонке — все недостатки и потери от гнева (чего вы лишаетесь, когда злитесь). Будьте честны, учитывайте как краткосрочные, так и долгосрочные последствия. Можете заполнить только одну колонку, если у вас есть данные только для неё."
@@ -149,12 +158,7 @@ const AngerProsCons: React.FC = () => {
         hideHistory={true}
         allowPartialColumns={true} // Позволяем добавлять только левую или только правую колонку
         onSave={handleThreeColumnsResult}
-        actionButtons={
-          <>
-            <ChapterLinkButton activityId={SHEET_ID} />
-            <FavoriteButton activityId={SHEET_ID} />
-          </>
-        }
+        actionButtons={actionButtons}
       />
       
       {/* Отображение текущих записанных преимуществ и недостатков */}
@@ -181,7 +185,7 @@ const AngerProsCons: React.FC = () => {
       )}
       
       {/* Список последствий */}
-      <div className={styles.critiqueSection}>
+      <div className={styles.additionalSection}>
         <h3>Что хорошего произойдет, если я стану менее гневливым?</h3>
         <div className={styles.inputRow}>
           <input

@@ -4,7 +4,7 @@ import { ThreeColumnsBase } from '../ThreeColumnsBase/ThreeColumnsBase';
 import { useAppDispatch } from '../../../redux/hooks';
 import { ThreeColumnsMethodResult } from '../ThreeColumnsBase/types';
 import { SpecialContent } from '../../../types/progress.types';
-import styles from './AdvantagesDisadvantages.module.css';
+import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';

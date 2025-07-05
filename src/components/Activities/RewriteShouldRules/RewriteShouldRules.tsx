@@ -11,7 +11,6 @@ import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 
 const SHEET_ID: SpecialContent = ACTIVITY_IDS.REWRITE_SHOULD_RULES;
-// TODO использовать один и тот же стиль для всех компонентов на основе ThreeColumnsBase
 
 
 const RewriteShouldRules: React.FC = () => {
