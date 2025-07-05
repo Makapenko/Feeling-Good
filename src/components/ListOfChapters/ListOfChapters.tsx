@@ -56,7 +56,7 @@ function ListOfChapters() {
     }
 
     // Если это введение (первая подглава) и основная глава доступна, то введение тоже доступно
-    const isIntroSection = chapter.sections[0]?.id === sectionId;
+    const isIntroSection = chapter.sections?.[0]?.id === sectionId;
     if (isIntroSection) {
       return true;
     }
@@ -112,7 +112,7 @@ function ListOfChapters() {
                       </div>
                       {isExpanded && (
                         <ul className={styles.subSections}>
-                          {chapter.sections.map((section: Section) => (
+                          {(chapter.sections || []).map((section: Section) => (
                             <li
                               key={section.id}
                               onClick={() => 
