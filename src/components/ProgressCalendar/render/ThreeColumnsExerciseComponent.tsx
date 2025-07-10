@@ -3,6 +3,7 @@ import { ThreeColumnsExercise } from '../../Activities/ThreeColumnsBase/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from './ThreeColumnsExerciseComponent.module.css';
 import { ACTIVITY_IDS } from '../../../constants/activities';
+import { formatTime } from '../../../utils/dateUtils';
 
 interface ThreeColumnsExerciseProps {
   exercise: ThreeColumnsExercise;
@@ -95,10 +96,7 @@ const ThreeColumnsExerciseComponent: React.FC<ThreeColumnsExerciseProps> = ({
         {exercise.records.map((record, index) => (
           <div key={record.id || index} className={styles.record}>
             <div className={styles.recordTime}>
-              {record.timestamp && new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+              {formatTime(record.timestamp)}
             </div>
             <div className={styles.recordContent}>
               <div className={styles.column}>

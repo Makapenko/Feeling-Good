@@ -8,13 +8,11 @@ import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import styles from '../ThreeColumnsBase/ThreeColumnsBase.module.css';
 import { ACTIVITY_IDS } from '../../../constants/activities';
-import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp, compareDatesDesc, formatDateTime } from '../../../utils/dateUtils';
 import { AngerProsConsExercise } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
 // TODO: У компонента есть счетчик времени, который не работает, разобраться - нужен ли он, зачем и может его лучше скрыть
-
-// TODO: Кнопки с сылкой на главу и добавление в избранное неправильно стиллизованы
 
 // Идентификатор активности
 const SHEET_ID = ACTIVITY_IDS.ANGER_PROS_CONS;
@@ -65,7 +63,7 @@ const AngerProsCons: React.FC = () => {
     const sortedHistory = [...historyExercises].sort((a, b) => {
       // Сначала по дате завершения (если есть)
       if (a.completedAt && b.completedAt) {
-        return new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime();
+        return compareDatesDesc(a.completedAt, b.completedAt);
       }
       // Если нет даты завершения, используем дату из объекта
       return a.date && b.date ? b.date.localeCompare(a.date) : 0;
@@ -238,7 +236,7 @@ const AngerProsCons: React.FC = () => {
                       {/* Объединяем ячейки по дате только для первой строки */}
                       {rowIndex === 0 && (
                         <td rowSpan={maxLength}>
-                          {entry.completedAt ? new Date(entry.completedAt).toLocaleString('ru-RU') : 'Нет даты'}
+                          {entry.completedAt ? formatDateTime(entry.completedAt) : 'Нет даты'}
                         </td>
                       )}
                       <td>

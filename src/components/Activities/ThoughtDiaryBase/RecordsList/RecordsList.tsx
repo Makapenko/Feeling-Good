@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './RecordsList.module.css';
 import { ThoughtDiaryRecord } from '../types';
-import { formatDateWithOptions } from '../../../../utils/dateUtils';
+import { formatDateWithOptions, formatTime } from '../../../../utils/dateUtils';
 
 interface RecordsListProps {
   records: (ThoughtDiaryRecord & { date?: string })[];
@@ -73,7 +73,7 @@ export const RecordsList: React.FC<RecordsListProps> = ({
                   <strong>Ситуация:</strong> {record.situation.substring(0, 100)}{record.situation.length > 100 ? '...' : ''}
                 </div>
                 <div className={styles.recordTime}>
-                  {new Date(record.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                  {formatTime(record.timestamp)}
                 </div>
               </div>
 

@@ -8,7 +8,7 @@ import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { addExercise } from '../../../redux/actions';
 import { NoButsExercise } from './types';
-import { getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp, formatDate, compareDatesDesc } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
@@ -27,7 +27,7 @@ const NoButsSheet: React.FC = () => {
       dailyProgress,
       SHEET_ID,
       SHEET_ID
-    ).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    ).sort((a, b) => compareDatesDesc(a.timestamp, b.timestamp));
   }, [dailyProgress]);
 
   const saveToProgress = (updatedPairs: ButPair[]) => {

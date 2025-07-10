@@ -4,17 +4,22 @@ import styles from './ProgressCalendar.module.css';
 import chaptersData from '../ListOfChapters/chapters.json';
 import { DayDetails } from './DayDetails';
 import { ChapterMap, CalendarDayProgress } from './types';
-import { formatTimeFromSeconds, formatDateWithOptions, getCurrentDate, formatDateToISO } from '../../utils/dateUtils';
+import { 
+  formatTimeFromSeconds, 
+  formatDateWithOptions, 
+  getCurrentDate, 
+  getCurrentYearMonth, 
+  getDaysInMonth,
+  getDayOfMonth,
+  getUpdatedYearMonth
+} from '../../utils/dateUtils';
 
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 const ProgressCalendar: React.FC = () => {
   const dailyProgressData = useDailyProgress();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [currentMonth, setCurrentMonth] = useState(() => {
-    const today = new Date();
-    return formatDateToISO(today).substring(0, 7);
-  });
+  const [currentMonth, setCurrentMonth] = useState(getCurrentYearMonth);
 
   // Создаем карту глав для быстрого поиска
   const chapterMap: ChapterMap = {};
@@ -120,7 +125,7 @@ const ProgressCalendar: React.FC = () => {
   const getMonthDays = () => {
     const [year, month] = currentMonth.split('-').map(Number);
     const firstDay = new Date(year, month - 1, 1);
-    const lastDay = new Date(year, month, 0);
+    const daysInMonth = getDaysInMonth(year, month);
 
     // Получаем день недели для первого дня месяца (0 = воскресенье)
     let firstDayOfWeek = firstDay.getDay();
@@ -135,7 +140,7 @@ const ProgressCalendar: React.FC = () => {
     }
 
     // Добавляем дни месяца
-    for (let i = 1; i <= lastDay.getDate(); i++) {
+    for (let i = 1; i <= daysInMonth; i++) {
       const date = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       days.push(date);
     }
@@ -147,19 +152,7 @@ const ProgressCalendar: React.FC = () => {
   const monthDays = getMonthDays();
 
   const changeMonth = (delta: number) => {
-    const [year, month] = currentMonth.split('-').map(Number);
-    // Месяцы в JavaScript начинаются с 0, поэтому нужно вычесть 1 из номера месяца
-    const currentMonthIndex = month - 1;
-    // Добавляем delta к текущему индексу месяца
-    const newMonthIndex = currentMonthIndex + delta;
-    
-    // Создаем новую дату с учетом смещения
-    const newDate = new Date(year, newMonthIndex, 1);
-    
-    // Форматируем дату в строку формата YYYY-MM
-    const newYear = newDate.getFullYear();
-    const newMonth = newDate.getMonth() + 1; // +1, так как месяцы в JS начинаются с 0
-    setCurrentMonth(`${newYear}-${String(newMonth).padStart(2, '0')}`);
+    setCurrentMonth(getUpdatedYearMonth(currentMonth, delta));
   };
 
   const formatMonthTitle = () => {
@@ -209,7 +202,7 @@ const ProgressCalendar: React.FC = () => {
               onClick={() => dayProgress && setSelectedDate(date)}
             >
               <div className={styles.dayHeader}>
-                <h3>{new Date(date).getDate()}</h3>
+                <h3>{getDayOfMonth(date)}</h3>
                 {dayProgress && dayProgress.chapters && (
                   <span>{formatTimeFromSeconds(dayProgress.chapters.reduce((total, chapter) => total + chapter.timeSpent, 0))}</span>
                 )}

@@ -3,6 +3,7 @@ import { AngerProsConsExercise } from '../../Activities/AngerProsCons/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
 import { ACTIVITY_IDS } from '../../../constants/activities';
+import { compareDatesDesc } from '../../../utils/dateUtils';
 
 interface AngerProsConsExerciseProps {
   exercises: AngerProsConsExercise[]; // Теперь массив упражнений
@@ -76,14 +77,22 @@ const AngerProsConsExerciseComponent: React.FC<AngerProsConsExerciseProps> = ({
     );
   }
 
-  // Сортируем записи по времени выполнения (новые сверху)
-  const sortedRecords = [...allRecords].sort((a, b) => 
-    new Date(b.completedAt || '').getTime() - new Date(a.completedAt || '').getTime()
-  );
+  // Функция для сортировки по дате (новые сверху), с учетом возможного отсутствия даты
+  const sortByCompletedAtDesc = (
+    a: { completedAt?: string },
+    b: { completedAt?: string }
+  ) => {
+    if (a.completedAt && b.completedAt) {
+      return compareDatesDesc(a.completedAt, b.completedAt);
+    }
+    if (a.completedAt) return -1;
+    if (b.completedAt) return 1;
+    return 0;
+  };
 
-  const sortedConsequences = [...allConsequences].sort((a, b) => 
-    new Date(b.completedAt || '').getTime() - new Date(a.completedAt || '').getTime()
-  );
+  // Сортируем записи по времени выполнения
+  const sortedRecords = [...allRecords].sort(sortByCompletedAtDesc);
+  const sortedConsequences = [...allConsequences].sort(sortByCompletedAtDesc);
 
   // Создаем базовое упражнение только с необходимыми полями для ExerciseWrapper
   const groupedExercise: AngerProsConsExercise = {

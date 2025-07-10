@@ -2,6 +2,7 @@ import React from 'react';
 import {  ImagineSuccessExercise, ImagineSuccessRecord } from '../../Activities/ImagineSuccess/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
+import { formatDateTime } from '../../../utils/dateUtils';
 
 interface ImagineSuccessExerciseProps {
   exercise: ImagineSuccessExercise;
@@ -26,7 +27,7 @@ const ImagineSuccessExerciseComponent: React.FC<ImagineSuccessExerciseProps> = (
         {exercise.records.map((record: ImagineSuccessRecord) => (
           <div key={record.id} className={styles.record}>
             <div className={styles.timestamp}>
-              {new Date(record.timestamp).toLocaleString()}
+              {formatDateTime(record.timestamp)}
             </div>
             <div className={styles.content}>
               <div className={styles.goal}>

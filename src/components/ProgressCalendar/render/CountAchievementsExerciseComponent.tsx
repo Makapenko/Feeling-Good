@@ -2,6 +2,7 @@ import React from 'react';
 import { CountAchievementsExercise } from '../../Activities/CountAchievements/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
+import { formatTime } from '../../../utils/dateUtils';
 
 interface CountAchievementsExerciseProps {
   exercise: CountAchievementsExercise;
@@ -26,10 +27,7 @@ const CountAchievementsExerciseComponent:React.FC<CountAchievementsExerciseProps
           {exercise.records.map((record) => (
             <div key={record.id} className={styles.record}>
               <div className={styles.timestamp}>
-                {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                {formatTime(record.timestamp)}
               </div>
               <div className={styles.achievementText}>
                 {record.text}

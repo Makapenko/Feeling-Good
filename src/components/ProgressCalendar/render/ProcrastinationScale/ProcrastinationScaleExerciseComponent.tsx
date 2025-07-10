@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from '../../DayDetails.module.css';
 import { procrastinationConfig } from '../../../Activities/ProcrastinationScale/procrastinationConfig';
+import { formatTime } from '../../../../utils/dateUtils';
 
 export interface ProcrastinationScaleExercise {
   id: string;
@@ -45,10 +46,7 @@ const ProcrastinationScaleExerciseComponent: React.FC<ProcrastinationScaleExerci
         <div className={styles.exerciseTitle}>
           <h4>Шкала иррациональной прокрастинации</h4>
           <div className={styles.exerciseMeta}>
-            {new Date(exercise.completedAt).toLocaleTimeString('ru-RU', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+            {formatTime(exercise.completedAt)}
           </div>
         </div>
         <div className={styles.exerciseScore}>

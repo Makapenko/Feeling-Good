@@ -2,6 +2,7 @@ import React from 'react';
 import { DownwardArrowExercise } from '../../Activities/DownwardArrow/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
+import { formatTime } from '../../../utils/dateUtils';
 
 interface DownwardArrowExerciseProps {
   exercise: DownwardArrowExercise;
@@ -33,10 +34,7 @@ const DownwardArrowExerciseComponent: React.FC<DownwardArrowExerciseProps> = ({
               <div className={styles.recordHeader}>
                 <span className={styles.recordNumber}>Цепочка {index + 1}</span>
                 <span className={styles.recordTime}>
-                  {new Date(chain.timestamp).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
+                  {formatTime(chain.timestamp)}
                 </span>
               </div>
 

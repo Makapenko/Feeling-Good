@@ -2,6 +2,7 @@ import React from 'react';
 import { PleasureSheetExercise } from '../../Activities/PleasureSheet/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
+import { formatTime } from '../../../utils/dateUtils';
 
 interface PleasureSheetExerciseProps {
   exercise: PleasureSheetExercise;
@@ -34,10 +35,7 @@ const PleasureSheetExerciseComponent: React.FC<PleasureSheetExerciseProps> = ({
           <div key={index} className={styles.activity}>
             <div className={styles.activityContent}>
               <div className={styles.activityTime}>
-                {new Date(activity.timestamp).toLocaleTimeString('ru-RU', {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                {formatTime(activity.timestamp)}
               </div>
               <div className={styles.activityDetails}>
                 <p><strong>Занятие:</strong> {activity.text}</p>

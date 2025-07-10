@@ -2,6 +2,7 @@ import React from 'react';
 import { MotivationWithoutCoercionExercise } from '../../Activities/MotivationWithoutCoercion/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
+import { formatTime } from '../../../utils/dateUtils';
 
 interface MotivationWithoutCoercionExerciseProps {
   exercise: MotivationWithoutCoercionExercise;
@@ -26,10 +27,7 @@ const MotivationWithoutCoercionExerciseComponent: React.FC<MotivationWithoutCoer
         {exercise.records.map((record, index) => (
           <div key={index} className={styles.record}>
             <div className={styles.recordTime}>
-              {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+              {formatTime(record.timestamp)}
             </div>
             <div className={styles.recordContent}>
               <div className={styles.column}>

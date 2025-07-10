@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
 import { getStoredActivityTime } from '../../utils/activityTimerStorage';
-import { formatDateWithOptions, formatTimeFromSeconds } from '../../utils/dateUtils';
+import { formatDateWithOptions, formatTimeFromSeconds, getCurrentISOTimestamp } from '../../utils/dateUtils';
 import { useAppDispatch } from '../../redux/hooks';
 import { loadChapter } from '../../redux/actions';
 import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
@@ -84,7 +84,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
           id: dasExercise.id,
           name: ACTIVITY_NAMES[ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
           type: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
-          completedAt: dasExercise.completedAt || new Date().toISOString(),
+          completedAt: dasExercise.completedAt || getCurrentISOTimestamp(),
           categoryResults: dasExercise.categoryResults
         } as TestResult;
       });

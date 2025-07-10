@@ -20,6 +20,48 @@ export const formatDateToISO = (date: Date): string => {
 };
 
 /**
+ * Получает текущий год и месяц в формате YYYY-MM
+ * @returns строка в формате YYYY-MM
+ */
+export const getCurrentYearMonth = (): string => {
+  return new Date().toISOString().slice(0, 7);
+};
+
+/**
+ * Получает количество дней в месяце
+ * @param year Год
+ * @param month Месяц (1-12)
+ * @returns Количество дней в месяце
+ */
+export const getDaysInMonth = (year: number, month: number): number => {
+  return new Date(year, month, 0).getDate();
+};
+
+/**
+ * Получает день месяца из строки с датой
+ * @param dateString строка с датой
+ * @returns день месяца
+ */
+export const getDayOfMonth = (dateString: string): number => {
+  return new Date(dateString).getDate();
+};
+
+/**
+ * Изменяет год и месяц на заданное количество месяцев (дельта)
+ * @param currentYearMonth Строка в формате YYYY-MM
+ * @param delta Количество месяцев для добавления (может быть отрицательным)
+ * @returns Новая строка в формате YYYY-MM
+ */
+export const getUpdatedYearMonth = (currentYearMonth: string, delta: number): string => {
+  const [year, month] = currentYearMonth.split('-').map(Number);
+  // Месяцы в JavaScript начинаются с 0
+  const newDate = new Date(year, month - 1 + delta, 1);
+  const newYear = newDate.getFullYear();
+  const newMonth = newDate.getMonth() + 1;
+  return `${newYear}-${String(newMonth).padStart(2, '0')}`;
+};
+
+/**
  * Вычисляет разницу между двумя датами в днях
  * @param dateA первая дата (более поздняя)
  * @param dateB вторая дата (более ранняя)
@@ -56,6 +98,21 @@ export const formatTime = (
     hour: '2-digit',
     minute: '2-digit'
   });
+};
+
+/**
+ * Форматирует дату и время в локализованный формат
+ * @param dateString строка с датой
+ * @param format локаль
+ * @param options опции форматирования
+ * @returns отформатированная строка даты и времени
+ */
+export const formatDateTime = (
+  dateString: string,
+  format: string = 'ru-RU',
+  options?: Intl.DateTimeFormatOptions
+): string => {
+  return new Date(dateString).toLocaleString(format, options);
 };
 
 /**

@@ -2,6 +2,7 @@ import React from 'react';
 import {  CheckCantDoExercise } from '../../Activities/CheckCantDo/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
+import { formatTime } from '../../../utils/dateUtils';
 
 interface  CheckCantDoExerciseProps {
   exercise: CheckCantDoExercise;
@@ -28,10 +29,7 @@ const CheckCantDoExerciseComponent:React.FC<CheckCantDoExerciseProps> = ({
               <div className={styles.cantDoHeader}>
                 <span className={styles.cantDoText}>{record.text}</span>
                 <span className={styles.cantDoTime}>
-                  {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
+                  {formatTime(record.timestamp)}
                 </span>
               </div>
               <div className={styles.cantDoMinimum}>

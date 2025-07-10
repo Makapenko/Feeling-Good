@@ -7,7 +7,7 @@ import { addExercise } from '../../../redux/actions';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
-import { getCurrentDate, getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getCurrentDate, getCurrentISOTimestamp, formatDate } from '../../../utils/dateUtils';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getAllRecordsFromProgress } from '../../../utils/recordsUtils';
 
@@ -348,7 +348,7 @@ const AntiProcrastinationSheet: React.FC = () => {
             {allTasks.map(task => (
               <div key={task.id} className={styles.taskRow}>
                 <div className={styles.taskDate}>
-                  {task.timestamp && new Date(task.timestamp).toLocaleDateString('ru-RU')}
+                  {task.timestamp && formatDate(task.timestamp)}
                 </div>
                 <div className={styles.taskText}>{task.text}</div>
                 <div className={styles.ratings}>

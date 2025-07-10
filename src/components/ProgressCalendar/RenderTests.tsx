@@ -5,6 +5,7 @@ import { procrastinationConfig } from '../Activities/ProcrastinationScale/procra
 import { CATEGORY_DESCRIPTIONS } from '../Activities/DysfunctionalAttitudeScale/dasConfig';
 import { burnsConfig } from '../Activities/BurnsChecklist/burnsConfig';
 import { novacoConfig } from '../Activities/NovacoScale/novacoConfig';
+import { formatTime } from '../../utils/dateUtils';
 
 // Интерфейс для минимального объекта теста
 interface TestObject {
@@ -183,10 +184,7 @@ const RenderTests: React.FC<RenderTestsProps> = ({ testResults, expandedTests, t
         const { name, hasDetails } = getTestDetails(testType);
 
         // Форматируем время
-        const testTime = new Date(test.completedAt).toLocaleTimeString('ru-RU', {
-          hour: '2-digit',
-          minute: '2-digit'
-        });
+        const testTime = formatTime(test.completedAt);
 
 
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { ThoughtDiaryExercise } from '../../Activities/ThoughtDiaryBase/types';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
+import { formatTime } from '../../../utils/dateUtils';
 // TODO: возможно не отображается финальные эмоции - перепроверить
 interface ThoughtDiaryExerciseProps {
   exercise: ThoughtDiaryExercise;
@@ -36,10 +37,7 @@ const ThoughtDiaryExerciseComponent: React.FC<ThoughtDiaryExerciseProps> = ({
         {exercise.records.map((record, index) => (
           <div key={index} className={styles.record}>
             <div className={styles.recordTime}>
-              {new Date(record.timestamp).toLocaleTimeString('ru-RU', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+              {formatTime(record.timestamp)}
             </div>
             <div className={styles.recordContent}>
               <div className={styles.column}>

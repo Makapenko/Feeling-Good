@@ -4,7 +4,7 @@ import { useAppDispatch, useDailyProgress, useIsFavoriteActivity } from '../../.
 import { ImagineSuccessRecord, ImagineSuccessExercise } from './types';
 import { Exercise } from '../../../types/progress.types';
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
+import { getCurrentISOTimestamp, compareDatesDesc } from '../../../utils/dateUtils';
 import { ACTIVITY_IDS } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
@@ -44,7 +44,7 @@ const ImagineSuccess: React.FC = () => {
     
     // Сортируем по времени создания (от новых к старым)
     return allRecords.sort((a, b) => 
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      compareDatesDesc(a.timestamp, b.timestamp)
     );
   }, [dailyProgress]);
 
