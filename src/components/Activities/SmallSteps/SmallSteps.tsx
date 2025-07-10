@@ -12,7 +12,7 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { formatTimeFromSeconds } from '../../../utils/dateUtils';
 import { useIsMobile } from '../../../utils/deviceUtils';
 import { Exercise } from '../../../types/progress.types';
-//TODO: В мобильной версии кнопка закончено внизу экрана - кривая
+//TODO: В мобильной версии кнопка "закончено" внизу экрана - кривая ??? Не увидел эту кнопку, нужно перепроверить
 
 const SHEET_ID = ACTIVITY_IDS.SMALL_STEPS;
 

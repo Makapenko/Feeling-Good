@@ -15,8 +15,6 @@ import { loadChapter, completeChapterWithUnlock } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
-// TODO: иногда глава не отмечается прочитанной - перепроверить, вроде исправил, думаю глава не отображалась прочитанной, когда переходил на упражнение вместо следующей главы
-
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 

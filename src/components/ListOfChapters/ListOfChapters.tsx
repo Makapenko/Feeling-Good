@@ -5,8 +5,6 @@ import type { Chapter, ChaptersData, Section } from '../../types/chapters.types'
 import { useAppDispatch, useUnlockedContent, useCompletedChapters, useCurrentChapter } from '../../redux/hooks';
 import { loadChapter } from '../../redux/actions';
 
-// TODO: В мобильной версии на телефоне не видно последнюю 19 главу. Если открыть мобильную версию на компе - то всё нормально.
-
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 
