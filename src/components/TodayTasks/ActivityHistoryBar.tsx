@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './TodayTasks.module.css';
 import { useTestsByType, useDailyProgress } from "../../redux/hooks";
-import { formatTimeFromSeconds, getCurrentDate, formatDateWithOptions } from "../../utils/dateUtils";
+import { 
+  formatTimeFromSeconds, 
+  getCurrentDate, 
+  formatDateWithOptions,
+  formatDateToISO,
+  getShortMonthName,
+  getDayOfMonth
+} from "../../utils/dateUtils";
 
 // Интерфейс для дневной статистики активностей
 interface DayActivityStats {
@@ -100,7 +107,7 @@ const useActivityHistory = (config: ActivityHistoryConfig): DayActivityStats[] =
       const endDate = new Date(lastDay);
       
       while (currentDate <= endDate) {
-        const dateString = currentDate.toISOString().split('T')[0];
+        const dateString = formatDateToISO(currentDate);
         
         if (activityStats[dateString]) {
           allDays.push(activityStats[dateString]);
@@ -145,12 +152,6 @@ const ActivityHistoryBar: React.FC<{
       }, 100);
     }
   }, [activityHistory.length]);
-  
-  // Функция для форматирования месяца
-  const getMonthName = (date: Date): string => {
-    const monthNames = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-    return monthNames[date.getMonth()];
-  };
   
   // Обработчик клика по квадратику
   const handleDayClick = (date: string) => {
@@ -237,9 +238,9 @@ const ActivityHistoryBar: React.FC<{
             title={`${formatDateWithOptions(testDay.date)}: ${testDay.totalTime > 0 ? formatTimeFromSeconds(testDay.totalTime) : 'нет активности'} ${testDay.testScore !== null ? `, Тест: ${testDay.testScore} баллов` : ''}`}
           >
             {showMonthLabel && (
-              <span className={styles.monthLabel}>{getMonthName(testDate)}</span>
+              <span className={styles.monthLabel}>{getShortMonthName(testDay.date)}</span>
             )}
-            <span className={styles.dayNumber}>{testDate.getDate()}</span>
+            <span className={styles.dayNumber}>{getDayOfMonth(testDay.date)}</span>
             
             {/* Показываем индикатор прохождения теста */}
             <span className={styles.burnsScoreBadge}>
@@ -283,7 +284,7 @@ const ActivityHistoryBar: React.FC<{
                     title={`Время активностей после последнего теста (${formatDateWithOptions(testDay.date)}): ${formatTimeFromSeconds(afterTestTime)}`}
                   >
                     {showMonthLabel && (
-                      <span className={styles.monthLabel}>{getMonthName(firstDayAfterTestDate)}</span>
+                      <span className={styles.monthLabel}>{getShortMonthName(firstDayAfterTest.date)}</span>
                     )}
                     <span className={styles.dayNumber}>∑</span>
                     <span className={styles.dayTime}>
@@ -336,7 +337,7 @@ const ActivityHistoryBar: React.FC<{
                 title={`Время активностей между ${formatDateWithOptions(testDay.date)} и ${formatDateWithOptions(nextTestDay.date)}: ${intervalTime > 0 ? formatTimeFromSeconds(intervalTime) : 'нет активности'}`}
               >
                 {showMonthLabel && intervalDays.length > 0 && (
-                  <span className={styles.monthLabel}>{getMonthName(new Date(intervalDays[0].date))}</span>
+                  <span className={styles.monthLabel}>{getShortMonthName(intervalDays[0].date)}</span>
                 )}
                 <span className={styles.dayNumber}>∑</span>
                 
@@ -413,8 +414,7 @@ const ActivityHistoryBar: React.FC<{
           // Стандартное отображение - все дни
           activityHistory.map((day, index) => {
             const isToday = day.date === getCurrentDate();
-            const dayDate = new Date(day.date);
-            const dayNumber = dayDate.getDate();
+            const dayNumber = getDayOfMonth(day.date);
             const isExpanded = expandedDay === day.date;
             const isFirstDayOfMonth = dayNumber === 1 || index === 0;
             
@@ -426,7 +426,7 @@ const ActivityHistoryBar: React.FC<{
                   title={`${formatDateWithOptions(day.date)}: ${day.totalTime > 0 ? formatTimeFromSeconds(day.totalTime) : 'нет активности'} ${day.testScore !== null ? `, Тест: ${day.testScore} баллов` : ''}`}
                 >
                   {isFirstDayOfMonth && (
-                    <span className={styles.monthLabel}>{getMonthName(dayDate)}</span>
+                    <span className={styles.monthLabel}>{getShortMonthName(day.date)}</span>
                   )}
                   <span className={styles.dayNumber}>{dayNumber}</span>
                   

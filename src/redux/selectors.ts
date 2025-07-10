@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from './types';
-import { getCurrentDate } from '../utils/dateUtils';
+import { getCurrentDate, compareDatesDesc } from '../utils/dateUtils';
 import { SpecialContent, Exercise } from '../types/progress.types';
 import { TestResult } from './types';
 
@@ -85,7 +85,7 @@ export const selectTestsByType = (testType: string) =>
       });
       
       return allTests.sort((a, b) => 
-        new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
+        compareDatesDesc(a.completedAt, b.completedAt)
       );
     }
   );

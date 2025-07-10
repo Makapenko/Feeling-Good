@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useDailyProgress } from "../../redux/hooks";
-import { formatTimeFromSeconds, getCurrentDate, formatDateWithOptions } from "../../utils/dateUtils";
+import { 
+  formatTimeFromSeconds, 
+  getCurrentDate, 
+  formatDateWithOptions,
+  formatDateToISO,
+  getShortMonthName,
+  getDayOfMonth 
+} from "../../utils/dateUtils";
 import styles from "./TodayTasks.module.css";
 
 // Интерфейс для дневной статистики чтения
@@ -15,12 +22,6 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
   const [dayStats, setDayStats] = useState<DayReadingStats[]>([]);
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Функция для форматирования месяца
-  const getMonthName = (date: Date): string => {
-    const monthNames = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-    return monthNames[date.getMonth()];
-  };
   
   // Обработчик клика по квадратику
   const handleDayClick = (date: string) => {
@@ -78,7 +79,7 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
       const endDate = new Date(lastDay);
       
       while (currentDate <= endDate) {
-        const dateString = currentDate.toISOString().split('T')[0];
+        const dateString = formatDateToISO(currentDate);
         allDays.push({
           date: dateString,
           totalTime: stats[dateString] || 0
@@ -162,8 +163,7 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
       <div className={styles.readingHistoryScroll} ref={scrollContainerRef}>
         {dayStats.map((day, index) => {
           const isToday = day.date === getCurrentDate();
-          const dayDate = new Date(day.date);
-          const dayNumber = dayDate.getDate();
+          const dayNumber = getDayOfMonth(day.date);
           const hasReading = day.totalTime > 0;
           const isExpanded = expandedDay === day.date;
           const isFirstDayOfMonth = dayNumber === 1 || index === 0;
@@ -179,7 +179,7 @@ const ReadingHistoryBar: React.FC<{ readingGoalSeconds: number }> = ({ readingGo
                 })}: ${hasReading ? formatTimeFromSeconds(day.totalTime) : 'нет чтения'}`}
               >
                 {isFirstDayOfMonth && (
-                  <span className={styles.monthLabel}>{getMonthName(dayDate)}</span>
+                  <span className={styles.monthLabel}>{getShortMonthName(day.date)}</span>
                 )}
                 <span className={styles.dayNumber}>{dayNumber}</span>
                 {hasReading && (

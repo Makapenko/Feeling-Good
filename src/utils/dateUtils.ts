@@ -167,3 +167,14 @@ export const createEmptyDayProgress = (): DayProgress => ({
     exercises: []
   }
 });
+
+/**
+ * Возвращает короткое название месяца на русском языке
+ * @param dateString строка с датой
+ * @returns короткое название месяца (e.g., 'янв')
+ */
+export const getShortMonthName = (dateString: string): string => {
+  const monthNames = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+  const date = new Date(dateString);
+  return monthNames[date.getMonth()];
+};
