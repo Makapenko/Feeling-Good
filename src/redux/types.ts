@@ -9,6 +9,15 @@ export interface FavoriteChapter {
   title: string;
 }
 
+// Рейтинг упражнения
+export interface ExerciseRating {
+  exerciseId: string; // ID выполненного упражнения
+  activityId: string; // ID типа активности (например, 'thought-diary')
+  rating: number; // 1-5 звезд
+  ratedAt: string; // ISO timestamp
+  comment?: string; // Опциональный комментарий
+}
+
 // Обновляем интерфейс UserProgress, добавляя поле для избранных глав
 export interface UserProgress {
   currentChapter: ChapterWithContent | null;
@@ -26,6 +35,7 @@ export interface UserProgress {
   favoriteChapters: FavoriteChapter[]; // Добавляем поле для избранных глав
   reduxMigrationCompleted?: boolean; // Флаг, указывающий, что миграция в Redux успешно выполнена
   readingHistory: Record<string, DailyProgress>;
+  exerciseRatings: ExerciseRating[]; // Рейтинги упражнений
 }
 
 

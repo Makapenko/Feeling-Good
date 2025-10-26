@@ -1,0 +1,1 @@
+export { ExerciseRating } from './ExerciseRating';

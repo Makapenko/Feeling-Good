@@ -2,19 +2,23 @@ import React, { useState } from 'react';
 import styles from './RecordsList.module.css';
 import { ThoughtDiaryRecord } from '../types';
 import { formatDateWithOptions, formatTime } from '../../../../utils/dateUtils';
+import { ExerciseRating } from '../../../shared/ExerciseRating';
+import { ActivityId } from '../../../../constants/activities';
 
 interface RecordsListProps {
   records: (ThoughtDiaryRecord & { date?: string })[];
   showCognitiveDistortions?: boolean;
   showEmotionIntensity?: boolean;
   showResultIntensity?: boolean;
+  activityId: ActivityId;
 }
 
-export const RecordsList: React.FC<RecordsListProps> = ({ 
+export const RecordsList: React.FC<RecordsListProps> = ({
   records,
   showCognitiveDistortions = true,
   showEmotionIntensity = true,
-  showResultIntensity = true
+  showResultIntensity = true,
+  activityId
 }) => {
   const [expandedRecords, setExpandedRecords] = useState<{ [key: string]: boolean }>({});
 
@@ -120,6 +124,13 @@ export const RecordsList: React.FC<RecordsListProps> = ({
                       </ul>
                     </div>
                   )}
+
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <ExerciseRating
+                      exerciseId={record.timestamp}
+                      activityId={activityId}
+                    />
+                  </div>
                 </div>
               )}
             </div>

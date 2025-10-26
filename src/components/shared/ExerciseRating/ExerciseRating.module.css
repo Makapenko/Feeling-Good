@@ -1,0 +1,157 @@
+.container {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.ratingSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.label {
+  font-size: 0.95rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.stars {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+.starEmpty {
+  color: #dee2e6;
+}
+
+.starFilled {
+  color: #ffc107;
+  text-shadow: 0 0 2px rgba(255, 193, 7, 0.5);
+}
+
+.commentButton {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.commentButton:hover {
+  color: #0056b3;
+}
+
+.commentSection {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.commentInput {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.commentInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.commentActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.saveButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.saveButton:hover {
+  background-color: #218838;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+.savedComment {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: white;
+  border-left: 3px solid #007bff;
+  border-radius: 4px;
+}
+
+.commentText {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #495057;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .star {
+    font-size: 1.75rem;
+  }
+
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .commentInput {
+    font-size: 0.9rem;
+  }
+}

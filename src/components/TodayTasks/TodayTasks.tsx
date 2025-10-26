@@ -19,6 +19,7 @@ import TestTaskComponent from './TestTaskComponent';
 import MethodsTaskComponent, { MethodsTask } from './MethodsTaskComponent';
 import ReadingTaskComponent from './ReadingTaskComponent';
 import FavoritesComponent from './FavoritesComponent';
+import { MoodTrendChart } from '../MoodTrendChart';
 
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
@@ -263,8 +264,8 @@ const TodayTasks: React.FC = () => {
         {/* Обновленная секция с историей методов */}
         <div className={styles.methodsHistorySection}>
           <h4 className={styles.methodsHistoryTitle}>История работы с самооценкой</h4>
-          <ActivityHistoryBar 
-            goalSeconds={METHODS_GOAL_SECONDS} 
+          <ActivityHistoryBar
+            goalSeconds={METHODS_GOAL_SECONDS}
             config={{
               title: "История работы с самооценкой",
               emptyHistoryText: "История работы с методами самооценки пока отсутствует",
@@ -274,6 +275,13 @@ const TodayTasks: React.FC = () => {
             }}
           />
         </div>
+
+        {/* График динамики настроения */}
+        {burnsTestResults.length > 0 && (
+          <div className={styles.moodTrendSection}>
+            <MoodTrendChart height={350} showStats={true} />
+          </div>
+        )}
 
         {/* Раздел: Работа с прокрастинацией */}
         <h3 className={styles.taskSectionTitle}>Работа с прокрастинацией</h3>

@@ -37,7 +37,8 @@ const initialState: ProgressState = {
   lastUnlockedActivities: [],
   favoriteChapters: [], // Инициализируем пустым массивом
   reduxMigrationCompleted: true,
-  readingHistory: {} // Добавляем пустой объект истории чтения
+  readingHistory: {}, // Добавляем пустой объект истории чтения
+  exerciseRatings: [] // Рейтинги упражнений
 };
 
 const progressSlice = createSlice({
@@ -322,15 +323,15 @@ const progressSlice = createSlice({
     // Добавление/удаление главы из избранного
     toggleFavoriteChapter: (state, action: PayloadAction<{ chapterId: string; chapterTitle: string }>) => {
       const { chapterId, chapterTitle } = action.payload;
-      
+
       // Убедимся, что массив избранных глав существует
       if (!state.favoriteChapters) {
         state.favoriteChapters = [];
       }
-      
+
       // Проверяем, есть ли глава в избранном
       const existingIndex = state.favoriteChapters.findIndex(chapter => chapter.id === chapterId);
-      
+
       if (existingIndex >= 0) {
         // Если глава уже в избранном, удаляем её
         state.favoriteChapters = state.favoriteChapters.filter(chapter => chapter.id !== chapterId);
@@ -339,11 +340,40 @@ const progressSlice = createSlice({
         state.favoriteChapters.push({ id: chapterId, title: chapterTitle });
       }
     },
+
+    // Сохранение рейтинга упражнения
+    saveExerciseRating: (state, action: PayloadAction<{ exerciseId: string; activityId: string; rating: number; comment?: string }>) => {
+      const { exerciseId, activityId, rating, comment } = action.payload;
+
+      // Убедимся, что массив рейтингов существует
+      if (!state.exerciseRatings) {
+        state.exerciseRatings = [];
+      }
+
+      // Проверяем, есть ли уже рейтинг для этого упражнения
+      const existingIndex = state.exerciseRatings.findIndex(r => r.exerciseId === exerciseId);
+
+      const newRating = {
+        exerciseId,
+        activityId,
+        rating,
+        ratedAt: getCurrentISOTimestamp(),
+        comment
+      };
+
+      if (existingIndex >= 0) {
+        // Обновляем существующий рейтинг
+        state.exerciseRatings[existingIndex] = newRating;
+      } else {
+        // Добавляем новый рейтинг
+        state.exerciseRatings.push(newRating);
+      }
+    },
   }
 });
 
 // Экспорт actions и reducer
-export const { 
+export const {
   setCurrentChapter,
   startChapterReading,
   updateChapterProgress,
@@ -357,7 +387,8 @@ export const {
   toggleFavoriteActivity,
   resetNewlyUnlocked,
   loadStateFromStorage,
-  toggleFavoriteChapter
+  toggleFavoriteChapter,
+  saveExerciseRating
 } = progressSlice.actions;
 
 // Селекторы
@@ -372,5 +403,6 @@ export const selectFavoriteActivities = (state: RootState) => state.progress.fav
 export const selectLastUnlockedChapter = (state: RootState) => state.progress.lastUnlockedChapter;
 export const selectLastUnlockedActivities = (state: RootState) => state.progress.lastUnlockedActivities;
 export const selectFavoriteChapters = (state: RootState) => state.progress.favoriteChapters;
+export const selectExerciseRatings = (state: RootState) => state.progress.exerciseRatings || [];
 
 export default progressSlice.reducer; 

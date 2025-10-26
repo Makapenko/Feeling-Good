@@ -1134,3 +1134,16 @@
     font-size: 0.8rem;
   }
 } 
+
+/* Mood Trend Chart Section */
+.moodTrendSection {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .moodTrendSection {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}

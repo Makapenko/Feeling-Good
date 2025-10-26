@@ -339,11 +339,12 @@ const ThoughtDiaryBase: React.FC<ThoughtDiaryBaseProps> = ({
         </div>
       )}
 
-      <RecordsList 
+      <RecordsList
         records={allRecords}
         showCognitiveDistortions={showCognitiveDistortions}
         showEmotionIntensity={showEmotionIntensity}
         showResultIntensity={showResultIntensity}
+        activityId={activityId}
       />
     </div>
   );

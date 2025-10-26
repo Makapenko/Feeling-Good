@@ -1,6 +1,7 @@
 import styles from './WelcomePage.module.css';
 import { useAppDispatch, useUnlockedContent } from '../../redux/hooks';
 import { unlockAll } from '../../redux/actions';
+import { StreakDisplay } from '../shared/StreakDisplay';
 
 const WelcomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -16,12 +17,16 @@ const WelcomePage: React.FC = () => {
   return (
     <div className={styles.welcomePage}>
       <h1>Терапия настроения</h1>
-      
+
       <div className={styles.content}>
         <p>
-          Интерактивная версия книги Дэвида Бернса <i>"Терапия настроения"</i> - практическое руководство 
+          Интерактивная версия книги Дэвида Бернса <i>"Терапия настроения"</i> - практическое руководство
           по когнитивно-поведенческой терапии.
         </p>
+
+        <div className={styles.streakSection}>
+          <StreakDisplay />
+        </div>
 
         <h2>Как это работает?</h2>
         <ul>
