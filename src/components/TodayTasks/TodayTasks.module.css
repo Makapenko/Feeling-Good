@@ -1141,8 +1141,19 @@
   margin-bottom: 2rem;
 }
 
+/* DAS Trend Chart Section */
+.dasTrendSection {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 @media (max-width: 768px) {
   .moodTrendSection {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .dasTrendSection {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
   }

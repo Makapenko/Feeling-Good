@@ -795,3 +795,143 @@ src/
 
 ---
 
+### 16.7 График динамики дисфункциональных убеждений (DAS) 📊
+
+**Дата добавления:** 27 октября 2025
+
+**Файлы:**
+- [src/components/DASTrendChart/](src/components/DASTrendChart/) - Компонент мультилайн-графика
+- [src/utils/dasTrendUtils.ts](src/utils/dasTrendUtils.ts) - Утилиты для DAS данных
+
+**Возможности:**
+- 📊 Мультилайн-график с 7 линиями (по одной на каждую категорию убеждений)
+- 🎨 Уникальные цвета для каждой категории
+- 📈 Статистика: всего тестов, последний общий балл, средний, лучший результат
+- 💬 Мотивационные сообщения о прогрессе
+- 🖱️ Интерактивный tooltip с детализацией по всем категориям
+- 📱 Адаптивный дизайн для мобильных
+- ⚖️ Нулевая референсная линия (граница здоровых/дисфункциональных убеждений)
+
+**7 категорий убеждений:**
+1. **Одобрение** (Approval) - фиолетовый `#667eea`
+2. **Любовь** (Love) - розовый `#f093fb`
+3. **Достижения** (Achievement) - голубой `#4facfe`
+4. **Перфекционизм** (Perfectionism) - зеленый `#43e97b`
+5. **Право** (Entitlement) - коралловый `#fa709a`
+6. **Всемогущество** (Omnipotence) - желтый `#feca57`
+7. **Автономия** (Autonomy) - оранжево-красный `#ff6348`
+
+**Где отображается:**
+- Страница "Задания на сегодня" (TodayTasks) - новый раздел "Работа с убеждениями"
+- Появляется только если пройден хотя бы один тест DAS
+- Отображается после карточки теста DAS
+
+**Интервал прохождения теста:**
+- Рекомендуется проходить раз в **14 дней** (2 недели)
+- Первый тест можно пройти сразу
+- После этого напоминание появляется через 2 недели
+
+**Диапазон баллов:**
+- Каждая категория: от **-10** (дисфункциональные) до **+10** (здоровые)
+- Общий балл: от **-70** до **+70** (сумма всех 7 категорий)
+
+**Интерпретация общего балла:**
+```
++35 до +70:  Отличные здоровые убеждения (зелёный)
++15 до +35:  Хорошие убеждения (светло-зелёный)
+-15 до +15:  Умеренные убеждения (жёлтый)
+-35 до -15:  Проблемные убеждения (оранжевый)
+-70 до -35:  Дисфункциональные убеждения (красный)
+```
+
+**Использование:**
+```typescript
+import { DASTrendChart } from '../DASTrendChart';
+
+<DASTrendChart
+  height={350}
+  showStats={true}
+/>
+```
+
+**Утилиты:**
+```typescript
+import {
+  getDASData,
+  getDASStats,
+  getDASInterpretation,
+  CATEGORY_COLORS,
+  CATEGORY_LABELS
+} from '../utils/dasTrendUtils';
+
+// Получить все DAS тесты
+const dasData = useAppSelector(getDASData);
+// [
+//   {
+//     date: "2025-10-20",
+//     timestamp: "2025-10-20T10:30:00Z",
+//     categoryResults: [
+//       { category: "approval", score: 8, isStrength: true },
+//       { category: "love", score: 6, isStrength: true },
+//       // ... остальные категории
+//     ],
+//     totalScore: 12
+//   }
+// ]
+
+// Статистика
+const stats = useAppSelector(getDASStats);
+// {
+//   totalTests: 3,
+//   averageScore: 15.3,
+//   latestScore: 18,
+//   improvement: 12, // положительное = улучшение
+//   trend: 'improving', // 'improving' | 'worsening' | 'stable'
+//   bestScore: 22,
+//   worstScore: 6
+// }
+
+// Интерпретация
+const interpretation = getDASInterpretation(18);
+// { label: "Хорошие убеждения", color: "#90EE90" }
+
+// Цвета и названия категорий
+const color = CATEGORY_COLORS['approval']; // "#667eea"
+const label = CATEGORY_LABELS['approval']; // "Одобрение"
+```
+
+**Дизайн:**
+- Полностью идентичен дизайну компонента MoodTrendChart
+- Использует те же стилевые паттерны
+- Мобильная адаптивность через CSS Grid и Flexbox
+- Градиенты на карточках статистики
+
+**Redux Integration:**
+```typescript
+// DAS данные хранятся в exercises (не в testResults)
+state.progress.dailyProgress[date].exercises.exercises[]
+// где каждый exercise с type === 'dysfunctional-attitude-scale'
+```
+
+**Новые файлы (4 файла):**
+```
+src/
+├── components/DASTrendChart/
+│   ├── DASTrendChart.tsx           # Компонент графика
+│   ├── DASTrendChart.module.css    # Стили
+│   └── index.ts                    # Экспорт
+└── utils/
+    └── dasTrendUtils.ts            # Утилиты и селекторы
+```
+
+**Изменённые файлы (3 файла):**
+```
+src/components/TodayTasks/
+├── TodayTasks.tsx          # Добавлен раздел "Работа с убеждениями"
+└── TodayTasks.module.css   # Стили для .dasTrendSection
+```
+
+**Всего для DAS Trend: 4 новых файла, 2 изменённых**
+
+---
+

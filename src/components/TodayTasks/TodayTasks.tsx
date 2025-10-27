@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './TodayTasks.module.css';
 import {
   useAppDispatch,
+  useAppSelector,
   useUnlockedContent,
   useTestsByType,
   useTodayActivitiesProgress
@@ -20,6 +21,7 @@ import MethodsTaskComponent, { MethodsTask } from './MethodsTaskComponent';
 import ReadingTaskComponent from './ReadingTaskComponent';
 import FavoritesComponent from './FavoritesComponent';
 import { MoodTrendChart } from '../MoodTrendChart';
+import { DASTrendChart } from '../DASTrendChart';
 
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
@@ -27,12 +29,14 @@ const METHODS_GOAL_SECONDS = 900; // 15 минут
 const PROCRASTINATION_GOAL_SECONDS = 900; // 15 минут
 const BURNS_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями опросника Бернса
 const PROCRASTINATION_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями теста на прокрастинацию
+const DAS_TEST_INTERVAL_DAYS = 14; // Интервал между прохождениями теста DAS (раз в 2 недели)
 
 
 // Создадим константы для внутренних идентификаторов
 const DAILY_MOOD_ID = 'daily-mood';
 const AUTOMATIC_THOUGHTS_ID = 'automatic-thoughts';
 const PROCRASTINATION_SCALE_ID = 'procrastination-scale';
+const DAS_SCALE_ID = 'das-scale';
 
 const TodayTasks: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +45,26 @@ const TodayTasks: React.FC = () => {
   const burnsTestResults = useTestsByType(ACTIVITY_IDS.BURNS_CHECKLIST);
   const procrastinationTestResults = useTestsByType(ACTIVITY_IDS.PROCRASTINATION_SCALE);
   const todayActivitiesProgress = useTodayActivitiesProgress();
+
+  // Для DAS используем selectExercisesByType вместо useTestsByType
+  const dasExercises = useAppSelector((state) => {
+    const { dailyProgress } = state.progress;
+    const allExercises: any[] = [];
+
+    Object.values(dailyProgress).forEach(dayProgress => {
+      if (dayProgress.exercises?.exercises) {
+        const filtered = dayProgress.exercises.exercises.filter(
+          (exercise: any) => exercise.type === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE
+        );
+        allExercises.push(...filtered);
+      }
+    });
+
+    // Сортируем по timestamp (новые сначала)
+    return allExercises.sort((a, b) =>
+      (b.timestamp || b.completedAt || '').localeCompare(a.timestamp || a.completedAt || '')
+    );
+  });
 
   // Проверяем статус опросника Бернса
   const checkBurnsStatus = () => {
@@ -121,7 +145,7 @@ const TodayTasks: React.FC = () => {
     const lastCompletionDate = new Date(procrastinationTestResults[0].completedAt);
     const today = new Date(getCurrentDate());
     const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
-    
+
     // Сохраняем последний результат
     const lastScore = procrastinationTestResults[0].score ?? null;
     const maxScore = procrastinationTestResults[0].maxScore || 45;
@@ -152,6 +176,68 @@ const TodayTasks: React.FC = () => {
       lastScore,
       scorePercent,
       completedAt: procrastinationTestResults[0].completedAt,
+      buttonText: 'Открыть тест'
+    };
+  };
+
+  // Проверяем статус шкалы дисфункциональных убеждений (DAS)
+  const checkDASStatus = () => {
+    const availableActivities = getAvailableActivities(unlockedContent.chapters);
+    if (!availableActivities.has(ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE)) return null;
+
+    if (dasExercises.length === 0) {
+      return {
+        id: DAS_SCALE_ID,
+        testId: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
+        title: 'Шкала дисфункциональных убеждений',
+        message: 'Пройдите тест на дисфункциональные убеждения',
+        needToComplete: true,
+        lastScore: null,
+        scorePercent: null,
+        completedAt: null,
+        buttonText: 'Открыть тест'
+      };
+    }
+
+    const lastExercise = dasExercises[0];
+    const lastCompletionDate = new Date(lastExercise.timestamp || lastExercise.completedAt);
+    const today = new Date(getCurrentDate());
+    const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
+
+    // Вычисляем общий балл из категорий
+    const totalScore = lastExercise.categoryResults?.reduce(
+      (sum: number, cat: any) => sum + (cat.score || 0),
+      0
+    ) ?? null;
+
+    // Процент от максимума (70 = +10 по каждой из 7 категорий)
+    const scorePercent = totalScore !== null ? Math.round(((totalScore + 70) / 140) * 100) : null;
+
+    if (daysSinceLastCompletion >= DAS_TEST_INTERVAL_DAYS) {
+      return {
+        id: DAS_SCALE_ID,
+        testId: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
+        title: 'Шкала дисфункциональных убеждений',
+        message: dasExercises.length === 1
+          ? 'Пройдите тест DAS повторно (второй раз)'
+          : 'Пройдите тест DAS повторно',
+        needToComplete: true,
+        lastScore: totalScore,
+        scorePercent,
+        completedAt: lastExercise.timestamp || lastExercise.completedAt,
+        buttonText: 'Открыть тест'
+      };
+    }
+
+    return {
+      id: DAS_SCALE_ID,
+      testId: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
+      title: 'Шкала дисфункциональных убеждений',
+      message: `Следующее прохождение теста через ${DAS_TEST_INTERVAL_DAYS - daysSinceLastCompletion} дн.`,
+      needToComplete: false,
+      lastScore: totalScore,
+      scorePercent,
+      completedAt: lastExercise.timestamp || lastExercise.completedAt,
       buttonText: 'Открыть тест'
     };
   };
@@ -209,6 +295,7 @@ const TodayTasks: React.FC = () => {
 
   const burnsStatus = checkBurnsStatus();
   const procrastinationScaleStatus = checkProcrastinationScaleStatus();
+  const dasStatus = checkDASStatus();
 
   const handleActivityClick = (activityId: string) => {
     switch (activityId) {
@@ -217,6 +304,9 @@ const TodayTasks: React.FC = () => {
         break;
       case PROCRASTINATION_SCALE_ID:
         dispatch(setSpecialContent(ACTIVITY_IDS.PROCRASTINATION_SCALE));
+        break;
+      case DAS_SCALE_ID:
+        dispatch(setSpecialContent(ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE));
         break;
       case AUTOMATIC_THOUGHTS_ID:
         dispatch(setSpecialContent(ACTIVITY_IDS.THREE_COLUMNS_METHOD));
@@ -280,6 +370,24 @@ const TodayTasks: React.FC = () => {
         {burnsTestResults.length > 0 && (
           <div className={styles.moodTrendSection}>
             <MoodTrendChart height={350} showStats={true} />
+          </div>
+        )}
+
+        {/* Раздел: Работа с убеждениями */}
+        <h3 className={styles.taskSectionTitle}>Работа с убеждениями</h3>
+
+        {/* Шкала дисфункциональных убеждений (DAS) */}
+        {dasStatus && (
+          <TestTaskComponent
+            task={dasStatus}
+            onActivityClick={handleActivityClick}
+          />
+        )}
+
+        {/* График динамики убеждений */}
+        {dasExercises.length > 0 && (
+          <div className={styles.dasTrendSection}>
+            <DASTrendChart height={350} showStats={true} />
           </div>
         )}
 

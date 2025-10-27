@@ -1,0 +1,306 @@
+.container {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Stats Cards */
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Trend Message */
+.trendMessage {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  background: #e7f3ff;
+  color: #0066cc;
+  border: 2px solid #cce5ff;
+}
+
+.trendMessage.improving {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.trendMessage.worsening {
+  background: #fff3cd;
+  color: #856404;
+  border-color: #ffeeba;
+}
+
+/* Chart Container */
+.chartContainer {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: #fafbfc;
+  border-radius: 12px;
+}
+
+/* Custom Tooltip */
+.tooltip {
+  background: white;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 280px;
+}
+
+.tooltipDate {
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.5rem;
+}
+
+.tooltipCategories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tooltipCategory {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.tooltipCategoryDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tooltipCategoryName {
+  color: #495057;
+  flex: 1;
+}
+
+.tooltipCategoryScore {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Legend */
+.legend {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.legend h4 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.legendItems {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.legendColor {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.interpretationNote {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.interpretationNote p {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.interpretationNote strong {
+  color: #2c3e50;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f8f9fa;
+  border-radius: 16px;
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.emptyState h3 {
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+.emptyState p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .statsContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .statCard {
+    padding: 1rem;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+
+  .statLabel {
+    font-size: 0.8rem;
+  }
+
+  .trendMessage {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .chartContainer {
+    padding: 0.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .legend {
+    padding: 1rem;
+  }
+
+  .legendItems {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .legendItem {
+    font-size: 0.8rem;
+  }
+
+  .legendColor {
+    width: 20px;
+    height: 20px;
+  }
+
+  .interpretationNote {
+    font-size: 0.8rem;
+  }
+
+  .tooltipCategory {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .legendItems {
+    grid-template-columns: 1fr;
+  }
+
+  .emptyState {
+    padding: 3rem 1rem;
+  }
+
+  .emptyIcon {
+    font-size: 3rem;
+  }
+}
