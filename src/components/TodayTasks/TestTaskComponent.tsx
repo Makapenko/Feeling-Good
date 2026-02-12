@@ -43,13 +43,13 @@ const TestTaskComponent: React.FC<{
         {task.lastScore !== null && (
           <div className={styles.testResultContainer}>
             <div className={styles.testScoreInfo}>
-              <span className={styles.testScoreLabel}>Последний результат:</span>
+              <span className={styles.testScoreLabel}>Последний результат: </span>
               <span className={styles.testScoreValue}>
                 {task.lastScore} баллов
                 {task.scorePercent !== null && ` (${task.scorePercent}%)`}
               </span>
               <span className={styles.testScoreDate}>
-                {formatDateWithOptions(task.completedAt || '')}
+              &#32;{formatDateWithOptions(task.completedAt || '')}
               </span>
             </div>
           </div>

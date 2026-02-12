@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './TodayTasks.module.css';
 import {
   useAppDispatch,
@@ -322,119 +322,149 @@ const TodayTasks: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
+  const [activeTab, setActiveTab] = useState<'reading' | 'beliefs' | 'procrastination'>('reading');
+
+  const renderReadingAndSelfEsteemTab = () => (
+    <>
+      <h3 className={styles.taskSectionTitle}>Ежедневное чтение</h3>
+      <ReadingTaskComponent readingGoalSeconds={READING_GOAL_SECONDS} />
+
+      <div className={styles.readingHistorySection}>
+        <h4 className={styles.readingHistoryTitle}>Прогресс вашего чтения</h4>
+        <ReadingHistoryBar readingGoalSeconds={READING_GOAL_SECONDS} />
+      </div>
+
+      <h3 className={styles.taskSectionTitle}>Работа с самооценкой</h3>
+      <MethodsTaskComponent
+        task={selfEsteemTask}
+        onActivityClick={handleActivityClick}
+      />
+
+      {burnsStatus && (
+        <TestTaskComponent
+          task={burnsStatus}
+          onActivityClick={handleActivityClick}
+        />
+      )}
+
+      <div className={styles.methodsHistorySection}>
+        <h4 className={styles.methodsHistoryTitle}>История работы с самооценкой</h4>
+        <ActivityHistoryBar
+          goalSeconds={METHODS_GOAL_SECONDS}
+          config={{
+            title: "История работы с самооценкой",
+            emptyHistoryText: "История работы с методами самооценки пока отсутствует",
+            activityIds: [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY],
+            testActivityId: ACTIVITY_IDS.BURNS_CHECKLIST,
+            testScoreBadgeLabel: "опросника"
+          }}
+        />
+      </div>
+
+      {burnsTestResults.length > 0 && (
+        <div className={styles.moodTrendSection}>
+          <MoodTrendChart height={350} showStats={true} />
+        </div>
+      )}
+    </>
+  );
+
+  const renderBeliefsTab = () => (
+    <>
+      <h3 className={styles.taskSectionTitle}>Работа с убеждениями</h3>
+
+      {dasStatus && (
+        <TestTaskComponent
+          task={dasStatus}
+          onActivityClick={handleActivityClick}
+        />
+      )}
+
+      {dasExercises.length > 0 && (
+        <div className={styles.dasTrendSection}>
+          <DASTrendChart height={350} showStats={true} />
+        </div>
+      )}
+    </>
+  );
+
+  const renderProcrastinationTab = () => (
+    <>
+      <h3 className={styles.taskSectionTitle}>Работа с прокрастинацией</h3>
+      <MethodsTaskComponent
+        task={procrastinationTask}
+        onActivityClick={handleActivityClick}
+      />
+
+      {procrastinationScaleStatus && (
+        <TestTaskComponent
+          task={procrastinationScaleStatus}
+          onActivityClick={handleActivityClick}
+        />
+      )}
+
+      <div className={styles.procrastinationHistorySection}>
+        <h4 className={styles.procrastinationHistoryTitle}>История работы с прокрастинацией</h4>
+        <ActivityHistoryBar
+          goalSeconds={PROCRASTINATION_GOAL_SECONDS}
+          config={{
+            title: "История работы с прокрастинацией",
+            emptyHistoryText: "История работы с прокрастинацией пока отсутствует",
+            activityIds: [
+              ACTIVITY_IDS.PROCRASTINATION_DIARY,
+              ACTIVITY_IDS.ANTI_PROCRASTINATION,
+              ACTIVITY_IDS.DAILY_SCHEDULE,
+              ACTIVITY_IDS.PLEASURE_SHEET,
+              ACTIVITY_IDS.NO_BUTS,
+              ACTIVITY_IDS.SELF_SUPPORT,
+              ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS,
+              ACTIVITY_IDS.SMALL_STEPS,
+              ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION,
+              ACTIVITY_IDS.DISARMING_TECHNIQUE,
+              ACTIVITY_IDS.IMAGINE_SUCCESS,
+              ACTIVITY_IDS.COUNT_ACHIEVEMENTS,
+              ACTIVITY_IDS.CHECK_CANT_DO,
+              ACTIVITY_IDS.NO_LOSE_TECHNIQUE
+            ],
+            testActivityId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
+            testScoreBadgeLabel: "теста"
+          }}
+        />
+      </div>
+    </>
+  );
+
   return (
     <div className={styles.container}>
       <FavoritesComponent onActivityClick={handleActivityClick} />
-      
+
       <h2 className={styles.todayTasksTitle}>Задания на сегодня</h2>
+
+      <div className={styles.tasksTabs}>
+        <button
+          className={`${styles.tasksTab} ${activeTab === 'reading' ? styles.tasksTabActive : ''}`}
+          onClick={() => setActiveTab('reading')}
+        >
+          Чтение и самооценка
+        </button>
+        <button
+          className={`${styles.tasksTab} ${activeTab === 'beliefs' ? styles.tasksTabActive : ''}`}
+          onClick={() => setActiveTab('beliefs')}
+        >
+          Убеждения
+        </button>
+        <button
+          className={`${styles.tasksTab} ${activeTab === 'procrastination' ? styles.tasksTabActive : ''}`}
+          onClick={() => setActiveTab('procrastination')}
+        >
+          Прокрастинация
+        </button>
+      </div>
+
       <div className={styles.tasksList}>
-        <h3 className={styles.taskSectionTitle}>Ежедневное чтение</h3>
-        <ReadingTaskComponent readingGoalSeconds={READING_GOAL_SECONDS} />
-        
-        {/* Компонент для отображения истории чтения */}
-        <div className={styles.readingHistorySection}>
-          <h4 className={styles.readingHistoryTitle}>Прогресс вашего чтения</h4>
-          <ReadingHistoryBar readingGoalSeconds={READING_GOAL_SECONDS} />
-        </div>
-
-        <h3 className={styles.taskSectionTitle}>Работа с самооценкой</h3>
-        <MethodsTaskComponent 
-          task={selfEsteemTask}
-          onActivityClick={handleActivityClick}
-        />
-
-        {/* Добавляем опросник Бернса в раздел работы с самооценкой */}
-        {burnsStatus && (
-          <TestTaskComponent 
-            task={burnsStatus} 
-            onActivityClick={handleActivityClick} 
-          />
-            )}
-
-        {/* Обновленная секция с историей методов */}
-        <div className={styles.methodsHistorySection}>
-          <h4 className={styles.methodsHistoryTitle}>История работы с самооценкой</h4>
-          <ActivityHistoryBar
-            goalSeconds={METHODS_GOAL_SECONDS}
-            config={{
-              title: "История работы с самооценкой",
-              emptyHistoryText: "История работы с методами самооценки пока отсутствует",
-              activityIds: [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY],
-              testActivityId: ACTIVITY_IDS.BURNS_CHECKLIST,
-              testScoreBadgeLabel: "опросника"
-            }}
-          />
-        </div>
-
-        {/* График динамики настроения */}
-        {burnsTestResults.length > 0 && (
-          <div className={styles.moodTrendSection}>
-            <MoodTrendChart height={350} showStats={true} />
-          </div>
-        )}
-
-        {/* Раздел: Работа с убеждениями */}
-        <h3 className={styles.taskSectionTitle}>Работа с убеждениями</h3>
-
-        {/* Шкала дисфункциональных убеждений (DAS) */}
-        {dasStatus && (
-          <TestTaskComponent
-            task={dasStatus}
-            onActivityClick={handleActivityClick}
-          />
-        )}
-
-        {/* График динамики убеждений */}
-        {dasExercises.length > 0 && (
-          <div className={styles.dasTrendSection}>
-            <DASTrendChart height={350} showStats={true} />
-          </div>
-        )}
-
-        {/* Раздел: Работа с прокрастинацией */}
-        <h3 className={styles.taskSectionTitle}>Работа с прокрастинацией</h3>
-        <MethodsTaskComponent 
-          task={procrastinationTask}
-          onActivityClick={handleActivityClick}
-        />
-        
-        {/* Шкала прокрастинации */}
-        {procrastinationScaleStatus && (
-          <TestTaskComponent 
-            task={procrastinationScaleStatus} 
-            onActivityClick={handleActivityClick} 
-          />
-        )}
-
-        {/* Секция с историей работы с прокрастинацией */}
-        <div className={styles.procrastinationHistorySection}>
-          <h4 className={styles.procrastinationHistoryTitle}>История работы с прокрастинацией</h4>
-          <ActivityHistoryBar 
-            goalSeconds={PROCRASTINATION_GOAL_SECONDS}
-            config={{
-              title: "История работы с прокрастинацией",
-              emptyHistoryText: "История работы с прокрастинацией пока отсутствует",
-              activityIds: [
-                ACTIVITY_IDS.PROCRASTINATION_DIARY, 
-                ACTIVITY_IDS.ANTI_PROCRASTINATION,
-                ACTIVITY_IDS.DAILY_SCHEDULE,
-                ACTIVITY_IDS.PLEASURE_SHEET,
-                ACTIVITY_IDS.NO_BUTS,
-                ACTIVITY_IDS.SELF_SUPPORT,
-                ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS,
-                ACTIVITY_IDS.SMALL_STEPS,
-                ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION,
-                ACTIVITY_IDS.DISARMING_TECHNIQUE,
-                ACTIVITY_IDS.IMAGINE_SUCCESS,
-                ACTIVITY_IDS.COUNT_ACHIEVEMENTS,
-                ACTIVITY_IDS.CHECK_CANT_DO,
-                ACTIVITY_IDS.NO_LOSE_TECHNIQUE
-              ],
-              testActivityId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
-              testScoreBadgeLabel: "теста"
-            }}
-          />
-          </div>
+        {activeTab === 'reading' && renderReadingAndSelfEsteemTab()}
+        {activeTab === 'beliefs' && renderBeliefsTab()}
+        {activeTab === 'procrastination' && renderProcrastinationTab()}
       </div>
     </div>
   );
