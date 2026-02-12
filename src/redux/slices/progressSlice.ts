@@ -9,10 +9,12 @@ import type { RootState, UserProgress } from '../types';
 import { ACTIVITY_IDS } from '../../constants/activities';
 import { getChapterActivities } from '../../utils/chapterUtils';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
+import book2ChaptersData from '../../components/ListOfChapters/chapters-book2.json';
 import type { ChaptersData } from '../../types/chapters.types';
 
-// Указываем тип для импортированных данных  
+// Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
+const typedBook2Data = book2ChaptersData as ChaptersData;
 
 const today = getCurrentDate();
 
@@ -28,7 +30,7 @@ const initialState: ProgressState = {
   },
   chapters: [],
   unlockedContent: {
-    chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
+    chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1', 'b2-intro', 'b2-about', 'b2-ch1'],
     activities: []
   },
   completedChapters: [],
@@ -267,15 +269,17 @@ const progressSlice = createSlice({
     
     // Разблокировка всего содержимого
     unlockAllContent: (state) => {
-      // Собираем все ID глав и подглав из chapters.json
-      const allChapterIds = typedChaptersData.chapters.flatMap(chapter => {
-        const ids = [chapter.id];
-        if (chapter.sections) {
-          ids.push(...chapter.sections.map(section => section.id));
-        }
-        return ids;
-      });
-      
+      // Собираем все ID глав и подглав из обеих книг
+      const collectIds = (data: ChaptersData) =>
+        data.chapters.flatMap(chapter => {
+          const ids = [chapter.id];
+          if (chapter.sections) {
+            ids.push(...chapter.sections.map(section => section.id));
+          }
+          return ids;
+        });
+
+      const allChapterIds = [...collectIds(typedChaptersData), ...collectIds(typedBook2Data)];
       state.unlockedContent.chapters = [...allChapterIds, 'all'];
     },
     

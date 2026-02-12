@@ -1,0 +1,349 @@
+{
+  "chapters": [
+    {
+      "id": "b2-intro",
+      "title": "Вступление",
+      "path": "content/book2/chapters/ch01.html",
+      "order": 1
+    },
+    {
+      "id": "b2-about",
+      "title": "Немного обо мне",
+      "path": "content/book2/chapters/ch02.html",
+      "order": 2
+    },
+    {
+      "id": "b2-ch1",
+      "title": "Глава 1. Вы одиноки?",
+      "path": "content/book2/chapters/ch1.html",
+      "order": 3
+    },
+    {
+      "id": "b2-ch2",
+      "title": "Глава 2. Что такое одиночество",
+      "order": 4,
+      "sections": [
+        {
+          "id": "b2-ch2-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch2-0.html"
+        },
+        {
+          "id": "b2-ch2-1",
+          "title": "Тест на способность к близости",
+          "path": "content/book2/chapters/ch2-1.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch3",
+      "title": "Глава 3. Научитесь нравиться себе и любить себя",
+      "order": 5,
+      "sections": [
+        {
+          "id": "b2-ch3-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch3-0.html"
+        },
+        {
+          "id": "b2-ch3-1",
+          "title": "Как важно побыть одному",
+          "path": "content/book2/chapters/ch3-1.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch4",
+      "title": "Глава 4. Подумайте о самооценке",
+      "order": 6,
+      "sections": [
+        {
+          "id": "b2-ch4-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch4-0.html"
+        },
+        {
+          "id": "b2-ch4-1",
+          "title": "Десять способов «распутать» мышление",
+          "path": "content/book2/chapters/ch4-1.html"
+        },
+        {
+          "id": "b2-ch4-2",
+          "title": "Как победить страх одиночества",
+          "path": "content/book2/chapters/ch4-2.html"
+        },
+        {
+          "id": "b2-ch4-3",
+          "title": "Как развить более здоровые установки",
+          "path": "content/book2/chapters/ch4-3.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch5",
+      "title": "Глава 5. Как быть неотразимыми",
+      "path": "content/book2/chapters/ch5.html",
+      "order": 7
+    },
+    {
+      "id": "b2-ch6",
+      "title": "Глава 6. Как стать общительнее",
+      "order": 8,
+      "sections": [
+        {
+          "id": "b2-ch6-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch6-0.html"
+        },
+        {
+          "id": "b2-ch6-1",
+          "title": "Как захотеть флиртовать?",
+          "path": "content/book2/chapters/ch6-1.html"
+        },
+        {
+          "id": "b2-ch6-2",
+          "title": "Где знакомиться с людьми",
+          "path": "content/book2/chapters/ch6-2.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch7",
+      "title": "Глава 7. Как преодолеть застенчивость и социальную тревожность",
+      "order": 9,
+      "sections": [
+        {
+          "id": "b2-ch7-1",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch7-1.html"
+        },
+        {
+          "id": "b2-ch7-2",
+          "title": "Как отвечать на инициативу",
+          "path": "content/book2/chapters/ch7-2.html"
+        },
+        {
+          "id": "b2-ch7-3",
+          "title": "Как стать «легче»",
+          "path": "content/book2/chapters/ch7-3.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch8",
+      "title": "Глава 8. Как общаться с теми, кто играет в неприступность",
+      "order": 10,
+      "sections": [
+        {
+          "id": "b2-ch8-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch8-0.html"
+        },
+        {
+          "id": "b2-ch8-1",
+          "title": "Как общаться с женщинами, которые строят из себя недотрог",
+          "path": "content/book2/chapters/ch8-1.html"
+        },
+        {
+          "id": "b2-ch8-2",
+          "title": "Как перестать идеализировать женщин",
+          "path": "content/book2/chapters/ch8-2.html"
+        },
+        {
+          "id": "b2-ch8-3",
+          "title": "Как поменяться ролями с неприступным мужчиной",
+          "path": "content/book2/chapters/ch8-3.html"
+        },
+        {
+          "id": "b2-ch8-4",
+          "title": "Как не позволять мужчинам собой пользоваться",
+          "path": "content/book2/chapters/ch8-4.html"
+        },
+        {
+          "id": "b2-ch8-5",
+          "title": "Как перестать «нуждаться» в любви",
+          "path": "content/book2/chapters/ch8-5.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch9",
+      "title": "Глава 9. Как преодолеть романтический перфекционизм и научиться любить",
+      "path": "content/book2/chapters/ch9.html",
+      "order": 11
+    },
+    {
+      "id": "b2-ch10",
+      "title": "Глава 10. Фактор ловушки: а вдруг вы «пленник любви»?",
+      "order": 12,
+      "sections": [
+        {
+          "id": "b2-ch10-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch10-0.html"
+        },
+        {
+          "id": "b2-ch10-1",
+          "title": "Подведем итоги",
+          "path": "content/book2/chapters/ch10-1.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch11",
+      "title": "Глава 11. Как склеить разбитое сердце",
+      "order": 13,
+      "sections": [
+        {
+          "id": "b2-ch11-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch11-0.html"
+        },
+        {
+          "id": "b2-ch11-1",
+          "title": "Страх отказа",
+          "path": "content/book2/chapters/ch11-1.html"
+        },
+        {
+          "id": "b2-ch11-2",
+          "title": "Страх успеха",
+          "path": "content/book2/chapters/ch11-2.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch12",
+      "title": "Глава 12. Только для мужчин: преодоление эректильной дисфункции",
+      "order": 14,
+      "sections": [
+        {
+          "id": "b2-ch12-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch12-0.html"
+        },
+        {
+          "id": "b2-ch12-1",
+          "title": "Преодоление эректильной дисфункции",
+          "path": "content/book2/chapters/ch12-1.html"
+        },
+        {
+          "id": "b2-ch12-2",
+          "title": "Работа над фантазиями",
+          "path": "content/book2/chapters/ch12-2.html"
+        },
+        {
+          "id": "b2-ch12-3",
+          "title": "Техника парадокса",
+          "path": "content/book2/chapters/ch12-3.html"
+        },
+        {
+          "id": "b2-ch12-4",
+          "title": "Чем поможет женщина",
+          "path": "content/book2/chapters/ch12-4.html"
+        },
+        {
+          "id": "b2-ch12-5",
+          "title": "Подведем итоги",
+          "path": "content/book2/chapters/ch12-5.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch13",
+      "title": "Глава 13. Только для женщин: как получать больше удовольствия от секса",
+      "order": 15,
+      "sections": [
+        {
+          "id": "b2-ch13-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch13-0.html"
+        },
+        {
+          "id": "b2-ch13-1",
+          "title": "Чувство напряженности",
+          "path": "content/book2/chapters/ch13-1.html"
+        },
+        {
+          "id": "b2-ch13-2",
+          "title": "Трудности в достижении оргазма",
+          "path": "content/book2/chapters/ch13-2.html"
+        },
+        {
+          "id": "b2-ch13-3",
+          "title": "Как преодолеть стеснение перед мастурбацией",
+          "path": "content/book2/chapters/ch13-3.html"
+        },
+        {
+          "id": "b2-ch13-4",
+          "title": "Секс и близость",
+          "path": "content/book2/chapters/ch13-4.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-ch14",
+      "title": "Глава 14. Искушение: темная сторона жизни без партнера",
+      "order": 16,
+      "sections": [
+        {
+          "id": "b2-ch14-0",
+          "title": "Введение",
+          "path": "content/book2/chapters/ch14-0.html"
+        },
+        {
+          "id": "b2-ch14-1",
+          "title": "Принятие рационального решения",
+          "path": "content/book2/chapters/ch14-1.html"
+        },
+        {
+          "id": "b2-ch14-2",
+          "title": "Как противостоять искушениям",
+          "path": "content/book2/chapters/ch14-2.html"
+        }
+      ]
+    },
+    {
+      "id": "b2-appendix",
+      "title": "Приложения",
+      "path": "content/book2/chapters/ch15.html",
+      "order": 17
+    }
+  ],
+  "sections": [
+    {
+      "id": "b2-front",
+      "name": "Вступительные материалы",
+      "chapters": ["b2-intro", "b2-about"]
+    },
+    {
+      "id": "b2-part1",
+      "name": "Часть I: Хорошие новости об одиночестве",
+      "chapters": ["b2-ch1", "b2-ch2"]
+    },
+    {
+      "id": "b2-part2",
+      "name": "Часть II: Любовь к себе — прежде всего",
+      "chapters": ["b2-ch3", "b2-ch4"]
+    },
+    {
+      "id": "b2-part3",
+      "name": "Часть III: Как выстраивать связи",
+      "chapters": ["b2-ch5", "b2-ch6", "b2-ch7", "b2-ch8"]
+    },
+    {
+      "id": "b2-part4",
+      "name": "Часть IV: Как сближаться с людьми",
+      "chapters": ["b2-ch9", "b2-ch10", "b2-ch11"]
+    },
+    {
+      "id": "b2-part5",
+      "name": "Часть V: Ваша личная программа роста",
+      "chapters": ["b2-ch12", "b2-ch13", "b2-ch14"]
+    },
+    {
+      "id": "b2-appendices",
+      "name": "Приложения",
+      "chapters": ["b2-appendix"]
+    }
+  ]
+}

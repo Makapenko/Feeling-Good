@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { unlockAllContent, unlockContent } from '../slices/progressSlice';
 import { addNotification } from '../slices/notificationSlice';
-import { getUnlockContentForChapter } from '../../utils/chapterUtils';
+import { getUnlockContentForChapter, findChapterData } from '../../utils/chapterUtils';
 import type { RootState } from '../types';
 
 /**
@@ -13,21 +13,27 @@ export const unlockContentAfterChapter = createAsyncThunk(
   async (completedChapterId: string, { dispatch, getState }) => {
     // Определяем что нужно разблокировать
     const { nextChapter, newActivities } = getUnlockContentForChapter(completedChapterId);
-    
+
     // Разблокируем следующую главу, если она есть
     if (nextChapter) {
       const state = getState() as RootState;
-      const isAlreadyUnlocked = state.progress.unlockedContent.chapters.includes(nextChapter);
-      
-      if (!isAlreadyUnlocked) {
+      const unlockedChapters = state.progress.unlockedContent.chapters;
+
+      // Разблокируем подглаву/главу
+      if (!unlockedChapters.includes(nextChapter)) {
         dispatch(unlockContent({ contentId: nextChapter, contentType: 'chapter' }));
       }
+
+      // Если разблокируемая глава — подглава, разблокируем также родительскую главу
+      const chapterData = findChapterData(nextChapter);
+      if (chapterData && !chapterData.isMainChapter) {
+        const parentId = chapterData.chapter.id;
+        if (!unlockedChapters.includes(parentId)) {
+          dispatch(unlockContent({ contentId: parentId, contentType: 'chapter' }));
+        }
+      }
     }
-    
-    // Не отправляем дублирующее уведомление здесь,
-    // так как UnlockNotifier уже показывает подробное уведомление
-    // с точным названием разблокированного задания
-    
+
     return { completedChapterId, nextChapter, newActivities };
   }
 );

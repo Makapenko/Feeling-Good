@@ -44,14 +44,23 @@ const getInitialStateFromStorage = (): UserProgress | undefined => {
         }));
       }
       
+      // Миграция: добавляем начальные главы книги 2, если их нет
+      const unlockedContent = parsed.unlockedContent || {
+        chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
+        activities: []
+      };
+      const book2InitialChapters = ['b2-intro', 'b2-about', 'b2-ch1'];
+      for (const chId of book2InitialChapters) {
+        if (!unlockedContent.chapters.includes(chId)) {
+          unlockedContent.chapters.push(chId);
+        }
+      }
+
       // Убедимся, что все необходимые поля существуют
       return {
         ...parsed,
         chapters,
-        unlockedContent: parsed.unlockedContent || {
-          chapters: ['acknowledgments', 'foreword', 'introduction', 'ch1'],
-          activities: []
-        },
+        unlockedContent,
         completedChapters: parsed.completedChapters || [],
         favoriteActivities: parsed.favoriteActivities || [],
         lastUnlockedChapter: null,

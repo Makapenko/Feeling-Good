@@ -2,6 +2,39 @@
 
 Все заметные изменения в этом проекте будут документированы в этом файле.
 
+## [Unreleased] - 2026-02-12
+
+### Добавлено ✨
+
+#### Книга 2 — "Близость" 📖
+- Добавлена вторая книга Дэвида Бернса "Близость" (14 глав, 5 частей + приложения)
+- Вкладки переключения между книгами в компоненте ListOfChapters
+- Система постепенного открытия глав для Книги 2 (аналогично Книге 1)
+- Начальные разблокированные главы: Вступление, Немного обо мне, Глава 1
+- Метаданные глав в `chapters-book2.json`
+- Контент HTML-файлов в `public/content/book2/chapters/`
+- Изображения в `public/content/book2/images/`
+- Универсальная адаптация путей изображений в ChapterReader (поддержка book2/images/)
+
+#### Кнопка сброса данных 🗑️
+- Кнопка "Сбросить данные" на главной странице (WelcomePage)
+- Двойное подтверждение: первый клик → "Точно удалить?", второй → сброс
+- Удаляет все данные из localStorage и перезагружает страницу
+
+**Файлы добавлены:**
+- `src/components/ListOfChapters/chapters-book2.json` — метаданные Книги 2
+
+**Файлы изменены:**
+- `src/components/ListOfChapters/ListOfChapters.tsx` — вкладки книг
+- `src/components/ListOfChapters/ListOfChapters.module.css` — стили вкладок
+- `src/utils/chapterUtils.ts` — поддержка обеих книг (findChapterData, getNextChapterToUnlock)
+- `src/redux/slices/progressSlice.ts` — начальные главы Книги 2 + unlockAllContent для обеих книг
+- `src/components/ChapterReader/ChapterReader.tsx` — универсальная адаптация путей изображений
+- `src/components/WelcomePage/WelcomePage.tsx` — кнопка сброса данных
+- `src/components/WelcomePage/WelcomePage.module.css` — стили кнопки сброса
+
+---
+
 ## [Unreleased] - 2025-10-26
 
 ### Добавлено ✨

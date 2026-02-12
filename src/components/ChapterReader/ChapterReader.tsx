@@ -1,7 +1,6 @@
 import styles from './ChapterReader.module.css';
 import DOMPurify from 'dompurify';
-import chaptersData from '../ListOfChapters/chapters.json';
-import type { ChaptersData, Section } from '../../types/chapters.types';
+import { getNextChapterToUnlock, findChapterData } from '../../utils/chapterUtils';
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ImageModal from './ImageModal';
 import NoteModal from './NoteModal';
@@ -15,8 +14,6 @@ import { loadChapter, completeChapterWithUnlock } from '../../redux/actions';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
 import ChapterFavoriteButton from '../shared/ChapterFavoriteButton';
 
-// Указываем тип для импортированных данных
-const typedChaptersData = chaptersData as ChaptersData;
 
 interface ChapterReaderProps {
   content: string;
@@ -96,76 +93,31 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
 
   // Функция для адаптации путей к изображениям в зависимости от окружения
   const adaptImagePaths = useCallback((htmlContent: string): string => {
-    // Получаем базовый путь из окружения
     const basePath = import.meta.env.BASE_URL || '/';
-    
-    // 1. Обрабатываем случай, когда пути содержат /Feeling-Good/ 
-    if (htmlContent.includes('src="/Feeling-Good/content/images/')) {
-      // Если текущий basePath не /Feeling-Good/, то нужно исправить пути
-      if (basePath !== '/Feeling-Good/') {
-        // Удаляем /Feeling-Good/ и добавляем правильный basePath
-        return htmlContent.replace(/src="\/Feeling-Good\/content\/images\//g, `src="${basePath}content/images/`);
-      }
-      // Если basePath = /Feeling-Good/, оставляем как есть
-      return htmlContent;
+    let result = htmlContent;
+
+    // Заменяем все пути /Feeling-Good/content/ на правильный basePath
+    if (basePath !== '/Feeling-Good/') {
+      result = result.replace(/src="\/Feeling-Good\/content\//g, `src="${basePath}content/`);
     }
-    
-    // 2. Обрабатываем стандартные пути /content/images/
-    if (htmlContent.includes('src="/content/images/')) {
-      return htmlContent.replace(/src="\/content\/images\//g, `src="${basePath}content/images/`);
-    }
-    
-    return htmlContent;
+
+    // Заменяем абсолютные пути /content/ на basePath + content/
+    result = result.replace(/src="\/content\//g, `src="${basePath}content/`);
+
+    return result;
   }, []);
 
   const findNextChapter = useCallback(() => {
-    // Находим текущую главу
-    const currentChapter = typedChaptersData.chapters.find(ch => {
-      // Проверяем, является ли текущий ID главой или подглавой
-      if (chapterId === ch.id) return true;
-      return ch.sections?.some(section => section.id === chapterId);
-    });
+    const nextId = getNextChapterToUnlock(chapterId);
+    if (!nextId) return null;
 
-    if (!currentChapter) return null;
+    const data = findChapterData(nextId);
+    if (!data) return null;
 
-    // Если это подглава, находим следующую подглаву в текущей главе
-    if (chapterId !== currentChapter.id && currentChapter.sections) {
-      const currentSectionIndex = currentChapter.sections.findIndex(s => s.id === chapterId);
-      if (currentSectionIndex < currentChapter.sections.length - 1) {
-        // Есть следующая подглава
-        const nextSection = currentChapter.sections[currentSectionIndex + 1] as Section;
-        return {
-          id: nextSection.id,
-          title: nextSection.title,
-          path: nextSection.path
-        };
-      }
+    if (data.isMainChapter) {
+      return { id: data.chapter.id, title: data.chapter.title, path: data.chapter.path };
     }
-
-    // Если это последняя подглава или глава без подглав, переходим к следующей главе
-    const currentChapterIndex = typedChaptersData.chapters.findIndex(ch => ch.id === currentChapter.id);
-    if (currentChapterIndex < typedChaptersData.chapters.length - 1) {
-      const nextChapter = typedChaptersData.chapters[currentChapterIndex + 1];
-      // Если у следующей главы есть подглавы, берем первую подглаву
-      if (nextChapter.sections && nextChapter.sections.length > 0) {
-        const firstSection = nextChapter.sections[0] as Section;
-        return {
-          id: firstSection.id,
-          title: firstSection.title,
-          path: firstSection.path
-        };
-      }
-      // Если нет подглав, берем саму главу (только если у неё есть path)
-      if (nextChapter.path) {
-        return {
-          id: nextChapter.id,
-          title: nextChapter.title,
-          path: nextChapter.path
-        };
-      }
-    }
-
-    return null;
+    return { id: data.section!.id, title: data.section!.title, path: data.section!.path };
   }, [chapterId]);
 
   const handleComplete = useCallback(async () => {
@@ -245,9 +197,7 @@ const ChapterReader: React.FC<ChapterReaderProps> = React.memo(({ content, chapt
       <div className={styles.chapterActions}>
         <ChapterFavoriteButton 
           chapterId={chapterId} 
-          chapterTitle={typedChaptersData.chapters.find(ch => 
-            ch.id === chapterId || ch.sections?.some(s => s.id === chapterId)
-          )?.title || 'Глава'}
+          chapterTitle={findChapterData(chapterId)?.chapter.title || 'Глава'}
           className={styles.chapterFavorite}
         />
       </div>
