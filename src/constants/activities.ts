@@ -46,6 +46,8 @@ export const ACTIVITY_IDS = {
   PROCRASTINATION_SCALE: 'procrastination-scale',
   IMAGERY_SCENES_DIARY: 'imagery-scenes-diary',
   REASONS_SHOULD_REFUTATION: 'reasons-should-refutation',
+  SELF_WORTH_MEMO: 'self-worth-memo',
+  REJECTION_RESPONSE: 'rejection-response',
 } as const;
 
 // Типизированный объединенный тип из всех идентификаторов
@@ -92,6 +94,8 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.PROCRASTINATION_SCALE]: 'Шкала иррациональной прокрастинации',
   [ACTIVITY_IDS.IMAGERY_SCENES_DIARY]: 'Дневник воображаемых сцен',
   [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION]: 'Причины и опровержения "должен"-мышления',
+  [ACTIVITY_IDS.SELF_WORTH_MEMO]: 'Памятка: как завоевать расположение людей',
+  [ACTIVITY_IDS.REJECTION_RESPONSE]: 'Рациональные ответы на неодобрение',
 };
 
 /**

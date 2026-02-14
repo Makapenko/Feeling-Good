@@ -18,6 +18,57 @@
   white-space: pre-line;
 }
 
+.examples {
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.examplesSummary {
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #4070F4;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.examplesSummary::-webkit-details-marker {
+  display: none;
+}
+
+.examplesSummary::before {
+  content: '▸ ';
+}
+
+.examples[open] > .examplesSummary::before {
+  content: '▾ ';
+}
+
+.examplesSummary:hover {
+  background-color: #f5f7ff;
+}
+
+.examplesList {
+  margin: 0;
+  padding: 4px 16px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.examplesList li {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.examplesList li strong {
+  color: #333;
+}
+
 .formGroup {
   margin-bottom: 20px;
 }

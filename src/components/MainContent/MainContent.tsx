@@ -41,6 +41,9 @@ import VerbalJudo from '../Activities/VerbalJudo/VerbalJudo';
 import CriticismManagementMethods from '../Activities/CriticismManagementMethods/CriticismManagementMethods';
 import AngerProsCons from '../Activities/AngerProsCons/AngerProsCons';
 import ReasonsShouldRefutation from '../Activities/ReasonsShouldRefutation/ReasonsShouldRefutation';
+import RewriteBelief from '../Activities/RewriteBelief/RewriteBelief';
+import SelfWorthMemo from '../Activities/SelfWorthMemo/SelfWorthMemo';
+import RejectionResponse from '../Activities/RejectionResponse/RejectionResponse';
 
 import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
@@ -84,7 +87,10 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.VERBAL_JUDO]: VerbalJudo,
   [ACTIVITY_IDS.CRITICISM_MANAGEMENT_METHODS]: CriticismManagementMethods,
   [ACTIVITY_IDS.ANGER_PROS_CONS]: AngerProsCons,
-  [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION]: ReasonsShouldRefutation
+  [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION]: ReasonsShouldRefutation,
+  [ACTIVITY_IDS.REWRITE_BELIEF]: RewriteBelief,
+  [ACTIVITY_IDS.SELF_WORTH_MEMO]: SelfWorthMemo,
+  [ACTIVITY_IDS.REJECTION_RESPONSE]: RejectionResponse
 };
 
 const MainContent: React.FC = () => {

@@ -55,6 +55,8 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch10-1': [ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
   // 'ch11-2': [ACTIVITY_IDS.PROS_CONS_ANALYSIS],
   'ch11-3': [ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES],
+  'ch11-6': [ACTIVITY_IDS.SELF_WORTH_MEMO],
+  'ch11-7': [ACTIVITY_IDS.REJECTION_RESPONSE],
 };
 
 // Получить все активности, доступные для данного набора глав

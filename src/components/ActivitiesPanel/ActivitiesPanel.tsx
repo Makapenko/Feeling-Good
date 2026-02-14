@@ -98,7 +98,9 @@ const sections: ActivitySection[] = [
     title: 'Зависимость от одобрения',
     activities: [
       { content: ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES, label: 'Анализ преимуществ и недостатков убеждений' },
-      { content: ACTIVITY_IDS.REWRITE_BELIEF, label: 'Переписывание убеждений' }
+      { content: ACTIVITY_IDS.REWRITE_BELIEF, label: 'Переписывание убеждений' },
+      { content: ACTIVITY_IDS.SELF_WORTH_MEMO, label: 'Как завоевать расположение людей' },
+      { content: ACTIVITY_IDS.REJECTION_RESPONSE, label: 'Рациональные ответы на неодобрение' }
     ]
   },
 ];

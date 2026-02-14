@@ -49,6 +49,8 @@ import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalA
 import AngerProsConsExerciseComponent from './render/AngerProsConsExerciseComponent';
 import { AngerProsConsExercise } from '../Activities/AngerProsCons/types';
 
+import RewriteBeliefExerciseComponent from './render/RewriteBeliefExerciseComponent';
+
 /**
  * Компонент для отображения и управления упражнениями пользователя
  * 
@@ -96,6 +98,7 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
         case ACTIVITY_IDS.NO_LOSE_TECHNIQUE:
         case ACTIVITY_IDS.VERBAL_JUDO:
         case ACTIVITY_IDS.REASONS_SHOULD_REFUTATION:
+        case ACTIVITY_IDS.REJECTION_RESPONSE:
           return <ThreeColumnsExerciseComponent
             key={exercise.id}
             exercise={exercise as ThreeColumnsExercise}
@@ -232,6 +235,14 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
           return <AngerProsConsExerciseComponent
             key={exercise.id}
             exercises={[exercise as AngerProsConsExercise]}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+          />;
+        case ACTIVITY_IDS.REWRITE_BELIEF:
+          return <RewriteBeliefExerciseComponent
+            key={exercise.id}
+            exercise={exercise as any}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
             onClose={onClose}
