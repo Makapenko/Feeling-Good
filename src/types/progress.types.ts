@@ -16,6 +16,7 @@ import { DownwardArrowExercise } from '../components/Activities/DownwardArrow/ty
 import { RewriteBeliefExercise } from '../components/Activities/RewriteBelief/types';
 import { DysfunctionalAttitudeScaleExercise } from '../components/Activities/DysfunctionalAttitudeScale/types';
 import { AngerProsConsExercise } from '../components/Activities/AngerProsCons/types';
+import { UniversalCounterExercise } from '../components/Activities/UniversalCounter/types';
 
 
 /**
@@ -47,6 +48,6 @@ export type Exercise = ThreeColumnsExercise | ThoughtDiaryExercise | DailySchedu
   AntiProcrastinationExercise | PleasureSheetExercise | NoButsExercise | SelfSupportExercise | 
   SmallStepsExercise | MotivationWithoutCoercionExercise | ImagineSuccessExercise | CountAchievementsExercise |
   CheckCantDoExercise | NoLoseTechniqueExercise | DownwardArrowExercise | DysfunctionalAttitudeScaleExercise | 
-  RewriteBeliefExercise | AngerProsConsExercise;
+  RewriteBeliefExercise | AngerProsConsExercise | UniversalCounterExercise;
 
 export type SpecialContent = ActivityId;

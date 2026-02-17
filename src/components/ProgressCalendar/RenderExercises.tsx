@@ -51,6 +51,9 @@ import { AngerProsConsExercise } from '../Activities/AngerProsCons/types';
 
 import RewriteBeliefExerciseComponent from './render/RewriteBeliefExerciseComponent';
 
+import UniversalCounterExerciseComponent from './render/UniversalCounterExerciseComponent';
+import { UniversalCounterExercise } from '../Activities/UniversalCounter/types';
+
 /**
  * Компонент для отображения и управления упражнениями пользователя
  * 
@@ -99,6 +102,9 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
         case ACTIVITY_IDS.VERBAL_JUDO:
         case ACTIVITY_IDS.REASONS_SHOULD_REFUTATION:
         case ACTIVITY_IDS.REJECTION_RESPONSE:
+        case ACTIVITY_IDS.LOVE_ADDICTION_DISADVANTAGES:
+        case ACTIVITY_IDS.BELIEF_CORRECTION:
+        case ACTIVITY_IDS.SELF_CRITICISM_RESPONSE:
           return <ThreeColumnsExerciseComponent
             key={exercise.id}
             exercise={exercise as ThreeColumnsExercise}
@@ -243,6 +249,17 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
           return <RewriteBeliefExerciseComponent
             key={exercise.id}
             exercise={exercise as any}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+          />;
+        case ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER:
+        case ACTIVITY_IDS.SHOULD_COUNTER:
+        case ACTIVITY_IDS.INNER_LIGHT:
+        case ACTIVITY_IDS.DONE_RIGHT_COUNTER:
+          return <UniversalCounterExerciseComponent
+            key={exercise.id}
+            exercise={exercise as UniversalCounterExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
             onClose={onClose}

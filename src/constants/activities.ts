@@ -48,6 +48,15 @@ export const ACTIVITY_IDS = {
   REASONS_SHOULD_REFUTATION: 'reasons-should-refutation',
   SELF_WORTH_MEMO: 'self-worth-memo',
   REJECTION_RESPONSE: 'rejection-response',
+  LOVE_ADDICTION_DISADVANTAGES: 'love-addiction-disadvantages',
+  BELIEF_CORRECTION: 'belief-correction',
+  SELF_CRITICISM_RESPONSE: 'self-criticism-response',
+  SELF_ESTEEM_MEMO: 'self-esteem-memo',
+  // Универсальные счётчики
+  NEGATIVE_THOUGHTS_COUNTER: 'negative-thoughts-counter',
+  SHOULD_COUNTER: 'should-counter',
+  INNER_LIGHT: 'inner-light',
+  DONE_RIGHT_COUNTER: 'done-right-counter',
 } as const;
 
 // Типизированный объединенный тип из всех идентификаторов
@@ -96,6 +105,14 @@ export const ACTIVITY_NAMES: Record<ActivityId, string> = {
   [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION]: 'Причины и опровержения "должен"-мышления',
   [ACTIVITY_IDS.SELF_WORTH_MEMO]: 'Памятка: как завоевать расположение людей',
   [ACTIVITY_IDS.REJECTION_RESPONSE]: 'Рациональные ответы на неодобрение',
+  [ACTIVITY_IDS.LOVE_ADDICTION_DISADVANTAGES]: 'Недостатки любовной зависимости',
+  [ACTIVITY_IDS.BELIEF_CORRECTION]: 'Корректировка убеждения',
+  [ACTIVITY_IDS.SELF_CRITICISM_RESPONSE]: 'Ответы на самокритику',
+  [ACTIVITY_IDS.SELF_ESTEEM_MEMO]: 'Памятка: четыре способа укрепить самооценку',
+  [ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER]: 'Счётчик негативных мыслей',
+  [ACTIVITY_IDS.SHOULD_COUNTER]: 'Счётчик «должен»-мышления',
+  [ACTIVITY_IDS.INNER_LIGHT]: 'Включите «внутренний свет»',
+  [ACTIVITY_IDS.DONE_RIGHT_COUNTER]: 'Счётчик правильных действий',
 };
 
 /**

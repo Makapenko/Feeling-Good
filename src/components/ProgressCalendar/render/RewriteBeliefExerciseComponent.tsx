@@ -1,17 +1,10 @@
 import React from 'react';
 import ExerciseWrapper from './ExerciseWrapper';
 import styles from '../DayDetails.module.css';
-import { BaseExercise } from '../../../types/progress.types';
-
-interface RewriteBeliefExerciseData extends BaseExercise {
-  belief: string;
-  newBelief: string;
-  advantages: string[];
-  disadvantages: string[];
-}
+import { RewriteBeliefExercise } from '../../../components/Activities/RewriteBelief/types';
 
 interface RewriteBeliefExerciseProps {
-  exercise: RewriteBeliefExerciseData;
+  exercise: RewriteBeliefExercise;
   expandedExercises: string[];
   toggleExercise: (id: string) => void;
   onClose?: () => void;

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useDailyProgress } from '../../redux/hooks';
 import styles from './ProgressCalendar.module.css';
-import chaptersData from '../ListOfChapters/chapters.json';
 import { DayDetails } from './DayDetails';
-import { ChapterMap, CalendarDayProgress } from './types';
+import { CalendarDayProgress } from './types';
+import { getChapterTitle, findChapterData } from '../../utils/chapterUtils';
 import { 
   formatTimeFromSeconds, 
   formatDateWithOptions, 
@@ -21,27 +21,15 @@ const ProgressCalendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(getCurrentYearMonth);
 
-  // Создаем карту глав для быстрого поиска
-  const chapterMap: ChapterMap = {};
-  chaptersData.chapters.forEach(chapter => {
-    chapterMap[chapter.id] = {
-      id: chapter.id,
-      title: chapter.title,
-      order: chapter.order,
-      sections: chapter.sections || []
-    };
-  });
-
-  // Определяем, является ли id подглавой и находим родительскую главу
+  // Находим родительскую главу по ID подглавы (поиск по всем книгам)
   const findParentChapter = (id: string): { id: string; title: string; order: number } | undefined => {
-    for (const chapter of chaptersData.chapters) {
-      if (chapter.sections?.some(section => section.id === id)) {
-        return {
-          id: chapter.id,
-          title: chapter.title,
-          order: chapter.order
-        };
-      }
+    const data = findChapterData(id);
+    if (data && !data.isMainChapter) {
+      return {
+        id: data.chapter.id,
+        title: data.chapter.title,
+        order: data.chapter.order
+      };
     }
     return undefined;
   };
@@ -65,15 +53,8 @@ const ProgressCalendar: React.FC = () => {
         // Обрабатываем прогресс по главам
         if (dayProgress.chapters && Object.keys(dayProgress.chapters).length > 0) {
           Object.entries(dayProgress.chapters).forEach(([chapterId, chapterProgress]) => {
-            let chapterTitle = '';
+            const chapterTitle = getChapterTitle(chapterId);
             const parentChapter = findParentChapter(chapterId);
-
-            if (parentChapter) {
-              const section = chapterMap[parentChapter.id].sections.find(s => s.id === chapterId);
-              chapterTitle = section?.title || chapterId;
-            } else {
-              chapterTitle = chapterMap[chapterId]?.title || chapterId;
-            }
 
             processedDailyProgress[date].chapters?.push({
               id: chapterId,
@@ -86,12 +67,15 @@ const ProgressCalendar: React.FC = () => {
           // Сортируем главы по порядку в книге
           if (processedDailyProgress[date].chapters) {
             processedDailyProgress[date].chapters.sort((a, b) => {
-              const aOrder = a.parentChapter?.order || chapterMap[a.id]?.order || 0;
-              const bOrder = b.parentChapter?.order || chapterMap[b.id]?.order || 0;
+              const aData = findChapterData(a.id);
+              const bData = findChapterData(b.id);
+              const aOrder = a.parentChapter?.order || aData?.chapter.order || 0;
+              const bOrder = b.parentChapter?.order || bData?.chapter.order || 0;
               if (aOrder !== bOrder) return aOrder - bOrder;
 
               if (a.parentChapter && b.parentChapter && a.parentChapter.id === b.parentChapter.id) {
-                const sections = chapterMap[a.parentChapter.id].sections;
+                const parentData = findChapterData(a.parentChapter.id);
+                const sections = parentData?.chapter.sections || [];
                 const aIndex = sections.findIndex(s => s.id === a.id);
                 const bIndex = sections.findIndex(s => s.id === b.id);
                 return aIndex - bIndex;
@@ -236,7 +220,6 @@ const ProgressCalendar: React.FC = () => {
         <DayDetails
           date={selectedDate}
           dayProgress={dailyProgress[selectedDate]}
-          chapterMap={chapterMap}
           onClose={() => setSelectedDate(null)}
         />
       )}

@@ -40,6 +40,7 @@ const sections: ActivitySection[] = [
     activities: [
       { content: ACTIVITY_IDS.THREE_COLUMNS_METHOD, label: 'Метод трёх колонок' },
       { content: ACTIVITY_IDS.THOUGHT_DIARY, label: 'Дневник автоматических мыслей' },
+      { content: ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER, label: 'Счётчик негативных мыслей' },
     ]
   },
   {
@@ -100,7 +101,29 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES, label: 'Анализ преимуществ и недостатков убеждений' },
       { content: ACTIVITY_IDS.REWRITE_BELIEF, label: 'Переписывание убеждений' },
       { content: ACTIVITY_IDS.SELF_WORTH_MEMO, label: 'Как завоевать расположение людей' },
-      { content: ACTIVITY_IDS.REJECTION_RESPONSE, label: 'Рациональные ответы на неодобрение' }
+      { content: ACTIVITY_IDS.REJECTION_RESPONSE, label: 'Рациональные ответы на неодобрение' },
+      { content: ACTIVITY_IDS.LOVE_ADDICTION_DISADVANTAGES, label: 'Недостатки любовной зависимости' },
+      { content: ACTIVITY_IDS.BELIEF_CORRECTION, label: 'Корректировка убеждения' },
+      { content: ACTIVITY_IDS.INNER_LIGHT, label: 'Включите «внутренний свет»' },
+    ]
+  },
+  {
+    title: 'Работа с чувством вины',
+    activities: [
+      { content: ACTIVITY_IDS.SHOULD_COUNTER, label: 'Счётчик «должен»-мышления' },
+    ]
+  },
+  {
+    title: 'Работа и ценность',
+    activities: [
+      { content: ACTIVITY_IDS.SELF_CRITICISM_RESPONSE, label: 'Ответы на самокритику' },
+      { content: ACTIVITY_IDS.SELF_ESTEEM_MEMO, label: 'Четыре способа укрепить самооценку' },
+    ]
+  },
+  {
+    title: 'Перфекционизм',
+    activities: [
+      { content: ACTIVITY_IDS.DONE_RIGHT_COUNTER, label: 'Счётчик правильных действий' },
     ]
   },
 ];

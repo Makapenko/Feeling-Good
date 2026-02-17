@@ -374,7 +374,7 @@ export const DASTrendChart: React.FC<DASTrendChartProps> = ({
                   />
 
                   <Tooltip
-                    formatter={(value: number, name: string, props: any) => {
+                    formatter={(_value: number, name: string, props: any) => {
                       const rawKey = name === 'Последний' ? 'latestRaw' : 'previousRaw';
                       const raw = props.payload[rawKey];
                       return [`${raw > 0 ? '+' : ''}${raw}`, name];

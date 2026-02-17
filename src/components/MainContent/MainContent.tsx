@@ -44,6 +44,11 @@ import ReasonsShouldRefutation from '../Activities/ReasonsShouldRefutation/Reaso
 import RewriteBelief from '../Activities/RewriteBelief/RewriteBelief';
 import SelfWorthMemo from '../Activities/SelfWorthMemo/SelfWorthMemo';
 import RejectionResponse from '../Activities/RejectionResponse/RejectionResponse';
+import LoveAddictionDisadvantages from '../Activities/LoveAddictionDisadvantages/LoveAddictionDisadvantages';
+import BeliefCorrection from '../Activities/BeliefCorrection/BeliefCorrection';
+import SelfCriticismResponse from '../Activities/SelfCriticismResponse/SelfCriticismResponse';
+import SelfEsteemMemo from '../Activities/SelfEsteemMemo/SelfEsteemMemo';
+import UniversalCounter from '../Activities/UniversalCounter/UniversalCounter';
 
 import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
@@ -90,7 +95,15 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.REASONS_SHOULD_REFUTATION]: ReasonsShouldRefutation,
   [ACTIVITY_IDS.REWRITE_BELIEF]: RewriteBelief,
   [ACTIVITY_IDS.SELF_WORTH_MEMO]: SelfWorthMemo,
-  [ACTIVITY_IDS.REJECTION_RESPONSE]: RejectionResponse
+  [ACTIVITY_IDS.REJECTION_RESPONSE]: RejectionResponse,
+  [ACTIVITY_IDS.LOVE_ADDICTION_DISADVANTAGES]: LoveAddictionDisadvantages,
+  [ACTIVITY_IDS.BELIEF_CORRECTION]: BeliefCorrection,
+  [ACTIVITY_IDS.SELF_CRITICISM_RESPONSE]: SelfCriticismResponse,
+  [ACTIVITY_IDS.SELF_ESTEEM_MEMO]: SelfEsteemMemo,
+  [ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER]: () => <UniversalCounter counterId={ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER} />,
+  [ACTIVITY_IDS.SHOULD_COUNTER]: () => <UniversalCounter counterId={ACTIVITY_IDS.SHOULD_COUNTER} />,
+  [ACTIVITY_IDS.INNER_LIGHT]: () => <UniversalCounter counterId={ACTIVITY_IDS.INNER_LIGHT} />,
+  [ACTIVITY_IDS.DONE_RIGHT_COUNTER]: () => <UniversalCounter counterId={ACTIVITY_IDS.DONE_RIGHT_COUNTER} />,
 };
 
 const MainContent: React.FC = () => {

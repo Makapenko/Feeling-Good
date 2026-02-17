@@ -15,7 +15,7 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch3-0': [ACTIVITY_IDS.COGNITIVE_BIASES],
   'ch3-1': [ACTIVITY_IDS.COGNITIVE_BIASES_TEST],
   // Самооценка
-  'ch4-2': [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY],
+  'ch4-2': [ACTIVITY_IDS.THREE_COLUMNS_METHOD, ACTIVITY_IDS.THOUGHT_DIARY, ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER],
   // Прокрастинация
   'ch5-0': [ACTIVITY_IDS.PROCRASTINATION_SCALE],
   'ch5-1': [ACTIVITY_IDS.DAILY_SCHEDULE],
@@ -49,6 +49,8 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   // ch7-12 TODO - Написать список ситуаций которые вызывают гнев и отранжировать их. Кажды вечер - представлять ситуацию, и как вы выбираетесь из неё в положительном сценарии, написать сколько гнева испытываешь в результате, повторять каждый день, так же записывать горячие и прохладные мысли по поводу ситуации
   // TODO: Сделать обобщающий компонент с советами по остальным занятиям 7 главы
 
+  'ch8-2': [ACTIVITY_IDS.SHOULD_COUNTER],
+
   'ch9-3': [ACTIVITY_IDS.RATIONAL_RESPONSES],
   
   'ch10-0': [ACTIVITY_IDS.DOWNWARD_ARROW],
@@ -57,6 +59,13 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch11-3': [ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES],
   'ch11-6': [ACTIVITY_IDS.SELF_WORTH_MEMO],
   'ch11-7': [ACTIVITY_IDS.REJECTION_RESPONSE],
+  'ch11-8': [ACTIVITY_IDS.INNER_LIGHT],
+  'ch12-1': [ACTIVITY_IDS.LOVE_ADDICTION_DISADVANTAGES],
+  'ch12-4': [ACTIVITY_IDS.BELIEF_CORRECTION],
+  'ch12-3': [ACTIVITY_IDS.PLEASURE_SHEET],
+  'ch13-1': [ACTIVITY_IDS.SELF_CRITICISM_RESPONSE],
+  'ch13-2': [ACTIVITY_IDS.SELF_ESTEEM_MEMO],
+  'ch14-1': [ACTIVITY_IDS.DONE_RIGHT_COUNTER],
 };
 
 // Получить все активности, доступные для данного набора глав

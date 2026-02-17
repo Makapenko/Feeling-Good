@@ -11,6 +11,23 @@ const typedBook2Data = book2ChaptersData as ChaptersData;
 // Объединённый список глав обеих книг для поиска
 const allBooksData: ChaptersData[] = [typedChaptersData, typedBook2Data];
 
+const BOOK_NAMES = ['Терапия настроения', 'Хорошее настроение: Руководство'];
+
+/**
+ * Возвращает индекс книги (0, 1, ...) и её название по ID главы
+ */
+export const getBookInfo = (chapterId: string): { index: number; name: string } | null => {
+  for (let i = 0; i < allBooksData.length; i++) {
+    const bookData = allBooksData[i];
+    const found = bookData.chapters.some(ch => {
+      if (ch.id === chapterId) return true;
+      return ch.sections?.some(s => s.id === chapterId);
+    });
+    if (found) return { index: i, name: BOOK_NAMES[i] || `Книга ${i + 1}` };
+  }
+  return null;
+};
+
 /**
  * Ищет главу по ID (может быть основная глава или подглава)
  */

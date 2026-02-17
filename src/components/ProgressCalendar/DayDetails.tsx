@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styles from './DayDetails.module.css';
-import { ChapterMap } from './types';
 import { CalendarDayProgress } from './types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
@@ -13,11 +12,11 @@ import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
 import RenderExercises from './RenderExercises';
 import RenderTests from './RenderTests';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
+import { getChapterTitle, getBookInfo } from '../../utils/chapterUtils';
 
 interface DayDetailsProps {
   date: string;
   dayProgress: CalendarDayProgress;
-  chapterMap: ChapterMap;
   onClose: () => void;
 }
 
@@ -59,7 +58,7 @@ const ChapterButton: React.FC<{ chapterId: string, onClose: () => void }> = ({ c
   );
 };
 
-export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapterMap, onClose }) => {
+export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, onClose }) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('chapters');
   const [expandedTests, setExpandedTests] = useState<string[]>([]);
   const [allTestResults, setAllTestResults] = useState<TestResult[]>([]);
@@ -120,22 +119,39 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
     return { grouped, standalone };
   };
 
-  const renderChaptersContent = () => {
-    if (!dayProgress.chapters || dayProgress.chapters.length === 0) {
-      return <div className={styles.emptyState}>Нет прочитанных глав за этот день</div>;
-    }
+  const groupChaptersByBook = (chapters: NonNullable<typeof dayProgress.chapters>) => {
+    const books: { [bookIndex: number]: { name: string; chapters: typeof chapters } } = {};
 
-    const { grouped, standalone } = groupChaptersByParent(dayProgress.chapters);
+    chapters.forEach(chapter => {
+      const bookInfo = getBookInfo(chapter.parentChapter?.id || chapter.id);
+      const bookIndex = bookInfo?.index ?? 0;
+      if (!books[bookIndex]) {
+        books[bookIndex] = { name: bookInfo?.name || `Книга ${bookIndex + 1}`, chapters: [] };
+      }
+      books[bookIndex].chapters.push(chapter);
+    });
+
+    return Object.entries(books).sort(([a], [b]) => Number(a) - Number(b));
+  };
+
+  const renderBookChapters = (chapters: NonNullable<typeof dayProgress.chapters>) => {
+    const { grouped, standalone } = groupChaptersByParent(chapters);
     return (
       <>
         {standalone.map(chapter => (
-          <div key={chapter.id} className={styles.chapter}>
-            <div className={styles.chapterInfo}>
-              <span>{chapter.title}</span>
-              <span>{formatTimeFromSeconds(chapter.timeSpent)}</span>
+          <div key={chapter.id} className={styles.chapterGroup}>
+            <div className={styles.parentChapter}>
+              <div className={styles.chapterInfo}>
+                {chapter.title}
+              </div>
             </div>
-            <div className={styles.chapterActions}>
-              <ChapterButton chapterId={chapter.id} onClose={onClose} />
+            <div className={styles.subChapter}>
+              <div className={styles.chapterInfo}>
+                <span>{formatTimeFromSeconds(chapter.timeSpent)}</span>
+              </div>
+              <div className={styles.chapterActions}>
+                <ChapterButton chapterId={chapter.id} onClose={onClose} />
+              </div>
             </div>
           </div>
         ))}
@@ -143,7 +159,7 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
           <div key={parentId} className={styles.chapterGroup}>
             <div className={styles.parentChapter}>
               <div className={styles.chapterInfo}>
-                {chapterMap[parentId]?.title}
+                {getChapterTitle(parentId)}
               </div>
             </div>
             {subChapters.map(chapter => (
@@ -157,6 +173,30 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, chapt
                 </div>
               </div>
             ))}
+          </div>
+        ))}
+      </>
+    );
+  };
+
+  const renderChaptersContent = () => {
+    if (!dayProgress.chapters || dayProgress.chapters.length === 0) {
+      return <div className={styles.emptyState}>Нет прочитанных глав за этот день</div>;
+    }
+
+    const bookEntries = groupChaptersByBook(dayProgress.chapters);
+
+    // Если главы только из одной книги — без заголовка
+    if (bookEntries.length === 1) {
+      return renderBookChapters(bookEntries[0][1].chapters);
+    }
+
+    return (
+      <>
+        {bookEntries.map(([bookIndex, book]) => (
+          <div key={bookIndex}>
+            <h4 className={styles.bookTitle}>{book.name}</h4>
+            {renderBookChapters(book.chapters)}
           </div>
         ))}
       </>

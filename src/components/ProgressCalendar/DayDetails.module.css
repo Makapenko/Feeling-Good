@@ -181,6 +181,19 @@
   background-color: #3182ce;
 }
 
+.bookTitle {
+  margin: 16px 0 8px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 2px solid #4299e1;
+}
+
+.bookTitle:first-child {
+  margin-top: 0;
+}
+
 .chapterGroup {
   margin: 10px 0;
 }
