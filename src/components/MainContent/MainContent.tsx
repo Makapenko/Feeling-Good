@@ -49,6 +49,9 @@ import BeliefCorrection from '../Activities/BeliefCorrection/BeliefCorrection';
 import SelfCriticismResponse from '../Activities/SelfCriticismResponse/SelfCriticismResponse';
 import SelfEsteemMemo from '../Activities/SelfEsteemMemo/SelfEsteemMemo';
 import UniversalCounter from '../Activities/UniversalCounter/UniversalCounter';
+import LonelinessScale from '../Activities/LonelinessScale/LonelinessScale';
+import IntimacyScale from '../Activities/IntimacyScale/IntimacyScale';
+import MoodJournal from '../Activities/MoodJournal/MoodJournal';
 
 import WelcomePage from '../WelcomePage/WelcomePage';
 import { ACTIVITY_IDS } from '../../constants/activities';
@@ -100,6 +103,20 @@ const ACTIVITY_COMPONENTS = {
   [ACTIVITY_IDS.BELIEF_CORRECTION]: BeliefCorrection,
   [ACTIVITY_IDS.SELF_CRITICISM_RESPONSE]: SelfCriticismResponse,
   [ACTIVITY_IDS.SELF_ESTEEM_MEMO]: SelfEsteemMemo,
+  [ACTIVITY_IDS.LONELINESS_SCALE]: LonelinessScale,
+  [ACTIVITY_IDS.INTIMACY_SCALE]: IntimacyScale,
+  [ACTIVITY_IDS.MOOD_JOURNAL]: MoodJournal,
+  [ACTIVITY_IDS.LONELINESS_PLEASURE_SHEET]: () => (
+    <PleasureSheet
+      activityId={ACTIVITY_IDS.LONELINESS_PLEASURE_SHEET}
+      title="Бланк предполагаемого удовольствия"
+      description="Проверьте гипотезу: «Я не могу быть счастливым и довольным, когда я один (одна)». Запланируйте творческие занятия — как в компании, так и в одиночку. Оцените предполагаемое удовольствие до занятия и реальное — после. Сравните результаты: часто реальное удовольствие оказывается выше, чем мы ожидаем!"
+      activityLabel="Занятие, которое может принести удовольствие или личностный рост"
+      activityPlaceholder="Например: пробежка, приготовление ужина, прогулка..."
+      participantsLabel="С кем? (если в одиночку — напишите «с собой»)"
+      participantsPlaceholder='Напишите "с собой" или имя'
+    />
+  ),
   [ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER]: () => <UniversalCounter counterId={ACTIVITY_IDS.NEGATIVE_THOUGHTS_COUNTER} />,
   [ACTIVITY_IDS.SHOULD_COUNTER]: () => <UniversalCounter counterId={ACTIVITY_IDS.SHOULD_COUNTER} />,
   [ACTIVITY_IDS.INNER_LIGHT]: () => <UniversalCounter counterId={ACTIVITY_IDS.INNER_LIGHT} />,

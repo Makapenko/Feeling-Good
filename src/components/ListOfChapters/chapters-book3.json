@@ -1,0 +1,283 @@
+{
+  "chapters": [
+    {
+      "id": "b3-thanks",
+      "title": "Благодарности",
+      "path": "content/book3/chapters/ch01.html",
+      "order": 1
+    },
+    {
+      "id": "b3-preface",
+      "title": "Предисловие",
+      "path": "content/book3/chapters/ch02.html",
+      "order": 2
+    },
+    {
+      "id": "b3-ch1",
+      "title": "Глава 1. Введение",
+      "order": 3,
+      "sections": [
+        {
+          "id": "b3-ch1-1",
+          "title": "Цель пособия",
+          "path": "content/book3/chapters/ch1-1.html"
+        },
+        {
+          "id": "b3-ch1-2",
+          "title": "На кого рассчитано пособие",
+          "path": "content/book3/chapters/ch1-2.html"
+        },
+        {
+          "id": "b3-ch1-3",
+          "title": "«Теоретическая книга» и «Рабочая тетрадь»",
+          "path": "content/book3/chapters/ch1-3.html"
+        },
+        {
+          "id": "b3-ch1-4",
+          "title": "Содержание «Рабочей тетради»",
+          "path": "content/book3/chapters/ch1-4.html"
+        },
+        {
+          "id": "b3-ch1-5",
+          "title": "Какова длительность программы?",
+          "path": "content/book3/chapters/ch1-5.html"
+        },
+        {
+          "id": "b3-ch1-6",
+          "title": "Поиск помощника",
+          "path": "content/book3/chapters/ch1-6.html"
+        },
+        {
+          "id": "b3-ch1-7",
+          "title": "Он или она?",
+          "path": "content/book3/chapters/ch1-7.html"
+        }
+      ]
+    },
+    {
+      "id": "b3-ch2",
+      "title": "Глава 2. О социофобии и социальной тревоге",
+      "order": 4,
+      "sections": [
+        {
+          "id": "b3-ch2-1",
+          "title": "Что такое социофобия?",
+          "path": "content/book3/chapters/ch2-1.html"
+        },
+        {
+          "id": "b3-ch2-2",
+          "title": "Дополнительная информация о социофобии",
+          "path": "content/book3/chapters/ch2-2.html"
+        },
+        {
+          "id": "b3-ch2-3",
+          "title": "Лечение социофобии",
+          "path": "content/book3/chapters/ch2-3.html"
+        },
+        {
+          "id": "b3-ch2-4",
+          "title": "Определите свой начальный уровень",
+          "path": "content/book3/chapters/ch2-4.html"
+        },
+        {
+          "id": "b3-ch2-5",
+          "title": "Преодоление вашей социофобии",
+          "path": "content/book3/chapters/ch2-5.html"
+        }
+      ]
+    },
+    {
+      "id": "b3-ch3",
+      "title": "Глава 3. Изменение негативных мыслей",
+      "order": 5,
+      "sections": [
+        {
+          "id": "b3-ch3-1",
+          "title": "Азбука эмоций",
+          "path": "content/book3/chapters/ch3-1.html"
+        },
+        {
+          "id": "b3-ch3-2",
+          "title": "Различение событий, мыслей и чувств",
+          "path": "content/book3/chapters/ch3-2.html"
+        },
+        {
+          "id": "b3-ch3-3",
+          "title": "Порядок анализа мыслей",
+          "path": "content/book3/chapters/ch3-3.html"
+        },
+        {
+          "id": "b3-ch3-4",
+          "title": "Анализ ваших чувств и мыслей",
+          "path": "content/book3/chapters/ch3-4.html"
+        },
+        {
+          "id": "b3-ch3-5",
+          "title": "Ежедневный анализ мыслей",
+          "path": "content/book3/chapters/ch3-5.html"
+        },
+        {
+          "id": "b3-ch3-6",
+          "title": "Рациональные и иррациональные мысли",
+          "path": "content/book3/chapters/ch3-6.html"
+        },
+        {
+          "id": "b3-ch3-7",
+          "title": "Изменение мыслей",
+          "path": "content/book3/chapters/ch3-7.html"
+        },
+        {
+          "id": "b3-ch3-8",
+          "title": "Поведенческие эксперименты",
+          "path": "content/book3/chapters/ch3-8.html"
+        },
+        {
+          "id": "b3-ch3-9",
+          "title": "Логические ошибки и иррациональные мысли, наиболее распространенные при социофобии",
+          "path": "content/book3/chapters/ch3-9.html"
+        },
+        {
+          "id": "b3-ch3-10",
+          "title": "Другие упражнения по изменению иррациональных мыслей",
+          "path": "content/book3/chapters/ch3-10.html"
+        }
+      ]
+    },
+    {
+      "id": "b3-ch4",
+      "title": "Глава 4. Навыки общения",
+      "order": 6,
+      "sections": [
+        {
+          "id": "b3-ch4-1",
+          "title": "Введение",
+          "path": "content/book3/chapters/ch4-1.html"
+        },
+        {
+          "id": "b3-ch4-2",
+          "title": "Невербальное поведение",
+          "path": "content/book3/chapters/ch4-2.html"
+        },
+        {
+          "id": "b3-ch4-3",
+          "title": "Начало разговора",
+          "path": "content/book3/chapters/ch4-3.html"
+        },
+        {
+          "id": "b3-ch4-4",
+          "title": "Поддержание беседы: умение слушать",
+          "path": "content/book3/chapters/ch4-4.html"
+        },
+        {
+          "id": "b3-ch4-5",
+          "title": "Завершение беседы",
+          "path": "content/book3/chapters/ch4-5.html"
+        },
+        {
+          "id": "b3-ch4-6",
+          "title": "Комплименты",
+          "path": "content/book3/chapters/ch4-6.html"
+        },
+        {
+          "id": "b3-ch4-7",
+          "title": "Просьба о чем-либо",
+          "path": "content/book3/chapters/ch4-7.html"
+        },
+        {
+          "id": "b3-ch4-8",
+          "title": "Отказ",
+          "path": "content/book3/chapters/ch4-8.html"
+        },
+        {
+          "id": "b3-ch4-9",
+          "title": "Как реагировать на отказ",
+          "path": "content/book3/chapters/ch4-9.html"
+        },
+        {
+          "id": "b3-ch4-10",
+          "title": "Высказывание критики",
+          "path": "content/book3/chapters/ch4-10.html"
+        },
+        {
+          "id": "b3-ch4-11",
+          "title": "Реакция на критику",
+          "path": "content/book3/chapters/ch4-11.html"
+        },
+        {
+          "id": "b3-ch4-12",
+          "title": "Заключительное слово о социальных навыках",
+          "path": "content/book3/chapters/ch4-12.html"
+        }
+      ]
+    },
+    {
+      "id": "b3-ch5",
+      "title": "Глава 5. Преодоление отчужденности",
+      "order": 7,
+      "sections": [
+        {
+          "id": "b3-ch5-1",
+          "title": "Учимся расслабляться",
+          "path": "content/book3/chapters/ch5-1.html"
+        },
+        {
+          "id": "b3-ch5-2",
+          "title": "Противодействие тревоге",
+          "path": "content/book3/chapters/ch5-2.html"
+        },
+        {
+          "id": "b3-ch5-3",
+          "title": "Изготовление карточек для упражнений",
+          "path": "content/book3/chapters/ch5-3.html"
+        },
+        {
+          "id": "b3-ch5-4",
+          "title": "Планирование упражнений",
+          "path": "content/book3/chapters/ch5-4.html"
+        },
+        {
+          "id": "b3-ch5-5",
+          "title": "Как выполнять упражнения",
+          "path": "content/book3/chapters/ch5-5.html"
+        },
+        {
+          "id": "b3-ch5-6",
+          "title": "Специальное упражнение: «Выйти наружу»",
+          "path": "content/book3/chapters/ch5-6.html"
+        },
+        {
+          "id": "b3-ch5-7",
+          "title": "Дополнительные упражнения",
+          "path": "content/book3/chapters/ch5-7.html"
+        },
+        {
+          "id": "b3-ch5-8",
+          "title": "Возможные трудности при выполнении упражнений на раскрытие",
+          "path": "content/book3/chapters/ch5-8.html"
+        },
+        {
+          "id": "b3-ch5-9",
+          "title": "Планирование социальных контактов",
+          "path": "content/book3/chapters/ch5-9.html"
+        },
+        {
+          "id": "b3-ch5-10",
+          "title": "Оценка программы",
+          "path": "content/book3/chapters/ch5-10.html"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "b3-front",
+      "name": "Вступительные материалы",
+      "chapters": ["b3-thanks", "b3-preface"]
+    },
+    {
+      "id": "b3-part1",
+      "name": "Часть I: Теоретическая книга",
+      "chapters": ["b3-ch1", "b3-ch2", "b3-ch3", "b3-ch4", "b3-ch5"]
+    }
+  ]
+}

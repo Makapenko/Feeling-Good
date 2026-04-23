@@ -65,7 +65,8 @@ export const ThreeColumnsBase: React.FC<ThreeColumnsBaseProps> = ({
        ACTIVITY_IDS.ADVANTAGES_DISADVANTAGES,
        ACTIVITY_IDS.VERBAL_JUDO,
        ACTIVITY_IDS.ANGER_PROS_CONS,
-       ACTIVITY_IDS.REJECTION_RESPONSE],
+       ACTIVITY_IDS.REJECTION_RESPONSE,
+       ACTIVITY_IDS.MOOD_JOURNAL],
       methodId
     );
   }, [dailyProgress, methodId]);

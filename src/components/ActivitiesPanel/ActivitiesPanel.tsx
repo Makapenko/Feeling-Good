@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import styles from './ActivitiesPanel.module.css';
 import { useAppDispatch, useUnlockedContent, useSpecialContent } from '../../redux/hooks';
 import { setSpecialContent } from '../../redux/slices/progressSlice';
@@ -16,6 +16,7 @@ interface ActivityItem {
 interface ActivitySection {
   title: string;
   activities: ActivityItem[];
+  book?: number;
 }
 
 const sections: ActivitySection[] = [
@@ -126,6 +127,17 @@ const sections: ActivitySection[] = [
       { content: ACTIVITY_IDS.DONE_RIGHT_COUNTER, label: 'Счётчик правильных действий' },
     ]
   },
+  // Книга 2
+  {
+    title: 'Одиночество и отношения',
+    activities: [
+      { content: ACTIVITY_IDS.LONELINESS_SCALE, label: 'Опросник одиночества' },
+      { content: ACTIVITY_IDS.INTIMACY_SCALE, label: 'Тест на способность к близости' },
+      { content: ACTIVITY_IDS.LONELINESS_PLEASURE_SHEET, label: 'Бланк предполагаемого удовольствия' },
+      { content: ACTIVITY_IDS.MOOD_JOURNAL, label: 'Журнал настроения' },
+    ],
+    book: 2,
+  },
 ];
 
 const ActivitiesPanel: React.FC = () => {
@@ -133,6 +145,19 @@ const ActivitiesPanel: React.FC = () => {
   const unlockedContent = useUnlockedContent();
   const specialContent = useSpecialContent();
   const availableActivities = getAvailableActivities(unlockedContent?.chapters || []);
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+
+  const toggleSection = useCallback((title: string) => {
+    setCollapsedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(title)) {
+        next.delete(title);
+      } else {
+        next.add(title);
+      }
+      return next;
+    });
+  }, []);
 
   const handleActivityClick = (content: SpecialContent) => {
     dispatch(setSpecialContent(content));
@@ -145,14 +170,24 @@ const ActivitiesPanel: React.FC = () => {
     buttons: section.activities.filter(activity => availableActivities.has(activity.content))
   })).filter(section => section.buttons.length > 0);
 
-  return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>Доступные задания</h2>
+  // Разделяем секции по книгам
+  const book1Sections = filteredSections.filter(s => !s.book || s.book === 1);
+  const book2Sections = filteredSections.filter(s => s.book === 2);
 
-      <div className={styles.sections}>
-        {filteredSections.map((section) => (
-          <div key={section.title} className={styles.section}>
-            <h3 className={styles.sectionTitle}>{section.title}</h3>
+  const renderSections = (sectionsList: typeof filteredSections) =>
+    sectionsList.map((section) => {
+      const isCollapsed = collapsedSections.has(section.title);
+      return (
+        <div key={section.title} className={styles.section}>
+          <h3
+            className={styles.sectionTitle}
+            onClick={() => toggleSection(section.title)}
+          >
+            <span className={`${styles.collapseIcon} ${isCollapsed ? styles.collapsed : ''}`}>▾</span>
+            {section.title}
+            <span className={styles.sectionCount}>{section.buttons.length}</span>
+          </h3>
+          {!isCollapsed && (
             <div className={styles.specialTools}>
               {section.buttons.map((button) => (
                 <button
@@ -164,8 +199,25 @@ const ActivitiesPanel: React.FC = () => {
                 </button>
               ))}
             </div>
-          </div>
-        ))}
+          )}
+        </div>
+      );
+    });
+
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>Доступные задания</h2>
+
+      <div className={styles.sections}>
+        {renderSections(book1Sections)}
+        {book2Sections.length > 0 && (
+          <>
+            <div className={styles.bookDivider}>
+              <span>Книга 2: Терапия одиночества</span>
+            </div>
+            {renderSections(book2Sections)}
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import styles from './PleasureSheet.module.css';
-import { ACTIVITY_IDS } from '../../../constants/activities';
+import { ACTIVITY_IDS, ActivityId } from '../../../constants/activities';
 import ChapterLinkButton from '../../shared/ChapterLinkButton';
 import FavoriteButton from '../../shared/FavoriteButton';
 import { Activity, PleasureSheetExercise } from './types';
@@ -12,9 +12,25 @@ import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faEdit, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
 
-const SHEET_ID = ACTIVITY_IDS.PLEASURE_SHEET;
+export interface PleasureSheetProps {
+  activityId?: ActivityId;
+  title?: string;
+  description?: string;
+  activityLabel?: string;
+  activityPlaceholder?: string;
+  participantsLabel?: string;
+  participantsPlaceholder?: string;
+}
 
-const PleasureSheet: React.FC = () => {
+const PleasureSheet: React.FC<PleasureSheetProps> = ({
+  activityId = ACTIVITY_IDS.PLEASURE_SHEET,
+  title = 'Листок предполагаемого удовольствия',
+  description = 'Запишите занятие, вызывающее удовлетворенность, с кем вы это делали и оцените предполагаемый уровень удовольствия перед занятием. После занятия запишите реальный уровень удовольствия.',
+  activityLabel = 'Занятие, вызывающее удовлетворенность (удовольствие или компетентность)',
+  activityPlaceholder = 'Чем вы будете заниматься?',
+  participantsLabel = 'С кем вы это делали?',
+  participantsPlaceholder = 'Если в одиночку, укажите "Я"',
+}) => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
   
@@ -35,10 +51,9 @@ const PleasureSheet: React.FC = () => {
   
   // Получаем все записи из истории
   const records = useMemo(() => {
-    // Получаем все упражнения типа "Листок предполагаемого удовольствия"
     const exercises = Object.values(dailyProgress)
       .flatMap(day => day.exercises.exercises)
-      .filter(ex => ex.type === SHEET_ID) as PleasureSheetExercise[];
+      .filter(ex => ex.type === activityId) as PleasureSheetExercise[];
     
     if (!exercises.length) return [];
     
@@ -47,7 +62,7 @@ const PleasureSheet: React.FC = () => {
     
     // Сортируем по дате (новые сверху)
     return [...allRecords].sort((a, b) => compareDatesDesc(a.date, b.date));
-  }, [dailyProgress]);
+  }, [dailyProgress, activityId]);
   
   // Расчёт статистики
   const statistics = useMemo(() => {
@@ -163,7 +178,7 @@ const PleasureSheet: React.FC = () => {
   // Сохранение в Redux
   const saveToRedux = (updatedRecords: Activity[]) => {
     const exercise: PleasureSheetExercise = {
-      ...createBaseExercise(SHEET_ID),
+      ...createBaseExercise(activityId),
       records: updatedRecords
     };
     
@@ -176,17 +191,15 @@ const PleasureSheet: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
-        <h2>Листок предполагаемого удовольствия</h2>
+        <h2>{title}</h2>
         <div className={styles.actionButtons}>
-          <ChapterLinkButton activityId={SHEET_ID} />
-          <FavoriteButton activityId={SHEET_ID} />
+          <ChapterLinkButton activityId={activityId} />
+          <FavoriteButton activityId={activityId} />
         </div>
       </div>
-      
+
       <div className={styles.description}>
-        <p>
-          Запишите занятие, вызывающее удовлетворенность, с кем вы это делали и оцените предполагаемый уровень удовольствия перед занятием. После занятия запишите реальный уровень удовольствия.
-        </p>
+        <p>{description}</p>
       </div>
       
       {/* Форма добавления новой записи */}
@@ -210,28 +223,28 @@ const PleasureSheet: React.FC = () => {
         </div>
         
         <div className={styles.formGroup}>
-          <label htmlFor="activityText">Занятие, вызывающее удовлетворенность (удовольствие или компетентность)</label>
+          <label htmlFor="activityText">{activityLabel}</label>
           <input
             type="text"
             id="activityText"
             className={styles.input}
             value={activityText}
             onChange={(e) => setActivityText(e.target.value)}
-            placeholder="Чем вы будете заниматься?"
+            placeholder={activityPlaceholder}
             required
           />
         </div>
         
         <div className={styles.formGroup}>
-          <label htmlFor="participants">С кем вы это делали?</label>
+          <label htmlFor="participants">{participantsLabel}</label>
           <input
             type="text"
             id="participants"
             className={styles.input}
             value={participants}
             onChange={(e) => setParticipants(e.target.value)}
-            placeholder='Если в одиночку, укажите "Я"'          
-            />
+            placeholder={participantsPlaceholder}
+          />
         </div>
         
         <div className={styles.formGroup}>

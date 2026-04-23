@@ -1,5 +1,7 @@
 import chaptersData from '../components/ListOfChapters/chapters.json';
 import book2ChaptersData from '../components/ListOfChapters/chapters-book2.json';
+import book3ChaptersData from '../components/ListOfChapters/chapters-book3.json';
+
 import type { ChaptersData } from '../types/chapters.types';
 import { chapterToActivitiesMap } from '../data/activitiesMapping';
 import type { SpecialContent } from '../types/progress.types';
@@ -7,11 +9,12 @@ import type { SpecialContent } from '../types/progress.types';
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 const typedBook2Data = book2ChaptersData as ChaptersData;
+const typedBook3Data = book3ChaptersData as ChaptersData;
 
 // Объединённый список глав обеих книг для поиска
-const allBooksData: ChaptersData[] = [typedChaptersData, typedBook2Data];
+const allBooksData: ChaptersData[] = [typedChaptersData, typedBook2Data, typedBook3Data];
 
-const BOOK_NAMES = ['Терапия настроения', 'Хорошее настроение: Руководство'];
+const BOOK_NAMES = ['Терапия настроения', 'Терапия одиночества', 'Тренинг преодоления социофобии' ];
 
 /**
  * Возвращает индекс книги (0, 1, ...) и её название по ID главы

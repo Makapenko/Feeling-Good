@@ -66,6 +66,12 @@ export const chapterToActivitiesMap: Record<string, SpecialContent[]> = {
   'ch13-1': [ACTIVITY_IDS.SELF_CRITICISM_RESPONSE],
   'ch13-2': [ACTIVITY_IDS.SELF_ESTEEM_MEMO],
   'ch14-1': [ACTIVITY_IDS.DONE_RIGHT_COUNTER],
+
+  // Книга 2: Терапия одиночества
+  'b2-ch1': [ACTIVITY_IDS.LONELINESS_SCALE],
+  'b2-ch2-1': [ACTIVITY_IDS.INTIMACY_SCALE],
+  'b2-ch3-1': [ACTIVITY_IDS.LONELINESS_PLEASURE_SHEET],
+  'b2-ch4-0': [ACTIVITY_IDS.MOOD_JOURNAL],
 };
 
 // Получить все активности, доступные для данного набора глав

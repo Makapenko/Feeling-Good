@@ -37,7 +37,7 @@ import { ImagineSuccessExercise } from '../Activities/ImagineSuccess/types';
 import CheckCantDoExerciseComponent from './render/CheckCantDoExerciseComponent';
 import { CheckCantDoExercise } from '../Activities/CheckCantDo/types';
 
-import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent'
+import CountAchievementsExerciseComponent from './render/CountAchievementsExerciseComponent';
 import { CountAchievementsExercise } from '../Activities/CountAchievements/types';
 
 import DownwardArrowExerciseComponent from './render/DownwardArrowExerciseComponent';
@@ -50,9 +50,13 @@ import AngerProsConsExerciseComponent from './render/AngerProsConsExerciseCompon
 import { AngerProsConsExercise } from '../Activities/AngerProsCons/types';
 
 import RewriteBeliefExerciseComponent from './render/RewriteBeliefExerciseComponent';
+import { RewriteBeliefExercise } from '../Activities/RewriteBelief/types';
 
 import UniversalCounterExerciseComponent from './render/UniversalCounterExerciseComponent';
 import { UniversalCounterExercise } from '../Activities/UniversalCounter/types';
+
+import IntimacyScaleExerciseComponent from './render/IntimacyScaleExerciseComponent';
+import { IntimacyScaleExercise } from '../Activities/IntimacyScale/types';
 
 /**
  * Компонент для отображения и управления упражнениями пользователя
@@ -102,6 +106,7 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
         case ACTIVITY_IDS.VERBAL_JUDO:
         case ACTIVITY_IDS.REASONS_SHOULD_REFUTATION:
         case ACTIVITY_IDS.REJECTION_RESPONSE:
+        case ACTIVITY_IDS.MOOD_JOURNAL:
         case ACTIVITY_IDS.LOVE_ADDICTION_DISADVANTAGES:
         case ACTIVITY_IDS.BELIEF_CORRECTION:
         case ACTIVITY_IDS.SELF_CRITICISM_RESPONSE:
@@ -159,6 +164,7 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
             onClose={onClose}
           />;
         case ACTIVITY_IDS.PLEASURE_SHEET:
+        case ACTIVITY_IDS.LONELINESS_PLEASURE_SHEET:
           return <PleasureSheetExerciseComponent
             key={exercise.id}
             exercise={exercise as PleasureSheetExercise}
@@ -237,6 +243,14 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
           />;
+        case ACTIVITY_IDS.INTIMACY_SCALE:
+          return <IntimacyScaleExerciseComponent
+            key={exercise.id}
+            exercise={exercise as IntimacyScaleExercise}
+            expandedExercises={expandedExercises}
+            toggleExercise={toggleExercise}
+            onClose={onClose}
+          />;
         case ACTIVITY_IDS.ANGER_PROS_CONS:
           return <AngerProsConsExerciseComponent
             key={exercise.id}
@@ -248,7 +262,7 @@ const RenderExercises: React.FC<RenderExercisesProps> = ({ exercises, onClose })
         case ACTIVITY_IDS.REWRITE_BELIEF:
           return <RewriteBeliefExerciseComponent
             key={exercise.id}
-            exercise={exercise as any}
+            exercise={exercise as RewriteBeliefExercise}
             expandedExercises={expandedExercises}
             toggleExercise={toggleExercise}
             onClose={onClose}

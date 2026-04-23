@@ -3,6 +3,7 @@ import styles from './DayDetails.module.css';
 import { ACTIVITY_IDS, ActivityId, ACTIVITY_NAMES } from '../../constants/activities';
 import { procrastinationConfig } from '../Activities/ProcrastinationScale/procrastinationConfig';
 import { CATEGORY_DESCRIPTIONS } from '../Activities/DysfunctionalAttitudeScale/dasConfig';
+import { INTIMACY_CATEGORY_DESCRIPTIONS } from '../Activities/IntimacyScale/intimacyConfig';
 import { burnsConfig } from '../Activities/BurnsChecklist/burnsConfig';
 import { novacoConfig } from '../Activities/NovacoScale/novacoConfig';
 import { formatTime } from '../../utils/dateUtils';
@@ -42,7 +43,8 @@ const getTestDetails = (testType: string | undefined) => {
       ACTIVITY_IDS.PROCRASTINATION_SCALE,
       ACTIVITY_IDS.BURNS_CHECKLIST,
       ACTIVITY_IDS.NOVACO_SCALE,
-      ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE
+      ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
+      ACTIVITY_IDS.INTIMACY_SCALE,
     ];
 
     // Используем простую проверку на наличие значения в массиве
@@ -85,9 +87,15 @@ const getTestDetails = (testType: string | undefined) => {
         config: null,
         hasDetails: false
       };
-    case ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE: 
+    case ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE:
       return {
         name: ACTIVITY_NAMES[ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
+        config: null,
+        hasDetails: true
+      };
+    case ACTIVITY_IDS.INTIMACY_SCALE:
+      return {
+        name: ACTIVITY_NAMES[ACTIVITY_IDS.INTIMACY_SCALE],
         config: null,
         hasDetails: true
       };
@@ -170,6 +178,38 @@ const renderDysfunctionalAttitudeScaleResults = (test: TestObject) => {
   );
 };
 
+/**
+ * Отображение категорий для теста на способность к близости
+ */
+const renderIntimacyScaleResults = (test: TestObject) => {
+  if (!test.categoryResults) return null;
+
+  return (
+    <div className={styles.resultsContainer}>
+      {test.categoryResults.map((result) => {
+        const categoryDesc = INTIMACY_CATEGORY_DESCRIPTIONS.find(
+          desc => desc.category === result.category
+        );
+        if (!categoryDesc) return null;
+
+        const isHigh = result.score >= 6;
+
+        return (
+          <div
+            key={result.category}
+            className={`${styles.categoryResult} ${isHigh ? styles.weakness : styles.strength}`}
+          >
+            <div className={styles.categoryHeader}>
+              <strong>{categoryDesc.title}:</strong>
+              <span className={styles.score}>{result.score}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const RenderTests: React.FC<RenderTestsProps> = ({ testResults, expandedTests, toggleTest }) => {
   if (!testResults || testResults.length === 0) {
     return <div className={styles.emptyState}>Нет пройденных тестов за этот день</div>;
@@ -245,6 +285,17 @@ const RenderTests: React.FC<RenderTestsProps> = ({ testResults, expandedTests, t
                         renderDysfunctionalAttitudeScaleResults(test)
                       ) : (
                         <p>Результаты шкалы дисфункциональных убеждений указывают на ваши ключевые убеждения и установки.</p>
+                      )}
+                    </div>
+                  )}
+
+                {(testType === ACTIVITY_IDS.INTIMACY_SCALE) && (
+                    <div className={styles.resultInterpretation}>
+                      <h5>Результаты по категориям:</h5>
+                      {test.categoryResults && test.categoryResults.length > 0 ? (
+                        renderIntimacyScaleResults(test)
+                      ) : (
+                        <p>Результаты теста на способность к близости.</p>
                       )}
                     </div>
                   )}

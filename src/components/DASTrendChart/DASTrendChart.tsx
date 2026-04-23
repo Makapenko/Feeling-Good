@@ -29,6 +29,8 @@ import styles from './DASTrendChart.module.css';
 
 type ViewMode = 'trend' | 'comparison';
 
+const categories = Object.values(DASCategory);
+
 interface DASTrendChartProps {
   height?: number;
   showStats?: boolean;
@@ -45,10 +47,6 @@ export const DASTrendChart: React.FC<DASTrendChartProps> = ({
 
   const chartData = useMemo(() => formatDASDataForChart(dasData), [dasData]);
 
-  // Все категории для отображения
-  const categories = Object.values(DASCategory);
-
-  // Данные для радиальной диаграммы: последний и предпоследний тесты
   const radarData = useMemo(() => {
     if (dasData.length < 1) return null;
 
@@ -59,10 +57,10 @@ export const DASTrendChart: React.FC<DASTrendChartProps> = ({
     // поэтому сдвигаем шкалу: [-10..+10] → [0..20]
     return categories.map(category => {
       const latestCat = latest.categoryResults.find(
-        (c: any) => c.category === category
+        c => c.category === category
       );
       const previousCat = previous?.categoryResults.find(
-        (c: any) => c.category === category
+        c => c.category === category
       );
 
       return {
@@ -77,7 +75,7 @@ export const DASTrendChart: React.FC<DASTrendChartProps> = ({
           : {})
       };
     });
-  }, [dasData, categories]);
+  }, [dasData]);
 
   if (dasData.length === 0) {
     return (
@@ -215,13 +213,11 @@ export const DASTrendChart: React.FC<DASTrendChartProps> = ({
 
       {stats.improvement !== null && (
         <div
-          className={`${styles.trendMessage} ${
-            stats.improvement > 0
-              ? styles.improving
-              : stats.improvement < 0
-              ? styles.worsening
-              : ''
-          }`}
+          className={[
+            styles.trendMessage,
+            stats.improvement > 0 && styles.improving,
+            stats.improvement < 0 && styles.worsening,
+          ].filter(Boolean).join(' ')}
         >
           {getTrendMessage()}
         </div>

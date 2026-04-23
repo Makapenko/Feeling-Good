@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './DayDetails.module.css';
 import { CalendarDayProgress } from './types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +12,7 @@ import { ACTIVITY_IDS, ACTIVITY_NAMES } from '../../constants/activities';
 import RenderExercises from './RenderExercises';
 import RenderTests from './RenderTests';
 import { DysfunctionalAttitudeScaleExercise } from '../Activities/DysfunctionalAttitudeScale/types';
+import { IntimacyScaleExercise } from '../Activities/IntimacyScale/types';
 import { getChapterTitle, getBookInfo } from '../../utils/chapterUtils';
 
 interface DayDetailsProps {
@@ -29,7 +30,7 @@ interface TestResult {
   maxScore?: number;
   completedAt: string;
   content?: string;
-  categoryResults?: Array<{category: string, score: number, isStrength: boolean}>;
+  categoryResults?: Array<{ category: string; score: number; isStrength?: boolean; maxScore?: number }>;
 }
 
 type ActiveTab = 'chapters' | 'tests' | 'exercises';
@@ -61,37 +62,44 @@ const ChapterButton: React.FC<{ chapterId: string, onClose: () => void }> = ({ c
 export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, onClose }) => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('chapters');
   const [expandedTests, setExpandedTests] = useState<string[]>([]);
-  const [allTestResults, setAllTestResults] = useState<TestResult[]>([]);
 
-  // Обрабатываем все типы тестов, включая шкалу дисфункциональных убеждений
-  useEffect(() => {
+  const allTestResults = useMemo<TestResult[]>(() => {
     const testResults = [...(dayProgress.exercises.testResults || [])].map(result => ({
       ...result,
       type: result.content
     })) as TestResult[];
-    
-    // Добавляем упражнения шкалы дисфункциональных убеждений к тестам
-    if (dayProgress.exercises.exercises) {
-      const dasExercises = dayProgress.exercises.exercises.filter(
-        ex => ex.type === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE
-      );
-      
-      // Преобразуем упражнения в формат тестов
-      const dasTestResults = dasExercises.map(exercise => {
+
+    if (!dayProgress.exercises.exercises) return testResults;
+
+    const dasTestResults = dayProgress.exercises.exercises
+      .filter(ex => ex.type === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE)
+      .map(exercise => {
         const dasExercise = exercise as DysfunctionalAttitudeScaleExercise;
         return {
           id: dasExercise.id,
           name: ACTIVITY_NAMES[ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE],
           type: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
           completedAt: dasExercise.completedAt || getCurrentISOTimestamp(),
-          categoryResults: dasExercise.categoryResults
+          categoryResults: dasExercise.categoryResults,
         } as TestResult;
       });
-      
-      setAllTestResults([...testResults, ...dasTestResults]);
-    } else {
-      setAllTestResults(testResults);
-    }
+
+    const intimacyTestResults = dayProgress.exercises.exercises
+      .filter(ex => ex.type === ACTIVITY_IDS.INTIMACY_SCALE)
+      .map(exercise => {
+        const intimacyExercise = exercise as IntimacyScaleExercise;
+        return {
+          id: intimacyExercise.id,
+          name: ACTIVITY_NAMES[ACTIVITY_IDS.INTIMACY_SCALE],
+          type: ACTIVITY_IDS.INTIMACY_SCALE,
+          score: intimacyExercise.totalScore,
+          maxScore: 180,
+          completedAt: intimacyExercise.completedAt || getCurrentISOTimestamp(),
+          categoryResults: intimacyExercise.categoryResults,
+        } as TestResult;
+      });
+
+    return [...testResults, ...dasTestResults, ...intimacyTestResults];
   }, [dayProgress]);
 
   const toggleTest = (testId: string) => {
@@ -203,11 +211,12 @@ export const DayDetails: React.FC<DayDetailsProps> = ({ date, dayProgress, onClo
     );
   };
   
-  // Фильтруем упражнения, исключая шкалу дисфункциональных убеждений
+  // Фильтруем упражнения, исключая те, что показываются во вкладке Тесты
   const filteredExercises = {
     ...dayProgress.exercises,
     exercises: dayProgress.exercises.exercises?.filter(
-      ex => ex.type !== ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE
+      ex => ex.type !== ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE &&
+            ex.type !== ACTIVITY_IDS.INTIMACY_SCALE
     )
   };
 

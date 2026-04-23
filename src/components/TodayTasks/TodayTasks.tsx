@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './TodayTasks.module.css';
 import {
   useAppDispatch,
-  useAppSelector,
+  useExercisesByType,
   useUnlockedContent,
   useTestsByType,
   useTodayActivitiesProgress
@@ -12,7 +12,8 @@ import { getAvailableActivities } from '../../data/activitiesMapping';
 import { ActivityId, ACTIVITY_IDS } from '../../constants/activities';
 import {
   getDaysDifference,
-  getCurrentDate
+  getCurrentDate,
+  compareDatesDesc
 } from '../../utils/dateUtils';
 import ReadingHistoryBar from './ReadingHistoryBar';
 import ActivityHistoryBar from './ActivityHistoryBar';
@@ -22,6 +23,7 @@ import ReadingTaskComponent from './ReadingTaskComponent';
 import FavoritesComponent from './FavoritesComponent';
 import { MoodTrendChart } from '../MoodTrendChart';
 import { DASTrendChart } from '../DASTrendChart';
+import { IntimacyTrendChart } from '../IntimacyTrendChart';
 
 // Константы для времени в секундах
 const READING_GOAL_SECONDS = 300; // 5 минут
@@ -30,13 +32,173 @@ const PROCRASTINATION_GOAL_SECONDS = 900; // 15 минут
 const BURNS_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями опросника Бернса
 const PROCRASTINATION_TEST_INTERVAL_DAYS = 7; // Интервал между прохождениями теста на прокрастинацию
 const DAS_TEST_INTERVAL_DAYS = 14; // Интервал между прохождениями теста DAS (раз в 2 недели)
+const LONELINESS_TEST_INTERVAL_DAYS = 14; // Интервал между прохождениями опросника одиночества
+const INTIMACY_TEST_INTERVAL_DAYS = 14; // Интервал между прохождениями теста на способность к близости
 
 
-// Создадим константы для внутренних идентификаторов
 const DAILY_MOOD_ID = 'daily-mood';
 const AUTOMATIC_THOUGHTS_ID = 'automatic-thoughts';
 const PROCRASTINATION_SCALE_ID = 'procrastination-scale';
 const DAS_SCALE_ID = 'das-scale';
+const LONELINESS_SCALE_ID = 'loneliness-scale';
+const INTIMACY_SCALE_ID = 'intimacy-scale';
+
+const PROCRASTINATION_ACTIVITY_IDS: string[] = [
+  ACTIVITY_IDS.PROCRASTINATION_DIARY,
+  ACTIVITY_IDS.ANTI_PROCRASTINATION,
+  ACTIVITY_IDS.DAILY_SCHEDULE,
+  ACTIVITY_IDS.PLEASURE_SHEET,
+  ACTIVITY_IDS.NO_BUTS,
+  ACTIVITY_IDS.SELF_SUPPORT,
+  ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS,
+  ACTIVITY_IDS.SMALL_STEPS,
+  ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION,
+  ACTIVITY_IDS.DISARMING_TECHNIQUE,
+  ACTIVITY_IDS.IMAGINE_SUCCESS,
+  ACTIVITY_IDS.COUNT_ACHIEVEMENTS,
+  ACTIVITY_IDS.CHECK_CANT_DO,
+  ACTIVITY_IDS.NO_LOSE_TECHNIQUE,
+];
+
+interface TestStatusConfig {
+  id: string;
+  testId: ActivityId;
+  title: string;
+  firstTimeMessage: string;
+  retakeMessage: string;
+  retakeSecondMessage: string;
+  waitMessagePrefix: string;
+  buttonText: string;
+  intervalDays: number;
+  defaultMaxScore: number;
+}
+
+interface TestResult {
+  completedAt: string;
+  score?: number;
+  maxScore?: number;
+}
+
+function checkTestStatus(
+  config: TestStatusConfig,
+  testResults: TestResult[],
+  availableActivities: Set<ActivityId>
+) {
+  if (!availableActivities.has(config.testId)) return null;
+
+  const base = {
+    id: config.id,
+    testId: config.testId,
+    title: config.title,
+    buttonText: config.buttonText,
+  };
+
+  if (testResults.length === 0) {
+    return {
+      ...base,
+      message: config.firstTimeMessage,
+      needToComplete: true,
+      lastScore: null,
+      scorePercent: null,
+      completedAt: null,
+    };
+  }
+
+  const latest = testResults[0];
+  const daysSince = getDaysDifference(
+    new Date(getCurrentDate()),
+    new Date(latest.completedAt)
+  );
+  const lastScore = latest.score ?? null;
+  const maxScore = latest.maxScore || config.defaultMaxScore;
+  const scorePercent = lastScore !== null ? Math.round((lastScore / maxScore) * 100) : null;
+
+  if (daysSince >= config.intervalDays) {
+    return {
+      ...base,
+      message: testResults.length === 1 ? config.retakeSecondMessage : config.retakeMessage,
+      needToComplete: true,
+      lastScore,
+      scorePercent,
+      completedAt: latest.completedAt,
+    };
+  }
+
+  return {
+    ...base,
+    message: `${config.waitMessagePrefix} ${config.intervalDays - daysSince} дн.`,
+    needToComplete: false,
+    lastScore,
+    scorePercent,
+    completedAt: latest.completedAt,
+  };
+}
+
+interface ExerciseTestStatusConfig {
+  id: string;
+  testId: ActivityId;
+  title: string;
+  buttonText: string;
+  intervalDays: number;
+  firstTimeMessage: string;
+  retakeMessage: string;
+  retakeSecondMessage: string;
+  waitMessagePrefix: string;
+  getScore: (exercise: any) => number | null;
+  scoreToPercent: (score: number) => number;
+}
+
+function checkExerciseTestStatus(
+  config: ExerciseTestStatusConfig,
+  exercises: any[],
+  availableActivities: Set<ActivityId>
+) {
+  if (!availableActivities.has(config.testId)) return null;
+
+  const base = {
+    id: config.id,
+    testId: config.testId,
+    title: config.title,
+    buttonText: config.buttonText,
+  };
+
+  if (exercises.length === 0) {
+    return {
+      ...base,
+      message: config.firstTimeMessage,
+      needToComplete: true,
+      lastScore: null,
+      scorePercent: null,
+      completedAt: null,
+    };
+  }
+
+  const lastExercise = exercises[0];
+  const completedAt = lastExercise.timestamp || lastExercise.completedAt;
+  const daysSince = getDaysDifference(new Date(getCurrentDate()), new Date(completedAt));
+  const lastScore = config.getScore(lastExercise);
+  const scorePercent = lastScore !== null ? config.scoreToPercent(lastScore) : null;
+
+  if (daysSince >= config.intervalDays) {
+    return {
+      ...base,
+      message: exercises.length === 1 ? config.retakeSecondMessage : config.retakeMessage,
+      needToComplete: true,
+      lastScore,
+      scorePercent,
+      completedAt,
+    };
+  }
+
+  return {
+    ...base,
+    message: `${config.waitMessagePrefix} ${config.intervalDays - daysSince} дн.`,
+    needToComplete: false,
+    lastScore,
+    scorePercent,
+    completedAt,
+  };
+}
 
 const TodayTasks: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -44,230 +206,28 @@ const TodayTasks: React.FC = () => {
 
   const burnsTestResults = useTestsByType(ACTIVITY_IDS.BURNS_CHECKLIST);
   const procrastinationTestResults = useTestsByType(ACTIVITY_IDS.PROCRASTINATION_SCALE);
+  const lonelinessTestResults = useTestsByType(ACTIVITY_IDS.LONELINESS_SCALE);
   const todayActivitiesProgress = useTodayActivitiesProgress();
 
-  // Для DAS используем selectExercisesByType вместо useTestsByType
-  const dasExercises = useAppSelector((state) => {
-    const { dailyProgress } = state.progress;
-    const allExercises: any[] = [];
+  const dasExercisesRaw = useExercisesByType(ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE);
+  const dasExercises = [...dasExercisesRaw].sort((a: any, b: any) =>
+    compareDatesDesc(a.timestamp || a.completedAt || '', b.timestamp || b.completedAt || '')
+  );
 
-    Object.values(dailyProgress).forEach(dayProgress => {
-      if (dayProgress.exercises?.exercises) {
-        const filtered = dayProgress.exercises.exercises.filter(
-          (exercise: any) => exercise.type === ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE
-        );
-        allExercises.push(...filtered);
-      }
-    });
+  const intimacyExercisesRaw = useExercisesByType(ACTIVITY_IDS.INTIMACY_SCALE);
+  const intimacyExercises = [...intimacyExercisesRaw].sort((a: any, b: any) =>
+    compareDatesDesc(a.timestamp || a.completedAt || '', b.timestamp || b.completedAt || '')
+  );
 
-    // Сортируем по timestamp (новые сначала)
-    return allExercises.sort((a, b) =>
-      (b.timestamp || b.completedAt || '').localeCompare(a.timestamp || a.completedAt || '')
-    );
-  });
+  const availableActivities = getAvailableActivities(unlockedContent.chapters);
 
-  // Проверяем статус опросника Бернса
-  const checkBurnsStatus = () => {
-    const availableActivities = getAvailableActivities(unlockedContent.chapters);
-    if (!availableActivities.has(ACTIVITY_IDS.BURNS_CHECKLIST)) return null;
+  const totalMethodsTime =
+    (todayActivitiesProgress[ACTIVITY_IDS.THREE_COLUMNS_METHOD]?.timeSpent || 0) +
+    (todayActivitiesProgress[ACTIVITY_IDS.THOUGHT_DIARY]?.timeSpent || 0);
 
-    if (burnsTestResults.length === 0) {
-      return {
-        id: DAILY_MOOD_ID,
-        testId: ACTIVITY_IDS.BURNS_CHECKLIST,
-        title: 'Опросник депрессии Бернса',
-        message: 'Пройдите опросник депрессии Бернса',
-        needToComplete: true,
-        lastScore: null,
-        scorePercent: null,
-        completedAt: null,
-        buttonText: 'Открыть опросник'
-      };
-    }
-
-    const lastCompletionDate = new Date(burnsTestResults[0].completedAt);
-    const today = new Date(getCurrentDate());
-    const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
-    
-    // Сохраняем последний результат
-    const lastScore = burnsTestResults[0].score ?? null;
-    const maxScore = burnsTestResults[0].maxScore || 100;
-    const scorePercent = lastScore !== null ? Math.round((lastScore / maxScore) * 100) : null;
-
-    if (daysSinceLastCompletion >= BURNS_TEST_INTERVAL_DAYS) {
-      return {
-        id: DAILY_MOOD_ID,
-        testId: ACTIVITY_IDS.BURNS_CHECKLIST,
-        title: 'Опросник депрессии Бернса',
-        message: burnsTestResults.length === 1
-          ? 'Пройдите опросник Бернса повторно (второй раз)'
-          : 'Пройдите опросник Бернса повторно',
-        needToComplete: true,
-        lastScore,
-        scorePercent,
-        completedAt: burnsTestResults[0].completedAt,
-        buttonText: 'Открыть опросник'
-      };
-    }
-
-    return {
-      id: DAILY_MOOD_ID,
-      testId: ACTIVITY_IDS.BURNS_CHECKLIST,
-      title: 'Опросник депрессии Бернса',
-      message: `Следующее прохождение опросника через ${BURNS_TEST_INTERVAL_DAYS - daysSinceLastCompletion} дн.`,
-      needToComplete: false,
-      lastScore,
-      scorePercent,
-      completedAt: burnsTestResults[0].completedAt,
-      buttonText: 'Открыть опросник'
-    };
-  };
-
-  // Проверяем статус шкалы прокрастинации
-  const checkProcrastinationScaleStatus = () => {
-    const availableActivities = getAvailableActivities(unlockedContent.chapters);
-    if (!availableActivities.has(ACTIVITY_IDS.PROCRASTINATION_SCALE)) return null;
-
-    if (procrastinationTestResults.length === 0) {
-      return {
-        id: PROCRASTINATION_SCALE_ID,
-        testId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
-        title: 'Шкала иррациональной прокрастинации',
-        message: 'Пройдите тест на прокрастинацию',
-        needToComplete: true,
-        lastScore: null,
-        scorePercent: null,
-        completedAt: null,
-        buttonText: 'Открыть тест'
-      };
-    }
-
-    const lastCompletionDate = new Date(procrastinationTestResults[0].completedAt);
-    const today = new Date(getCurrentDate());
-    const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
-
-    // Сохраняем последний результат
-    const lastScore = procrastinationTestResults[0].score ?? null;
-    const maxScore = procrastinationTestResults[0].maxScore || 45;
-    const scorePercent = lastScore !== null ? Math.round((lastScore / maxScore) * 100) : null;
-
-    if (daysSinceLastCompletion >= PROCRASTINATION_TEST_INTERVAL_DAYS) {
-      return {
-        id: PROCRASTINATION_SCALE_ID,
-        testId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
-        title: 'Шкала иррациональной прокрастинации',
-        message: procrastinationTestResults.length === 1
-          ? 'Пройдите тест на прокрастинацию повторно (второй раз)'
-          : 'Пройдите тест на прокрастинацию повторно',
-        needToComplete: true,
-        lastScore,
-        scorePercent,
-        completedAt: procrastinationTestResults[0].completedAt,
-        buttonText: 'Открыть тест'
-      };
-    }
-
-    return {
-      id: PROCRASTINATION_SCALE_ID,
-      testId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
-      title: 'Шкала иррациональной прокрастинации',
-      message: `Следующее прохождение теста через ${PROCRASTINATION_TEST_INTERVAL_DAYS - daysSinceLastCompletion} дн.`,
-      needToComplete: false,
-      lastScore,
-      scorePercent,
-      completedAt: procrastinationTestResults[0].completedAt,
-      buttonText: 'Открыть тест'
-    };
-  };
-
-  // Проверяем статус шкалы дисфункциональных убеждений (DAS)
-  const checkDASStatus = () => {
-    const availableActivities = getAvailableActivities(unlockedContent.chapters);
-    if (!availableActivities.has(ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE)) return null;
-
-    if (dasExercises.length === 0) {
-      return {
-        id: DAS_SCALE_ID,
-        testId: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
-        title: 'Шкала дисфункциональных убеждений',
-        message: 'Пройдите тест на дисфункциональные убеждения',
-        needToComplete: true,
-        lastScore: null,
-        scorePercent: null,
-        completedAt: null,
-        buttonText: 'Открыть тест'
-      };
-    }
-
-    const lastExercise = dasExercises[0];
-    const lastCompletionDate = new Date(lastExercise.timestamp || lastExercise.completedAt);
-    const today = new Date(getCurrentDate());
-    const daysSinceLastCompletion = getDaysDifference(today, lastCompletionDate);
-
-    // Вычисляем общий балл из категорий
-    const totalScore = lastExercise.categoryResults?.reduce(
-      (sum: number, cat: any) => sum + (cat.score || 0),
-      0
-    ) ?? null;
-
-    // Процент от максимума (70 = +10 по каждой из 7 категорий)
-    const scorePercent = totalScore !== null ? Math.round(((totalScore + 70) / 140) * 100) : null;
-
-    if (daysSinceLastCompletion >= DAS_TEST_INTERVAL_DAYS) {
-      return {
-        id: DAS_SCALE_ID,
-        testId: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
-        title: 'Шкала дисфункциональных убеждений',
-        message: dasExercises.length === 1
-          ? 'Пройдите тест DAS повторно (второй раз)'
-          : 'Пройдите тест DAS повторно',
-        needToComplete: true,
-        lastScore: totalScore,
-        scorePercent,
-        completedAt: lastExercise.timestamp || lastExercise.completedAt,
-        buttonText: 'Открыть тест'
-      };
-    }
-
-    return {
-      id: DAS_SCALE_ID,
-      testId: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
-      title: 'Шкала дисфункциональных убеждений',
-      message: `Следующее прохождение теста через ${DAS_TEST_INTERVAL_DAYS - daysSinceLastCompletion} дн.`,
-      needToComplete: false,
-      lastScore: totalScore,
-      scorePercent,
-      completedAt: lastExercise.timestamp || lastExercise.completedAt,
-      buttonText: 'Открыть тест'
-    };
-  };
-
-  // Получаем время работы с каждой методикой самооценки
-  const threeCategoryTime = todayActivitiesProgress[ACTIVITY_IDS.THREE_COLUMNS_METHOD]?.timeSpent || 0;
-  const diaryTime = todayActivitiesProgress[ACTIVITY_IDS.THOUGHT_DIARY]?.timeSpent || 0;
-  const totalMethodsTime = threeCategoryTime + diaryTime;
-  
-  // Получаем время работы с методиками прокрастинации
-  const procrastinationMethodsTime = Object.entries(todayActivitiesProgress)
-    .filter(([key]) => {
-      return key === ACTIVITY_IDS.PROCRASTINATION_DIARY ||
-             key === ACTIVITY_IDS.ANTI_PROCRASTINATION ||
-             key === ACTIVITY_IDS.DAILY_SCHEDULE ||
-             key === ACTIVITY_IDS.PLEASURE_SHEET ||
-             key === ACTIVITY_IDS.NO_BUTS ||
-             key === ACTIVITY_IDS.SELF_SUPPORT ||
-             key === ACTIVITY_IDS.HINDERING_HELPING_THOUGHTS ||
-             key === ACTIVITY_IDS.SMALL_STEPS ||
-             key === ACTIVITY_IDS.MOTIVATION_WITHOUT_COERCION ||
-             key === ACTIVITY_IDS.DISARMING_TECHNIQUE ||
-             key === ACTIVITY_IDS.IMAGINE_SUCCESS ||
-             key === ACTIVITY_IDS.COUNT_ACHIEVEMENTS ||
-             key === ACTIVITY_IDS.CHECK_CANT_DO ||
-             key === ACTIVITY_IDS.NO_LOSE_TECHNIQUE;
-    })
+  const totalProcrastinationTime = Object.entries(todayActivitiesProgress)
+    .filter(([key]) => PROCRASTINATION_ACTIVITY_IDS.includes(key))
     .reduce((total, [, data]) => total + (data?.timeSpent || 0), 0);
-  
-  const totalProcrastinationTime = procrastinationMethodsTime;
 
   // Создаем объекты задач
   const selfEsteemTask: MethodsTask = {
@@ -293,9 +253,92 @@ const TodayTasks: React.FC = () => {
     totalTime: totalProcrastinationTime
   };
 
-  const burnsStatus = checkBurnsStatus();
-  const procrastinationScaleStatus = checkProcrastinationScaleStatus();
-  const dasStatus = checkDASStatus();
+  const burnsStatus = checkTestStatus({
+    id: DAILY_MOOD_ID,
+    testId: ACTIVITY_IDS.BURNS_CHECKLIST,
+    title: 'Опросник депрессии Бернса',
+    firstTimeMessage: 'Пройдите опросник депрессии Бернса',
+    retakeMessage: 'Пройдите опросник Бернса повторно',
+    retakeSecondMessage: 'Пройдите опросник Бернса повторно (второй раз)',
+    waitMessagePrefix: 'Следующее прохождение опросника через',
+    buttonText: 'Открыть опросник',
+    intervalDays: BURNS_TEST_INTERVAL_DAYS,
+    defaultMaxScore: 100,
+  }, burnsTestResults, availableActivities);
+
+  const procrastinationScaleStatus = checkTestStatus({
+    id: PROCRASTINATION_SCALE_ID,
+    testId: ACTIVITY_IDS.PROCRASTINATION_SCALE,
+    title: 'Шкала иррациональной прокрастинации',
+    firstTimeMessage: 'Пройдите тест на прокрастинацию',
+    retakeMessage: 'Пройдите тест на прокрастинацию повторно',
+    retakeSecondMessage: 'Пройдите тест на прокрастинацию повторно (второй раз)',
+    waitMessagePrefix: 'Следующее прохождение теста через',
+    buttonText: 'Открыть тест',
+    intervalDays: PROCRASTINATION_TEST_INTERVAL_DAYS,
+    defaultMaxScore: 45,
+  }, procrastinationTestResults, availableActivities);
+
+  const dasStatus = checkExerciseTestStatus({
+    id: DAS_SCALE_ID,
+    testId: ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE,
+    title: 'Шкала дисфункциональных убеждений',
+    buttonText: 'Открыть тест',
+    intervalDays: DAS_TEST_INTERVAL_DAYS,
+    firstTimeMessage: 'Пройдите тест на дисфункциональные убеждения',
+    retakeMessage: 'Пройдите тест DAS повторно',
+    retakeSecondMessage: 'Пройдите тест DAS повторно (второй раз)',
+    waitMessagePrefix: 'Следующее прохождение теста через',
+    getScore: (ex) => ex.categoryResults?.reduce(
+      (sum: number, cat: { score: number }) => sum + (cat.score || 0), 0
+    ) ?? null,
+    scoreToPercent: (score) => Math.round(((score + 70) / 140) * 100),
+  }, dasExercises, availableActivities);
+
+  const intimacyStatus = checkExerciseTestStatus({
+    id: INTIMACY_SCALE_ID,
+    testId: ACTIVITY_IDS.INTIMACY_SCALE,
+    title: 'Тест на способность к близости',
+    buttonText: 'Открыть тест',
+    intervalDays: INTIMACY_TEST_INTERVAL_DAYS,
+    firstTimeMessage: 'Пройдите тест на способность к близости',
+    retakeMessage: 'Пройдите тест на близость повторно',
+    retakeSecondMessage: 'Пройдите тест на близость повторно (второй раз)',
+    waitMessagePrefix: 'Следующее прохождение теста через',
+    getScore: (ex) => ex.totalScore ?? ex.categoryResults?.reduce(
+      (sum: number, cat: { score: number }) => sum + (cat.score || 0), 0
+    ) ?? null,
+    scoreToPercent: (score) => Math.round((score / 180) * 100),
+  }, intimacyExercises, availableActivities);
+
+  const totalLonelinessMethodsTime =
+    (todayActivitiesProgress[ACTIVITY_IDS.MOOD_JOURNAL]?.timeSpent || 0) +
+    (todayActivitiesProgress[ACTIVITY_IDS.LONELINESS_PLEASURE_SHEET]?.timeSpent || 0);
+
+  const lonelinessMethodsTask: MethodsTask = {
+    id: 'loneliness-methods',
+    title: 'Работа с одиночеством',
+    description: 'Поработать с журналом настроения или бланком удовольствия (минимум 15 минут)',
+    goalSeconds: METHODS_GOAL_SECONDS,
+    methodIds: [
+      { id: ACTIVITY_IDS.MOOD_JOURNAL, name: 'журнал настроения' },
+      { id: ACTIVITY_IDS.LONELINESS_PLEASURE_SHEET, name: 'бланк удовольствия' },
+    ],
+    totalTime: totalLonelinessMethodsTime
+  };
+
+  const lonelinessStatus = checkTestStatus({
+    id: LONELINESS_SCALE_ID,
+    testId: ACTIVITY_IDS.LONELINESS_SCALE,
+    title: 'Опросник одиночества',
+    firstTimeMessage: 'Пройдите опросник одиночества',
+    retakeMessage: 'Пройдите опросник одиночества повторно',
+    retakeSecondMessage: 'Пройдите опросник одиночества повторно (второй раз)',
+    waitMessagePrefix: 'Следующее прохождение опросника через',
+    buttonText: 'Открыть опросник',
+    intervalDays: LONELINESS_TEST_INTERVAL_DAYS,
+    defaultMaxScore: 32,
+  }, lonelinessTestResults, availableActivities);
 
   const handleActivityClick = (activityId: string) => {
     switch (activityId) {
@@ -307,6 +350,12 @@ const TodayTasks: React.FC = () => {
         break;
       case DAS_SCALE_ID:
         dispatch(setSpecialContent(ACTIVITY_IDS.DYSFUNCTIONAL_ATTITUDE_SCALE));
+        break;
+      case LONELINESS_SCALE_ID:
+        dispatch(setSpecialContent(ACTIVITY_IDS.LONELINESS_SCALE));
+        break;
+      case INTIMACY_SCALE_ID:
+        dispatch(setSpecialContent(ACTIVITY_IDS.INTIMACY_SCALE));
         break;
       case AUTOMATIC_THOUGHTS_ID:
         dispatch(setSpecialContent(ACTIVITY_IDS.THREE_COLUMNS_METHOD));
@@ -322,7 +371,7 @@ const TodayTasks: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  const [activeTab, setActiveTab] = useState<'reading' | 'beliefs' | 'procrastination'>('reading');
+  const [activeTab, setActiveTab] = useState<'reading' | 'beliefs' | 'procrastination' | 'loneliness'>('reading');
 
   const renderReadingAndSelfEsteemTab = () => (
     <>
@@ -383,6 +432,39 @@ const TodayTasks: React.FC = () => {
       {dasExercises.length > 0 && (
         <div className={styles.dasTrendSection}>
           <DASTrendChart height={350} showStats={true} />
+        </div>
+      )}
+    </>
+  );
+
+  const renderLonelinessTab = () => (
+    <>
+      <h3 className={styles.taskSectionTitle}>Работа с одиночеством</h3>
+
+      {availableActivities.has(ACTIVITY_IDS.MOOD_JOURNAL) && (
+        <MethodsTaskComponent
+          task={lonelinessMethodsTask}
+          onActivityClick={handleActivityClick}
+        />
+      )}
+
+      {lonelinessStatus && (
+        <TestTaskComponent
+          task={lonelinessStatus}
+          onActivityClick={handleActivityClick}
+        />
+      )}
+
+      {intimacyStatus && (
+        <TestTaskComponent
+          task={intimacyStatus}
+          onActivityClick={handleActivityClick}
+        />
+      )}
+
+      {intimacyExercises.length > 0 && (
+        <div className={styles.dasTrendSection}>
+          <IntimacyTrendChart height={350} showStats={true} />
         </div>
       )}
     </>
@@ -459,12 +541,19 @@ const TodayTasks: React.FC = () => {
         >
           Прокрастинация
         </button>
+        <button
+          className={`${styles.tasksTab} ${activeTab === 'loneliness' ? styles.tasksTabActive : ''}`}
+          onClick={() => setActiveTab('loneliness')}
+        >
+          Одиночество
+        </button>
       </div>
 
       <div className={styles.tasksList}>
         {activeTab === 'reading' && renderReadingAndSelfEsteemTab()}
         {activeTab === 'beliefs' && renderBeliefsTab()}
         {activeTab === 'procrastination' && renderProcrastinationTab()}
+        {activeTab === 'loneliness' && renderLonelinessTab()}
       </div>
     </div>
   );

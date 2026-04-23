@@ -10,11 +10,13 @@ import { ACTIVITY_IDS } from '../../constants/activities';
 import { getChapterActivities } from '../../utils/chapterUtils';
 import chaptersData from '../../components/ListOfChapters/chapters.json';
 import book2ChaptersData from '../../components/ListOfChapters/chapters-book2.json';
+import book3ChaptersData from '../../components/ListOfChapters/chapters-book3.json';
 import type { ChaptersData } from '../../types/chapters.types';
 
 // Указываем тип для импортированных данных
 const typedChaptersData = chaptersData as ChaptersData;
 const typedBook2Data = book2ChaptersData as ChaptersData;
+const typedBook3Data = book3ChaptersData as ChaptersData;
 
 const today = getCurrentDate();
 
@@ -279,7 +281,7 @@ const progressSlice = createSlice({
           return ids;
         });
 
-      const allChapterIds = [...collectIds(typedChaptersData), ...collectIds(typedBook2Data)];
+      const allChapterIds = [...collectIds(typedChaptersData), ...collectIds(typedBook2Data), ...collectIds(typedBook3Data)];
       state.unlockedContent.chapters = [...allChapterIds, 'all'];
     },
     

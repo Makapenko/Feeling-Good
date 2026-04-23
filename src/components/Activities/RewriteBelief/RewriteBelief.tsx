@@ -1,5 +1,4 @@
-// src/components/Activities/RewriteBelief/RewriteBelief.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from '../../../redux/hooks';
 import { SpecialContent } from '../../../types/progress.types';
 import styles from './RewriteBelief.module.css';
@@ -10,8 +9,6 @@ import { addExercise } from '../../../redux/actions';
 import { createBaseExercise } from '../../../utils/exerciseUtils';
 import { getCurrentISOTimestamp } from '../../../utils/dateUtils';
 
-// Добавьте новый ID в constants/activities.ts
-// REWRITE_BELIEF: 'rewrite_belief'
 const SHEET_ID: SpecialContent = ACTIVITY_IDS.REWRITE_BELIEF;
 
 const RewriteBelief: React.FC = () => {
@@ -27,25 +24,16 @@ const RewriteBelief: React.FC = () => {
   );
 
   const handleSave = () => {
-    // Создаем уникальный ID для упражнения
-    const exerciseId = `rewrite_belief_${Date.now()}`;
-    
-    // Определите структуру упражнения в соответствии с RewriteBeliefExercise
     const exercise = {
-      ...createBaseExercise(SHEET_ID, exerciseId),
+      ...createBaseExercise(SHEET_ID, `rewrite_belief_${Date.now()}`),
       belief: oldBelief,
-      newBelief: newBelief,
+      newBelief,
       advantages: [],
       disadvantages: [],
       timestamp: getCurrentISOTimestamp()
     };
 
-    dispatch(addExercise({ 
-      exercise, 
-      showNotification: true 
-    }));
-    
-    // Очистка полей после сохранения
+    dispatch(addExercise({ exercise, showNotification: true }));
     setOldBelief('');
     setNewBelief('');
   };
@@ -56,7 +44,7 @@ const RewriteBelief: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Перепишите убеждение</h2>
-        <div>{actionButtons}</div>
+        {actionButtons}
       </div>
 
       <p className={styles.description}>

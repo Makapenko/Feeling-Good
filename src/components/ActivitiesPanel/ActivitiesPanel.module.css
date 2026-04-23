@@ -33,6 +33,33 @@
   font-size: 1.1rem;
   margin-bottom: 15px;
   font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.sectionTitle:hover {
+  color: #2d3748;
+}
+
+.collapseIcon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 0.85rem;
+  color: #a0aec0;
+}
+
+.collapseIcon.collapsed {
+  transform: rotate(-90deg);
+}
+
+.sectionCount {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: #a0aec0;
+  font-weight: 400;
 }
 
 .specialTools {
@@ -64,6 +91,29 @@
   color: #2c5282;
   font-weight: 500;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.bookDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 8px;
+  margin-top: 8px;
+}
+
+.bookDivider::before,
+.bookDivider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background-color: #cbd5e0;
+}
+
+.bookDivider span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #718096;
+  white-space: nowrap;
 }
 
 .activeTasksList {
@@ -125,7 +175,7 @@
   .sectionTitle {
     font-size: 1rem;
     margin: 16px 0 12px;
-    padding: 0 4px;
+    padding: 8px 4px;
     color: #2d3748;
     font-weight: 600;
   }

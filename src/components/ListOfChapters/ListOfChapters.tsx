@@ -1,6 +1,7 @@
 import styles from './ListOfChapters.module.css';
 import chaptersData from './chapters.json';
 import book2ChaptersData from './chapters-book2.json';
+import book3ChaptersData from './chapters-book3.json';
 import { useState } from 'react';
 import type { Chapter, ChaptersData, Section } from '../../types/chapters.types';
 import { useAppDispatch, useUnlockedContent, useCompletedChapters, useCurrentChapter } from '../../redux/hooks';
@@ -8,8 +9,9 @@ import { loadChapter } from '../../redux/actions';
 
 const typedChaptersData = chaptersData as ChaptersData;
 const typedBook2Data = book2ChaptersData as ChaptersData;
+const typedBook3Data = book3ChaptersData as ChaptersData;
 
-type BookTab = 'book1' | 'book2';
+type BookTab = 'book1' | 'book2' | 'book3';
 
 function ListOfChapters() {
   const dispatch = useAppDispatch();
@@ -19,7 +21,10 @@ function ListOfChapters() {
   const [expandedChapters, setExpandedChapters] = useState<Set<string>>(new Set());
   const [activeBook, setActiveBook] = useState<BookTab>('book1');
 
-  const currentBookData = activeBook === 'book1' ? typedChaptersData : typedBook2Data;
+  const currentBookData =
+    activeBook === 'book1' ? typedChaptersData :
+      activeBook === 'book2' ? typedBook2Data :
+        typedBook3Data;
 
   const toggleChapter = (chapterId: string) => {
     setExpandedChapters(prev => {
@@ -74,20 +79,17 @@ function ListOfChapters() {
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.bookTabs}>
-        <button
-          className={`${styles.bookTab} ${activeBook === 'book1' ? styles.bookTabActive : ''}`}
-          onClick={() => setActiveBook('book1')}
-        >
-          Терапия настроения
-        </button>
-        <button
-          className={`${styles.bookTab} ${activeBook === 'book2' ? styles.bookTabActive : ''}`}
-          onClick={() => setActiveBook('book2')}
-        >
-          Близость
-        </button>
-      </div>
+      <select
+        id="book-select"
+        name="book"
+        className={styles.bookSelect}
+        value={activeBook}
+        onChange={(e) => setActiveBook(e.target.value as BookTab)}
+      >
+        <option value="book1">Терапия настроения</option>
+        <option value="book2">Терапия одиночества</option>
+        <option value="book3">Тренинг преодоления социофобии</option>
+      </select>
       <h3>Список глав:</h3>
       {currentBookData.sections.map((section) => (
         <div key={section.id}>
@@ -103,7 +105,7 @@ function ListOfChapters() {
               const isExpanded = expandedChapters.has(chapterId);
               const isChapterCompleted = areAllSubchaptersCompleted(chapter);
 
-                return (
+              return (
                 <li key={chapterId}>
                   {hasSubchapters ? (
                     <>
@@ -154,11 +156,11 @@ function ListOfChapters() {
                       {chapter.title}
                     </div>
                   )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       ))}
     </aside>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import styles from './UniversalCounter.module.css';
 import { useAppDispatch, useDailyProgress } from '../../../redux/hooks';
@@ -6,6 +6,7 @@ import { addExercise } from '../../../redux/actions';
 import { CounterClick, UniversalCounterExercise } from './types';
 import { counterConfigs } from './counterConfigs';
 import { Exercise } from '../../../types/progress.types';
+import { DayProgress } from '../../../redux/types';
 import { ActivityId } from '../../../constants/activities';
 import { v4 as uuidv4 } from 'uuid';
 import { getCurrentDate, getCurrentISOTimestamp, formatDateWithOptions, compareDatesDesc } from '../../../utils/dateUtils';
@@ -17,6 +18,16 @@ interface UniversalCounterProps {
   counterId: ActivityId;
 }
 
+function findCounterExercise(
+  dayProgress: DayProgress | undefined,
+  counterId: ActivityId
+): UniversalCounterExercise | undefined {
+  return dayProgress?.exercises.exercises.find(
+    (ex: Exercise): ex is UniversalCounterExercise =>
+      ex.type === counterId && ex.id === counterId
+  );
+}
+
 const UniversalCounter: React.FC<UniversalCounterProps> = ({ counterId }) => {
   const dispatch = useAppDispatch();
   const dailyProgress = useDailyProgress();
@@ -26,18 +37,11 @@ const UniversalCounter: React.FC<UniversalCounterProps> = ({ counterId }) => {
 
   const config = counterConfigs[counterId];
 
-  // Получаем сегодняшние клики
   const todayClicks = useMemo(() => {
-    const currentDate = getCurrentDate();
-    const dayProgress = dailyProgress[currentDate];
-    const exercise = dayProgress?.exercises.exercises.find(
-      (ex: Exercise): ex is UniversalCounterExercise =>
-        ex.type === counterId && ex.id === counterId
-    );
+    const exercise = findCounterExercise(dailyProgress[getCurrentDate()], counterId);
     return exercise?.clicks || [];
   }, [dailyProgress, counterId]);
 
-  // Данные для графика тренда (последние 21 день)
   const trendData = useMemo(() => {
     const days: { date: string; count: number }[] = [];
     const today = new Date();
@@ -46,11 +50,7 @@ const UniversalCounter: React.FC<UniversalCounterProps> = ({ counterId }) => {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
-      const dayProgress = dailyProgress[dateStr];
-      const exercise = dayProgress?.exercises.exercises.find(
-        (ex: Exercise): ex is UniversalCounterExercise =>
-          ex.type === counterId && ex.id === counterId
-      );
+      const exercise = findCounterExercise(dailyProgress[dateStr], counterId);
       const count = exercise?.clicks?.length || 0;
       if (count > 0 || i <= 6) {
         days.push({
@@ -63,43 +63,37 @@ const UniversalCounter: React.FC<UniversalCounterProps> = ({ counterId }) => {
     return days;
   }, [dailyProgress, counterId]);
 
-  // Есть ли данные для графика
   const hasTrendData = trendData.some(d => d.count > 0);
 
-  // История по прошлым дням
   const pastDays = useMemo(() => {
     const currentDate = getCurrentDate();
-    const result: { date: string; clicks: CounterClick[] }[] = [];
 
-    Object.entries(dailyProgress)
+    return Object.entries(dailyProgress)
       .filter(([date]) => date !== currentDate)
       .sort(([a], [b]) => compareDatesDesc(a, b))
-      .forEach(([date, progress]) => {
-        const exercise = progress?.exercises.exercises.find(
-          (ex: Exercise): ex is UniversalCounterExercise =>
-            ex.type === counterId && ex.id === counterId
-        );
+      .reduce<{ date: string; clicks: CounterClick[] }[]>((result, [date, progress]) => {
+        const exercise = findCounterExercise(progress, counterId);
         if (exercise?.clicks?.length) {
           result.push({ date, clicks: exercise.clicks });
         }
-      });
-
-    return result.slice(0, 14); // последние 14 дней
+        return result;
+      }, [])
+      .slice(0, 14);
   }, [dailyProgress, counterId]);
 
   const saveToProgress = (updatedClicks: CounterClick[]) => {
-    const exercise: UniversalCounterExercise = {
-      ...createBaseExercise(counterId),
-      clicks: updatedClicks,
-    };
-    dispatch(addExercise({ exercise, showNotification: false }));
+    dispatch(addExercise({
+      exercise: { ...createBaseExercise(counterId), clicks: updatedClicks },
+      showNotification: false,
+    }));
   };
 
   const handleClick = () => {
+    const trimmedNote = note.trim();
     const newClick: CounterClick = {
       id: uuidv4(),
       timestamp: getCurrentISOTimestamp(),
-      ...(note.trim() ? { note: note.trim() } : {}),
+      ...(trimmedNote && { note: trimmedNote }),
     };
     saveToProgress([...todayClicks, newClick]);
     setNote('');

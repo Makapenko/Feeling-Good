@@ -1,0 +1,1 @@
+export { IntimacyTrendChart } from './IntimacyTrendChart';

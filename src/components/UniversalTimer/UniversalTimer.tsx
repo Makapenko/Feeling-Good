@@ -56,14 +56,28 @@ const UniversalTimer: React.FC<UniversalTimerProps> = React.memo(({ componentId,
     }
   }, [componentId, onTimeUpdate]);
 
+  // Пауза при переключении на другую вкладку браузера
+  const [isTabHidden, setIsTabHidden] = useState(document.hidden);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsTabHidden(document.hidden);
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
   // Обновление времени
   useEffect(() => {
     // Не запускаем обновление времени для исключенных компонентов
-    if (EXCLUDED_TIMER_COMPONENTS.includes(componentId) || isPaused) {
+    if (EXCLUDED_TIMER_COMPONENTS.includes(componentId) || isPaused || isTabHidden) {
       return;
     }
-    
-    
+
+
     const interval = window.setInterval(() => {
       setSeconds(prev => {
         const newTime = prev + 1;
@@ -75,7 +89,7 @@ const UniversalTimer: React.FC<UniversalTimerProps> = React.memo(({ componentId,
     return () => {
       window.clearInterval(interval);
     };
-  }, [saveCurrentTime, componentId, isPaused]);
+  }, [saveCurrentTime, componentId, isPaused, isTabHidden]);
 
   // Сброс таймера при смене компонента
   useEffect(() => {
